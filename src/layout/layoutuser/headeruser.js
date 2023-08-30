@@ -11,12 +11,13 @@ import { Avatar, Badge } from 'antd';
 import { useSelector, useDispatch } from "react-redux";
 import React, { useEffect, useState } from 'react';
 import { Modal } from 'antd';
+import { useNavigate } from "react-router-dom";
 import LoginComponent from "../../component/login/Login";
 
 const HeaderUser = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
-
+    const navigate = useNavigate()
     const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
     const dispatch = useDispatch()
     const showModal = () => {
@@ -42,6 +43,8 @@ const HeaderUser = () => {
     };
     const logout = () => {
         dispatch(logoutUser())
+        navigate('/')
+        setIsModalOpen(true)
     }
     return (
         <header>

@@ -9,6 +9,7 @@ import {
 } from '@ant-design/icons';
 import { Link, Route, Routes } from 'react-router-dom'; // Import thư viện Link và Route
 import AddProductForm from '../../component/product/productadd';
+import CategoryList from '../../component/category/categorylist';
 const { Header, Content, Sider } = Layout;
 
 
@@ -22,9 +23,10 @@ function getItem(label, key, icon, route) {
 }
 
 const items = [
-    getItem('Quản trị sản phẩm', '1', <PieChartOutlined />, 'admin/createform'),
-    getItem('Option 2', '2', <DesktopOutlined />, 'admin/createform'),
+    getItem('Quản trị sản phẩm', '1', <PieChartOutlined />, 'admin/createform', <AddProductForm />),
+    getItem('Quản trị loại sản phẩm', '2', <DesktopOutlined />, 'admin/category', <CategoryList />),
 ];
+
 
 const SiderAdmin = () => {
     return (
@@ -35,7 +37,7 @@ const SiderAdmin = () => {
         >
             <Layout
                 style={{
-                    padding: '24px 0',
+                    padding: '12px 0',
                     background: 'colorBgContainer',
                 }}
             >
@@ -44,7 +46,7 @@ const SiderAdmin = () => {
                         background: 'colorBgContainer'
 
                     }}
-                    width={200}
+                    width={250}
                 >
                     <Menu
                         mode="inline"
@@ -70,9 +72,10 @@ const SiderAdmin = () => {
                     }}
                 >
                     <Routes>
-                        {items.map((item) => (
-                            <Route path={item.route} element={<AddProductForm />} />
-                        ))}
+                        <React.Fragment>
+                            <Route path='admin/createform' element={<AddProductForm />} />
+                            <Route path='admin/category' element={<CategoryList />} />
+                        </React.Fragment>
                     </Routes>
                 </Content>
             </Layout>

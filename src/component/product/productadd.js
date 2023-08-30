@@ -1,28 +1,50 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addProductAsync } from "../../features/product/createproductThunks";
+import { addProductAsync, fetchProductsAsync } from "../../features/product/createproductThunks";
 import { fetchProducts } from "../../features/product/productThunk";
+import { fetchCategory } from "../../features/category/categoryThunk"
 import { useState } from "react";
-import { Space, Table, Typography, Modal, Spin, Popconfirm } from 'antd';
+import { Space, Table, Typography, Modal, Spin, Popconfirm, Form, Input, Row, Col, Select, Button } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;
 
-
+const onFinish = (values) => {
+    console.log('Success:', values);
+};
+const onFinishFailed = (errorInfo) => {
+    console.log('Failed:', errorInfo);
+};
+const handleChange = (value) => {
+    console.log(`selected ${value}`);
+};
 function AddProductForm() {
-
+    const [name, setname] = useState("")
+    const [price, setprice] = useState(0)
+    const [image, setimage] = useState("")
+    const [category, setcategory] = useState([])
+    const [selectedCategory, setSelectedCategory] = useState("");
     const dispatch = useDispatch();
-    const [productName, setProductName] = useState('');
     const loading = useSelector((state) => state.product.loading)
     const products = useSelector((state) => state.product.products)
     const error = useSelector((state) => state.product.error)
+    const categorys = useSelector((state) => state.category.categorys)
     const [isModalOpen, setIsModalOpen] = useState(false);
     //
+
+
+
+    const handleChange = (value) => {
+        console.log(value); // Giá trị ID của mục được chọn
+        setcategory(value);
+    }
+
     const showModal = () => {
         setIsModalOpen(true);
     };
     const handleOk = () => {
         setIsModalOpen(false);
+        handleAddProduct()
     };
     const handleCancel = () => {
         setIsModalOpen(false);
@@ -31,12 +53,25 @@ function AddProductForm() {
     useEffect(() => {
         dispatch(fetchProducts());
     }, []);
-
+    useEffect(() => {
+        dispatch(fetchCategory());
+    }, []);
+    useEffect(() => {
+        dispatch(fetchProductsAsync());
+    }, [products]);
+    //
     const handleAddProduct = () => {
         dispatch(addProductAsync({
-            name: productName
+            name: name,
+            price: price,
+            category: {
+                id: category
+            },
+            image: image
         }))
-        setProductName('');
+        setname('')
+        setprice('')
+        setimage('')
     }
 
     const columns = [
@@ -60,11 +95,13 @@ function AddProductForm() {
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
-                    <a onClick={showModal}>Thêm</a>
+                    <a onClick={showModal}>Sửa</a>
                     <Popconfirm
-                        title="Delete the task"
-                        description="Are you sure to delete this task?"
+                        title="Xóa mục này"
+                        description="Bạn chắc chắn muốn xóa mục này chứ?"
                         icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+                        cancelText="hủy"
+                        okText="xóa"
                     >
                         <a>Delete</a>
                     </Popconfirm>
@@ -72,25 +109,119 @@ function AddProductForm() {
             ),
         },
     ];
+
+
     return (
         <div style={{ marginTop: '30px' }}>
             <Title level={2}>Quản trị sản phẩm</Title>
             <Title level={4}>Danh mục</Title>
+            <Button type="primary" style={{ float: 'right', marginBottom: '20px' }} onClick={showModal}>Thêm</Button>
             {loading ? <Spin className="example" size="large" /> : null}
             {error ? <p>Error: {error}</p> : null}
-            <Table columns={columns} dataSource={products} />;
+            <Table columns={columns} dataSource={products} />
+            {/* popup form */}
             <Modal title="Thêm sản phẩm" open={isModalOpen}
                 onOk={handleOk} onCancel={handleCancel}
-                cancelText="Hủy" okText="Thêm">
-                <input
+                cancelText="Hủy" okText="Thêm" width={800}>
+                {/* <input
                     type="text"
                     value={productName}
                     onChange={(e) => setProductName(e.target.value)}
                     placeholder="Product Name"
-                />
-                <button onClick={handleAddProduct}>Add Product</button>
+                /> */}<br />
+                <Form
+                    name="basic"
+                    labelCol={{
+                        span: 8,
+                    }}
+                    wrapperCol={{
+                        span: 24,
+                    }}
+                    style={{
+                        maxWidth: 800,
+                    }}
+                    initialValues={{
+                        remember: true,
+                    }}
+                    onFinish={onFinish}
+                    onFinishFailed={onFinishFailed}
+                    autoComplete="off"
+                >
+                    <Row gutter={24}>
+                        {/* Trường thứ nhất */}
+                        <Col span={12}>
+                            <Form.Item
+                                label="Name product"
+                                name="name"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please input your name product!',
+                                    },
+                                ]}
+                            >
+                                <Input value={name}
+                                    onChange={(e) => setname(e.target.value)} />
+                            </Form.Item>
+                        </Col>
+                        {/* Trường thứ hai */}
+                        <Col span={12}>
+                            <Form.Item
+                                label="Price"
+                                name="price"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please input your price!',
+                                    },
+                                ]}
+                            >
+                                <Input value={price}
+                                    onChange={(e) => setprice(e.target.value)} />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                label="Category"
+                                name="category"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please input your category!',
+                                    },
+                                ]}
+                            >
+                                <Select
+                                    style={{ width: 243 }}
+                                    onChange={handleChange}
+                                    options={categorys.map(category => ({ value: category.id, label: category.name }))}
+                                    value={category} // Đặt giá trị mặc định dựa trên selectedCategory (ID của danh mục)
+                                    initialValue={categorys.length > 0 ? categorys[0].id : undefined}
+                                />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row gutter={24}>
+                        <Col span={12}>
+                            <Form.Item
+                                label="image"
+                                name="image"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please input your image!',
+                                    },
+                                ]}
+                            >
+                                <Input value={image}
+                                    onChange={(e) => setimage(e.target.value)} />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                </Form>
             </Modal>
         </div>
     )
 }
 export default AddProductForm
+

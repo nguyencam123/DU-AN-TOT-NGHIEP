@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom
 import ProtectedRoute from './app/ProtectedRoute';
 import AdminLayout from './layout/layoutadmin/AdminLayout';
 import UserLayout from './layout/layoutuser/UserLayout';
+import CategoryList from './component/category/categorylist';
 
 function App() {
   return (
@@ -22,8 +23,8 @@ function App() {
           </Route>
           {/* Sử dụng AdminLayout cho trang quản trị */}
           <Route path='/*' element={<AdminLayout />}>
-            <Route path='admin/createform' element={<ProtectedRoute adminOnly />}>
-            </Route>
+            <Route path='admin/createform' element={<ProtectedRoute adminOnly />} />
+            <Route path='admin/category' element={<ProtectedRoute adminOnly />} />
           </Route>
         </Routes>
       </Router>

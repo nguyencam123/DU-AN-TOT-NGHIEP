@@ -5,7 +5,6 @@ const { Title } = Typography;
 
 const LoginDetail = () => {
     const getdata = useSelector((state) => state.user.userData)
-    console.log(getdata)
     return (
         <>
             {getdata.fullname}
