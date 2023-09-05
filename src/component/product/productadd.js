@@ -1,11 +1,13 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addProductAsync, fetchProductsAsync } from "../../features/product/createproductThunks";
+import { addProductAsync } from "../../features/product/createproductThunks";
 import { fetchProducts } from "../../features/product/productThunk";
 import { fetchCategory } from "../../features/category/categoryThunk"
 import { useState } from "react";
 import { Space, Table, Typography, Modal, Spin, Popconfirm, Form, Input, Row, Col, Select, Button } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import { removeProduct } from "../../features/product/deleteproductThunks";
+import * as Yup from 'yup'
 
 const { Title } = Typography;
 
@@ -20,9 +22,9 @@ const handleChange = (value) => {
 };
 function AddProductForm() {
     const [name, setname] = useState("")
-    const [price, setprice] = useState(0)
+    const [price, setprice] = useState("")
     const [image, setimage] = useState("")
-    const [category, setcategory] = useState([])
+    const [category, setcategory] = useState("")
     const [selectedCategory, setSelectedCategory] = useState("");
     const dispatch = useDispatch();
     const loading = useSelector((state) => state.product.loading)
@@ -30,9 +32,17 @@ function AddProductForm() {
     const error = useSelector((state) => state.product.error)
     const categorys = useSelector((state) => state.category.categorys)
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [formErrors, setFormErrors] = useState({});
+
     //
 
-
+    const validationSchema = Yup.object().shape({
+        name: Yup.string().required('Vui lòng nhập tên sản phẩm'),
+        price: Yup.string()
+            .matches(/^[0-9]+$/, 'Giá sản phẩm phải là số')
+            .required('Vui lòng nhập giá sản phẩm'),
+        image: Yup.string().required('Vui lòng chọn ảnh sản phẩm'),
+    })
 
     const handleChange = (value) => {
         console.log(value); // Giá trị ID của mục được chọn
@@ -43,7 +53,7 @@ function AddProductForm() {
         setIsModalOpen(true);
     };
     const handleOk = () => {
-        setIsModalOpen(false);
+        //setIsModalOpen(false);
         handleAddProduct()
     };
     const handleCancel = () => {
@@ -56,23 +66,46 @@ function AddProductForm() {
     useEffect(() => {
         dispatch(fetchCategory());
     }, []);
-    useEffect(() => {
-        dispatch(fetchProductsAsync());
-    }, [products]);
     //
+    //delete
+    const handleDeleteProduct = (productId) => {
+        dispatch(removeProduct(productId));
+    }
+    //add
     const handleAddProduct = () => {
-        dispatch(addProductAsync({
+        // Tạo object chứa dữ liệu từ form
+        const productData = {
             name: name,
             price: price,
             category: {
                 id: category
             },
             image: image
-        }))
-        setname('')
-        setprice('')
-        setimage('')
-    }
+        };
+
+        // Sử dụng Yup để validate dữ liệu
+        validationSchema.validate(productData, { abortEarly: false })
+            .then(() => {
+                // Dữ liệu hợp lệ, dispatch action hoặc thực hiện các thao tác khác ở đây
+                dispatch(addProductAsync(productData));
+
+                // Xóa dữ liệu đã nhập trong form
+                setname('');
+                setprice('');
+                setimage('');
+                setFormErrors({});
+                setIsModalOpen(false);
+            })
+            .catch(errors => {
+                // Dữ liệu không hợp lệ, xử lý lỗi nếu cần
+                const errorObject = {};
+                errors.inner.forEach(error => {
+                    errorObject[error.path] = error.message;
+                });
+                setFormErrors(errorObject);
+            });
+    };
+
 
     const columns = [
         {
@@ -95,15 +128,16 @@ function AddProductForm() {
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
-                    <a onClick={showModal}>Sửa</a>
+                    <a onClick={showModal} style={{ color: '#1677ff' }}>Sửa</a>
                     <Popconfirm
                         title="Xóa mục này"
                         description="Bạn chắc chắn muốn xóa mục này chứ?"
                         icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
                         cancelText="hủy"
                         okText="xóa"
+                        onConfirm={() => handleDeleteProduct(record.id)} // Truyền record.id vào hàm handleDeleteProduct
                     >
-                        <a>Delete</a>
+                        <a style={{ color: '#1677ff' }}>Xóa</a>
                     </Popconfirm>
                 </Space>
             ),
@@ -153,12 +187,8 @@ function AddProductForm() {
                             <Form.Item
                                 label="Name product"
                                 name="name"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Please input your name product!',
-                                    },
-                                ]}
+                                validateStatus={formErrors.name ? 'error' : ''} // Hiển thị lỗi cho trường name nếu có
+                                help={formErrors.name} // Hiển thị thông báo lỗi cho trường name nếu có
                             >
                                 <Input value={name}
                                     onChange={(e) => setname(e.target.value)} />
@@ -169,12 +199,8 @@ function AddProductForm() {
                             <Form.Item
                                 label="Price"
                                 name="price"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Please input your price!',
-                                    },
-                                ]}
+                                validateStatus={formErrors.price ? 'error' : ''} // Hiển thị lỗi cho trường price nếu có
+                                help={formErrors.price} // Hiển thị thông báo lỗi cho trường price nếu có
                             >
                                 <Input value={price}
                                     onChange={(e) => setprice(e.target.value)} />
@@ -206,12 +232,8 @@ function AddProductForm() {
                             <Form.Item
                                 label="image"
                                 name="image"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Please input your image!',
-                                    },
-                                ]}
+                                validateStatus={formErrors.image ? 'error' : ''} // Hiển thị lỗi cho trường image nếu có
+                                help={formErrors.image} // Hiển thị thông báo lỗi cho trường image nếu có
                             >
                                 <Input value={image}
                                     onChange={(e) => setimage(e.target.value)} />

@@ -24,8 +24,15 @@ const productSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+    deleteProduct: (state, action) => {
+      const productIdToDelete = action.payload;
+      state.products = state.products.filter(product => product.id !== productIdToDelete);
+    },
+    addproduct: (state, action) => {
+      state.products.push(action.payload)
+    }
   },
 });
 
-export const { fetchProductsStart, fetchProductsSuccess, fetchProductsFailure } = productSlice.actions;
+export const { fetchProductsStart, fetchProductsSuccess, fetchProductsFailure, deleteProduct, addproduct } = productSlice.actions;
 export default productSlice.reducer;

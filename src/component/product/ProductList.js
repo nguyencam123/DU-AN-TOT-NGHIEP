@@ -22,10 +22,6 @@ function ProductList() {
         dispatch(fetchProducts());
     }, []);
 
-    React.useEffect(() => {
-        dispatch(fetchProductsAsync());
-    }, [dispatch]);
-
     return (
 
         <div>

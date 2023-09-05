@@ -66,7 +66,7 @@ const SiderAdmin = () => {
                 <Content
                     style={{
                         padding: '0 24px',
-                        minHeight: '80vh',
+                        minHeight: '88vh',
                         backgroundColor: '#ffffff',
                         marginLeft: '10px',
                     }}

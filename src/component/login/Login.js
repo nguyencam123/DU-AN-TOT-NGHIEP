@@ -23,6 +23,7 @@ import { notification } from 'antd';
 const Context = React.createContext({
     name: 'Default',
 });
+
 function LoginComponent() {
     const navigate = useNavigate()
     const dispatch = useDispatch();
@@ -130,7 +131,7 @@ function LoginComponent() {
                         <Button type="primary" size={size} style={{ width: '430px' }} onClick={handleLogin}>
                             Sign in
                         </Button>
-                        <button onClick={handleLogout}>Logout</button>
+                        {/* <button onClick={handleLogout}>Logout</button> */}
 
                         <p className="text-center">Not a member? <a href="#!">Register</a></p>
 
