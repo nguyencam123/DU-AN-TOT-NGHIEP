@@ -1,0 +1,16 @@
+.awesection1 {
+    position: relative;
+    background-image: url('../../assets/img/bluer.png');
+    background-color: rgba(0, 0, 0, 0.8);
+    background-repeat: no-repeat;
+    background-size: cover, contain;
+}
+
+.border-inpicture {
+    border: 2px solid rgb(252, 252, 252);
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    margin-top: 80px;
+    margin-left: 100px;
+}

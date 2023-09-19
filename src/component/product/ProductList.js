@@ -3,7 +3,11 @@ import { fetchProducts } from '../../features/product/productThunk';
 import React, { useEffect } from 'react';
 import { Spin, Card, Row, Col } from 'antd';
 import { fetchProductsAsync } from '../../features/product/createproductThunks';
-import slice1 from "../../assets/img/iphone12.png"
+import slice1 from "../../assets/img/Screenshot 2023-09-08 174300.png"
+import slice2 from "../../assets/img/Screenshot 2023-09-08 174708.png"
+import slice3 from "../../assets/img/Screenshot 2023-09-08 174807.png"
+import imgsection from "../../assets/img/Screenshot 2023-09-08 174057.png"
+import "./ProductList.css"
 import { Carousel } from 'antd';
 const contentStyle = {
     height: '660px',
@@ -12,6 +16,22 @@ const contentStyle = {
     textAlign: 'center',
     background: '#364d79',
 };
+const sectionStyle = {
+    height: "323px",
+    width: "100%",
+};
+const awesection1 = {
+    position: "relative",
+}
+const overlay = {
+    position: "absolute",
+    top: "0",
+    left: "0",
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    zIndex: "2" // Giá trị này phải cao hơn so với phần ảnh
+}
 function ProductList() {
     const dispatch = useDispatch();
     const products = useSelector((state) => state.product.products);
@@ -30,16 +50,23 @@ function ProductList() {
                     <h3 style={contentStyle}><img src={slice1} style={{ width: '100%' }} /></h3>
                 </div>
                 <div>
-                    <h3 style={contentStyle}>2</h3>
+                    <h3 style={contentStyle}><img src={slice2} style={{ width: '100%' }} /></h3>
                 </div>
                 <div>
-                    <h3 style={contentStyle}>3</h3>
+                    <h3 style={contentStyle}><img src={slice3} style={{ width: '100%' }} /></h3>
                 </div>
-                <div>
-                    <h3 style={contentStyle}>4</h3>
+            </Carousel>
+            <section className='awesection1' style={sectionStyle}>
+                <div className="textOverlay" style={{ position: 'absolute', zIndex: '1' }}>
+                    <div className='border-inpicture'>getText();</div>
                 </div>
-            </Carousel><br /><br />
-            {loading ? <Spin className="example" size="large" /> : null}
+            </section>
+            <br /><br />
+            {loading ? <div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div> : null}
             {error ? <p>Error: {error}</p> : null}
             <Row style={{ marginLeft: '100px' }}>
                 {products.map((product) => (

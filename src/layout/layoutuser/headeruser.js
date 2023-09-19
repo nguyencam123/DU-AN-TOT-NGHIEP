@@ -4,15 +4,18 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import { UserOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import { UserOutlined, ShoppingCartOutlined, SearchOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { logoutUser } from "../../features/user/userThunk";
-import { Avatar, Badge } from 'antd';
+import { Avatar, Badge, Input, Button } from 'antd';
 import { useSelector, useDispatch } from "react-redux";
 import React, { useEffect, useState } from 'react';
-import { Modal } from 'antd';
+import { Modal, Typography } from 'antd';
 import { useNavigate } from "react-router-dom";
 import LoginComponent from "../../component/login/Login";
+import iconplane from "../../assets/svg/Iconka-Business-Finance-Plane.512.png"
+
+const { Title } = Typography
 
 const HeaderUser = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,6 +23,24 @@ const HeaderUser = () => {
     const navigate = useNavigate()
     const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
     const dispatch = useDispatch()
+
+    const [searchVisible, setSearchVisible] = useState(false);
+    const [searchValue, setSearchValue] = useState('');
+
+    const handleSearchClick = () => {
+        setSearchVisible(!searchVisible);
+        setSearchValue('');
+    };
+
+    const handleInputChange = (e) => {
+        setSearchValue(e.target.value);
+    };
+
+    const handleSearch = () => {
+        console.log('Searching for:', searchValue);
+    };
+
+
     const showModal = () => {
         setIsModalOpen(true);
     };
@@ -48,50 +69,69 @@ const HeaderUser = () => {
     }
     return (
         <header>
-            <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+            <Navbar>
                 <Container>
                     <Navbar.Brand href="https://html.design/preview/?theme=timups">
-                        CAMPHONES
+                        <div className="parent-box">
+                            <div className="box-fly-icon">
+                                <div className="parent-plane-icon"><img className="plane-icon" src={iconplane} style={{ color: 'white' }} /></div>
+                            </div>
+                            <Title level={2} style={{ color: 'blue' }}>Travel</Title>
+                        </div>
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="me-auto">
                             <Link to={"/"} className="textnabar">
-                                Home
+                                <strong>trang chủ</strong>
                             </Link>
-                            <Link to={"/watches"} className="textnabar">
-                                Watches
+                            <Link to={"/gioi-thieu"} className="textnabar">
+                                <strong>Giới thiệu</strong>
                             </Link>
-                            <Link to={"/about"} className="textnabar">
-                                About
+                            <Link to={"/san-pham"} className="textnabar">
+                                <strong>Sản phẩm</strong>
                             </Link>
-                            <NavDropdown title="Contact US" id="collasible-nav-dropdown">
-                                <NavDropdown.Item href="/action">Action</NavDropdown.Item>
-
-                                <NavDropdown.Item href="/Anotheraction">
-                                    Another action
-                                </NavDropdown.Item>
-                                <NavDropdown.Item href="/Something">Something</NavDropdown.Item>
-                                <NavDropdown.Divider />
-                                <NavDropdown.Item href="/Separatedlink">
-                                    Separated link
-                                </NavDropdown.Item>
-                            </NavDropdown>
+                            <Link to={"/tin-tuc"} className="textnabar">
+                                <strong>Tin tức</strong>
+                            </Link>
+                            <Link to={"/lien-he"} className="textnabar">
+                                <strong> Liên hệ</strong>
+                            </Link>
                         </Nav>
                         <div className="headercart">
-                            <div className="cartAndPerson">
+                            <div className="cartAndPerson" style={{ display: "flex" }}>
+                                <div className="search-bar-container">
+                                    {searchVisible ? (
+                                        <div className="search-input-container">
+                                            <Input
+                                                placeholder="Tìm kiếm..."
+                                                value={searchValue}
+                                                onChange={handleInputChange}
+                                            />
+                                            <Button type="primary" onClick={handleSearch}>
+                                                Tìm kiếm
+                                            </Button>
+                                        </div>
+                                    ) : (
+                                        <SearchOutlined
+                                            className="search-icon"
+                                            onClick={handleSearchClick} style={{ fontSize: '26px' }}
+                                        />
+                                    )}
+                                </div>
+                                &emsp;
                                 <Link to="/shopingcart" className="headercart">
                                     <span className="picturecart">
                                         <span className="cc">
                                             <Badge count={0} showZero>
-                                                <ShoppingCartOutlined style={{ color: 'white', fontSize: '24px' }} />
+                                                <ShoppingCartOutlined style={{ color: 'black', fontSize: '26px' }} />
                                             </Badge>
                                         </span>
                                     </span>
                                 </Link>
                                 &emsp;
                                 <span className="pictureperson" onClick={handleDropdownToggle}>
-                                    <UserOutlined style={{ color: 'white', fontSize: '24px' }} />
+                                    <UserOutlined style={{ color: 'black', fontSize: '26px' }} />
                                 </span>
                                 {isLoggedIn ? ( // Render dropdown only if the user is logged in
                                     <div className={`dropdown-menu ${showDropdown ? "show" : ""}`} >
