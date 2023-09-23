@@ -6,7 +6,12 @@ import { fetchProductsAsync } from '../../features/product/createproductThunks';
 import slice1 from "../../assets/img/Screenshot 2023-09-08 174300.png"
 import slice2 from "../../assets/img/Screenshot 2023-09-08 174708.png"
 import slice3 from "../../assets/img/Screenshot 2023-09-08 174807.png"
-import imgsection from "../../assets/img/Screenshot 2023-09-08 174057.png"
+import imgsection from "../../assets/svg/sailing_FILL0_wght400_GRAD0_opsz24.svg"
+import apartment from "../../assets/svg/apartment_FILL0_wght400_GRAD0_opsz24.svg"
+import favorite from "../../assets/svg/favorite_FILL0_wght400_GRAD0_opsz24.svg"
+import explore from "../../assets/svg/explore_FILL0_wght400_GRAD0_opsz24.svg"
+import beach from "../../assets/svg/beach_access_FILL0_wght400_GRAD0_opsz24.svg"
+import kayaking from "../../assets/svg/kayaking_FILL0_wght400_GRAD0_opsz24.svg"
 import "./ProductList.css"
 import { Carousel } from 'antd';
 const contentStyle = {
@@ -57,8 +62,37 @@ function ProductList() {
                 </div>
             </Carousel>
             <section className='awesection1' style={sectionStyle}>
-                <div className="textOverlay" style={{ position: 'absolute', zIndex: '1' }}>
-                    <div className='border-inpicture'>getText();</div>
+                <div className="textOverlay" style={{ position: 'absolute', zIndex: '1', display: 'flex' }}>
+                    <div className='border-inpicture'><img src={imgsection} style={{ width: '110px', marginLeft: '12px', color: 'white' }} />
+                        <div className='text-inpictủe' style={{ marginTop: '40px', fontSize: '25px', marginLeft: '10px' }}>
+                            Hành trình
+                        </div>
+                    </div>
+                    <div className='border-inpicture-1'><img src={apartment} style={{ width: '110px', marginLeft: '12px', color: 'white' }} />
+                        <div className='text-inpictủe' style={{ marginTop: '40px', fontSize: '25px', marginLeft: '10px' }}>
+                            Cao cấp
+                        </div>
+                    </div>
+                    <div className='border-inpicture-2'><img src={favorite} style={{ width: '110px', marginLeft: '12px', color: 'white', marginTop: '15px' }} />
+                        <div className='text-inpictủe' style={{ marginTop: '30px', fontSize: '25px', marginLeft: '10px' }}>
+                            Tuần trăng mật
+                        </div>
+                    </div>
+                    <div className='border-inpicture-2'><img src={explore} style={{ width: '110px', marginLeft: '12px', color: 'white', marginTop: '10px' }} />
+                        <div className='text-inpictủe' style={{ marginTop: '40px', fontSize: '25px', marginLeft: '10px' }}>
+                            Khám phá
+                        </div>
+                    </div>
+                    <div className='border-inpicture-2'><img src={beach} style={{ width: '110px', marginLeft: '12px', color: 'white', marginTop: '10px' }} />
+                        <div className='text-inpictủe' style={{ marginTop: '40px', fontSize: '25px', marginLeft: '10px' }}>
+                            Sinh thái
+                        </div>
+                    </div>
+                    <div className='border-inpicture-2'><img src={kayaking} style={{ width: '110px', marginLeft: '12px', color: 'white', marginTop: '10px' }} />
+                        <div className='text-inpictủe' style={{ marginTop: '40px', fontSize: '25px', marginLeft: '10px' }}>
+                            Đi biển
+                        </div>
+                    </div>
                 </div>
             </section>
             <br /><br />

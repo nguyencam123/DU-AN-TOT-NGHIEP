@@ -7,10 +7,28 @@
 }
 
 .border-inpicture {
-    border: 2px solid rgb(252, 252, 252);
+    border: 3px solid rgb(145, 144, 144);
     width: 140px;
     height: 140px;
     border-radius: 50%;
     margin-top: 80px;
-    margin-left: 100px;
+    margin-left: 180px;
+}
+
+.border-inpicture-1 {
+    border: 3px solid rgb(145, 144, 144);
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    margin-top: 80px;
+    margin-left: 50px;
+}
+
+.border-inpicture-2 {
+    border: 3px solid rgb(145, 144, 144);
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    margin-top: 80px;
+    margin-left: 50px;
 }
