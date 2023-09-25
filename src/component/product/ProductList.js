@@ -62,7 +62,7 @@ function ProductList() {
                 </div>
             </Carousel>
             <section className='awesection1' style={sectionStyle}>
-                <div className="textOverlay" style={{ position: 'absolute', zIndex: '1', display: 'flex' }}>
+                <div className="textOverlay" style={{ position: 'absolute', zIndex: '1', display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
                     <div className='border-inpicture'><img src={imgsection} style={{ width: '110px', marginLeft: '12px', color: 'white' }} />
                         <div className='text-inpictủe' style={{ marginTop: '40px', fontSize: '25px', marginLeft: '10px' }}>
                             Hành trình
