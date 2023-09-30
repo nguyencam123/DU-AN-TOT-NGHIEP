@@ -15,7 +15,7 @@ import kayaking from "../../assets/svg/kayaking_FILL0_wght400_GRAD0_opsz24.svg"
 import "./ProductList.css"
 import { Carousel } from 'antd';
 const contentStyle = {
-    height: '660px',
+    height: '100%',
     color: '#fff',
     lineHeight: '160px',
     textAlign: 'center',

@@ -23,8 +23,8 @@ function getItem(label, key, icon, route) {
 }
 
 const items = [
-    getItem('Quản trị sản phẩm', '1', <PieChartOutlined />, 'admin/createform', <AddProductForm />),
-    getItem('Quản trị loại sản phẩm', '2', <DesktopOutlined />, 'admin/category', <CategoryList />),
+    { label: 'Quản trị sản phẩm', key: '1', icon: <PieChartOutlined />, route: 'admin/createform', component: <AddProductForm /> },
+    { label: 'Quản trị loại sản phẩm', key: '2', icon: <DesktopOutlined />, route: 'admin/category', component: <CategoryList /> },
 ];
 
 
@@ -72,10 +72,9 @@ const SiderAdmin = () => {
                     }}
                 >
                     <Routes>
-                        <React.Fragment>
-                            <Route path='admin/createform' element={<AddProductForm />} />
-                            <Route path='admin/category' element={<CategoryList />} />
-                        </React.Fragment>
+                        {items.map(item => (
+                            <Route key={item.key} path={item.route} element={item.component} />
+                        ))}
                     </Routes>
                 </Content>
             </Layout>

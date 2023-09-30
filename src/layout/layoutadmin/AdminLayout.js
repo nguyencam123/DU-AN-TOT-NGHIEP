@@ -4,6 +4,7 @@ import SiderAdmin from './siderAdmin';
 import { Layout } from 'antd';
 const { Header, Content } = Layout;
 
+
 const AdminLayout = ({ children }) => {
     return (
         <div style={{ backgroundColor: '#f5f5f5' }}>

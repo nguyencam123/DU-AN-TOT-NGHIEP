@@ -13,6 +13,7 @@ function App() {
     <>
       <Router>
         <Routes>
+          {/* guest component */}
           <Route path='/*' element={<UserLayout />}>
             <Route path=''>
               <Route index element={<ProductList />} />
@@ -21,10 +22,9 @@ function App() {
               <Route index element={<LoginDetail />} />
             </Route>
           </Route>
-          {/* Sử dụng AdminLayout cho trang quản trị */}
+          {/* map quyen voi url admin */}
           <Route path='/*' element={<AdminLayout />}>
-            <Route path='admin/createform' element={<ProtectedRoute adminOnly />} />
-            <Route path='admin/category' element={<ProtectedRoute adminOnly />} />
+            <Route path='admin/*' element={<ProtectedRoute adminOnly />} />
           </Route>
         </Routes>
       </Router>
