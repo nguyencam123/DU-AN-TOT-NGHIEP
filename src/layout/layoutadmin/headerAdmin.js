@@ -14,6 +14,7 @@ const HeaderAdmin = () => {
         <Header style={{ display: 'flex', alignItems: 'center' }}>
             <div className="demo-logo" />
             <AppleOutlined style={{ fontSize: '28px', color: 'white' }} />&emsp;<Title level={3} style={{ marginTop: '13px', color: 'white' }}>IPShop chuyên bán hàng uy tín</Title>
+            <div className="layout-login" style={{ marginLeft: 'auto' }}><Title level={5} style={{ color: 'white' }}>Nguyễn Cầm (Đăng xuất)</Title></div>
         </Header>
     )
 }
