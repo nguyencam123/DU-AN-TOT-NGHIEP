@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; // Đảm bảo bạn đã import useState
+import React, { useEffect, useState } from 'react'; // Đảm bảo bạn đã import useState
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser, logoutUser } from '../../features/user/userThunk';
 import "./Login.css";
@@ -48,13 +48,16 @@ function LoginComponent() {
     const handleLogin = async () => {
         // Gọi loginUser thunk và truyền vào username và password
         dispatch(loginUser(username, password));
+    };
+
+    useEffect(() => {
         if (isLoggedIn) {
             navigate('/')
         } else if (isAdmin) {
             navigate('/admin/createform')
             openNotificationadmin()
         }
-    };
+    }, [isLoggedIn, isAdmin]);
 
 
 
@@ -128,9 +131,10 @@ function LoginComponent() {
                             <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Remember me' />
                             <a href="!#">Forgot password?</a>
                         </div>
-                        <Button type="primary" size={size} style={{ width: '430px' }} onClick={handleLogin}>
+                        <div style={{ justifyContent: 'center', textAlign: 'center' }}><Button type="primary" size={size} style={{ width: '430px' }} onClick={handleLogin}>
                             Sign in
-                        </Button>
+                        </Button></div>
+
                         {/* <button onClick={handleLogout}>Logout</button> */}
 
                         <p className="text-center">Not a member? <a href="#!">Register</a></p>

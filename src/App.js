@@ -21,6 +21,9 @@ function App() {
             <Route path='user/propreties'>
               <Route index element={<LoginDetail />} />
             </Route>
+            <Route path='login'>
+              <Route index element={<LoginComponent />} />
+            </Route>
           </Route>
           {/* map quyen voi url admin */}
           <Route path='/*' element={<AdminLayout />}>

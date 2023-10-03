@@ -14,6 +14,7 @@ import { Modal, Typography } from 'antd';
 import { useNavigate } from "react-router-dom";
 import LoginComponent from "../../component/login/Login";
 import iconplane from "../../assets/svg/Iconka-Business-Finance-Plane.512.png"
+import logotravel from "../../assets/svg/Rectangle 3.svg"
 
 const { Title } = Typography
 
@@ -64,8 +65,7 @@ const HeaderUser = () => {
     };
     const logout = () => {
         dispatch(logoutUser())
-        navigate('/')
-        setIsModalOpen(true)
+        navigate('/login')
     }
     return (
         <header>
@@ -73,12 +73,13 @@ const HeaderUser = () => {
             <Navbar collapseOnSelect expand="lg" >
                 <Container>
                     <Navbar.Brand href="https://html.design/preview/?theme=timups">
-                        <div className="parent-box">
+                        {/* <div className="parent-box">
                             <div className="box-fly-icon">
                                 <div className="parent-plane-icon"><img className="plane-icon" src={iconplane} style={{ color: 'white' }} /></div>
                             </div>
                             <Title level={2} style={{ color: 'blue' }}>Travel</Title>
-                        </div>
+                        </div> */}
+                        <img src={logotravel} style={{}} />
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
@@ -86,17 +87,14 @@ const HeaderUser = () => {
                             <Link to={"/"} className="textnabar">
                                 <strong>trang chủ</strong>
                             </Link>
-                            <Link to={"/gioi-thieu"} className="textnabar">
-                                <strong>Giới thiệu</strong>
+                            <Link to={"/khach-san"} className="textnabar">
+                                <strong>Khách sạn</strong>
                             </Link>
-                            <Link to={"/san-pham"} className="textnabar">
-                                <strong>Sản phẩm</strong>
+                            <Link to={"/phieu-giam-gia"} className="textnabar">
+                                <strong>Phiếu giảm giá</strong>
                             </Link>
-                            <Link to={"/tin-tuc"} className="textnabar">
-                                <strong>Tin tức</strong>
-                            </Link>
-                            <Link to={"/lien-he"} className="textnabar">
-                                <strong> Liên hệ</strong>
+                            <Link to={"/su-kien"} className="textnabar">
+                                <strong>Sự kiện</strong>
                             </Link>
                         </Nav>
                         <div className="headercart">
@@ -131,21 +129,26 @@ const HeaderUser = () => {
                                     </span>
                                 </Link>
                                 &emsp;
-                                <span className="pictureperson" onClick={handleDropdownToggle}>
-                                    <UserOutlined style={{ color: 'black', fontSize: '26px' }} />
-                                </span>
+                                {isLoggedIn ? (
+                                    <span className="pictureperson" onClick={handleDropdownToggle}>
+                                        <UserOutlined style={{ color: 'black', fontSize: '26px' }} />
+                                    </span>
+                                ) : null}
+
                                 {isLoggedIn ? ( // Render dropdown only if the user is logged in
-                                    <div className={`dropdown-menu ${showDropdown ? "show" : ""}`} >
+                                    <div className={`dropdown-menu ${showDropdown ? "show" : ""}`} style={{ backgroundColor: '#FFF6E5' }} >
                                         <button type="button" className="btn btn-primary" style={{ color: 'black' }} onClick={logout}>
                                             Đăng xuất
                                         </button>
                                         <Link to="/user/propreties" style={{ textDecoration: 'none' }}>
                                             <button type="button" className="btn btn-primary" style={{ color: 'black' }}>
-                                                Thông tin người dùng
+                                                Hồ sơ của tôi
                                             </button>
                                         </Link>
                                     </div>
-                                ) : null}
+                                ) : <div>   <Link to="/login"><Button type="primary" style={{ backgroundColor: '#FF7D63', color: 'white' }}>Đăng nhập</Button></Link> &emsp;
+                                    <Button type="primary" style={{ backgroundColor: '#FF7D63', color: 'white' }}>Đăng ký</Button>
+                                </div>}
                             </div>
                         </div>
                     </Navbar.Collapse>

@@ -1,29 +1,32 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchProducts } from '../../features/product/productThunk';
-import React, { useEffect } from 'react';
-import { Spin, Card, Row, Col } from 'antd';
-import { fetchProductsAsync } from '../../features/product/createproductThunks';
-import slice1 from "../../assets/img/Screenshot 2023-09-08 174300.png"
-import slice2 from "../../assets/img/Screenshot 2023-09-08 174708.png"
-import slice3 from "../../assets/img/Screenshot 2023-09-08 174807.png"
-import imgsection from "../../assets/svg/sailing_FILL0_wght400_GRAD0_opsz24.svg"
-import apartment from "../../assets/svg/apartment_FILL0_wght400_GRAD0_opsz24.svg"
-import favorite from "../../assets/svg/favorite_FILL0_wght400_GRAD0_opsz24.svg"
-import explore from "../../assets/svg/explore_FILL0_wght400_GRAD0_opsz24.svg"
+import React, { useEffect, useState } from 'react';
+import { Spin, Card, Row, Col, Typography } from 'antd';
+import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import imgsection from "../../assets/svg/Ellipse 1.svg"
+import imgslide2 from "../../assets/svg/Ellipse 2.svg"
+import imgslide3 from "../../assets/svg/Ellipse 3.svg"
+import imgslide4 from "../../assets/svg/Ellipse 4.svg"
 import beach from "../../assets/svg/beach_access_FILL0_wght400_GRAD0_opsz24.svg"
 import kayaking from "../../assets/svg/kayaking_FILL0_wght400_GRAD0_opsz24.svg"
+import slideform from "../../assets/svg/Rectangle 7.svg"
 import "./ProductList.css"
 import { Carousel } from 'antd';
+
+const Title = Typography
 const contentStyle = {
-    height: '100%',
+    height: '45%',
     color: '#fff',
     lineHeight: '160px',
     textAlign: 'center',
     background: '#364d79',
+    display: 'flex'
 };
 const sectionStyle = {
+    marginTop: '300px',
     height: "323px",
     width: "100%",
+
 };
 const awesection1 = {
     position: "relative",
@@ -46,53 +49,77 @@ function ProductList() {
     useEffect(() => {
         dispatch(fetchProducts());
     }, []);
+    const [currentPage, setCurrentPage] = useState(0);
+
+    const handleNextPage = () => {
+        setCurrentPage(currentPage + 1);
+    };
+
+    const handlePrevPage = () => {
+        setCurrentPage(currentPage - 1);
+    };
+    const YourData = [
+        { img: imgsection, title: 'Hồ Chí Minh' },
+        { img: imgslide2, title: 'Hà Nội' },
+        { img: imgslide3, title: 'Hải Phòng' },
+        { img: imgslide4, title: 'Đà Lạt' },
+        { img: imgslide4, title: 'Nha Trang' },
+        { img: imgslide4, title: 'Hội An' },
+        { img: imgslide4, title: 'Hội An' },
+        { img: imgslide4, title: 'Hội An' },
+        { img: imgslide4, title: 'Đà Lạt' }
+        // Thêm các dữ liệu khác tương tự
+    ];
+    const itemsPerPage = 7;
+    const startIndex = currentPage * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+
+    const itemsToShow = YourData.slice(startIndex, endIndex); // Thay YourData bằng dữ liệu thực tế của bạn
 
     return (
 
         <div>
-            <Carousel autoplay>
-                <div>
-                    <h3 style={contentStyle}><img src={slice1} style={{ width: '100%' }} /></h3>
+
+            <div>
+                <h3 style={contentStyle}>
+                    <div style={{ position: 'relative' }}>
+                        <img src={slideform} style={{ width: '100%' }} />
+                        <div style={{
+                            position: 'absolute',
+                            left: '50%',
+                            bottom: -300,
+                            transform: 'translate(-50%, -50%)',
+                            alignItems: 'center',
+                            width: '60%',
+                            height: '246px',
+                            borderRadius: '8px',
+                            backgroundColor: '#FFE5CA',
+                            minHeight: '100px',
+                            minWidth: '150px'
+                        }}></div>
+                    </div>
+                </h3>
+            </div>
+
+
+
+            <section style={sectionStyle}>
+                <div className='texthead' style={{ textAlign: 'center' }}>
+                    Các Điểm Đến Thu Hút Nhất Việt Nam
                 </div>
-                <div>
-                    <h3 style={contentStyle}><img src={slice2} style={{ width: '100%' }} /></h3>
-                </div>
-                <div>
-                    <h3 style={contentStyle}><img src={slice3} style={{ width: '100%' }} /></h3>
-                </div>
-            </Carousel>
-            <section className='awesection1' style={sectionStyle}>
-                <div className="textOverlay" style={{ position: 'absolute', zIndex: '1', display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
-                    <div className='border-inpicture'><img src={imgsection} style={{ width: '110px', marginLeft: '12px', color: 'white' }} />
-                        <div className='text-inpictủe' style={{ marginTop: '40px', fontSize: '25px', marginLeft: '10px' }}>
-                            Hành trình
+                <div className='allItem' style={{ alignItems: 'center', display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                    {currentPage > 0 && <div onClick={handlePrevPage}><LeftOutlined /></div>}
+                    {itemsToShow.map((item, index) => (
+                        <div className='picturetrval' style={{ textAlign: 'center', width: '10%' }} key={index}>
+                            <div className='image-container'>
+                                <img src={item.img} style={{ borderRadius: '50px' }} alt='Hình ảnh' />
+                                <div className='hover-text'>
+                                    <Title level={5}>{item.title}</Title>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div className='border-inpicture-1'><img src={apartment} style={{ width: '110px', marginLeft: '12px', color: 'white' }} />
-                        <div className='text-inpictủe' style={{ marginTop: '40px', fontSize: '25px', marginLeft: '10px' }}>
-                            Cao cấp
-                        </div>
-                    </div>
-                    <div className='border-inpicture-2'><img src={favorite} style={{ width: '110px', marginLeft: '12px', color: 'white', marginTop: '15px' }} />
-                        <div className='text-inpictủe' style={{ marginTop: '30px', fontSize: '25px', marginLeft: '10px' }}>
-                            Tuần trăng mật
-                        </div>
-                    </div>
-                    <div className='border-inpicture-2'><img src={explore} style={{ width: '110px', marginLeft: '12px', color: 'white', marginTop: '10px' }} />
-                        <div className='text-inpictủe' style={{ marginTop: '40px', fontSize: '25px', marginLeft: '10px' }}>
-                            Khám phá
-                        </div>
-                    </div>
-                    <div className='border-inpicture-2'><img src={beach} style={{ width: '110px', marginLeft: '12px', color: 'white', marginTop: '10px' }} />
-                        <div className='text-inpictủe' style={{ marginTop: '40px', fontSize: '25px', marginLeft: '10px' }}>
-                            Sinh thái
-                        </div>
-                    </div>
-                    <div className='border-inpicture-2'><img src={kayaking} style={{ width: '110px', marginLeft: '12px', color: 'white', marginTop: '10px' }} />
-                        <div className='text-inpictủe' style={{ marginTop: '40px', fontSize: '25px', marginLeft: '10px' }}>
-                            Đi biển
-                        </div>
-                    </div>
+                    ))}
+                    {(currentPage + 1) * itemsPerPage < YourData.length && <div onClick={handleNextPage}><RightOutlined /></div>}
                 </div>
             </section>
             <br /><br />
