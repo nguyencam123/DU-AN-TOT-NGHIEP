@@ -1,6 +1,6 @@
 package com.example.demo.services;
 
-import com.example.demo.models.Admin;
+import com.example.demo.entities.Admin;
 
 import java.util.List;
 

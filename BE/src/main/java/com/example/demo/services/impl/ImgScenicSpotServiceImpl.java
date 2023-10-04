@@ -1,8 +1,6 @@
 package com.example.demo.services.impl;
 
-import com.example.demo.models.Country;
-import com.example.demo.models.ImgScenicSpot;
-import com.example.demo.repositories.CountryRepository;
+import com.example.demo.entities.ImgScenicSpot;
 import com.example.demo.repositories.ImgScenicSpotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

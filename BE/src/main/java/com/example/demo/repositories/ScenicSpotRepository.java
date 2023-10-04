@@ -1,6 +1,6 @@
 package com.example.demo.repositories;
 
-import com.example.demo.models.ScenicSpot;
+import com.example.demo.entities.ScenicSpot;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

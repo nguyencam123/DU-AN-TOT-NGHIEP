@@ -1,6 +1,6 @@
 package com.example.demo.services.impl;
 
-import com.example.demo.models.Booking;
+import com.example.demo.entities.Booking;
 import com.example.demo.repositories.BookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

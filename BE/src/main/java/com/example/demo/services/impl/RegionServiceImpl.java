@@ -1,8 +1,6 @@
 package com.example.demo.services.impl;
 
-import com.example.demo.models.Country;
-import com.example.demo.models.Region;
-import com.example.demo.repositories.CountryRepository;
+import com.example.demo.entities.Region;
 import com.example.demo.repositories.RegionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
