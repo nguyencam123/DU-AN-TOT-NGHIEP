@@ -4,7 +4,15 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import { UserOutlined, ShoppingCartOutlined, SearchOutlined } from "@ant-design/icons";
+import {
+    UserOutlined,
+    ShoppingCartOutlined,
+    SearchOutlined,
+    FileDoneOutlined,
+    HeartOutlined,
+    CommentOutlined,
+    StarOutlined, BankOutlined
+} from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { logoutUser } from "../../features/user/userThunk";
 import { Avatar, Badge, Input, Button } from 'antd';
@@ -138,7 +146,27 @@ const HeaderUser = () => {
                                 {isLoggedIn ? ( // Render dropdown only if the user is logged in
                                     <div className={`dropdown-menu ${showDropdown ? "show" : ""}`} style={{ backgroundColor: '#FFF6E5' }} >
                                         <button type="button" className="btn btn-primary" style={{ color: 'black' }} onClick={logout}>
-                                            Đăng xuất
+                                            <UserOutlined /> Đăng xuất
+                                        </button>
+                                        <button type="button" className="btn btn-primary" style={{ color: 'black' }} onClick={logout}>
+                                            <FileDoneOutlined /> Đơn đặt hàng
+                                        </button>
+                                        <button type="button" className="btn btn-primary" style={{ color: 'black' }} onClick={logout}>
+                                            <HeartOutlined /> Danh sách yêu thích
+                                        </button>
+                                        <button type="button" className="btn btn-primary" style={{ color: 'black' }} onClick={logout}>
+                                            <CommentOutlined /> Nhận xét của tôi
+                                        </button>
+                                        <button type="button" className="btn btn-primary" style={{ color: 'black' }} onClick={logout}>
+                                            <StarOutlined /> Dành cho vip
+                                        </button>
+                                        <button type="button" className="btn btn-primary" style={{ color: 'black' }} onClick={logout}>
+                                            <BankOutlined /> Những luật trong khi đặt phòng
+                                        </button>
+                                        <button type="button" className="btn btn-primary" style={{ color: 'black', display: 'flex' }} onClick={logout}>
+                                            <div style={{ border: '1px solid black', fontSize: '20px', borderRadius: '50px', marginRight: 18, width: 25, height: 25 }}>
+                                                <div style={{ marginLeft: 8 }}>?</div></div>
+                                            Những câu hỏi thắc mắc
                                         </button>
                                         <Link to="/user/propreties" style={{ textDecoration: 'none' }}>
                                             <button type="button" className="btn btn-primary" style={{ color: 'black' }}>
