@@ -1,6 +1,6 @@
 package com.example.demo.services.impl;
 
-import com.example.demo.models.ConvenientRoom;
+import com.example.demo.entities.ConvenientRoom;
 import com.example.demo.repositories.ConvenientRoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
