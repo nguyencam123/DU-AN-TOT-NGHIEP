@@ -1,6 +1,6 @@
 package com.example.demo.services.impl;
 
-import com.example.demo.models.Admin;
+import com.example.demo.entities.Admin;
 import com.example.demo.repositories.AdminRepository;
 import com.example.demo.services.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
