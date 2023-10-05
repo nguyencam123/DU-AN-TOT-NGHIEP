@@ -3,6 +3,7 @@ import { fetchProducts } from '../../features/product/productThunk';
 import React, { useEffect, useState } from 'react';
 import { Spin, Card, Row, Col, Typography, Input, Select, Button, Carousel } from 'antd';
 import { LeftOutlined, RightOutlined, TeamOutlined } from "@ant-design/icons";
+import slidekm from "../../assets/img/slidekm.png"
 import imgsection from "../../assets/svg/Ellipse 1.svg"
 import imgslide2 from "../../assets/svg/Ellipse 2.svg"
 import imgslide3 from "../../assets/svg/Ellipse 3.svg"
@@ -14,7 +15,7 @@ import "./ProductList.css"
 import dayjs from 'dayjs';
 import { DatePicker, Space } from 'antd';
 const { Search } = Input;
-const Title = Typography
+const { Title } = Typography
 const { RangePicker } = DatePicker;
 
 const dateFormat = 'YYYY/MM/DD';
@@ -86,9 +87,7 @@ function ProductList() {
     const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
 
     return (
-
         <div>
-
             <div>
                 <h3 style={contentStyle}>
                     <div style={{ position: 'relative' }}>
@@ -103,39 +102,37 @@ function ProductList() {
                             height: '246px',
                             borderRadius: '8px',
                             backgroundColor: '#FFE5CA',
-                            minHeight: '100px',
-                            minWidth: '150px',
+                            minHeight: '150px',
+                            minWidth: '180px',
                             display: 'flex', /* Thêm thuộc tính display: flex để căn giữa nội dung bên trong */
                             flexDirection: 'column', /* Dọc xuống */
                             alignItems: 'center', /* Căn giữa theo chiều ngang */
                             justifyContent: 'space-between'
                         }}>          <Search placeholder="input search text" size="large" onSearch={onSearch} enterButton style={{ width: '80%', marginTop: '45px', fontSize: '20px' }} />
                             <div style={{ position: 'absolute', top: 60 }}>
-                                <table>
-                                    <tr>
-                                        <td>
-                                            <RangePicker size='large'
-                                                defaultValue={[dayjs('2023/09/01', dateFormat), dayjs('2023/10/01', dateFormat)]}
-                                                format={dateFormat}
-                                            />&emsp;
-                                        </td>
-                                        <td>
-                                            <Select
-                                                defaultValue="lucy"
-                                                style={{ width: '317px', minWidth: '150px' }} // Thêm maxWidth ở đây
-                                                size='large'
-                                                options={[
-                                                    { value: 'jack', label: '2 người lớn một phòng' },
-                                                    { value: 'lucy', label: 'Lucy' },
-                                                    { value: 'Yiminghe', label: 'yiminghe' },
-                                                    { value: 'disabled', label: 'Disabled', disabled: true },
-                                                ]}
-                                                suffixIcon={<TeamOutlined style={{ position: 'absolute', right: '10px' }} />}
-                                            />
-                                        </td>
-                                    </tr>
-                                </table>
 
+                                <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+                                    <Col className="gutter-row" span={12}>
+                                        <RangePicker size='large'
+                                            defaultValue={[dayjs('2023/09/01', dateFormat), dayjs('2023/10/01', dateFormat)]}
+                                            format={dateFormat}
+                                        />&emsp;
+                                    </Col>
+                                    <Col className="gutter-row" span={12}>
+                                        <Select
+                                            defaultValue="lucy"
+                                            style={{ width: '100%', minWidth: '50px' }} // Thêm maxWidth ở đây
+                                            size='large'
+                                            options={[
+                                                { value: 'jack', label: '2 người lớn một phòng' },
+                                                { value: 'lucy', label: 'Lucy' },
+                                                { value: 'Yiminghe', label: 'yiminghe' },
+                                                { value: 'disabled', label: 'Disabled', disabled: true },
+                                            ]}
+                                            suffixIcon={<TeamOutlined style={{ position: 'absolute', right: '150px', fontSize: 18 }} />}
+                                        />
+                                    </Col>
+                                </Row>
                             </div>
                             <div>
                                 <Button style={{ width: 430, height: 64, borderRadius: 16, backgroundColor: '#FF7D63', fontSize: '20', color: '#FFFFFF', top: 80 }}>Tìm kiếm</Button>
@@ -162,6 +159,29 @@ function ProductList() {
                     ))}
                     {(currentPage + 1) * itemsPerPage < YourData.length && <div onClick={handleNextPage}><RightOutlined style={{ fontSize: '22px', position: 'absolute' }} /></div>}
                 </div>
+            </section>
+            <section style={{ padding: '0px 120px 0px 120px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Title>Chương trình khuyến mại</Title>
+                    <div><a href='/khach-san' style={{ fontSize: 18, textDecoration: 'none' }}>Xem tất cả ></a></div>
+                </div>
+
+                <Carousel style={{}}>
+                    <div>
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                            <div style={{ border: '1px solid black', width: 400, height: 185, marginRight: 40 }}><img src={slidekm} style={{ position: 'absolute', width: 400, height: 185 }} /></div>
+                            <div style={{ border: '1px solid black', width: 400, height: 185, marginRight: 40 }}><img src={slidekm} style={{ position: 'absolute', width: 400, height: 185 }} /></div>
+                            <div style={{ border: '1px solid black', width: 400, height: 185 }}><img src={slidekm} style={{ position: 'absolute', width: 400, height: 185 }} /></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                            <div style={{ border: '1px solid black', width: 400, height: 185, marginRight: 40 }}><img src={slidekm} style={{ position: 'absolute', width: 400, height: 185 }} /></div>
+                            <div style={{ border: '1px solid black', width: 400, height: 185, marginRight: 40 }}><img src={slidekm} style={{ position: 'absolute', width: 400, height: 185 }} /></div>
+                            <div style={{ border: '1px solid black', width: 400, height: 185 }}><img src={slidekm} style={{ position: 'absolute', width: 400, height: 185 }} /></div>
+                        </div>
+                    </div>
+                </Carousel>
             </section>
             <br /><br />
             {loading ? <div class="d-flex justify-content-center">
