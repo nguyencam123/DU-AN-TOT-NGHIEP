@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons';
 import { Link, Route, Routes } from 'react-router-dom'; // Import thư viện Link và Route
 import AddProductForm from '../../component/product/productadd';
-import CategoryList from '../../component/category/categorylist';
+import CategoryList from '../../component/admin/category/categorylist';
 const { Header, Content, Sider } = Layout;
 
 

@@ -183,6 +183,34 @@ function ProductList() {
                     </div>
                 </Carousel>
             </section>
+            <section style={{ marginTop: 30 }}>
+                <div style={{ justifyContent: 'center', textAlign: 'center' }}>
+                    <Title level={2}>Tiếng lành đồn xa</Title>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'center' }} >
+                    <div style={{ width: 368, height: 294, border: '1px solid #e9ebee', backgroundColor: '#fff', textAlign: 'center', padding: '15px 15px 15px 10px', marginRight: 30 }} >
+                        <Title level={4} style={{ color: '#5392f9' }}>Nhà nghỉ ở phố cổ<br /></Title><Title level={5} style={{ color: '#737373' }}>Hà Nội</Title><br />
+                        <span style={{ fontSize: 22, fontFamily: 'mallory,Helvetica Neue,Helvetica,Arial,sans-serif', color: 'black' }}>Tôi hoàn toàn hài lòng khi nghỉ tại phố cổ. Cám ơn trvalVIVU rất nhiều.</span>
+                        <div style={{ marginTop: 30, fontSize: 18 }}>
+                            <p>- Perter đến từ Anh quốc</p>
+                        </div>
+                    </div>
+                    <div style={{ width: 368, height: 294, border: '1px solid #e9ebee', backgroundColor: '#fff', textAlign: 'center', padding: '15px 15px 15px 10px', marginRight: 30 }} >
+                        <Title level={4} style={{ color: '#5392f9' }}>khách sạn haritage<br /></Title><Title level={5} style={{ color: '#737373' }}>Đà nẵng</Title><br />
+                        <span style={{ fontSize: 22, fontFamily: 'mallory,Helvetica Neue,Helvetica,Arial,sans-serif', color: 'black' }}>Tôi săn được giá đặc biệt giờ chót với TravalVIVU. Phòng ốc rộng rãi, giường ngủ thoải mái và ấm cúng.</span>
+                        <div style={{ marginTop: 30, fontSize: 18 }}>
+                            <p>- fuakada đến từ Nhật Bản</p>
+                        </div>
+                    </div>
+                    <div style={{ width: 368, height: 294, border: '1px solid #e9ebee', backgroundColor: '#fff', textAlign: 'center', padding: '15px 15px 15px 10px' }} >
+                        <Title level={4} style={{ color: '#5392f9' }}>Khách sạn novotel<br /></Title><Title level={5} style={{ color: '#737373' }}>Phú QUốc</Title><br />
+                        <span style={{ fontSize: 22, fontFamily: 'mallory,Helvetica Neue,Helvetica,Arial,sans-serif', color: 'black' }}>Sau khi nghỉ tại đây, mọi âu lo đều tan biến. Cám ơn trvalVIVU rất nhiều.</span>
+                        <div style={{ marginTop: 30, fontSize: 18 }}>
+                            <p>- Anh Wang đến từ Trung Quốc</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
             <br /><br />
             {loading ? <div class="d-flex justify-content-center">
                 <div class="spinner-border" role="status">
