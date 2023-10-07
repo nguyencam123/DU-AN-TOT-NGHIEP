@@ -2,6 +2,7 @@ import React from 'react';
 import { MDBFooter, MDBContainer, MDBRow, MDBCol, MDBIcon } from 'mdb-react-ui-kit';
 import { FacebookOutlined, TwitterOutlined, GoogleOutlined, InstagramOutlined, LinkedinOutlined, GithubOutlined } from '@ant-design/icons'
 import logotravel from "../../assets/svg/Rectangle 16.svg"
+import logovnpay from "../../assets/svg/Rectangle 20.svg"
 export default function FooterUser() {
     return (
         <MDBFooter style={{ backgroundColor: '#5D5D5D', color: 'white' }} className='text-center text-lg-start'>
@@ -91,20 +92,10 @@ export default function FooterUser() {
                         </MDBCol>
 
                         <MDBCol md="4" lg="3" xl="3" className='mx-auto mb-md-0 mb-4'>
-                            <h6 className='text-uppercase fw-bold mb-4'>Contact</h6>
+                            <h6 className='text-uppercase fw-bold mb-4'>Phương thức thanh toán</h6>
                             <p>
                                 <MDBIcon icon="home" className="me-2" />
-                                New York, NY 10012, US
-                            </p>
-                            <p>
-                                <MDBIcon icon="envelope" className="me-3" />
-                                info@example.com
-                            </p>
-                            <p>
-                                <MDBIcon icon="phone" className="me-3" /> + 01 234 567 88
-                            </p>
-                            <p>
-                                <MDBIcon icon="print" className="me-3" /> + 01 234 567 89
+                                <img src={logovnpay} />
                             </p>
                         </MDBCol>
                     </MDBRow>

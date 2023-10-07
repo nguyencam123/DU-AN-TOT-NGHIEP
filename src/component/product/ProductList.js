@@ -1,8 +1,9 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchProducts } from '../../features/product/productThunk';
 import React, { useEffect, useState } from 'react';
-import { Spin, Card, Row, Col, Typography, Input, Select, Button, Carousel } from 'antd';
+import { Spin, Card, Row, Col, Typography, Input, Select, Button, Carousel, Tabs } from 'antd';
 import { LeftOutlined, RightOutlined, TeamOutlined } from "@ant-design/icons";
+import ProductTabs from './productTab/ProductTabs';
 import slidekm from "../../assets/img/slidekm.png"
 import imgsection from "../../assets/svg/Ellipse 1.svg"
 import imgslide2 from "../../assets/svg/Ellipse 2.svg"
@@ -83,8 +84,35 @@ function ProductList() {
     const startIndex = currentPage * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
 
-    const itemsToShow = YourData.slice(startIndex, endIndex); // Thay YourData bằng dữ liệu thực tế của bạn
+    const itemsToShow = YourData.slice(startIndex, endIndex);
     const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
+    const items = [
+        {
+            key: '1',
+            label: 'Hồ Chí Minh',
+            children: <ProductTabs />,
+        },
+        {
+            key: '2',
+            label: 'Hà Nội',
+            children: <ProductTabs />,
+        },
+        {
+            key: '3',
+            label: 'Đà Nẵng',
+            children: <ProductTabs />,
+        },
+        {
+            key: '4',
+            label: 'Nha Trang',
+            children: <ProductTabs />,
+        },
+        {
+            key: '5',
+            label: 'Vũng Tàu',
+            children: <ProductTabs />,
+        },
+    ];
 
     return (
         <div>
@@ -199,7 +227,7 @@ function ProductList() {
                         <Title level={4} style={{ color: '#5392f9' }}>khách sạn haritage<br /></Title><Title level={5} style={{ color: '#737373' }}>Đà nẵng</Title><br />
                         <span style={{ fontSize: 22, fontFamily: 'mallory,Helvetica Neue,Helvetica,Arial,sans-serif', color: 'black' }}>Tôi săn được giá đặc biệt giờ chót với TravalVIVU. Phòng ốc rộng rãi, giường ngủ thoải mái và ấm cúng.</span>
                         <div style={{ marginTop: 30, fontSize: 18 }}>
-                            <p>- fuakada đến từ Nhật Bản</p>
+                            <p>- fukada đến từ Nhật Bản</p>
                         </div>
                     </div>
                     <div style={{ width: 368, height: 294, border: '1px solid #e9ebee', backgroundColor: '#fff', textAlign: 'center', padding: '15px 15px 15px 10px' }} >
@@ -212,27 +240,15 @@ function ProductList() {
                 </div>
             </section>
             <br /><br />
-            {loading ? <div class="d-flex justify-content-center">
-                <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-            </div> : null}
-            {error ? <p>Error: {error}</p> : null}
-            <Row style={{ marginLeft: '100px' }}>
-                {products.map((product) => (
-                    <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 8 }} lg={{ span: 6 }} style={{ marginTop: '50px' }}>
-                        <Card
-                            hoverable
-                            style={{
-                                width: 240,
-                            }}
-                            cover={<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
-                        >
-                            <Meta title={product.name} description={product.price} />
-                        </Card>
-                    </Col>
-                ))}
-            </Row>
+            <section style={{ marginBottom: 100 }}>
+                <div style={{ textAlign: 'center' }}><Title level={2}>Những chỗ nghỉ nổi bật dành cho quý khách</Title></div>
+                <div><Tabs
+                    defaultActiveKey="1"
+                    centered
+                    items={items}
+                /></div>
+            </section>
+
         </div>
     );
 }
