@@ -18,5 +18,10 @@ public class AdminServiceImpl implements AdminService {
         return adminRepository.findAll();
     }
 
+    @Override
+    public Admin getAdmin() {
+        return null;
+    }
+
 
 }
