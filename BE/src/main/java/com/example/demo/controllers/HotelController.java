@@ -1,7 +1,7 @@
 package com.example.demo.controllers;
 
-import com.example.demo.entities.Admin;
-import com.example.demo.services.AdminService;
+import com.example.demo.entities.Hotel;
+import com.example.demo.services.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,19 +12,14 @@ import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/api/v1/admin")
-public class AdminController {
+@RequestMapping("/api/v1/hotel")
+public class HotelController {
 
     @Autowired
-    private AdminService adminService;
+    private HotelService hotelService;
 
     @GetMapping("")
-    public List<Admin> getAll(){
-        return adminService.getAll();
-    }
-
-    @GetMapping("/get-admin")
-    public Admin getAdmin(){
-        return null;
+    public List<Hotel> getAll(){
+        return hotelService.getAll();
     }
 }

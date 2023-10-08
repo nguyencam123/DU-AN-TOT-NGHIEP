@@ -45,7 +45,7 @@ public class Hotel {
     @Column(name = "star")
     private Float star;
 
-    @Column(name = "desc")
+    @Column(name = "[desc]")
     private String desc;
 
     @Column(name = "createddate")
