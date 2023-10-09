@@ -31,12 +31,8 @@ public class Booking {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "customer")
-    private Customer customer;
-
-    @ManyToOne
-    @JoinColumn(name = "employee")
-    private Employee employee;
+    @JoinColumn(name = "[user]")
+    private User user;
 
     @Column(name = "datebooking")
     private Date dateBooking;
