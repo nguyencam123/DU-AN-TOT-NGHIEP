@@ -17,12 +17,12 @@ import java.util.Date;
 import java.util.UUID;
 
 @Entity
-@Table(name = "customer")
+@Table(name = "user")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
-public class Customer {
+public class User {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.AUTO)
@@ -50,6 +50,12 @@ public class Customer {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "username")
+    private String username;
+
+    @Column(name = "password")
+    private String password;
+
     @Column(name = "identificationnumber")
     private String identificationNumber;
 
@@ -59,13 +65,29 @@ public class Customer {
     @Column(name = "point")
     private Integer point;
 
+    @Column(name = "status")
+    private Integer status;
+
     @ManyToOne
     @JoinColumn(name = "rank")
     private CustomerRank rank;
 
     @ManyToOne
+    @JoinColumn(name = "[role]")
+    private Role role;
+
+    @ManyToOne
     @JoinColumn(name = "presenter")
-    private Customer presenter;
+    private User presenter;
+
+    @ManyToOne
+    @JoinColumn(name = "createdperson")
+    private User createdperson;
+
+    @ManyToOne
+    @JoinColumn(name = "updatedperson")
+    private User updatedperson;
+
 
     @Column(name = "createddate")
     private Date createdDate;
