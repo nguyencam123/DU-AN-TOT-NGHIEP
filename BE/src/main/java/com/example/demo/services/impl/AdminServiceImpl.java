@@ -2,6 +2,7 @@ package com.example.demo.services.impl;
 
 import com.example.demo.entities.Admin;
 import com.example.demo.repositories.AdminRepository;
+import com.example.demo.request.AdminRequest;
 import com.example.demo.services.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,8 +20,8 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public Admin getAdmin() {
-        return null;
+    public Admin getAdmin(AdminRequest adminRequest) {
+        return adminRepository.getAdmin(adminRequest);
     }
 
 

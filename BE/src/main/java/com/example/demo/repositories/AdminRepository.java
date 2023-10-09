@@ -13,7 +13,7 @@ import java.util.UUID;
 @Repository
 public interface AdminRepository extends JpaRepository<Admin, UUID> {
 
-    @Query(value = "SELECT ID, Code, Username, Password, Status FROM dbo.Admin WHERE  (Username = :#{#req.username}) and(Password = :#{#req.password})", nativeQuery = true)
+    @Query(value = "SELECT ID, Code, Username, Password, Status, CreatedDate, UpdatedDATE FROM dbo.Admin WHERE  (Username = :#{#req.username}) and(Password = :#{#req.password})", nativeQuery = true)
     Admin getAdmin(@Param("req")AdminRequest req);
 
 }
