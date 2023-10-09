@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Row, Col, Rate } from 'antd';
+import { Card, Row, Col, Rate, Typography } from 'antd';
 import { useSelector } from 'react-redux';
 import imgproduct from '../../../assets/svg/Rectangle 153.svg'
+import { EnvironmentOutlined } from "@ant-design/icons";
+
+const { Title } = Typography
 const ProductTabs = (props) => {
     const { Meta } = Card;
     const products = useSelector((state) => state.product.products);
@@ -48,7 +51,15 @@ const ProductTabs = (props) => {
                             cover={<img alt="example" src={imgproduct} />}
                         >
                             <Meta title={product.name} description={product.price} />
-                            <Rate allowHalf disabled defaultValue={2.5} />
+                            <div>
+                                <Rate allowHalf disabled defaultValue={product.star} />
+                                <div style={{ display: 'flex' }}>
+                                    <EnvironmentOutlined style={{ marginTop: 5 }} />&ensp;
+                                    {product.address}
+                                </div>
+                                <div style={{ fontSize: 12 }}>Giá rẻ nhất mỗi đêm chỉ từ:</div>
+                                <Title level={3} style={{ color: 'red' }}>VND 1.155.000</Title>
+                            </div>
                         </Card>
                     </Col>
                 ))}

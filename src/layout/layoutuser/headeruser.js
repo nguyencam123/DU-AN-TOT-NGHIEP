@@ -175,7 +175,7 @@ const HeaderUser = () => {
                                         </Link>
                                     </div>
                                 ) : <div>   <Link to="/login"><Button type="primary" style={{ backgroundColor: '#FF7D63', color: 'white' }}>Đăng nhập</Button></Link> &emsp;
-                                    <Button type="primary" style={{ backgroundColor: '#FF7D63', color: 'white' }}>Đăng ký</Button>
+                                    <Link to="/register"><Button type="primary" style={{ backgroundColor: '#FF7D63', color: 'white' }}>Đăng ký</Button></Link>
                                 </div>}
                             </div>
                         </div>

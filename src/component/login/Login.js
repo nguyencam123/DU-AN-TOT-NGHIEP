@@ -2,15 +2,12 @@ import React, { useEffect, useState } from 'react'; // Đảm bảo bạn đã i
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser, logoutUser } from '../../features/user/userThunk';
 import "./Login.css";
-import { Button } from 'antd';
+import { Typography, Button } from 'antd';
 import { FacebookOutlined, TwitterOutlined, GoogleOutlined, InstagramOutlined } from '@ant-design/icons'
 import {
     MDBContainer,
-    MDBTabs,
-    MDBTabsItem,
-    MDBTabsLink,
-    MDBTabsContent,
-    MDBTabsPane,
+    MDBCol,
+    MDBRow,
     MDBBtn,
     MDBIcon,
     MDBInput,
@@ -19,6 +16,8 @@ import {
     from 'mdb-react-ui-kit';
 import { useNavigate } from 'react-router-dom';
 import { notification } from 'antd';
+
+const { Title } = Typography
 
 const Context = React.createContext({
     name: 'Default',
@@ -59,131 +58,44 @@ function LoginComponent() {
         }
     }, [isLoggedIn, isAdmin]);
 
-
-
-    const onFinish = (values) => {
-        console.log('Received values of form: ', values);
-    };
-
-    const handleLogout = () => {
-        dispatch(logoutUser());
-    };
-    const [justifyActive, setJustifyActive] = useState('tab1');;
-
-    const handleJustifyClick = (value) => {
-        if (value === justifyActive) {
-            return;
-        }
-
-        setJustifyActive(value);
-    };
-
     return (
         <div>
-            <MDBContainer className="p-3 my-5 d-flex flex-column w-50">
+            <MDBContainer fluid className="p-3 my-5">
 
-                <MDBTabs pills justify className='mb-3 d-flex flex-row justify-content-between'>
-                    <MDBTabsItem>
-                        <MDBTabsLink onClick={() => handleJustifyClick('tab1')} active={justifyActive === 'tab1'}>
-                            Login
-                        </MDBTabsLink>
-                    </MDBTabsItem>
-                    <MDBTabsItem>
-                        <MDBTabsLink onClick={() => handleJustifyClick('tab2')} active={justifyActive === 'tab2'}>
-                            Register
-                        </MDBTabsLink>
-                    </MDBTabsItem>
-                </MDBTabs>
+                <MDBRow>
 
-                <MDBTabsContent>
+                    <MDBCol col='10' md='6'>
+                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg" class="img-fluid" alt="Phone image" />
+                    </MDBCol>
 
-                    <MDBTabsPane show={justifyActive === 'tab1'}>
-
-                        <div className="text-center mb-3">
-                            <p>Sign in with:</p>
-
-                            <div className='d-flex justify-content-between mx-auto' style={{ width: '40%' }}>
-                                <MDBBtn tag='a' color='none' className='m-1' style={{ color: '#1266f1' }}>
-                                    <FacebookOutlined />
-                                </MDBBtn>
-                                <MDBBtn tag='a' color='none' className='m-1' style={{ color: '#1266f1' }}>
-                                    <TwitterOutlined />
-                                </MDBBtn>
-
-                                <MDBBtn tag='a' color='none' className='m-1' style={{ color: '#1266f1' }}>
-                                    <GoogleOutlined />
-                                </MDBBtn>
-
-                                <MDBBtn tag='a' color='none' className='m-1' style={{ color: '#1266f1' }}>
-                                    <InstagramOutlined />
-                                </MDBBtn>
-                            </div>
-
-                            <p className="text-center mt-3">or:</p>
+                    <MDBCol col='4' md='6'>
+                        <div>
+                            <Title level={2}>Đăng nhập</Title>
+                            <Title level={4}>Để đảm bảo an toàn, xin vui lòng đăng nhập để truy cập vào thông tin</Title><br />
                         </div>
-
-                        <MDBInput wrapperClass='mb-4' label='Username' type='email' value={username}
+                        <div>Email</div>
+                        <MDBInput wrapperClass='mb-4' id='formControlLg' type='email' size="lg" value={username}
                             onChange={(e) => setUsername(e.target.value)} />
-                        <MDBInput wrapperClass='mb-4' label='Password' type='password' value={password}
+                        <div>Mật khẩu</div>
+                        <MDBInput wrapperClass='mb-4' id='formControlLg' type='password' size="lg" value={password}
                             onChange={(e) => setPassword(e.target.value)} />
+
 
                         <div className="d-flex justify-content-between mx-4 mb-4">
                             <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Remember me' />
                             <a href="!#">Forgot password?</a>
                         </div>
-                        <div style={{ justifyContent: 'center', textAlign: 'center' }}><Button type="primary" size={size} style={{ width: '430px' }} onClick={handleLogin}>
-                            Sign in
-                        </Button></div>
 
-                        {/* <button onClick={handleLogout}>Logout</button> */}
+                        <Button type="primary" style={{ width: '100%', height: 45 }} onClick={handleLogin}>Đăng nhập</Button>
 
-                        <p className="text-center">Not a member? <a href="#!">Register</a></p>
 
-                    </MDBTabsPane>
+                    </MDBCol>
 
-                    <MDBTabsPane show={justifyActive === 'tab2'}>
-
-                        <div className="text-center mb-3">
-                            <p>Sign un with:</p>
-
-                            <div className='d-flex justify-content-between mx-auto' style={{ width: '40%' }}>
-                                <MDBBtn tag='a' color='none' className='m-1' style={{ color: '#1266f1' }}>
-                                    <FacebookOutlined />
-                                </MDBBtn>
-
-                                <MDBBtn tag='a' color='none' className='m-1' style={{ color: '#1266f1' }}>
-                                    <TwitterOutlined />
-                                </MDBBtn>
-
-                                <MDBBtn tag='a' color='none' className='m-1' style={{ color: '#1266f1' }}>
-                                    <GoogleOutlined />
-                                </MDBBtn>
-
-                                <MDBBtn tag='a' color='none' className='m-1' style={{ color: '#1266f1' }}>
-                                    <InstagramOutlined />
-                                </MDBBtn>
-                            </div>
-
-                            <p className="text-center mt-3">or:</p>
-                        </div>
-
-                        <MDBInput wrapperClass='mb-4' label='Name' id='form1' type='text' />
-                        <MDBInput wrapperClass='mb-4' label='Username' id='form1' type='text' />
-                        <MDBInput wrapperClass='mb-4' label='Email' id='form1' type='email' />
-                        <MDBInput wrapperClass='mb-4' label='Password' id='form1' type='password' />
-
-                        <div className='d-flex justify-content-center mb-4'>
-                            <MDBCheckbox name='flexCheck' id='flexCheckDefault' label='I have read and agree to the terms' />
-                        </div>
-
-                        <MDBBtn className="mb-4 w-100">Sign up</MDBBtn>
-
-                    </MDBTabsPane>
-
-                </MDBTabsContent>
+                </MDBRow>
 
             </MDBContainer>
         </div>
+
     );
 }
 

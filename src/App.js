@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom
 import ProtectedRoute from './app/ProtectedRoute';
 import AdminLayout from './layout/layoutadmin/AdminLayout';
 import UserLayout from './layout/layoutuser/UserLayout';
-
+import Register from './component/login/register'
 
 function App() {
   return (
@@ -23,6 +23,9 @@ function App() {
             </Route>
             <Route path='login'>
               <Route index element={<LoginComponent />} />
+            </Route>
+            <Route path='register'>
+              <Route index element={<Register />} />
             </Route>
           </Route>
           {/* map quyen voi url admin */}
