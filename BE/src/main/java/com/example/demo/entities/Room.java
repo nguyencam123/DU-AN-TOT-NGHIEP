@@ -41,9 +41,6 @@ public class Room {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "idmoney")
-    private BigDecimal money;
-
     @Column(name = "status")
     private Integer status;
 

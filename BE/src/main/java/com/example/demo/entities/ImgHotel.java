@@ -30,6 +30,6 @@ public class ImgHotel {
     @JoinColumn(name = "hotel")
     private Hotel hotel;
 
-    @Column(name = "id")
+    @Column(name = "imgurl")
     private String imgUrl;
 }
