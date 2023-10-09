@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Entity
-@Table(name = "user")
+@Table(name = "[user]")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -44,7 +44,7 @@ public class User {
     @Column(name = "address")
     private String address;
 
-    @Column(name = "phonepumber")
+    @Column(name = "phonenumber")
     private String phoneNumber;
 
     @Column(name = "email")
@@ -92,6 +92,6 @@ public class User {
     @Column(name = "createddate")
     private Date createdDate;
 
-    @Column(name = "updatedDate")
+    @Column(name = "updateddate")
     private Date updatedDate;
 }

@@ -30,7 +30,7 @@ public class ImgRoom {
     @JoinColumn(name = "room",referencedColumnName = "ID")
     private Room room;
 
-    @Column(name = "id")
+    @Column(name = "imgurl")
     private String imgUrl;
 
 }

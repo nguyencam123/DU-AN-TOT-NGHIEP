@@ -27,9 +27,6 @@ public class Located {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "ma")
-    private String ma;
-
     @Column(name = "name")
     private String name;
 
