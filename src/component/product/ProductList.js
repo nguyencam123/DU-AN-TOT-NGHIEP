@@ -48,10 +48,11 @@ const overlay = {
 }
 function ProductList() {
     const dispatch = useDispatch();
-    const products = useSelector((state) => state.product.products);
-    const loading = useSelector((state) => state.product.loading);
-    const error = useSelector((state) => state.product.error);
-    const { Meta } = Card;
+    const [currentLocation, setCurrentLocation] = useState('1'); // Initialize with 'Hồ Chí Minh'
+
+    const handleTabChange = (key) => {
+        setCurrentLocation(key);
+    };
     useEffect(() => {
         dispatch(fetchProducts());
     }, []);
@@ -86,31 +87,32 @@ function ProductList() {
 
     const itemsToShow = YourData.slice(startIndex, endIndex);
     const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
+
     const items = [
         {
             key: '1',
             label: 'Hồ Chí Minh',
-            children: <ProductTabs />,
+            children: <ProductTabs city="Hồ Chí Minh" />,
         },
         {
             key: '2',
             label: 'Hà Nội',
-            children: <ProductTabs />,
+            children: <ProductTabs city="Hà Nội" />,
         },
         {
             key: '3',
             label: 'Đà Nẵng',
-            children: <ProductTabs />,
+            children: <ProductTabs city="Đà Nẵng" />,
         },
         {
             key: '4',
             label: 'Nha Trang',
-            children: <ProductTabs />,
+            children: <ProductTabs city="Nha Trang" />,
         },
         {
             key: '5',
             label: 'Vũng Tàu',
-            children: <ProductTabs />,
+            children: <ProductTabs city="Vũng Tàu" />,
         },
     ];
 
@@ -188,7 +190,7 @@ function ProductList() {
                     {(currentPage + 1) * itemsPerPage < YourData.length && <div onClick={handleNextPage}><RightOutlined style={{ fontSize: '22px', position: 'absolute' }} /></div>}
                 </div>
             </section>
-            <section style={{ padding: '0px 120px 0px 120px' }}>
+            <section style={{ padding: '0 150px 0 150px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Title>Chương trình khuyến mại</Title>
                     <div><a href='/khach-san' style={{ fontSize: 18, textDecoration: 'none' }}>Xem tất cả ></a></div>
@@ -197,16 +199,16 @@ function ProductList() {
                 <Carousel style={{}}>
                     <div>
                         <div style={{ display: 'flex', justifyContent: 'center' }}>
-                            <div style={{ border: '1px solid black', width: 400, height: 185, marginRight: 40 }}><img src={slidekm} style={{ position: 'absolute', width: 400, height: 185 }} /></div>
-                            <div style={{ border: '1px solid black', width: 400, height: 185, marginRight: 40 }}><img src={slidekm} style={{ position: 'absolute', width: 400, height: 185 }} /></div>
-                            <div style={{ border: '1px solid black', width: 400, height: 185 }}><img src={slidekm} style={{ position: 'absolute', width: 400, height: 185 }} /></div>
+                            <div style={{ width: 400, height: 185, marginRight: 40 }}><img src={slidekm} style={{ position: 'absolute', width: 400, height: 185 }} /></div>
+                            <div style={{ width: 400, height: 185, marginRight: 40 }}><img src={slidekm} style={{ position: 'absolute', width: 400, height: 185 }} /></div>
+                            <div style={{ width: 400, height: 185 }}><img src={slidekm} style={{ position: 'absolute', width: 400, height: 185 }} /></div>
                         </div>
                     </div>
                     <div>
                         <div style={{ display: 'flex', justifyContent: 'center' }}>
-                            <div style={{ border: '1px solid black', width: 400, height: 185, marginRight: 40 }}><img src={slidekm} style={{ position: 'absolute', width: 400, height: 185 }} /></div>
-                            <div style={{ border: '1px solid black', width: 400, height: 185, marginRight: 40 }}><img src={slidekm} style={{ position: 'absolute', width: 400, height: 185 }} /></div>
-                            <div style={{ border: '1px solid black', width: 400, height: 185 }}><img src={slidekm} style={{ position: 'absolute', width: 400, height: 185 }} /></div>
+                            <div style={{ width: 400, height: 185, marginRight: 40 }}><img src={slidekm} style={{ position: 'absolute', width: 400, height: 185 }} /></div>
+                            <div style={{ width: 400, height: 185, marginRight: 40 }}><img src={slidekm} style={{ position: 'absolute', width: 400, height: 185 }} /></div>
+                            <div style={{ width: 400, height: 185 }}><img src={slidekm} style={{ position: 'absolute', width: 400, height: 185 }} /></div>
                         </div>
                     </div>
                 </Carousel>
@@ -246,9 +248,9 @@ function ProductList() {
                     defaultActiveKey="1"
                     centered
                     items={items}
+                    onChange={handleTabChange}
                 /></div>
             </section>
-
         </div>
     );
 }

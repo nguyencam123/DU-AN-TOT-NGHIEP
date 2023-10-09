@@ -1,25 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Row, Col, Rate } from 'antd';
 import { useSelector } from 'react-redux';
+import imgproduct from '../../../assets/svg/Rectangle 153.svg'
 const ProductTabs = (props) => {
     const { Meta } = Card;
     const products = useSelector((state) => state.product.products);
     const loading = useSelector((state) => state.product.loading);
     const error = useSelector((state) => state.product.error);
     useEffect(() => {
-        setProducts(products.slice(0, 6));
+        setProducts(products.slice(0, 8));
     }, [products]);
 
     const [productlist, setProducts] = useState([]);
 
     const loadMore = () => {
         const startIndex = productlist.length;
-        const endIndex = startIndex + 6;
+        const endIndex = startIndex + 8;
         setProducts([...productlist, ...products.slice(startIndex, endIndex)]);
     };
-    console.log(products)
     return (
-        <>
+        <section style={{ padding: '0 200px 0 200px' }}>
             {
                 loading ? (
                     <div className="d-flex justify-content-center">
@@ -30,7 +30,7 @@ const ProductTabs = (props) => {
                 ) : null
             }
             {error ? <p>Error: {error}</p> : null}
-            <Row style={{ marginLeft: '100px' }}>
+            <Row style={{}}>
                 {productlist.map((product) => (
                     <Col
                         xs={{ span: 24 }}
@@ -43,22 +43,26 @@ const ProductTabs = (props) => {
                         <Card
                             hoverable
                             style={{
-                                width: 240,
+                                width: 270
                             }}
-                            cover={<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
+                            cover={<img alt="example" src={imgproduct} />}
                         >
                             <Meta title={product.name} description={product.price} />
-                            <Rate allowHalf defaultValue={2.5} />
+                            <Rate allowHalf disabled defaultValue={2.5} />
                         </Card>
                     </Col>
                 ))}
             </Row>
             {productlist.length < products.length && (
                 <div className="d-flex justify-content-center" style={{ marginTop: '20px' }}>
-                    <button onClick={loadMore} style={{ borderRadius: 8, backgroundColor: '#FF7D63', color: 'white' }}>Xem thêm</button>
+                    <button onClick={loadMore}
+                        style={{
+                            borderRadius: 8, backgroundColor: '#5392F9',
+                            color: 'white', width: 380, height: 45, fontSize: 18, borderColor: '#5392F9'
+                        }}>Xem thêm các chỗ nghỉ({props.city})</button>
                 </div>
             )}
-        </>
+        </section>
     )
 }
 export default ProductTabs
