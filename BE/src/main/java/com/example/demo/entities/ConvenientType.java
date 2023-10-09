@@ -30,7 +30,7 @@ public class ConvenientType {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "dsec")
+    @Column(name = "[dsec]")
     private String dsec;
 
     @Column(name = "createddate")

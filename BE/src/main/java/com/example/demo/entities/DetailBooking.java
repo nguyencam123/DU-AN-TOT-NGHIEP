@@ -35,7 +35,4 @@ public class DetailBooking {
     @Column(name = "price")
     private BigDecimal price;
 
-    @ManyToOne
-    @JoinColumn(name = "booking")
-    private CancellationPolicyRoom cancellationPolicyRoom;
 }

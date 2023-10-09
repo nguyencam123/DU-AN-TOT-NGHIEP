@@ -28,7 +28,7 @@ public class CustomerRank {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "desc")
+    @Column(name = "[desc]")
     private String desc;
 
     @Column(name = "minimunpoint")

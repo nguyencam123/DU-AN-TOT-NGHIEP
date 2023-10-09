@@ -30,8 +30,8 @@ public class Sale {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "customer")
-    private Customer customer;
+    @JoinColumn(name = "[user]")
+    private User user;
 
     @Column(name = "name")
     private String name;

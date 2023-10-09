@@ -1,6 +1,7 @@
 package com.example.demo.entities.Embeddable;
 
 import com.example.demo.entities.Booking;
+import com.example.demo.entities.DetailRoom;
 import com.example.demo.entities.Room;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;
@@ -15,6 +16,6 @@ public class DetailBookingId implements Serializable {
     private Booking booking;
 
     @ManyToOne
-    @JoinColumn(name = "room")
-    private Room room;
+    @JoinColumn(name = "detailroom")
+    private DetailRoom room;
 }

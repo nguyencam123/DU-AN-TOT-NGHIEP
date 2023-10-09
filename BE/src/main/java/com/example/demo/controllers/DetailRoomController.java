@@ -1,8 +1,8 @@
 package com.example.demo.controllers;
 
-
+import com.example.demo.entities.DetailRoom;
 import com.example.demo.entities.Hotel;
-
+import com.example.demo.services.DetailRoomService;
 import com.example.demo.services.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,15 +14,14 @@ import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/api/v1/hotel")
-public class HotelController {
+@RequestMapping("/api/v1/room")
+public class DetailRoomController {
 
     @Autowired
-    private HotelService hotelService;
+    private DetailRoomService detailRoomService;
 
     @GetMapping("")
-    public List<Hotel> getAll(){
-        return hotelService.getAll();
+    public List<DetailRoom> getAll(){
+        return detailRoomService.getAll();
     }
-
 }

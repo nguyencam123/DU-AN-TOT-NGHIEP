@@ -29,16 +29,12 @@ public class CancellationPolicyRoom {
     @Column(name = "id")
     private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "room")
-    private Room room;
-
     @Column(name = "price")
     private BigDecimal price;
 
     @Column(name = "name")
     private String name;
 
-    @Column(name = "desc")
+    @Column(name = "[desc]")
     private String desc;
 }
