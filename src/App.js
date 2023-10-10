@@ -10,6 +10,7 @@ import Register from './component/login/register'
 import Hotel from './component/user/hotelcomponent/hotel';
 
 function App() {
+  //map component user
   const items = [
     { path: '', element: <ProductList /> },
     { path: 'user/propreties', element: <LoginDetail /> },
@@ -17,7 +18,7 @@ function App() {
     { path: 'register', element: <Register /> },
     { path: 'khach-san', element: <Hotel /> },
   ];
-
+  //
   return (
     <>
       <Router>

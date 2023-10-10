@@ -1,6 +1,10 @@
 header {
-    background-color: #FFF6E5;
+    background-color: #fdfdfb;
 
+}
+
+span.navbar-toggler-icon {
+    background-color: #ff6600;
 }
 
 .textnabar {

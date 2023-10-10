@@ -77,7 +77,6 @@ const HeaderUser = () => {
     }
     return (
         <header>
-
             <Navbar collapseOnSelect expand="lg" >
                 <Container>
                     <Navbar.Brand href="https://html.design/preview/?theme=timups">
