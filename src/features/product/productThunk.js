@@ -2,7 +2,7 @@
 import { fetchProductsStart, fetchProductsSuccess, fetchProductsFailure } from './productSlide';
 import axios from 'axios';
 
-const BASE_URL_HOTEL = 'http://localhost:8080/api/v1/hotel';
+const BASE_URL = 'http://localhost:8080/api/v1/hotel';
 export const fetchProducts = () => async (dispatch) => {
     dispatch(fetchProductsStart());
     try {
