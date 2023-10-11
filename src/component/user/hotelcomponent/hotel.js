@@ -15,6 +15,7 @@ import {
 } from 'mdb-react-ui-kit';
 import dayjs from 'dayjs';
 import { useState } from "react";
+import imgheadhotel from "../../../assets/img/imgheadhotel.png"
 import 'dayjs/locale/vi';
 dayjs.locale('vi');
 const { Title } = Typography
@@ -192,7 +193,7 @@ const Hotel = () => {
             <section style={{ padding: '20px 200px 400px 200px' }}>
                 <Layout hasSider >
                     <Sider style={{ marginRight: 40, backgroundColor: '#f5f5f5' }}>
-                        <img src={logoTravel} /><br /><br />
+                        &emsp;&emsp;&emsp;&ensp;<img src={logoTravel} /><br /><br />
                         <div style={{ display: 'flex', width: '100%', height: '30%', backgroundColor: 'white', borderRadius: 10, padding: '5px 5px 5px' }}>
                             <div>
                                 <div style={{ display: 'flex' }}>
@@ -230,7 +231,32 @@ const Hotel = () => {
                         </div><br />
                         <Collapse items={itemsutilities} size="small" defaultActiveKey={['2']} onChange={onChange} />
                     </Sider>
-                    <Content style={{}}>Content</Content>
+                    <Content style={{}}>
+                        <section>
+                            <div style={{
+                                width: '100%', height: 50,
+                                backgroundColor: '#ffffff', borderRadius: 8,
+                                boxShadow: '0 0 3px 1px #ACAEB1', display: 'flex'
+                            }}>
+                                <img src={imgheadhotel} style={{ height: 50, borderRadius: 8 }} />
+                                <h1 style={{ fontSize: 18, marginTop: 12, color: '#0194f3' }}>Chào mừng bạn đến với tralvalVIVU nơi có những ưu đãi tốt nhất dành cho bạn!!!</h1>
+                            </div>
+                            <div>
+                                <div style={{
+                                    width: '100%', height: 210,
+                                    backgroundColor: '#ffffff', borderRadius: 8,
+                                    boxShadow: '0 0 3px 1px #ACAEB1', marginTop: 20
+                                }}>
+                                    <img src={hotelimg} style={{ borderRadius: 8, height: 150 }} />
+                                    <div style={{ marginTop: 8 }}>
+                                        <img src={hotelimg} style={{ borderRadius: 8, height: 48, marginRight: 6 }} />
+                                        <img src={hotelimg} style={{ borderRadius: 8, height: 48, marginRight: 6 }} />
+                                        <img src={hotelimg} style={{ borderRadius: 8, height: 48, marginRight: 6 }} />
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </Content>
                 </Layout>
             </section>
         </>
