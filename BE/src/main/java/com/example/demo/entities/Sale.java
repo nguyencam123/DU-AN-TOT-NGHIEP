@@ -1,50 +1,37 @@
 package com.example.demo.entities;
 
+import com.example.demo.entities.base.PrimaryEntity;
+import com.example.demo.infrastructure.contant.EntityProperties;
+import com.example.demo.infrastructure.contant.TypeSale;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.Date;
-import java.util.UUID;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "sale")
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Data
-public class Sale {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private UUID id;
+@Getter
+@Setter
+public class Sale extends PrimaryEntity {
 
     @ManyToOne
-    @JoinColumn(name = "[user]")
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "name")
+    @Column(length = EntityProperties.LENGTH_NAME)
     private String name;
 
-    @Column(name = "startdate")
-    private Date startDate;
+    private Long startDate;
 
-    @Column(name = "enddate")
-    private Date endDate;
+    private Long endDate;
 
-    @Column(name = "kind")
+    private TypeSale type;
+
     private Integer kind;
 
-    @Column(name = "value")
     private Double value;
+
 }

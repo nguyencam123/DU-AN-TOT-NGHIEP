@@ -1,35 +1,25 @@
 package com.example.demo.entities;
 
+import com.example.demo.entities.base.PrimaryEntity;
+import com.example.demo.infrastructure.contant.EntityProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Table(name = "imgscenicspot")
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Data
-public class ImgScenicSpot {
+@Table(name = "img_scenic_spot")
+@Getter
+@Setter
+public class ImgScenicSpot extends PrimaryEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id",insertable = false,updatable = false)
-    private Integer id;
-
-    @Column(name = "imgurl")
     private String imgUrl;
 
     @ManyToOne
-    @JoinColumn(name = "scenicspot")
+    @JoinColumn(name = "scenicspot_id")
     private ScenicSpot scenicSpot;
 }
+

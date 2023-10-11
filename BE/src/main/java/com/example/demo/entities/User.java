@@ -1,97 +1,58 @@
 package com.example.demo.entities;
 
+import com.example.demo.entities.base.PrimaryEntity;
+import com.example.demo.infrastructure.contant.EntityProperties;
+import com.example.demo.infrastructure.contant.Status;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.Date;
-import java.util.UUID;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "[user]")
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Data
-public class User {
+@Getter
+@Setter
+public class User extends PrimaryEntity {
 
-    @Id
-    @GeneratedValue(strategy =  GenerationType.AUTO)
-    @Column(name = "id")
-    private UUID id;
-
-    @Column(name = "code")
+    @Column(length = EntityProperties.LENGTH_CODE)
     private String code;
 
-    @Column(name = "name")
+    @Column(length = EntityProperties.LENGTH_NAME)
     private String name;
 
-    @Column(name = "birthday")
-    private Date birthday;
+    private Long birthday;
 
-    @Column(name = "gender")
     private Boolean gender;
 
-    @Column(name = "address")
     private String address;
 
-    @Column(name = "phonenumber")
+    @Column(length = EntityProperties.LENGTH_PHONE)
     private String phoneNumber;
 
-    @Column(name = "email")
+    @Column(length = EntityProperties.LENGTH_EMAIL)
     private String email;
 
-    @Column(name = "username")
     private String username;
 
-    @Column(name = "password")
     private String password;
 
-    @Column(name = "identificationnumber")
     private String identificationNumber;
 
-    @Column(name = "avatarurl")
     private String avatarUrl;
 
-    @Column(name = "point")
     private Integer point;
 
-    @Column(name = "status")
-    private Integer status;
+    private Status status;
 
     @ManyToOne
-    @JoinColumn(name = "rank")
-    private CustomerRank rank;
+    @JoinColumn(name = "rank_id")
+    private CustomerRank customerRank;
 
     @ManyToOne
-    @JoinColumn(name = "[role]")
+    @JoinColumn(name = "role_id")
     private Role role;
 
-    @ManyToOne
-    @JoinColumn(name = "presenter")
-    private User presenter;
-
-    @ManyToOne
-    @JoinColumn(name = "createdperson")
-    private User createdperson;
-
-    @ManyToOne
-    @JoinColumn(name = "updatedperson")
-    private User updatedperson;
-
-
-    @Column(name = "createddate")
-    private Date createdDate;
-
-    @Column(name = "updateddate")
-    private Date updatedDate;
 }

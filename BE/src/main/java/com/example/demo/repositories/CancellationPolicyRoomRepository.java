@@ -4,6 +4,7 @@ import com.example.demo.entities.CancellationPolicyRoom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface CancellationPolicyRoomRepository extends JpaRepository<CancellationPolicyRoom, Integer> {
+@Repository(CancellationPolicyRoomRepository.NAME)
+public interface CancellationPolicyRoomRepository extends JpaRepository<CancellationPolicyRoom, String> {
+    public static final String NAME = "BaseCancellationPolicyRoomRepository";
 }

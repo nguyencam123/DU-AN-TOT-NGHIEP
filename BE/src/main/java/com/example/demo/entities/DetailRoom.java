@@ -1,49 +1,31 @@
 package com.example.demo.entities;
 
+import com.example.demo.entities.base.PrimaryEntity;
+import com.example.demo.infrastructure.contant.EntityProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.UUID;
 
 @Entity
-@Table(name = "detailroom")
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Data
-public class DetailRoom {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private UUID id;
+@Table(name = "detail_room")
+@Getter
+@Setter
+public class DetailRoom extends PrimaryEntity {
 
     @ManyToOne
-    @JoinColumn(name = "room")
+    @JoinColumn(name = "room_id")
     private Room room;
 
     @ManyToOne
-    @JoinColumn(name = "cancellationpolicyroom")
+    @JoinColumn(name = "cancellation_policy_room_id")
     private CancellationPolicyRoom cancellationPolicyRoom;
 
-    @Column(name = "price")
     private BigDecimal price;
 
-    @Column(name = "createddate")
-    private Date createdDate;
-
-    @Column(name = "updateddate")
-    private Date updatedDate;
 }
