@@ -1,7 +1,7 @@
 import React from 'react';
 import { Layout, Menu } from 'antd';
 import Title from 'antd/es/typography/Title';
-import logotravel from "../../assets/svg/Rectangle 3.svg"
+import logotravel from "../../assets/svg/Rectangle 405.svg"
 import {
     AppleOutlined
 } from '@ant-design/icons';
@@ -14,7 +14,7 @@ const HeaderAdmin = () => {
     return (
         <Header style={{ display: 'flex', alignItems: 'center' }}>
             <div className="demo-logo" />
-            <AppleOutlined style={{ fontSize: '28px', color: 'white' }} />&emsp;<Title level={3} style={{ marginTop: '13px', color: 'white' }}><img src={logotravel} /> chuyên bán hàng uy tín</Title>
+            <Title level={3} style={{ marginTop: '13px', color: 'white' }}><img src={logotravel} /> chuyên bán hàng uy tín</Title>
             <div className="layout-login" style={{ marginLeft: 'auto' }}><Title level={5} style={{ color: 'white' }}>Nguyễn Cầm (Đăng xuất)</Title></div>
         </Header>
     )
