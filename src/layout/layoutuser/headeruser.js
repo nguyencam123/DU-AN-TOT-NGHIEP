@@ -23,6 +23,8 @@ import { useNavigate } from "react-router-dom";
 import LoginComponent from "../../component/login/Login";
 import iconplane from "../../assets/svg/Iconka-Business-Finance-Plane.512.png"
 import logotravel from "../../assets/svg/Rectangle 3.svg"
+import { MDBIcon } from 'mdb-react-ui-kit';
+
 
 const { Title } = Typography
 
@@ -143,7 +145,7 @@ const HeaderUser = () => {
                                 ) : null}
 
                                 {isLoggedIn ? ( // Render dropdown only if the user is logged in
-                                    <div className={`dropdown-menu ${showDropdown ? "show" : ""}`} style={{ backgroundColor: '#FFF6E5' }} >
+                                    <div className={`dropdown-menu ${showDropdown ? "show" : ""}`} style={{ backgroundColor: '#FFFFFF', width: 200, marginLeft: 'auto', marginRight: 80 }} >
                                         <button type="button" className="btn btn-primary" style={{ color: 'black' }} onClick={logout}>
                                             <UserOutlined /> Đăng xuất
                                         </button>
@@ -163,9 +165,7 @@ const HeaderUser = () => {
                                             <BankOutlined /> Những luật trong khi đặt phòng
                                         </button>
                                         <button type="button" className="btn btn-primary" style={{ color: 'black', display: 'flex' }} onClick={logout}>
-                                            <div style={{ border: '1px solid black', fontSize: '20px', borderRadius: '50px', marginRight: 18, width: 25, height: 25 }}>
-                                                <div style={{ marginLeft: 8 }}>?</div></div>
-                                            Những câu hỏi thắc mắc
+                                            <MDBIcon fas icon="question" style={{ marginTop: 4 }} />&nbsp; Những câu hỏi thắc mắc
                                         </button>
                                         <Link to="/user/propreties" style={{ textDecoration: 'none' }}>
                                             <button type="button" className="btn btn-primary" style={{ color: 'black' }}>

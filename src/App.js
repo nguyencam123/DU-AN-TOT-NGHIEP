@@ -8,6 +8,7 @@ import AdminLayout from './layout/layoutadmin/AdminLayout';
 import UserLayout from './layout/layoutuser/UserLayout';
 import Register from './component/login/register'
 import Hotel from './component/user/hotelcomponent/hotel';
+import ErrorLogin from './features/admin/errorLogin/error';
 
 function App() {
   //map component user
@@ -17,6 +18,7 @@ function App() {
     { path: 'login', element: <LoginComponent /> },
     { path: 'register', element: <Register /> },
     { path: 'khach-san', element: <Hotel /> },
+    { path: 'error-role', element: <ErrorLogin /> },
   ];
   //
   return (

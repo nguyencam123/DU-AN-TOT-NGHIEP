@@ -223,7 +223,7 @@ const Hotel = () => {
                         </div><br />
                         <div style={{ width: '100%', height: '45%', backgroundColor: 'white', borderRadius: 10, padding: '5px 5px 5px' }}>
                             <div>
-                                <Title level={2} style={{ fontSize: 16 }}>Phạm vi giá</Title>
+                                <Title level={2} style={{ fontSize: 16 }}>Hạng sao</Title>
                                 <Checkbox><Rate allowHalf disabled defaultValue={1} /></Checkbox>
                                 <Checkbox><Rate allowHalf disabled defaultValue={2} /></Checkbox>
                                 <Checkbox><Rate allowHalf disabled defaultValue={3} /></Checkbox>

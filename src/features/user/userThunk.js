@@ -43,7 +43,6 @@ export const loginUser = (username, password) => async (dispatch) => {
         const accounts = response.data;
 
         const matchedAccount = accounts.find((account) => account.username === username && account.password === password);
-        console.log(matchedAccount)
         if (matchedAccount) {
             if (matchedAccount.admin == 0) {
                 dispatch(loginSuccess({ user: accounts }));
