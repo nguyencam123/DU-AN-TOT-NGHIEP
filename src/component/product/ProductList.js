@@ -131,13 +131,14 @@ function ProductList() {
                             width: '60%',
                             height: '246px',
                             borderRadius: '8px',
-                            backgroundColor: '#FFE5CA',
+                            backgroundColor: 'white',
                             minHeight: '150px',
                             minWidth: '180px',
                             display: 'flex', /* Thêm thuộc tính display: flex để căn giữa nội dung bên trong */
                             flexDirection: 'column', /* Dọc xuống */
                             alignItems: 'center', /* Căn giữa theo chiều ngang */
-                            justifyContent: 'space-between'
+                            justifyContent: 'space-between',
+                            boxShadow: '0 0 3px 3px #ACAEB1'
                         }}>          <Search placeholder="input search text" size="large" onSearch={onSearch} enterButton style={{ width: '80%', marginTop: '45px', fontSize: '20px' }} />
                             <div style={{ position: 'absolute', top: 60 }}>
 
@@ -165,7 +166,7 @@ function ProductList() {
                                 </Row>
                             </div>
                             <div>
-                                <Button style={{ width: 430, height: 64, borderRadius: 16, backgroundColor: '#FF7D63', fontSize: '20', color: '#FFFFFF', top: 80 }}>Tìm kiếm</Button>
+                                <Button style={{ width: 430, height: 64, borderRadius: 16, backgroundColor: 'rgb(83, 146, 249)', fontSize: '20', color: '#FFFFFF', top: 80 }}>Tìm kiếm</Button>
                             </div>
                         </div>
                     </div>

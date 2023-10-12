@@ -15,7 +15,7 @@ const ProtectedRoute = ({ adminOnly, ...rest }) => {
 
     if (adminOnly && !isAdmin) {
         // Sử dụng Navigate trong phạm vi của Outlet
-        return <Navigate to="/" replace />;
+        return <Navigate to="/error-role" replace />;
     }
 
     // Sử dụng Outlet để hiển thị nội dung con
