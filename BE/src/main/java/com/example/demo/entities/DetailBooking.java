@@ -1,38 +1,35 @@
 package com.example.demo.entities;
 
-import com.example.demo.entities.Embeddable.DetailBookingId;
+import com.example.demo.entities.base.PrimaryEntity;
+import com.example.demo.infrastructure.contant.EntityProperties;
 import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Entity
-@Table(name = "detailbooking")
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Data
-public class DetailBooking {
+@Table(name = "detail_booking")
+@Getter
+@Setter
+public class DetailBooking extends PrimaryEntity {
 
-    @EmbeddedId
-    private DetailBookingId id;
+    @ManyToOne
+    @JoinColumn(name = "booking_id", insertable = false, updatable = false)
+    private Booking booking;
 
-    @Column(name = "datestart")
-    private Date dateStart;
+    @ManyToOne
+    @JoinColumn(name = "detail_room_id")
+    private DetailRoom detailRoom;
 
-    @Column(name = "dateend")
-    private Date dateEnd;
+    private Long dateStart;
 
-    @Column(name = "price")
+    private Long dateEnd;
+
     private BigDecimal price;
 
 }

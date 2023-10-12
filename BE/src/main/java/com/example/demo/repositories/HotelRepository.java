@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
-@Repository
-public interface HotelRepository extends JpaRepository<Hotel, UUID> {
+@Repository(HotelRepository.NAME)
+public interface HotelRepository extends JpaRepository<Hotel, String> {
+    public static final String NAME = "BaseHotelRepository";
+
 }

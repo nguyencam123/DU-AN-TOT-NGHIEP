@@ -1,5 +1,7 @@
 package com.example.demo.entities;
 
+import com.example.demo.entities.base.PrimaryEntity;
+import com.example.demo.infrastructure.contant.EntityProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,26 +13,20 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Table(name = "imgroom")
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Data
-public class ImgRoom {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false,insertable = false)
-    private Integer id;
+@Table(name = "img_room")
+@Getter
+@Setter
+public class ImgRoom extends PrimaryEntity {
 
     @ManyToOne
-    @JoinColumn(name = "room",referencedColumnName = "ID")
+    @JoinColumn(name = "room_id")
     private Room room;
 
-    @Column(name = "imgurl")
     private String imgUrl;
 
 }

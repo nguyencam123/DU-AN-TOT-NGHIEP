@@ -1,47 +1,29 @@
 package com.example.demo.entities;
 
 
+import com.example.demo.entities.base.PrimaryEntity;
+import com.example.demo.infrastructure.contant.EntityProperties;
+import com.example.demo.infrastructure.contant.Status;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.UUID;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Table(name = "scenicspot")
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Data
-public class ScenicSpot {
+@Table(name = "scenic_spot")
+@Getter
+@Setter
+public class ScenicSpot extends PrimaryEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private UUID id;
-
-    @Column(name = "name")
+    @Column(length = EntityProperties.LENGTH_NAME)
     private String name;
 
-    @Column(name = "[desc]")
+    @Column(length = EntityProperties.LENGTH_NOTE, name = "[desc]")
     private String desc;
 
-    @Column(name = "star")
     private Double star;
 
-    @Column(name = "status")
-    private Integer status;
+    private Status status;
 
-    @ManyToOne
-    @JoinColumn(name = "located")
-    private Located located;
 }
