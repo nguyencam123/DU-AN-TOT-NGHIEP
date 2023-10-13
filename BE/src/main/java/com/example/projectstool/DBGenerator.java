@@ -100,14 +100,24 @@ public class DBGenerator implements CommandLineRunner {
         customerRankRepository.save(customerRank1);
 
         Role role1 = new Role();
-        role1.setCode("KH01");
+        role1.setCode("0");
         role1.setName("Khach hang");
         roleRepository.save(role1);
 
         Role role2 = new Role();
-        role1.setCode("AD01");
+        role1.setCode("1");
         role1.setName("Admin");
         roleRepository.save(role2);
+
+        Role role3 = new Role();
+        role1.setCode("2");
+        role1.setName("Super Admin");
+        roleRepository.save(role3);
+
+        Role role4 = new Role();
+        role1.setCode("3");
+        role1.setName("Chủ homestay");
+        roleRepository.save(role4);
 
         Hotel hotel1 = new Hotel();
         hotel1.setName("Tuy Anh");
@@ -119,6 +129,8 @@ public class DBGenerator implements CommandLineRunner {
         user1.setCode("US01");
         user1.setName("Nguyen Quoc Cuong");
         user1.setAddress("Nam Dinh");
+        user1.setUsername("user@gmail.com");
+        user1.setPassword("12345678");
         user1.setCustomerRank(customerRank1);
         user1.setRole(role1);
         userRepository.save(user1);
@@ -127,9 +139,31 @@ public class DBGenerator implements CommandLineRunner {
         user2.setCode("US02");
         user2.setName("Vuong Tien Sang");
         user2.setAddress("Ha Noi");
+        user2.setUsername("admin@gmail.com");
+        user2.setPassword("12345678");
         user2.setCustomerRank(customerRank1);
-        user2.setRole(role1);
+        user2.setRole(role2);
         userRepository.save(user2);
+
+        User user3 = new User();
+        user3.setCode("US03");
+        user3.setName("Tran Quang Huy");
+        user3.setAddress("Ha Noi");
+        user3.setUsername("superadmin@gmail.com");
+        user3.setPassword("12345678");
+        user3.setCustomerRank(customerRank1);
+        user3.setRole(role3);
+        userRepository.save(user3);
+
+        User user4 = new User();
+        user4.setCode("US04");
+        user4.setName("Nguyen Manh Cam");
+        user4.setAddress("Ha Noi");
+        user4.setUsername("homestayowner@gmail.com");
+        user4.setPassword("12345678");
+        user4.setCustomerRank(customerRank1);
+        user4.setRole(role4);
+        userRepository.save(user4);
 
         Sale sale1 = new Sale();
         sale1.setUser(user1);
