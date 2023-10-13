@@ -30,8 +30,6 @@ public class Sale extends PrimaryEntity {
 
     private TypeSale type;
 
-    private Integer kind;
-
     private Double value;
 
 }

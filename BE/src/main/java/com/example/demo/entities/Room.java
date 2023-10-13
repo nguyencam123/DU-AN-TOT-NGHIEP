@@ -30,7 +30,7 @@ public class Room extends PrimaryEntity {
 
     private Status status;
 
-    private Double squre;
+    private Double acreage;
 
     private Integer maxAdult;
 
