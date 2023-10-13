@@ -20,22 +20,22 @@ public class CancellationPolicyRoom extends PrimaryEntity {
     private BigDecimal price;
 
     @Column(length = EntityProperties.LENGTH_NAME)
-@Table(name = "cancellationpolicyroom")
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Data
-public class CancellationPolicyRoom {
+    @Table(name = "cancellationpolicyroom")
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    @Data
+    public class CancellationPolicyRoom {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name = "id")
+        private Integer id;
 
-    @Column(name = "name")
-    private String name;
+        @Column(name = "name")
+        private String name;
 
-    @Column(length = EntityProperties.LENGTH_NOTE, name = "[desc]")
-    private String desc;
+        @Column(length = EntityProperties.LENGTH_NOTE, name = "[desc]")
+        private String desc;
 
-}
+    }
