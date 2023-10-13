@@ -105,18 +105,18 @@ public class DBGenerator implements CommandLineRunner {
         roleRepository.save(role1);
 
         Role role2 = new Role();
-        role1.setCode("1");
-        role1.setName("Admin");
+        role2.setCode("1");
+        role2.setName("Admin");
         roleRepository.save(role2);
 
         Role role3 = new Role();
-        role1.setCode("2");
-        role1.setName("Super Admin");
+        role3.setCode("2");
+        role3.setName("Super Admin");
         roleRepository.save(role3);
 
         Role role4 = new Role();
-        role1.setCode("3");
-        role1.setName("Chủ homestay");
+        role4.setCode("3");
+        role4.setName("Chủ homestay");
         roleRepository.save(role4);
 
         Hotel hotel1 = new Hotel();
