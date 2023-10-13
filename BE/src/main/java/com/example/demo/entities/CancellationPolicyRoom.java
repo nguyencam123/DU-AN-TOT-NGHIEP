@@ -16,37 +16,13 @@ import java.math.BigDecimal;
 @Setter
 public class CancellationPolicyRoom extends PrimaryEntity {
 
-<<<<<<< HEAD
-    private BigDecimal price;
-
-    @Column(length = EntityProperties.LENGTH_NAME)
-    @Table(name = "cancellationpolicyroom")
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Builder
-    @Data
-    public class CancellationPolicyRoom {
-
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        @Column(name = "id")
-        private Integer id;
-
         @Column(name = "name")
         private String name;
-=======
-    @Column(name = "name")
-    private String name;
->>>>>>> 4f6e6688c2e06c1bf973a29a3d7b2ef767ff6883
 
         @Column(length = EntityProperties.LENGTH_NOTE, name = "[desc]")
         private String desc;
 
-<<<<<<< HEAD
-    }
-=======
-    @Column(length = EntityProperties.LENGTH_NAME)
-    private BigDecimal price;
+        @Column(length = EntityProperties.LENGTH_NAME, name = "price")
+        private BigDecimal price;
 
 }
->>>>>>> 4f6e6688c2e06c1bf973a29a3d7b2ef767ff6883
