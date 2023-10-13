@@ -24,5 +24,5 @@ public class CancellationPolicyRoom extends PrimaryEntity {
 
     @Column(length = EntityProperties.LENGTH_NAME)
     private BigDecimal price;
-    
+
 }
