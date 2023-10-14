@@ -1,4 +1,5 @@
 import imgsale from '../../../assets/svg/Rectangle 184.svg'
+import imghd from '../../../assets/img/Screenshot 2023-10-14 212504.png'
 import { Layout, Typography, Checkbox, Col, Divider, Row } from 'antd';
 import {
     MDBCard,
@@ -53,8 +54,16 @@ const Endow = () => {
                             </Row>
                         </Content>
                     </Layout>
-
                 </Layout>
+                <div style={{
+                    width: '100%', height: 450, marginBottom: 30,
+                    backgroundColor: '#ffffff', marginTop: 40,
+                    borderRadius: 10, padding: '40px 40px 0px 40px', textAlign: 'center'
+                }}><div>
+                        <Title level={2}>Cách Áp Dụng Phiếu Giảm Giá</Title>
+                    </div>
+                    <div><img src={imghd} style={{ width: '90%' }} /></div>
+                </div>
             </div>
         </section>
     )
