@@ -6,15 +6,15 @@ import { useState } from 'react'
 const { Title } = Typography
 const columns = [
     {
-        title: 'id',
-        dataIndex: 'id',
-        key: 'id',
-    },
-    {
         title: 'name',
         dataIndex: 'name',
         key: 'name'
-    },
+  },
+  {
+    title: 'address',
+    dataIndex: 'address',
+    key: 'address'
+},
     {
         title: 'Action',
         key: 'action',
@@ -53,7 +53,7 @@ const CategoryList = () => {
         setIsModalOpen(false);
     };
     return (
-        <>
+      <>
             <div style={{ marginTop: '30px' }}>
                 <Title level={2}>Quản trị loại sản phẩm</Title>
                 <Title level={4}>Danh mục</Title>
