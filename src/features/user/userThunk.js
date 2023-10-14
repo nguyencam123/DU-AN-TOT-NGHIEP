@@ -34,22 +34,23 @@ const openNotificationadmin = () => {
     });
 };
 export const loginUser = (username, password) => async (dispatch) => {
+  const loginRequest = JSON.stringify({
+    uname: username,
+    pass: password
+  })
     try {
-        const response = await axios.post('http://localhost:8080/api/viewaccount', {
-            username: username,
-            password: password,
-        });
+      const response = await axios.post('http://localhost:8080/api/v1/login', loginRequest);
 
-        const accounts = response.data;
+      const accounts = response.data;
+      console.log(response);
 
-        const matchedAccount = accounts.find((account) => account.username === username && account.password === password);
-        if (matchedAccount) {
-            if (matchedAccount.admin == 0) {
+        if (accounts) {
+            if (accounts.admin == 0) {
                 dispatch(loginSuccess({ user: accounts }));
                 localStorage.setItem('isLoggedIn', 'true');
                 openNotificationlogin()
-                dispatch(loginSuccess({ user: accounts, userData: matchedAccount }))
-            } else if (matchedAccount.admin == 1) {
+                dispatch(loginSuccess({ user: accounts, userData: accounts }))
+            } else if (accounts.admin == 1) {
                 dispatch(adminloginSuccess({ admin: accounts }));
                 localStorage.setItem('isAdmin', 'true');
             } else {
