@@ -7,6 +7,8 @@ import com.example.demo.cors.login.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class LoginServiceImpl implements LoginService {
 
@@ -14,7 +16,7 @@ public class LoginServiceImpl implements LoginService {
     private LoginRepository loginRepository;
 
     @Override
-    public SignInResponse getLogin(SignInRequest signInRequest) {
+    public List<SignInResponse> getLogin(SignInRequest signInRequest) {
         return loginRepository.getLogin(signInRequest);
     }
 }

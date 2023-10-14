@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1/login")
@@ -19,7 +21,7 @@ public class LoginContorller {
     private LoginService loginService;
 
     @PostMapping("")
-    public SignInResponse getLogin(@RequestBody SignInRequest signInRequest){
+    public List<SignInResponse> getLogin(@RequestBody SignInRequest signInRequest){
         return  loginService.getLogin(signInRequest);
     }
 }
