@@ -40,10 +40,7 @@ export const loginUser = (username, password) => async (dispatch) => {
             pass: password,
         });
       const accounts = response.data;
-
-      console.log(accounts.roleCode);
-
-      if (accounts) {
+    if (accounts) {
       if (accounts.roleCode == 0) {
         dispatch(loginSuccess({ user: accounts }));
         localStorage.setItem('isLoggedIn', 'true');
