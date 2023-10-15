@@ -6,6 +6,8 @@ import com.example.demo.repositories.UserRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface LoginRepository extends UserRepository {
 
