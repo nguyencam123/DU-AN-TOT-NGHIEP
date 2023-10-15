@@ -34,11 +34,11 @@ const openNotificationadmin = () => {
   });
 };
 export const loginUser = (username, password) => async (dispatch) => {
-  try {
-    const response = await axios.post('http://localhost:8080/api/v1/login', {
-      uname: username,
-      pass: password
-    });
+    try {
+        const response = await axios.post('http://localhost:8080/api/v1/login', {
+            uname: username,
+            pass: password,
+        });
 
     const accounts = response.data;
 
@@ -60,6 +60,7 @@ export const loginUser = (username, password) => async (dispatch) => {
     } else {
       // Xử lý khi đăng nhập không thành công
       openNotification()
+
     }
   } catch (error) {
     console.error('Đăng nhập thất bại:', error);
