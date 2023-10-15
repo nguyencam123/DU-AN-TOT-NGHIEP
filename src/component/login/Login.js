@@ -84,7 +84,7 @@ function LoginComponent() {
                             <a href="!#">Forgot password?</a>
                         </div>
 
-                        <Button type="primary" style={{ width: '100%', height: 45 }} onClick={handleLogin}>Đăng nhập</Button>
+                        <Button type="primary" style={{ width: '100%', height: 45 }} onClick={() => handleLogin()}>Đăng nhập</Button>
 
 
                     </MDBCol>
