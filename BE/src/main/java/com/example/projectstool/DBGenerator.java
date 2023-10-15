@@ -11,8 +11,6 @@ import com.example.demo.entities.CustomerRank;
 import com.example.demo.entities.DetailBooking;
 import com.example.demo.entities.DetailRoom;
 import com.example.demo.entities.Hotel;
-import com.example.demo.entities.Province;
-import com.example.demo.entities.Region;
 import com.example.demo.entities.Role;
 import com.example.demo.entities.Room;
 import com.example.demo.entities.Sale;
@@ -27,12 +25,10 @@ import com.example.demo.repositories.ConvenientHotelRepository;
 import com.example.demo.repositories.ConvenientHotelTypeRepository;
 import com.example.demo.repositories.ConvenientRoomRepository;
 import com.example.demo.repositories.ConvenientRoomTypeRepository;
-import com.example.demo.repositories.ProvinceRepository;
 import com.example.demo.repositories.CustomerRankRepository;
 import com.example.demo.repositories.DetailBookingRepository;
 import com.example.demo.repositories.DetailRoomRepository;
 import com.example.demo.repositories.HotelRepository;
-import com.example.demo.repositories.RegionRepository;
 import com.example.demo.repositories.RoleRepository;
 import com.example.demo.repositories.RoomRepository;
 import com.example.demo.repositories.SaleRepository;
@@ -64,8 +60,6 @@ public class DBGenerator implements CommandLineRunner {
     @Autowired
     private ConvenientRoomTypeRepository convenientRoomTypeRepository;
     @Autowired
-    private ProvinceRepository provinceRepository;
-    @Autowired
     private CustomerRankRepository customerRankRepository;
     @Autowired
     private DetailBookingRepository detailBookingRepository;
@@ -85,8 +79,6 @@ public class DBGenerator implements CommandLineRunner {
     private ConvenientHotelRepository convenientHotelRepository;
     @Autowired
     private ConvenientRoomRepository convenientRoomRepository;
-    @Autowired
-    private RegionRepository regionRepository;
     @Autowired
     private ScenicSpotRepository scenicSpotRepository;
 
@@ -237,22 +229,6 @@ public class DBGenerator implements CommandLineRunner {
         convenientRoom1.setName("Phong VIP");
         convenientRoom1.setConvenientRoomType(convenientRoomType1);
         convenientRoomRepository.save(convenientRoom1);
-
-        Region region1 = new Region();
-        region1.setCode("RG01");
-        region1.setName("TP Nam Dinh");
-        regionRepository.save(region1);
-
-        Region region2 = new Region();
-        region1.setCode("RG02");
-        region1.setName("Hai Hau");
-        regionRepository.save(region2);
-
-        Province province1 = new Province();
-        province1.setCode("PR01");
-        province1.setName("Nam Dinh");
-        province1.setRegion(region1);
-        provinceRepository.save(province1);
 
         ScenicSpot scenicSpot1 = new ScenicSpot();
         scenicSpot1.setName("Quat Lam");
