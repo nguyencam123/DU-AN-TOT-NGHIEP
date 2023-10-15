@@ -21,7 +21,7 @@ public class LoginContorller {
     private LoginService loginService;
 
     @PostMapping("")
-    public List<SignInResponse> getLogin(@RequestBody SignInRequest signInRequest){
+    public SignInResponse getLogin(@RequestBody SignInRequest signInRequest){
         return  loginService.getLogin(signInRequest);
     }
 }

@@ -39,20 +39,17 @@ export const loginUser = (username, password) => async (dispatch) => {
             uname: username,
             pass: password,
         });
-
-    const accounts = response.data;
-
-    const matchedAccount = accounts;
-    console.log(accounts);
-    if (matchedAccount) {
-      if (matchedAccount.roleCode == 0) {
+      const accounts = response.data;
+    if (accounts) {
+      if (accounts.roleCode == 0) {
         dispatch(loginSuccess({ user: accounts }));
         localStorage.setItem('isLoggedIn', 'true');
         openNotificationlogin()
-        dispatch(loginSuccess({ user: accounts, userData: matchedAccount }))
-      } else if (matchedAccount.roleCode == 2) {
+        dispatch(loginSuccess({ user: accounts, userData: accounts }))
+      } else if (accounts.roleCode == 2) {
         dispatch(adminloginSuccess({ admin: accounts }));
         localStorage.setItem('isAdmin', 'true');
+        openNotificationadmin();
       } else {
         dispatch(supperadminloginSuccess({ supperadmin: accounts }));
         localStorage.setItem('issupperAdmin', 'true');
@@ -60,7 +57,6 @@ export const loginUser = (username, password) => async (dispatch) => {
     } else {
       // Xử lý khi đăng nhập không thành công
       openNotification()
-
     }
   } catch (error) {
     console.error('Đăng nhập thất bại:', error);

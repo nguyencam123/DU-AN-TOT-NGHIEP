@@ -16,7 +16,7 @@ public class LoginServiceImpl implements LoginService {
     private LoginRepository loginRepository;
 
     @Override
-    public List<SignInResponse> getLogin(SignInRequest signInRequest) {
+    public SignInResponse getLogin(SignInRequest signInRequest) {
         return loginRepository.getLogin(signInRequest);
     }
 }

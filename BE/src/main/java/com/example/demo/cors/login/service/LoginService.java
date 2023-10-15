@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface LoginService {
 
-    List<SignInResponse> getLogin(SignInRequest signInRequest);
+    SignInResponse getLogin(SignInRequest signInRequest);
 }
