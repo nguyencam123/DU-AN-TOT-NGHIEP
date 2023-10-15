@@ -20,9 +20,9 @@ public class Hotel extends PrimaryEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "province_id")
-    private Province province;
+    private String province;
+
+    private String region;
 
     @Column(length = EntityProperties.LENGTH_NAME)
     private String name;
