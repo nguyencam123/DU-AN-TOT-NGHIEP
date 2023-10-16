@@ -1,6 +1,5 @@
 package com.example.demo.entities;
 
-
 import com.example.demo.entities.base.PrimaryEntity;
 import com.example.demo.infrastructure.contant.EntityProperties;
 import com.example.demo.infrastructure.contant.Status;
@@ -12,15 +11,16 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+
 @Entity
-@Table(name = "room")
+@Table(name = "admin")
 @Getter
 @Setter
-public class Room extends PrimaryEntity {
+public class Admin extends PrimaryEntity {
 
     @ManyToOne
-    @JoinColumn(name = "hotel_id")
-    private Hotel hotel;
+    @JoinColumn(name = "role_id")
+    private Role role;
 
     @Column(length = EntityProperties.LENGTH_CODE)
     private String code;
@@ -28,26 +28,24 @@ public class Room extends PrimaryEntity {
     @Column(length = EntityProperties.LENGTH_NAME)
     private String name;
 
+    private Long birthday;
+
+    private Boolean gender;
+
+    private String address;
+
+    @Column(length = EntityProperties.LENGTH_PHONE)
+    private String phoneNumber;
+
+    @Column(length = EntityProperties.LENGTH_EMAIL)
+    private String email;
+
+    private String username;
+
+    private String password;
+
+    private String avatarUrl;
+
     private Status status;
-
-    private Double acreage;
-
-    private Integer maxAdult;
-
-    private Integer maxChildren;
-
-    private Integer kingBed;
-
-    private Integer queenBed;
-
-    private Integer twinBed;
-
-    private Integer singleBed;
-
-    private Integer bath;
-
-    private Long startDate;
-
-    private Long endDate;
 
 }

@@ -19,5 +19,6 @@ public class ImgScenicSpot extends PrimaryEntity {
     @ManyToOne
     @JoinColumn(name = "scenicspot_id")
     private ScenicSpot scenicSpot;
+
 }
 

@@ -8,16 +8,26 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Entity
-@Table(name = "convenient_hotel_type")
+@Table(name = "service_pack")
 @Getter
 @Setter
-public class ConvenientHotelType extends PrimaryEntity {
+public class ServicePack extends PrimaryEntity {
+
+    private String code;
 
     @Column(length = EntityProperties.LENGTH_NAME)
     private String name;
 
-    @Column(length = EntityProperties.LENGTH_NOTE, name = "[desc]")
+    private BigDecimal price;
+
+    private Integer quantityPost;
+
+    private Integer time;
+
+    @Column(length = EntityProperties.LENGTH_NOTE)
     private String desc;
 
 }

@@ -1,6 +1,5 @@
 package com.example.demo.entities;
 
-
 import com.example.demo.entities.base.PrimaryEntity;
 import com.example.demo.infrastructure.contant.EntityProperties;
 import jakarta.persistence.Column;
@@ -12,21 +11,21 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "convenient_room")
+@Table(name = "convenient_homestay")
 @Getter
 @Setter
-public class ConvenientRoom extends PrimaryEntity {
+public class ConvenientHomestay extends PrimaryEntity {
 
     @Column(length = EntityProperties.LENGTH_NAME)
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "room_id")
-    private Room room;
+    @JoinColumn(name = "homestay_id")
+    private Homestay homestay;
 
     @ManyToOne
-    @JoinColumn(name = "convenient_room_type_id")
-    private ConvenientRoomType convenientRoomType;
+    @JoinColumn(name = "convenient_homestay_type_id")
+    private ConvenientHomestayType convenientHomestayType;
 
     @Column(length = EntityProperties.LENGTH_NOTE, name = "[desc]")
     private String desc;

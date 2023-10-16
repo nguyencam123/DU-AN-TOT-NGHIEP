@@ -1,8 +1,6 @@
 package com.example.demo.entities;
 
 import com.example.demo.entities.base.PrimaryEntity;
-import com.example.demo.infrastructure.contant.EntityProperties;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -11,22 +9,21 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "comment")
+@Table(name = "history_service_pack")
 @Getter
 @Setter
-public class Comment extends PrimaryEntity {
+public class HistoryServicePack extends PrimaryEntity {
 
     @ManyToOne
-    @JoinColumn(name = "hotel_id")
+    @JoinColumn(name = "homestay_id")
     private Homestay homestay;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "service_pack_id")
+    private ServicePack servicePack;
 
-    private Double point;
+    private Long startDate;
 
-    @Column(length = EntityProperties.LENGTH_NOTE)
-    private String comment;
+    private Long endDate;
 
 }

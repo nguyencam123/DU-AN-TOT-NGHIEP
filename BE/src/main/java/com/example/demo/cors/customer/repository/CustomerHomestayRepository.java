@@ -1,12 +1,12 @@
 package com.example.demo.cors.customer.repository;
 
 import com.example.demo.cors.customer.model.response.CustomerHotelResponse;
-import com.example.demo.repositories.HotelRepository;
+import com.example.demo.repositories.HomestayRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 
-public interface CustomerHotelRepository extends HotelRepository {
+public interface CustomerHomestayRepository extends HomestayRepository {
 
     @Query(value = """
             SELECT ROW_NUMBER() OVER(ORDER BY h.created_date DESC) AS stt, h.name, h.address, h.star FROM hotel h;

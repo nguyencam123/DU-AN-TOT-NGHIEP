@@ -9,19 +9,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "hotel")
+@Table(name = "convenient_homestay_type")
 @Getter
 @Setter
-public class Hotel extends PrimaryEntity {
+public class ConvenientHomestayType extends PrimaryEntity {
 
     @Column(length = EntityProperties.LENGTH_NAME)
     private String name;
-
-    private String address;
-
-    private String websiteUrl;
-
-    private Double star;
 
     @Column(length = EntityProperties.LENGTH_NOTE, name = "[desc]")
     private String desc;

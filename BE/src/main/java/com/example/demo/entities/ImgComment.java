@@ -9,14 +9,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "img_hotel")
+@Table(name = "img_comment")
 @Getter
 @Setter
-public class ImgHotel extends PrimaryEntity {
+public class ImgComment extends PrimaryEntity {
 
     @ManyToOne
-    @JoinColumn(name = "hotel_id")
-    private Hotel hotel;
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
 
     private String imgUrl;
 
