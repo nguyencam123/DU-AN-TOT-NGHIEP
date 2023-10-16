@@ -21,18 +21,12 @@ public class Booking extends PrimaryEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private Long dateBooking;
-
     private Status status;
 
     private BigDecimal totalPrice;
 
     @ManyToOne
-    @JoinColumn(name = "sale_id")
-    private Sale sale;
-
-    @ManyToOne
-    @JoinColumn(name = "customer_rank_id")
-    private CustomerRank customerRank;
+    @JoinColumn(name = "promotion_id")
+    private Promotion promotion;
 
 }

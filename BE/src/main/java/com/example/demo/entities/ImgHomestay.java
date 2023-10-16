@@ -8,22 +8,16 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-
 @Entity
-@Table(name = "detail_booking")
+@Table(name = "img_homestay")
 @Getter
 @Setter
-public class DetailBooking extends PrimaryEntity {
+public class ImgHomestay extends PrimaryEntity {
 
     @ManyToOne
-    @JoinColumn(name = "booking_id", insertable = false, updatable = false)
-    private Booking booking;
+    @JoinColumn(name = "homestay_id")
+    private Homestay homestay;
 
-    private Long dateStart;
-
-    private Long dateEnd;
-
-    private BigDecimal price;
+    private String imgUrl;
 
 }

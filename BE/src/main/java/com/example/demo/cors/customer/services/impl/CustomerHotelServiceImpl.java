@@ -3,7 +3,7 @@ package com.example.demo.cors.customer.services.impl;
 import com.example.demo.cors.common.base.PageableObject;
 import com.example.demo.cors.customer.model.request.CustomerHotelRequest;
 import com.example.demo.cors.customer.model.response.CustomerHotelResponse;
-import com.example.demo.cors.customer.repository.CustomerHotelRepository;
+import com.example.demo.cors.customer.repository.CustomerHomestayRepository;
 import com.example.demo.cors.customer.services.CustomerHotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class CustomerHotelServiceImpl implements CustomerHotelService {
 
     @Autowired
-    private CustomerHotelRepository hotelRepository;
+    private CustomerHomestayRepository hotelRepository;
 
     @Override
     public PageableObject<CustomerHotelResponse> getListHotel(CustomerHotelRequest request) {

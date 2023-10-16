@@ -2,6 +2,7 @@ package com.example.demo.entities;
 
 import com.example.demo.entities.base.PrimaryEntity;
 import com.example.demo.infrastructure.contant.EntityProperties;
+import com.example.demo.infrastructure.contant.TypePromotion;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -11,29 +12,24 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "hotel")
+@Table(name = "sale")
 @Getter
 @Setter
-public class Hotel extends PrimaryEntity {
+public class Promotion extends PrimaryEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    private String province;
-
-    private String region;
-
     @Column(length = EntityProperties.LENGTH_NAME)
     private String name;
 
-    private String address;
+    private Long startDate;
 
-    private String websiteUrl;
+    private Long endDate;
 
-    private Double star;
+    private TypePromotion type;
 
-    @Column(length = EntityProperties.LENGTH_NOTE, name = "[desc]")
-    private String desc;
+    private Double value;
 
 }

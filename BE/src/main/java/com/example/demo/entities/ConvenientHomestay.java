@@ -2,7 +2,6 @@ package com.example.demo.entities;
 
 import com.example.demo.entities.base.PrimaryEntity;
 import com.example.demo.infrastructure.contant.EntityProperties;
-import com.example.demo.infrastructure.contant.TypeSale;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -12,24 +11,23 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "sale")
+@Table(name = "convenient_homestay")
 @Getter
 @Setter
-public class Sale extends PrimaryEntity {
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+public class ConvenientHomestay extends PrimaryEntity {
 
     @Column(length = EntityProperties.LENGTH_NAME)
     private String name;
 
-    private Long startDate;
+    @ManyToOne
+    @JoinColumn(name = "homestay_id")
+    private Homestay homestay;
 
-    private Long endDate;
+    @ManyToOne
+    @JoinColumn(name = "convenient_homestay_type_id")
+    private ConvenientHomestayType convenientHomestayType;
 
-    private TypeSale type;
-
-    private Double value;
+    @Column(length = EntityProperties.LENGTH_NOTE, name = "[desc]")
+    private String desc;
 
 }

@@ -1,10 +1,7 @@
 package com.example.demo.entities;
 
-
 import com.example.demo.entities.base.PrimaryEntity;
 import com.example.demo.infrastructure.contant.EntityProperties;
-import com.example.demo.infrastructure.contant.Status;
-import com.example.demo.infrastructure.contant.TypeSale;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -12,23 +9,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "customer_rank")
+@Table(name = "address")
 @Getter
 @Setter
-public class CustomerRank extends PrimaryEntity {
+public class Address extends PrimaryEntity {
 
     @Column(length = EntityProperties.LENGTH_NAME)
     private String name;
 
-    @Column(length = EntityProperties.LENGTH_NOTE, name = "[desc]")
+    @Column(name = "[desc]")
     private String desc;
 
-    private Integer minimunPoint;
-
-    private TypeSale typeSale;
-
-    private Double value;
-
-    private Status status;
-
 }
+

@@ -8,21 +8,16 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-
 @Entity
 @Table(name = "cancellation_policy_room")
 @Getter
 @Setter
 public class CancellationPolicyRoom extends PrimaryEntity {
 
-        @Column(name = "name")
-        private String name;
+    @Column(length = EntityProperties.LENGTH_NAME)
+    private String name;
 
-        @Column(length = EntityProperties.LENGTH_NOTE, name = "[desc]")
-        private String desc;
-
-        @Column(length = EntityProperties.LENGTH_NAME, name = "price")
-        private BigDecimal price;
+    @Column(length = EntityProperties.LENGTH_NOTE, name = "[desc]")
+    private String desc;
 
 }
