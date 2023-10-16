@@ -26,4 +26,8 @@ public class ScenicSpot extends PrimaryEntity {
 
     private Status status;
 
+    private String province;
+
+    private String region;
+
 }

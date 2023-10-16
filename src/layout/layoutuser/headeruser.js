@@ -102,8 +102,8 @@ const HeaderUser = () => {
                             <Link to={"/phieu-giam-gia"} className="textnabar">
                                 <strong>Phiếu giảm giá</strong>
                             </Link>
-                            <Link to={"/su-kien"} className="textnabar">
-                                <strong>Sự kiện</strong>
+                            <Link to={"/hop-tac"} className="textnabar">
+                                <strong>Hợp tác với chúng tôi</strong>
                             </Link>
                         </Nav>
                         <div className="headercart">
