@@ -2,6 +2,7 @@ package com.example.demo.entities;
 
 import com.example.demo.entities.base.PrimaryEntity;
 import com.example.demo.infrastructure.contant.EntityProperties;
+import com.example.demo.infrastructure.contant.Role;
 import com.example.demo.infrastructure.contant.Status;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,8 +19,6 @@ import lombok.Setter;
 @Setter
 public class Admin extends PrimaryEntity {
 
-    @ManyToOne
-    @JoinColumn(name = "role_id")
     private Role role;
 
     @Column(length = EntityProperties.LENGTH_CODE)

@@ -18,5 +18,5 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
     public HomestayOwnerLoginReponse login(@RequestBody HomestayownerLoginRequest homestayownerLoginRequest) {
         return homestayownerOwnerHomestayRepository.getLoginOwnerHomestay(homestayownerLoginRequest);
     }
-    
+
 }

@@ -8,7 +8,7 @@ import com.example.demo.entities.Comment;
 import com.example.demo.entities.ConvenientHomestay;
 import com.example.demo.entities.ConvenientHomestayType;
 import com.example.demo.entities.DetailBooking;
-import com.example.demo.entities.DetailCancellationPolicyRoom;
+import com.example.demo.entities.DetailHomeStay;
 import com.example.demo.entities.HistoryServicePack;
 import com.example.demo.entities.Homestay;
 import com.example.demo.entities.ImgComment;
@@ -19,10 +19,11 @@ import com.example.demo.entities.Payment;
 import com.example.demo.entities.Promotion;
 import com.example.demo.entities.Province;
 import com.example.demo.entities.Region;
-import com.example.demo.entities.Role;
 import com.example.demo.entities.ScenicSpot;
+import com.example.demo.entities.ScenicSpotHomestay;
 import com.example.demo.entities.ServicePack;
 import com.example.demo.entities.User;
+import com.example.demo.infrastructure.contant.Role;
 import com.example.demo.infrastructure.contant.StatusServicePack;
 import com.example.demo.infrastructure.contant.TypePromotion;
 import com.example.demo.repositories.AddressRepository;
@@ -33,7 +34,7 @@ import com.example.demo.repositories.CommentRepository;
 import com.example.demo.repositories.ConvenientHomestayRepository;
 import com.example.demo.repositories.ConvenientHomestayTypeRepository;
 import com.example.demo.repositories.DetailBookingRepository;
-import com.example.demo.repositories.DetailCancellationPolicyRoomRepository;
+import com.example.demo.repositories.DetailHomestayRepository;
 import com.example.demo.repositories.HistoryServicePackRepository;
 import com.example.demo.repositories.HomestayRepository;
 import com.example.demo.repositories.ImgCommentRepository;
@@ -44,7 +45,7 @@ import com.example.demo.repositories.PaymentRepository;
 import com.example.demo.repositories.PromotionRepository;
 import com.example.demo.repositories.ProvinceRepository;
 import com.example.demo.repositories.RegionRepository;
-import com.example.demo.repositories.RoleRepository;
+import com.example.demo.repositories.ScenicSpotHomestayRepository;
 import com.example.demo.repositories.ScenicSpotRepository;
 import com.example.demo.repositories.ServicePackRepository;
 import com.example.demo.repositories.UserRepository;
@@ -80,7 +81,7 @@ public class DBGenerator implements CommandLineRunner {
     @Autowired
     private DetailBookingRepository detailBookingRepository;
     @Autowired
-    private DetailCancellationPolicyRoomRepository detailCancellationPolicyRoomRepository;
+    private DetailHomestayRepository detailHomestayRepository;
     @Autowired
     private HistoryServicePackRepository historyServicePackRepository;
     @Autowired
@@ -102,26 +103,15 @@ public class DBGenerator implements CommandLineRunner {
     @Autowired
     private RegionRepository regionRepository;
     @Autowired
-    private RoleRepository roleRepository;
-    @Autowired
     private ScenicSpotRepository scenicSpotRepository;
     @Autowired
     private ServicePackRepository servicePackRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ScenicSpotHomestayRepository scenicSpotHomestayRepository;
 
     public void run(String... args) throws Exception {
-
-        //role
-        Role role1 = new Role();
-        role1.setCode("KH01");
-        role1.setName("Supper Admin");
-        roleRepository.save(role1);
-
-        Role role2 = new Role();
-        role2.setCode("AD01");
-        role2.setName("Admin");
-        roleRepository.save(role2);
 
         //region
         Region region1 = new Region();
@@ -198,23 +188,23 @@ public class DBGenerator implements CommandLineRunner {
 
         //admin
         Admin admin1 = new Admin();
-        admin1.setRole(role1);
         admin1.setAddress("Lang Son");
         admin1.setCode("A01");
         admin1.setName("Tran Quang Huy");
         admin1.setGender(true);
         admin1.setUsername("huytq@gmail.com");
         admin1.setPassword("12345678");
+        admin1.setRole(Role.ADMIN);
         adminRepository.save(admin1);
 
         Admin admin2 = new Admin();
-        admin2.setRole(role2);
         admin2.setAddress("Nam Dinh");
         admin2.setCode("A02");
         admin2.setName("Nguyen Quoc Cuong");
         admin2.setGender(true);
         admin2.setUsername("cuongnq@gmail.com");
         admin2.setPassword("12345678");
+        admin2.setRole(Role.SUPPER_ADMIN);
         adminRepository.save(admin2);
 
         //user
@@ -282,7 +272,6 @@ public class DBGenerator implements CommandLineRunner {
         //promotion
         Promotion promotion1 = new Promotion();
         promotion1.setName("Chao mung ngay 20/10");
-        promotion1.setUser(user1);
         promotion1.setType(TypePromotion.TIEN);
         promotion1.setValue(50000.0);
         promotionRepository.save(promotion1);
@@ -318,9 +307,8 @@ public class DBGenerator implements CommandLineRunner {
         homestay1.setStar(3.5);
         homestay1.setAddress(address1);
         homestay1.setRegion(region2);
-        homestay1.setProvince(province1);
+        homestay1.setProvince(province2);
         homestay1.setPromotion(promotion1);
-        homestay1.setPayment(payment1);
         homestay1.setServicePack(servicePack1);
         homestay1.setOwnerHomestay(ownerHomestay1);
         homestay1.setStatusServicePack(StatusServicePack.CON_HAN);
@@ -332,7 +320,6 @@ public class DBGenerator implements CommandLineRunner {
         homestay2.setAddress(address2);
         homestay2.setRegion(region1);
         homestay2.setProvince(province1);
-        homestay2.setPayment(payment1);
         homestay2.setServicePack(servicePack2);
         homestay2.setOwnerHomestay(ownerHomestay1);
         homestay2.setStatusServicePack(StatusServicePack.CON_HAN);
@@ -344,7 +331,6 @@ public class DBGenerator implements CommandLineRunner {
         homestay3.setAddress(address3);
         homestay3.setRegion(region3);
         homestay3.setProvince(province3);
-        homestay3.setPayment(payment1);
         homestay3.setServicePack(servicePack3);
         homestay3.setOwnerHomestay(ownerHomestay2);
         homestay3.setStatusServicePack(StatusServicePack.CON_HAN);
@@ -414,24 +400,48 @@ public class DBGenerator implements CommandLineRunner {
         cancellationPolicyRoom3.setName("Huy dac biet");
         cancellationPolicyRoomRepository.save(cancellationPolicyRoom3);
 
-        //detail cancellation policy room
-        DetailCancellationPolicyRoom detailCancellationPolicyRoom1 = new DetailCancellationPolicyRoom();
-        detailCancellationPolicyRoom1.setCancellationPolicyRoom(cancellationPolicyRoom1);
-        detailCancellationPolicyRoom1.setPrice(new BigDecimal(0));
-        detailCancellationPolicyRoom1.setHomestay(homestay1);
-        detailCancellationPolicyRoomRepository.save(detailCancellationPolicyRoom1);
+        //detail homestay
+        DetailHomeStay detailHomeStay1 = new DetailHomeStay();
+        detailHomeStay1.setCancellationPolicyRoom(cancellationPolicyRoom1);
+        detailHomeStay1.setPrice(new BigDecimal(1000000));
+        detailHomeStay1.setHomestay(homestay1);
+        detailHomeStay1.setPayment(payment1);
+        detailHomestayRepository.save(detailHomeStay1);
 
-        DetailCancellationPolicyRoom detailCancellationPolicyRoom2 = new DetailCancellationPolicyRoom();
-        detailCancellationPolicyRoom2.setCancellationPolicyRoom(cancellationPolicyRoom2);
-        detailCancellationPolicyRoom2.setPrice(new BigDecimal(500000));
-        detailCancellationPolicyRoom2.setHomestay(homestay2);
-        detailCancellationPolicyRoomRepository.save(detailCancellationPolicyRoom2);
+        DetailHomeStay detailHomeStay2 = new DetailHomeStay();
+        detailHomeStay2.setCancellationPolicyRoom(cancellationPolicyRoom2);
+        detailHomeStay2.setPrice(new BigDecimal(500000));
+        detailHomeStay2.setHomestay(homestay1);
+        detailHomeStay1.setPayment(payment1);
+        detailHomestayRepository.save(detailHomeStay2);
 
-        DetailCancellationPolicyRoom detailCancellationPolicyRoom3 = new DetailCancellationPolicyRoom();
-        detailCancellationPolicyRoom3.setCancellationPolicyRoom(cancellationPolicyRoom3);
-        detailCancellationPolicyRoom3.setPrice(new BigDecimal(3000000));
-        detailCancellationPolicyRoom3.setHomestay(homestay3);
-        detailCancellationPolicyRoomRepository.save(detailCancellationPolicyRoom3);
+        DetailHomeStay detailHomeStay3 = new DetailHomeStay();
+        detailHomeStay3.setCancellationPolicyRoom(cancellationPolicyRoom3);
+        detailHomeStay3.setPrice(new BigDecimal(3000000));
+        detailHomeStay3.setHomestay(homestay1);
+        detailHomeStay1.setPayment(payment1);
+        detailHomestayRepository.save(detailHomeStay3);
+
+        DetailHomeStay detailHomeStay4 = new DetailHomeStay();
+        detailHomeStay4.setCancellationPolicyRoom(cancellationPolicyRoom2);
+        detailHomeStay4.setPrice(new BigDecimal(600000));
+        detailHomeStay4.setHomestay(homestay2);
+        detailHomeStay1.setPayment(payment1);
+        detailHomestayRepository.save(detailHomeStay4);
+
+        DetailHomeStay detailHomeStay5 = new DetailHomeStay();
+        detailHomeStay5.setCancellationPolicyRoom(cancellationPolicyRoom1);
+        detailHomeStay5.setPrice(new BigDecimal(1200000));
+        detailHomeStay5.setHomestay(homestay3);
+        detailHomeStay1.setPayment(payment1);
+        detailHomestayRepository.save(detailHomeStay5);
+
+        DetailHomeStay detailHomeStay6 = new DetailHomeStay();
+        detailHomeStay6.setCancellationPolicyRoom(cancellationPolicyRoom3);
+        detailHomeStay6.setPrice(new BigDecimal(3500000));
+        detailHomeStay6.setHomestay(homestay3);
+        detailHomeStay1.setPayment(payment1);
+        detailHomestayRepository.save(detailHomeStay6);
 
         //convenient homestay type
         ConvenientHomestayType convenientHomestayType1 = new ConvenientHomestayType();
@@ -479,6 +489,16 @@ public class DBGenerator implements CommandLineRunner {
         detailBooking2.setBooking(booking2);
         detailBookingRepository.save(detailBooking2);
 
+        //ScenicSpot homestay
+        ScenicSpotHomestay scenicSpotHomestay1 = new ScenicSpotHomestay();
+        scenicSpotHomestay1.setHomestay(homestay1);
+        scenicSpotHomestay1.setScenicSpot(scenicSpot1);
+        scenicSpotHomestayRepository.save(scenicSpotHomestay1);
+
+        ScenicSpotHomestay scenicSpotHomestay2 = new ScenicSpotHomestay();
+        scenicSpotHomestay2.setHomestay(homestay2);
+        scenicSpotHomestay2.setScenicSpot(scenicSpot2);
+        scenicSpotHomestayRepository.save(scenicSpotHomestay2);
     }
 
     public static void main(String[] args) {

@@ -11,10 +11,10 @@ import lombok.Setter;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "detail_cancellation_policy")
+@Table(name = "detail_homestay")
 @Getter
 @Setter
-public class DetailCancellationPolicyRoom extends PrimaryEntity {
+public class DetailHomeStay extends PrimaryEntity {
 
     @ManyToOne
     @JoinColumn(name = "homestay_id")
@@ -25,5 +25,9 @@ public class DetailCancellationPolicyRoom extends PrimaryEntity {
     private CancellationPolicyRoom cancellationPolicyRoom;
 
     private BigDecimal price;
+
+    @ManyToOne
+    @JoinColumn(name = "payment_id")
+    private Payment payment;
 
 }
