@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AdminLoginRepository extends AdminRepository {
     @Query(value = "SELECT dbo.[admin].status, dbo.[admin].code, dbo.[admin].name, dbo.[admin].password, dbo.[admin].username\n" +
-            "FROM     dbo.[admin] INNER JOIN\n" +
-            "                  dbo.role ON dbo.[admin].role_id = dbo.role.id WHERE (dbo.[admin].username = :#{#adminLoginRequest.username}) AND (dbo.[admin].password = :#{#adminLoginRequest.pass})" ,nativeQuery = true)
+            "FROM     dbo.[admin]  WHERE (dbo.[admin].username = :#{#adminLoginRequest.username}) AND (dbo.[admin].password = :#{#adminLoginRequest.pass})" ,nativeQuery = true)
     AdminLoginReponsi getLogin(AdminLoginRequest adminLoginRequest);
 }
