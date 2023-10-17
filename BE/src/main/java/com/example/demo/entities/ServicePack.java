@@ -27,7 +27,7 @@ public class ServicePack extends PrimaryEntity {
 
     private Integer time;
 
-    @Column(length = EntityProperties.LENGTH_NOTE)
+    @Column(name = "[desc]", length = EntityProperties.LENGTH_NOTE)
     private String desc;
 
 }
