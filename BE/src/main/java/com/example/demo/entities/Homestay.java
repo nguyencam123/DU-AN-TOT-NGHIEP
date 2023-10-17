@@ -19,10 +19,6 @@ import lombok.Setter;
 public class Homestay extends PrimaryEntity {
 
     @ManyToOne
-    @JoinColumn(name = "payment_id")
-    private Payment payment;
-
-    @ManyToOne
     @JoinColumn(name = "promotion_id")
     private Promotion promotion;
 
