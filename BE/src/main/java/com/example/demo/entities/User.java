@@ -47,8 +47,4 @@ public class User extends PrimaryEntity {
 
     private Status status;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
-
 }

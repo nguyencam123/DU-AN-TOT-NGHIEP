@@ -12,14 +12,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "sale")
+@Table(name = "promotion")
 @Getter
 @Setter
 public class Promotion extends PrimaryEntity {
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
 
     @Column(length = EntityProperties.LENGTH_NAME)
     private String name;
