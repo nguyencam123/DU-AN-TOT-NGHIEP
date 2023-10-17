@@ -119,8 +119,8 @@ public class DBGenerator implements CommandLineRunner {
         roleRepository.save(role1);
 
         Role role2 = new Role();
-        role1.setCode("AD01");
-        role1.setName("Admin");
+        role2.setCode("AD01");
+        role2.setName("Admin");
         roleRepository.save(role2);
 
         //region
@@ -153,9 +153,9 @@ public class DBGenerator implements CommandLineRunner {
         provinceRepository.save(province2);
 
         Province province3 = new Province();
-        province2.setCode("PR03");
-        province2.setName("TP Ho Chi Minh");
-        province2.setRegion(region3);
+        province3.setCode("PR03");
+        province3.setName("TP Ho Chi Minh");
+        province3.setRegion(region3);
         provinceRepository.save(province3);
 
         //scenic spot
@@ -187,13 +187,13 @@ public class DBGenerator implements CommandLineRunner {
         imgScenicSpotRepository.save(imgScenicSpot1);
 
         ImgScenicSpot imgScenicSpot2 = new ImgScenicSpot();
-        imgScenicSpot1.setScenicSpot(scenicSpot1);
-        imgScenicSpot1.setImgUrl("qwerty");
+        imgScenicSpot2.setScenicSpot(scenicSpot1);
+        imgScenicSpot2.setImgUrl("qwerty");
         imgScenicSpotRepository.save(imgScenicSpot2);
 
         ImgScenicSpot imgScenicSpot3 = new ImgScenicSpot();
-        imgScenicSpot1.setScenicSpot(scenicSpot2);
-        imgScenicSpot1.setImgUrl("abcxyz");
+        imgScenicSpot3.setScenicSpot(scenicSpot2);
+        imgScenicSpot3.setImgUrl("abcxyz");
         imgScenicSpotRepository.save(imgScenicSpot3);
 
         //admin
@@ -380,13 +380,13 @@ public class DBGenerator implements CommandLineRunner {
         detailCancellationPolicyRoomRepository.save(detailCancellationPolicyRoom1);
 
         DetailCancellationPolicyRoom detailCancellationPolicyRoom2 = new DetailCancellationPolicyRoom();
-        detailCancellationPolicyRoom1.setCancellationPolicyRoom(cancellationPolicyRoom2);
-        detailCancellationPolicyRoom1.setPrice(new BigDecimal(500000));
+        detailCancellationPolicyRoom2.setCancellationPolicyRoom(cancellationPolicyRoom2);
+        detailCancellationPolicyRoom2.setPrice(new BigDecimal(500000));
         detailCancellationPolicyRoomRepository.save(detailCancellationPolicyRoom2);
 
         DetailCancellationPolicyRoom detailCancellationPolicyRoom3 = new DetailCancellationPolicyRoom();
-        detailCancellationPolicyRoom1.setCancellationPolicyRoom(cancellationPolicyRoom3);
-        detailCancellationPolicyRoom1.setPrice(new BigDecimal(3000000));
+        detailCancellationPolicyRoom3.setCancellationPolicyRoom(cancellationPolicyRoom3);
+        detailCancellationPolicyRoom3.setPrice(new BigDecimal(3000000));
         detailCancellationPolicyRoomRepository.save(detailCancellationPolicyRoom3);
 
         //convenient homestay type
