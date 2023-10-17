@@ -230,7 +230,7 @@ public class DBGenerator implements CommandLineRunner {
         userRepository.save(user1);
 
         User user2 = new User();
-        user2.setCode("US01");
+        user2.setCode("US02");
         user2.setName("Vuong Tien Tuan");
         user2.setAddress("Ha Noi");
         user2.setGender(true);
@@ -250,6 +250,16 @@ public class DBGenerator implements CommandLineRunner {
         ownerHomestay1.setPassword("12345678");
         ownerHomestay1.setGender(true);
         ownerHomestayRepository.save(ownerHomestay1);
+
+        OwnerHomestay ownerHomestay2 = new OwnerHomestay();
+        ownerHomestay2.setCode("OH02");
+        ownerHomestay2.setName("Nguyen Van Ly");
+        ownerHomestay2.setPhoneNumber("0987654321");
+        ownerHomestay2.setEmail("dungvt@gmail.com");
+        ownerHomestay2.setUsername("lynv@gmail.com");
+        ownerHomestay2.setPassword("12345678");
+        ownerHomestay2.setGender(false);
+        ownerHomestayRepository.save(ownerHomestay2);
 
         //payment
         Payment payment1 = new Payment();
@@ -328,6 +338,18 @@ public class DBGenerator implements CommandLineRunner {
         homestay2.setStatusServicePack(StatusServicePack.CON_HAN);
         homestayRepository.save(homestay2);
 
+        Homestay homestay3 = new Homestay();
+        homestay3.setName("Celadon Homestay");
+        homestay3.setStar(4.5);
+        homestay3.setAddress(address3);
+        homestay3.setRegion(region3);
+        homestay3.setProvince(province3);
+        homestay3.setPayment(payment1);
+        homestay3.setServicePack(servicePack3);
+        homestay3.setOwnerHomestay(ownerHomestay2);
+        homestay3.setStatusServicePack(StatusServicePack.CON_HAN);
+        homestayRepository.save(homestay3);
+
         //comment
         Comment comment1 = new Comment();
         comment1.setComment("Good");
@@ -353,11 +375,31 @@ public class DBGenerator implements CommandLineRunner {
         imgHomestay1.setImgUrl("jkluio");
         imgHomestayRepository.save(imgHomestay1);
 
+        ImgHomestay imgHomestay2 = new ImgHomestay();
+        imgHomestay2.setHomestay(homestay2);
+        imgHomestay2.setImgUrl("abcxyz");
+        imgHomestayRepository.save(imgHomestay2);
+
+        ImgHomestay imgHomestay3 = new ImgHomestay();
+        imgHomestay3.setHomestay(homestay3);
+        imgHomestay3.setImgUrl("qwewcx");
+        imgHomestayRepository.save(imgHomestay3);
+
         //history service pack
         HistoryServicePack historyServicePack1 = new HistoryServicePack();
         historyServicePack1.setServicePack(servicePack1);
         historyServicePack1.setHomestay(homestay1);
         historyServicePackRepository.save(historyServicePack1);
+
+        HistoryServicePack historyServicePack2 = new HistoryServicePack();
+        historyServicePack2.setServicePack(servicePack2);
+        historyServicePack2.setHomestay(homestay2);
+        historyServicePackRepository.save(historyServicePack2);
+
+        HistoryServicePack historyServicePack3 = new HistoryServicePack();
+        historyServicePack3.setServicePack(servicePack3);
+        historyServicePack3.setHomestay(homestay3);
+        historyServicePackRepository.save(historyServicePack3);
 
         //cancellation policy room
         CancellationPolicyRoom cancellationPolicyRoom1 = new CancellationPolicyRoom();
@@ -382,11 +424,13 @@ public class DBGenerator implements CommandLineRunner {
         DetailCancellationPolicyRoom detailCancellationPolicyRoom2 = new DetailCancellationPolicyRoom();
         detailCancellationPolicyRoom2.setCancellationPolicyRoom(cancellationPolicyRoom2);
         detailCancellationPolicyRoom2.setPrice(new BigDecimal(500000));
+        detailCancellationPolicyRoom2.setHomestay(homestay2);
         detailCancellationPolicyRoomRepository.save(detailCancellationPolicyRoom2);
 
         DetailCancellationPolicyRoom detailCancellationPolicyRoom3 = new DetailCancellationPolicyRoom();
         detailCancellationPolicyRoom3.setCancellationPolicyRoom(cancellationPolicyRoom3);
         detailCancellationPolicyRoom3.setPrice(new BigDecimal(3000000));
+        detailCancellationPolicyRoom3.setHomestay(homestay3);
         detailCancellationPolicyRoomRepository.save(detailCancellationPolicyRoom3);
 
         //convenient homestay type
@@ -403,9 +447,15 @@ public class DBGenerator implements CommandLineRunner {
         //convenient homestay
         ConvenientHomestay convenientHomestay1 = new ConvenientHomestay();
         convenientHomestay1.setHomestay(homestay1);
-        convenientHomestay1.setName("convenient homestay1");
+        convenientHomestay1.setName("convenient homestay 1");
         convenientHomestay1.setConvenientHomestayType(convenientHomestayType1);
         convenientHomestayRepository.save(convenientHomestay1);
+
+        ConvenientHomestay convenientHomestay2 = new ConvenientHomestay();
+        convenientHomestay2.setHomestay(homestay2);
+        convenientHomestay2.setName("convenient homestay 2");
+        convenientHomestay2.setConvenientHomestayType(convenientHomestayType1);
+        convenientHomestayRepository.save(convenientHomestay2);
 
         //booking
         Booking booking1 = new Booking();
@@ -413,11 +463,21 @@ public class DBGenerator implements CommandLineRunner {
         booking1.setTotalPrice(new BigDecimal(1000000));
         bookingRepository.save(booking1);
 
+        Booking booking2 = new Booking();
+        booking2.setUser(user2);
+        booking2.setTotalPrice(new BigDecimal(1300000));
+        bookingRepository.save(booking2);
+
         //detail booking
         DetailBooking detailBooking1 = new DetailBooking();
         detailBooking1.setPrice(new BigDecimal(1000000));
         detailBooking1.setBooking(booking1);
         detailBookingRepository.save(detailBooking1);
+
+        DetailBooking detailBooking2 = new DetailBooking();
+        detailBooking2.setPrice(new BigDecimal(1300000));
+        detailBooking2.setBooking(booking2);
+        detailBookingRepository.save(detailBooking2);
 
     }
 
