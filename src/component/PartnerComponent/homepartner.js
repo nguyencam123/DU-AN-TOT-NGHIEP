@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { Typography } from 'antd'
 import { MDBBtn } from 'mdb-react-ui-kit';
 import imgHD from '../../assets/img/KMhoptac.png'
+import { Link } from 'react-router-dom';
 
 
 const { Title } = Typography
@@ -40,7 +41,9 @@ const HomePartner = () => {
                     }}>
                         <Title level={3} >HomeStay</Title>
                         <p>Những căn nhà nhỏ được trang trí thành một không gian lưu trú riêng biệt dành cho khách</p>
-                        <MDBBtn style={{ top: 30 }}>Đăng ký để cộng tác với chúng tôi</MDBBtn>
+                        <Link to={"/hop-tac/login"}>
+                            <MDBBtn style={{ top: 30 }}>Đăng nhập để cộng tác với chúng tôi</MDBBtn>
+                        </Link>
                     </div>
                     <div style={{
                         width: 500, height: 230, backgroundColor: 'white',
@@ -48,8 +51,10 @@ const HomePartner = () => {
                     }}>
                         <Title level={3} >Căn hộ của người dân</Title>
                         <p>Những căn hộ được trang trí lại thành một không gian đặc biệt cho du
-                            khách đặc biệt là những nói có tiềm năng như các điểm du lịch nổi tiếng</p>
-                        <MDBBtn style={{ top: 7 }}>Đăng ký để cộng tác với chúng tôi</MDBBtn>
+                            khách đặc biệt là những nơi có tiềm năng như các điểm du lịch nổi tiếng</p>
+                        <Link to={"/hop-tac/login"}>
+                            <MDBBtn style={{ top: 8 }}>Đăng nhập để cộng tác với chúng tôi</MDBBtn>
+                        </Link>
                     </div>
                 </div>
             </ColorBox>
