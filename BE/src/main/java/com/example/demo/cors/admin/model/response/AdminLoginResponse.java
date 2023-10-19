@@ -1,8 +1,9 @@
-package com.example.demo.cors.admin.model.reponse;
+package com.example.demo.cors.admin.model.response;
 
 import org.springframework.beans.factory.annotation.Value;
 
-public interface AdminLoginReponsi {
+public interface AdminLoginResponse {
+
     @Value("#{target.status}")
     Integer getStatus();
 

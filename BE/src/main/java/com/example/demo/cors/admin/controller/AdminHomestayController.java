@@ -1,10 +1,9 @@
 package com.example.demo.cors.admin.controller;
 
 import com.example.demo.cors.admin.model.request.AdminHomestayRequest;
-import com.example.demo.cors.admin.services.IAdminHomestaySevice;
+import com.example.demo.cors.admin.services.AdminHomestayService;
 import com.example.demo.cors.common.base.ResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,12 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v3/homestay")
 public class AdminHomestayController {
+
     @Autowired
-    private IAdminHomestaySevice iAdminHomestaySevice;
+    private AdminHomestayService adminHomestayService;
 
     @GetMapping()
     public ResponseObject getAll(AdminHomestayRequest adminHomestayRequest){
-        return new ResponseObject(iAdminHomestaySevice.getAll(adminHomestayRequest));
+        return new ResponseObject(adminHomestayService.getAll(adminHomestayRequest));
     }
 
 }
