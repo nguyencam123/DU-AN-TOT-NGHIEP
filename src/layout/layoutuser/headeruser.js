@@ -96,8 +96,8 @@ const HeaderUser = () => {
                             <Link to={"/"} className="textnabar">
                                 <strong>trang chủ</strong>
                             </Link>
-                            <Link to={"/khach-san"} className="textnabar">
-                                <strong>Khách sạn</strong>
+                            <Link to={"/home-stay"} className="textnabar">
+                                <strong>homestay</strong>
                             </Link>
                             <Link to={"/phieu-giam-gia"} className="textnabar">
                                 <strong>Phiếu giảm giá</strong>
