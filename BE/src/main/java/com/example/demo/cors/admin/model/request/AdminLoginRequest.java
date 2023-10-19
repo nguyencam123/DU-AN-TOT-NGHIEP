@@ -8,7 +8,8 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class AdminLoginRequest {
+
     private String pass;
 
-    private String username;
+    private String uname;
 }
