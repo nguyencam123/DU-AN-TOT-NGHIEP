@@ -59,8 +59,7 @@ const ProductTabs = (props) => {
                                     <EnvironmentOutlined style={{ marginTop: 5 }} />&ensp;
                                     {product.province_Name}
                                 </div>
-                                <div style={{ fontSize: 12 }}>Giá rẻ nhất mỗi đêm chỉ từ:</div>
-                                <Title level={3} style={{ color: 'red' }}>{product.price}</Title>
+                                <Title level={3} style={{ color: 'red' }}>{product.price}VNĐ</Title>
                             </div>
                         </Card>
                     </Col>
