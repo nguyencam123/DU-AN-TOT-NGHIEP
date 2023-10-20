@@ -13,10 +13,10 @@ import lombok.Setter;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "booking")
+@Table(name = "cart")
 @Getter
 @Setter
-public class Booking extends PrimaryEntity {
+public class Cart extends PrimaryEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -30,12 +30,7 @@ public class Booking extends PrimaryEntity {
     @JoinColumn(name = "promotion_id")
     private Promotion promotion;
 
-    private Long startDate;
-
-    private Long endDate;
-
     @OneToOne
     @JoinColumn(name = "homestay_id")
     private Homestay homestay;
-
 }

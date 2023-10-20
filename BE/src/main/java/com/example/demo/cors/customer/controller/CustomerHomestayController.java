@@ -17,11 +17,6 @@ public class CustomerHomestayController {
     @Autowired
     private CustomerHomestayService customerHomestayService;
 
-    @GetMapping()
-    public ResponseObject getAllHomestay() {
-        return new ResponseObject(customerHomestayService.getAllHomestay());
-    }
-
     @GetMapping("/list-homestay")
     public ResponseObject getListHotel(CustomerHomestayRequest request) {
         return new ResponseObject(customerHomestayService.getListHomestay(request));
