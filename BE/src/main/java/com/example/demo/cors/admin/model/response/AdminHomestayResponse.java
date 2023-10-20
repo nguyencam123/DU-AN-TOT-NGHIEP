@@ -1,8 +1,8 @@
-package com.example.demo.cors.admin.model.reponse;
+package com.example.demo.cors.admin.model.response;
 
 import org.springframework.beans.factory.annotation.Value;
 
-public interface AdminHomestayReponsi {
+public interface AdminHomestayResponse {
 
     @Value("#{target.name}")
     String getName();
@@ -21,4 +21,5 @@ public interface AdminHomestayReponsi {
 
     @Value("#{target.name_pack}")
     String getNamePack();
+
 }
