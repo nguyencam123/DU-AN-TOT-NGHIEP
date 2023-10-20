@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v3/homestay")
 public class AdminHomestayController {
-
     @Autowired
     private IAdminHomestaySevice iAdminHomestaySevice;
 
