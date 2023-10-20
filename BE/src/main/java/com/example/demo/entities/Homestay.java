@@ -11,6 +11,8 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "homestay")
 @Getter
@@ -29,9 +31,7 @@ public class Homestay extends PrimaryEntity {
     @JoinColumn(name = "region_id")
     private Region region;
 
-    @ManyToOne
-    @JoinColumn(name = "address_id")
-    private Address address;
+    private String address;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
@@ -50,5 +50,9 @@ public class Homestay extends PrimaryEntity {
 
     @Column(length = EntityProperties.LENGTH_NOTE, name = "[desc]")
     private String desc;
+
+    private BigDecimal price;
+
+    private Integer numberPerson;
 
 }
