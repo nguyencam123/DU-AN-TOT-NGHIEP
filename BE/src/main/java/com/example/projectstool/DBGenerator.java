@@ -1,47 +1,31 @@
 package com.example.projectstool;
 
 import com.example.demo.entities.Address;
-import com.example.demo.entities.Admin;
-import com.example.demo.entities.Booking;
-import com.example.demo.entities.Comment;
-import com.example.demo.entities.ConvenientHomestay;
-import com.example.demo.entities.ConvenientHomestayType;
-import com.example.demo.entities.DetailBooking;
-import com.example.demo.entities.Homestay;
-import com.example.demo.entities.ImgComment;
-import com.example.demo.entities.ImgHomestay;
 import com.example.demo.entities.ImgScenicSpot;
 import com.example.demo.entities.OwnerHomestay;
 import com.example.demo.entities.Promotion;
 import com.example.demo.entities.Province;
 import com.example.demo.entities.Region;
 import com.example.demo.entities.ScenicSpot;
-import com.example.demo.entities.ScenicSpotHomestay;
 import com.example.demo.entities.User;
-import com.example.demo.infrastructure.contant.Role;
 import com.example.demo.infrastructure.contant.TypePromotion;
 import com.example.demo.repositories.AddressRepository;
 import com.example.demo.repositories.AdminRepository;
 import com.example.demo.repositories.BookingRepository;
-import com.example.demo.repositories.CancellationPolicyRoomRepository;
 import com.example.demo.repositories.CommentRepository;
 import com.example.demo.repositories.ConvenientHomestayRepository;
 import com.example.demo.repositories.ConvenientHomestayTypeRepository;
 import com.example.demo.repositories.DetailBookingRepository;
-import com.example.demo.repositories.DetailHomestayRepository;
-import com.example.demo.repositories.HistoryServicePackRepository;
 import com.example.demo.repositories.HomestayRepository;
 import com.example.demo.repositories.ImgCommentRepository;
 import com.example.demo.repositories.ImgHomestayRepository;
 import com.example.demo.repositories.ImgScenicSpotRepository;
 import com.example.demo.repositories.OwnerHomestayRepository;
-import com.example.demo.repositories.PaymentRepository;
 import com.example.demo.repositories.PromotionRepository;
 import com.example.demo.repositories.ProvinceRepository;
 import com.example.demo.repositories.RegionRepository;
 import com.example.demo.repositories.ScenicSpotHomestayRepository;
 import com.example.demo.repositories.ScenicSpotRepository;
-import com.example.demo.repositories.ServicePackRepository;
 import com.example.demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -49,8 +33,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-
-import java.math.BigDecimal;
 
 @SpringBootApplication
 @EnableJpaRepositories(
@@ -65,8 +47,6 @@ public class DBGenerator implements CommandLineRunner {
     @Autowired
     private BookingRepository bookingRepository;
     @Autowired
-    private CancellationPolicyRoomRepository cancellationPolicyRoomRepository;
-    @Autowired
     private CommentRepository commentRepository;
     @Autowired
     private ConvenientHomestayRepository convenientHomestayRepository;
@@ -74,10 +54,6 @@ public class DBGenerator implements CommandLineRunner {
     private ConvenientHomestayTypeRepository convenientHomestayTypeRepository;
     @Autowired
     private DetailBookingRepository detailBookingRepository;
-    @Autowired
-    private DetailHomestayRepository detailHomestayRepository;
-    @Autowired
-    private HistoryServicePackRepository historyServicePackRepository;
     @Autowired
     private HomestayRepository homestayRepository;
     @Autowired
