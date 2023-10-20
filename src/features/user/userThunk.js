@@ -34,32 +34,31 @@ const openNotificationadmin = () => {
   });
 };
 export const loginUser = (username, password) => async (dispatch) => {
-    try {
-        const response = await axios.post('http://localhost:8080/api/v1/login', {
-            uname: username,
-            pass: password,
-        });
-      const accounts = response.data;
-    if (accounts) {
-      if (accounts.roleCode == 0) {
-        dispatch(loginSuccess({ user: accounts }));
-        localStorage.setItem('isLoggedIn', 'true');
-        openNotificationlogin()
-        dispatch(loginSuccess({ user: accounts, userData: accounts }))
-      } else if (accounts.roleCode == 2) {
-        dispatch(adminloginSuccess({ admin: accounts }));
-        localStorage.setItem('isAdmin', 'true');
-        openNotificationadmin();
-      } else {
-        dispatch(supperadminloginSuccess({ supperadmin: accounts }));
-        localStorage.setItem('issupperAdmin', 'true');
-      }
-    } else {
-      // Xử lý khi đăng nhập không thành công
-      openNotification()
-    }
+  try {
+    const response = await axios.post('http://localhost:8080/api/v1/login', {
+      uname: username,
+      pass: password,
+    });
+    const accounts = response.data;
+
+    dispatch(loginSuccess({ user: accounts }));
+    localStorage.setItem('isLoggedIn', 'true');
+    openNotificationlogin()
+    dispatch(loginSuccess({ user: accounts, userData: accounts }))
+
+    //   dispatch(adminloginSuccess({ admin: accounts }));
+    //   localStorage.setItem('isAdmin', 'true');
+    //   openNotificationadmin();
+
+    //   dispatch(supperadminloginSuccess({ supperadmin: accounts }));
+    //   localStorage.setItem('issupperAdmin', 'true');
+
+    // openNotification()
+
   } catch (error) {
     console.error('Đăng nhập thất bại:', error);
+    openNotification()
+
   }
 };
 

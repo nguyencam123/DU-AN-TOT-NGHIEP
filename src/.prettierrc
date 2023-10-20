@@ -1,6 +1,6 @@
 {
     "arrowParens": "always",
-    "semi": false,
+    "semi": true,
     "trailingComa": "none",
     "tabwidth": 2,
     "endofline": "auto",

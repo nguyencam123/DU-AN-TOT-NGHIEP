@@ -16,7 +16,7 @@ const ProductTabs = (props) => {
     useEffect(() => {
         setProducts(products.slice(0, 6));
     }, [products]);
-
+    console.log(products)
     const [productlist, setProducts] = useState([]);
     const loadMore = () => {
         const startIndex = productlist.length;
@@ -52,15 +52,14 @@ const ProductTabs = (props) => {
                             }}
                             cover={<img alt="example" src={imgproduct} />}
                         >
-                            <Meta title={product.name} description={product.price} />
+                            <Meta title={product.homestay_Name} />
                             <div>
                                 <Rate allowHalf disabled defaultValue={product.star} />
                                 <div style={{ display: 'flex' }}>
                                     <EnvironmentOutlined style={{ marginTop: 5 }} />&ensp;
-                                    {product.address}
+                                    {product.province_Name}
                                 </div>
-                                <div style={{ fontSize: 12 }}>Giá rẻ nhất mỗi đêm chỉ từ:</div>
-                                <Title level={3} style={{ color: 'red' }}>VND 1.155.000</Title>
+                                <Title level={3} style={{ color: 'red' }}>{product.price}VNĐ</Title>
                             </div>
                         </Card>
                     </Col>

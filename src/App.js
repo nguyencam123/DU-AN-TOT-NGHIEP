@@ -11,6 +11,8 @@ import Hotel from './component/user/hotelcomponent/hotel';
 import ErrorLogin from './features/admin/errorLogin/error';
 import Endow from './component/user/endow/endow';
 import HomePartner from './component/PartnerComponent/homepartner';
+import LoginPartner from './component/PartnerComponent/login/partnerlogin';
+import LoginAdmin from './component/admin/login/loginadmin';
 
 function App() {
   //map component user
@@ -19,10 +21,12 @@ function App() {
     { path: 'user/propreties', element: <LoginDetail /> },
     { path: 'login', element: <LoginComponent /> },
     { path: 'register', element: <Register /> },
-    { path: 'khach-san', element: <Hotel /> },
+    { path: 'home-stay', element: <Hotel /> },
     { path: 'error-role', element: <ErrorLogin /> },
     { path: 'phieu-giam-gia', element: <Endow /> },
-    { path: 'hop-tac', element: <HomePartner /> }
+    { path: 'hop-tac', element: <HomePartner /> },
+    { path: 'hop-tac/login', element: <LoginPartner /> },
+    { path: 'login-admin', element: <LoginAdmin /> }
   ];
   //
   return (

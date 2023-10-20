@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { Typography } from 'antd'
 import { MDBBtn } from 'mdb-react-ui-kit';
 import imgHD from '../../assets/img/KMhoptac.png'
+import { Link } from 'react-router-dom';
 
 
 const { Title } = Typography
@@ -40,7 +41,9 @@ const HomePartner = () => {
                     }}>
                         <Title level={3} >HomeStay</Title>
                         <p>Những căn nhà nhỏ được trang trí thành một không gian lưu trú riêng biệt dành cho khách</p>
-                        <MDBBtn style={{ top: 30 }}>Đăng ký để cộng tác với chúng tôi</MDBBtn>
+                        <Link to={"/hop-tac/login"}>
+                            <MDBBtn style={{ top: 30 }}>Đăng nhập để cộng tác với chúng tôi</MDBBtn>
+                        </Link>
                     </div>
                     <div style={{
                         width: 500, height: 230, backgroundColor: 'white',
@@ -48,8 +51,10 @@ const HomePartner = () => {
                     }}>
                         <Title level={3} >Căn hộ của người dân</Title>
                         <p>Những căn hộ được trang trí lại thành một không gian đặc biệt cho du
-                            khách đặc biệt là những nói có tiềm năng như các điểm du lịch nổi tiếng</p>
-                        <MDBBtn style={{ top: 7 }}>Đăng ký để cộng tác với chúng tôi</MDBBtn>
+                            khách đặc biệt là những nơi có tiềm năng như các điểm du lịch nổi tiếng</p>
+                        <Link to={"/hop-tac/login"}>
+                            <MDBBtn style={{ top: 8 }}>Đăng nhập để cộng tác với chúng tôi</MDBBtn>
+                        </Link>
                     </div>
                 </div>
             </ColorBox>
@@ -68,7 +73,7 @@ const HomePartner = () => {
                     <div style={{ width: '49.5%', height: 210, backgroundColor: '#d8f5d5', borderRadius: 20, padding: '10px 10px 0px 10px' }}>
                         <div style={{ width: 50, height: 50, backgroundColor: '#09b057', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 0L14.506 2.96974L18 1.60727L18.8478 5.38912L22.3919 6.00022L21.3538 9.58106L24 12.0004L21.3538 14.4198L22.3919 17.9998L18.8478 18.6109L18 22.3927L14.506 21.0312L12 24L9.49404 21.0312L6 22.3927L5.15307 18.6109L1.6081 17.9998L2.64622 14.4198L0 12.0004L2.64622 9.58106L1.6081 6.00022L5.15307 5.38912L6 1.60727L9.49404 2.96974L12 0ZM16.4496 7H14.6996L7.69959 17H9.44959L16.4496 7ZM15.5041 13C14.6159 13 13.9996 13.8421 13.9996 15.005C13.9996 16.1679 14.6068 17 15.4951 17C16.3833 17 16.9996 16.1679 16.9996 14.995C16.9996 13.8421 16.3923 13 15.5041 13ZM8.50412 7C7.61591 7 6.99959 7.84211 6.99959 9.00501C6.99959 10.1679 7.60684 11 8.49506 11C9.38328 11 9.99959 10.1679 9.99959 8.99499C9.99959 7.84211 9.39234 7 8.50412 7Z" fill="white"></path></svg>                        </div><br />
-                        <Title level={3}>Nhận đặt phòng nhanh chóng
+                        <Title level={3}>Nổi bật so với các đối thủ cạnh tranh
                         </Title>
                         <p>Thống kê của chúng tôi cho thấy, hầu hết các tin cho thuê phòng/thuê chỗ mới sẽ nhận được đặt phòng trong vòng 3 tháng đầu tiên sau khi tham gia cộng đồng của chúng tôi.</p>
                     </div>

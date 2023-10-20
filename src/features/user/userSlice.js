@@ -24,20 +24,20 @@ const userSlice = createSlice({
             state.admin = action.payload.admin;
             state.isAdmin = true;
         },
-        supperadminloginSuccess: (state, action) => {
-            state.supperadmin = action.payload.supperadmin;
-            state.issupperAdmin = true;
+        partnerloginSuccess: (state, action) => {
+            state.partner = action.payload.partner;
+            state.ispartner = true;
         },
         logout: (state) => {
             state.user = null
             state.isLoggedIn = false
             state.admin = null
             state.isAdmin = false
-            state.supperadmin = null
-            state.issupperAdmin = false
+            state.partner = null
+            state.ispartner = false
         },
     },
 });
 
-export const { loginSuccess, logout, adminloginSuccess, supperadminloginSuccess } = userSlice.actions;
+export const { loginSuccess, logout, adminloginSuccess, partnerloginSuccess } = userSlice.actions;
 export default userSlice.reducer;

@@ -19,17 +19,15 @@ import dayjs from 'dayjs';
 import { useState } from "react";
 import imgheadhotel from "../../../assets/img/imgheadhotel.png"
 import 'dayjs/locale/vi';
+import { useSelector } from 'react-redux';
 dayjs.locale('vi');
-const { Title } = Typography
+const { Title } = Typography;
 const { Header, Footer, Sider, Content } = Layout;
 
 
 const text = <section>
     <div style={{ justifyContent: 'space-between', display: 'flex', fontSize: 18 }}>
-        <div style={{ display: 'flex' }}><UserOutlined style={{ marginTop: 4 }} />&ensp;Người lớn</div><div><Input style={{ width: 40, height: 40 }} defaultValue={1} /></div>
-    </div><br />
-    <div style={{ justifyContent: 'space-between', display: 'flex', fontSize: 18 }}>
-        <div style={{ display: 'flex' }}><WalletOutlined style={{ marginTop: 4 }} />&ensp;Trẻ em</div><div><Input style={{ width: 40, height: 40 }} defaultValue={1} /></div>
+        <div style={{ display: 'flex' }}><UserOutlined style={{ marginTop: 4 }} />&ensp;số lượng người</div><div><Input style={{ width: 40, height: 40 }} defaultValue={1} /></div>
     </div>
 </section>;
 const utilities = <div style={{ width: '100%', height: '30%', backgroundColor: 'white', borderRadius: 10, padding: '5px 5px 5px' }}>
@@ -40,7 +38,7 @@ const utilities = <div style={{ width: '100%', height: '30%', backgroundColor: '
 const items = [
     {
         key: '1',
-        label: 'Bạn hãy chọn số lượng người và phòng',
+        label: 'Bạn hãy chọn số lượng người',
         children: <p>{text}</p>,
     }
 ];
@@ -53,6 +51,8 @@ const itemsutilities = [
 ]
 
 const Hotel = () => {
+    const products = useSelector((state) => state.product.products);
+
     const onChange = (key) => {
         console.log(key);
     };
@@ -244,36 +244,39 @@ const Hotel = () => {
                                 <h1 style={{ fontSize: 18, marginTop: 12, color: '#0194f3' }}>Chào mừng bạn đến với TravelVIVU nơi có những ưu đãi tốt nhất dành cho bạn!!!</h1>
                             </div>
                             <div>
-                                <div style={{
-                                    width: '100%', height: 210,
-                                    backgroundColor: '#ffffff', borderRadius: 8,
-                                    boxShadow: '0 0 3px 1px #ACAEB1', marginTop: 20,
-                                    padding: '2px 2px 2px 2px', display: 'flex'
-                                }}>
-                                    <div>
-                                        <img src={hotelimg} style={{ borderRadius: 8, height: 150 }} />
-                                        <div style={{ marginTop: 8 }}>
-                                            <img src={hotelimg} style={{ borderRadius: 8, height: 48, marginRight: 6 }} />
-                                            <img src={hotelimg} style={{ borderRadius: 8, height: 48, marginRight: 6 }} />
-                                            <img src={hotelimg} style={{ borderRadius: 8, height: 48, marginRight: 6 }} />
+                                {products.map((items) => (
+                                    <div style={{
+                                        width: '100%', height: 210,
+                                        backgroundColor: '#ffffff', borderRadius: 8,
+                                        boxShadow: '0 0 3px 1px #ACAEB1', marginTop: 20,
+                                        padding: '2px 2px 2px 2px', display: 'flex'
+                                    }}>
+                                        <div>
+                                            <img src={hotelimg} style={{ borderRadius: 8, height: 150 }} />
+                                            <div style={{ marginTop: 8 }}>
+                                                <img src={hotelimg} style={{ borderRadius: 8, height: 48, marginRight: 6 }} />
+                                                <img src={hotelimg} style={{ borderRadius: 8, height: 48, marginRight: 6 }} />
+                                                <img src={hotelimg} style={{ borderRadius: 8, height: 48, marginRight: 6 }} />
+                                            </div>
+                                        </div>
+                                        <div style={{ marginLeft: 10 }}>
+                                            <h1 style={{ fontSize: 18, marginTop: 10 }}>{items.homestay_Name}</h1>
+                                            <Rate allowHalf disabled defaultValue={items.star} size='sm' /><br />
+                                            <div style={{ display: 'flex', marginTop: 10 }}><CompassOutlined style={{ marginTop: 3 }} />&ensp; <Title style={{ fontSize: 16 }}>{items.province_Name}</Title></div>
+                                            <h1 style={{ width: '100%', height: 20, backgroundColor: 'rgb(242, 243, 243)', borderRadius: 8, fontSize: 14, padding: '0 2px 0 2px' }}>Thanh toán khi nhận phòng</h1>
+                                        </div>
+                                        <div style={{ marginLeft: 180, borderLeft: '1px solid #ACAEB1', padding: '45px 8px 2px 2px' }}>
+                                            <div style={{ display: 'flex', color: 'rgb(5, 165, 105)' }}><ShopOutlined style={{ marginTop: 3, fontSize: 14 }} /> Ưu đãi dành riêng cho bạn...</div>
+                                            <div style={{ float: 'right' }}>
+                                                <div style={{ fontSize: 16 }}><del>{items.price} VND</del></div>
+                                                <div style={{ fontSize: 22, color: 'rgb(231, 9, 14)' }}>{items.price} VND</div>
+                                                <div style={{ fontSize: 12, color: 'rgb(231, 9, 14)' }}>Ngày bạn chọn đã có 10 lượt<br /> đặt</div>
+                                                <div style={{ fontSize: 22 }}><Button style={{ backgroundColor: 'rgb(231, 9, 14)', color: 'white' }}>Chọn phòng</Button></div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div style={{ marginLeft: 10 }}>
-                                        <h1 style={{ fontSize: 18, marginTop: 10 }}>Davue Hotel Da Nang</h1>
-                                        <Rate allowHalf disabled defaultValue={5} size='sm' /><br />
-                                        <div style={{ display: 'flex', marginTop: 10 }}><CompassOutlined style={{ marginTop: 3 }} />&ensp; <Title style={{ fontSize: 16 }}>Mỹ An,Đà Nẵng</Title></div>
-                                        <h1 style={{ width: '100%', height: 20, backgroundColor: 'rgb(242, 243, 243)', borderRadius: 8, fontSize: 14, padding: '0 2px 0 2px' }}>Thanh toán khi nhận phòng</h1>
-                                    </div>
-                                    <div style={{ marginLeft: 180, borderLeft: '1px solid #ACAEB1', padding: '45px 8px 2px 2px' }}>
-                                        <div style={{ display: 'flex', color: 'rgb(5, 165, 105)' }}><ShopOutlined style={{ marginTop: 3, fontSize: 14 }} /> Ưu đãi dành riêng cho bạn...</div>
-                                        <div style={{ float: 'right' }}>
-                                            <div style={{ fontSize: 16 }}><del>1.999.999 VND</del></div>
-                                            <div style={{ fontSize: 22, color: 'rgb(231, 9, 14)' }}>1.999.999 VND</div>
-                                            <div style={{ fontSize: 12, color: 'rgb(231, 9, 14)' }}>Ngày bạn chọn đã có 10 lượt<br /> đặt</div>
-                                            <div style={{ fontSize: 22 }}><Button style={{ backgroundColor: 'rgb(231, 9, 14)', color: 'white' }}>Chọn phòng</Button></div>
-                                        </div>
-                                    </div>
-                                </div>
+                                ))}
+
                             </div>
                         </section>
                     </Content>
