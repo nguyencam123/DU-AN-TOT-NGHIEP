@@ -3,7 +3,6 @@ package com.example.demo.entities;
 import com.example.demo.entities.base.PrimaryEntity;
 import com.example.demo.infrastructure.contant.EntityProperties;
 import com.example.demo.infrastructure.contant.Status;
-import com.example.demo.infrastructure.contant.StatusServicePack;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -21,10 +20,6 @@ public class Homestay extends PrimaryEntity {
     @ManyToOne
     @JoinColumn(name = "promotion_id")
     private Promotion promotion;
-
-    @ManyToOne
-    @JoinColumn(name = "service_pack_id")
-    private ServicePack servicePack;
 
     @ManyToOne
     @JoinColumn(name = "province_id")
@@ -45,11 +40,9 @@ public class Homestay extends PrimaryEntity {
     @Column(length = EntityProperties.LENGTH_NAME)
     private String name;
 
-    private Double star;
+    private Double point;
 
     private Status status;
-
-    private StatusServicePack statusServicePack;
 
     private Long startDate;
 
