@@ -26,4 +26,9 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
         return new PageableObject<>(res);
     }
 
+    @Override
+    public List<CustomerHomestayResponse> getHomestayByConvenientId(CustomerHomestayRequest customerHomestayRequest) {
+        return customerHomestayRepository.getHomestayByConvenientId(customerHomestayRequest);
+    }
+
 }
