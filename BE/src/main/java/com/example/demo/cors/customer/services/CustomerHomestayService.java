@@ -10,4 +10,6 @@ public interface CustomerHomestayService {
 
     PageableObject<CustomerHomestayResponse> getListHomestay(CustomerHomestayRequest request);
 
+    List<CustomerHomestayResponse> getHomestayByConvenientId( CustomerHomestayRequest customerHomestayRequest);
+
 }

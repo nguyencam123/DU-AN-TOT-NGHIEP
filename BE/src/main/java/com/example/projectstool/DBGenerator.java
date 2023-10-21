@@ -7,6 +7,7 @@ import com.example.demo.entities.Cart;
 import com.example.demo.entities.Comment;
 import com.example.demo.entities.ConvenientHomestay;
 import com.example.demo.entities.ConvenientHomestayType;
+import com.example.demo.entities.DetailHomestay;
 import com.example.demo.entities.Homestay;
 import com.example.demo.entities.ImgComment;
 import com.example.demo.entities.ImgHomestay;
@@ -26,6 +27,7 @@ import com.example.demo.repositories.CartRepository;
 import com.example.demo.repositories.CommentRepository;
 import com.example.demo.repositories.ConvenientHomestayRepository;
 import com.example.demo.repositories.ConvenientHomestayTypeRepository;
+import com.example.demo.repositories.DetailHomestayRepository;
 import com.example.demo.repositories.HomestayRepository;
 import com.example.demo.repositories.ImgCommentRepository;
 import com.example.demo.repositories.ImgHomestayRepository;
@@ -88,6 +90,8 @@ public class DBGenerator implements CommandLineRunner {
     private CartRepository cartRepository;
     @Autowired
     private ApprovalHistoryRepository approvalHistoryRepository;
+    @Autowired
+    private DetailHomestayRepository detailHomestayRepository;
 
     public void run(String... args) throws Exception {
 
@@ -404,46 +408,60 @@ public class DBGenerator implements CommandLineRunner {
 
         //Convenient homestay
         ConvenientHomestay convenientHomestay1 = new ConvenientHomestay();
-        convenientHomestay1.setName("Wifi miễn phí");
-        convenientHomestay1.setHomestay(homestay1);
+        convenientHomestay1.setName("Wifi mien phi");
         convenientHomestay1.setConvenientHomestayType(convenientHomestayType1);
         convenientHomestayRepository.save(convenientHomestay1);
 
-        ConvenientHomestay convenientHomestay2 = new ConvenientHomestay();
-        convenientHomestay2.setName("Wifi miễn phí");
-        convenientHomestay2.setHomestay(homestay2);
-        convenientHomestay2.setConvenientHomestayType(convenientHomestayType1);
-        convenientHomestayRepository.save(convenientHomestay2);
-
-        ConvenientHomestay convenientHomestay3 = new ConvenientHomestay();
-        convenientHomestay3.setName("Wifi miễn phí");
-        convenientHomestay3.setHomestay(homestay3);
-        convenientHomestay3.setConvenientHomestayType(convenientHomestayType1);
-        convenientHomestayRepository.save(convenientHomestay3);
-
         ConvenientHomestay convenientHomestay4 = new ConvenientHomestay();
-        convenientHomestay4.setName("Hồ bơi");
-        convenientHomestay4.setHomestay(homestay4);
+        convenientHomestay4.setName("Ho boi");
         convenientHomestay4.setConvenientHomestayType(convenientHomestayType1);
         convenientHomestayRepository.save(convenientHomestay4);
 
         ConvenientHomestay convenientHomestay5 = new ConvenientHomestay();
-        convenientHomestay5.setName("Chỗ đỗ xe");
-        convenientHomestay5.setHomestay(homestay5);
+        convenientHomestay5.setName("Cho do xe");
         convenientHomestay5.setConvenientHomestayType(convenientHomestayType2);
         convenientHomestayRepository.save(convenientHomestay5);
 
-        ConvenientHomestay convenientHomestay6 = new ConvenientHomestay();
-        convenientHomestay6.setName("Wifi miễn phí");
-        convenientHomestay6.setHomestay(homestay4);
-        convenientHomestay6.setConvenientHomestayType(convenientHomestayType2);
-        convenientHomestayRepository.save(convenientHomestay6);
+        // detail homestay
+        DetailHomestay detailHomestay1 = new DetailHomestay();
+        detailHomestay1.setConvenientHomestay(convenientHomestay1);
+        detailHomestay1.setHomestay(homestay1);
+        detailHomestayRepository.save(detailHomestay1);
 
-        ConvenientHomestay convenientHomestay7 = new ConvenientHomestay();
-        convenientHomestay7.setName("Wifi miễn phí");
-        convenientHomestay7.setHomestay(homestay5);
-        convenientHomestay7.setConvenientHomestayType(convenientHomestayType2);
-        convenientHomestayRepository.save(convenientHomestay7);
+        DetailHomestay detailHomestay2 = new DetailHomestay();
+        detailHomestay2.setConvenientHomestay(convenientHomestay1);
+        detailHomestay2.setHomestay(homestay2);
+        detailHomestayRepository.save(detailHomestay2);
+
+        DetailHomestay detailHomestay3 = new DetailHomestay();
+        detailHomestay3.setConvenientHomestay(convenientHomestay1);
+        detailHomestay3.setHomestay(homestay3);
+        detailHomestayRepository.save(detailHomestay3);
+
+        DetailHomestay detailHomestay4 = new DetailHomestay();
+        detailHomestay4.setConvenientHomestay(convenientHomestay1);
+        detailHomestay4.setHomestay(homestay4);
+        detailHomestayRepository.save(detailHomestay4);
+
+        DetailHomestay detailHomestay5 = new DetailHomestay();
+        detailHomestay5.setConvenientHomestay(convenientHomestay1);
+        detailHomestay5.setHomestay(homestay5);
+        detailHomestayRepository.save(detailHomestay5);
+
+        DetailHomestay detailHomestay6 = new DetailHomestay();
+        detailHomestay6.setConvenientHomestay(convenientHomestay4);
+        detailHomestay6.setHomestay(homestay1);
+        detailHomestayRepository.save(detailHomestay6);
+
+        DetailHomestay detailHomestay7 = new DetailHomestay();
+        detailHomestay7.setConvenientHomestay(convenientHomestay4);
+        detailHomestay7.setHomestay(homestay2);
+        detailHomestayRepository.save(detailHomestay7);
+
+        DetailHomestay detailHomestay8 = new DetailHomestay();
+        detailHomestay8.setConvenientHomestay(convenientHomestay5);
+        detailHomestay8.setHomestay(homestay1);
+        detailHomestayRepository.save(detailHomestay8);
 
         //booking
         Booking booking1 = new Booking();

@@ -6,8 +6,5 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CustomerHomestayRequest extends PageableRequest {
-
-    private String convenientId;
-
+public class CustomerConvenientHomestayRequest extends PageableRequest {
 }
