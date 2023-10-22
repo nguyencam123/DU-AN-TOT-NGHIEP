@@ -10,13 +10,13 @@ const items1 = ['1', '2', '3'].map((key) => ({
     key,
     label: `nav ${key}`,
 }));
-const HeaderAdmin = () => {
+const Headerpartner = () => {
     return (
         <Header style={{ display: 'flex', alignItems: 'center' }}>
             <div className="demo-logo" />
-            <Title level={3} style={{ marginTop: '13px', color: 'white' }}><img src={logotravel} />Trang quản trị home-stay</Title>
+            <Title level={3} style={{ marginTop: '13px', color: 'white' }}><img src={logotravel} />Trang quản trị home-stay của bạn</Title>
             <div className="layout-login" style={{ marginLeft: 'auto' }}><Title level={5} style={{ color: 'white' }}>Nguyễn Cầm (Đăng xuất)</Title></div>
         </Header>
     )
 }
-export default HeaderAdmin
+export default Headerpartner

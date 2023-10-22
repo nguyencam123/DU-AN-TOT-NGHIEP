@@ -2,7 +2,7 @@ import './App.css';
 import ProductList from './component/product/ProductList';
 import LoginComponent from './component/login/Login';
 import LoginDetail from './component/login/LoginDetail';
-import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from 'react-router-dom';
 import ProtectedRoute from './app/ProtectedRoute';
 import AdminLayout from './layout/layoutadmin/AdminLayout';
 import UserLayout from './layout/layoutuser/UserLayout';
@@ -12,10 +12,15 @@ import ErrorLogin from './features/admin/errorLogin/error';
 import Endow from './component/user/endow/endow';
 import HomePartner from './component/PartnerComponent/homepartner';
 import LoginPartner from './component/PartnerComponent/login/partnerlogin';
+import { useSelector } from 'react-redux';
 import LoginAdmin from './component/admin/login/loginadmin';
+import PartnerLayout from './layout/layoutpartner/partnerlayout';
+
 
 function App() {
   //map component user
+  const isAdmin = useSelector((state) => state.user.isAdmin);
+
   const items = [
     { path: '', element: <ProductList /> },
     { path: 'user/propreties', element: <LoginDetail /> },
@@ -34,14 +39,21 @@ function App() {
       <Router>
         <Routes>
           {/* guest component */}
-          <Route path='/*' element={<UserLayout />}>
+          <Route path="/*" element={<UserLayout />}>
             {items.map(item => (
               <Route path={item.path} element={item.element} />
             ))}
+            {/* {isAdmin == true ?
+              null : <Route path="admin/*" element={<Navigate to="/error-role" replace />} />
+            } */}
           </Route>
           {/* map quyen voi url admin */}
-          <Route path='/*' element={<AdminLayout />}>
-            <Route path='admin/*' element={<ProtectedRoute adminOnly />} />
+          <Route path="/*" element={<PartnerLayout />}>
+            <Route path="partner/*" element={<ProtectedRoute partnerOnly />} />
+          </Route>
+          <Route path="/*" element={<AdminLayout />}>
+            <Route path="admin/*" element={<ProtectedRoute adminOnly />} />
+            <Route path="*" element={<Navigate to="/error-role" replace />} />
           </Route>
         </Routes>
       </Router>

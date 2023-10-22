@@ -16,7 +16,6 @@ const ProductTabs = (props) => {
     useEffect(() => {
         setProducts(products.slice(0, 6));
     }, [products]);
-    console.log(products)
     const [productlist, setProducts] = useState([]);
     const loadMore = () => {
         const startIndex = productlist.length;

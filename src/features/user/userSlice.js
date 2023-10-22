@@ -6,9 +6,11 @@ const initialState = {
     isLoggedIn: false,
     admin: null,
     isAdmin: false,
-    supperadmin: null,
-    issupperAdmin: false,
-    userData: null
+    partner: null,
+    ispartner: false,
+    userData: null,
+    adminData: null,
+    partnerData: null
 };
 
 const userSlice = createSlice({
@@ -23,10 +25,12 @@ const userSlice = createSlice({
         adminloginSuccess: (state, action) => {
             state.admin = action.payload.admin;
             state.isAdmin = true;
+            state.adminData = action.payload.adminData
         },
         partnerloginSuccess: (state, action) => {
             state.partner = action.payload.partner;
             state.ispartner = true;
+            state.adminData = action.payload.adminData
         },
         logout: (state) => {
             state.user = null

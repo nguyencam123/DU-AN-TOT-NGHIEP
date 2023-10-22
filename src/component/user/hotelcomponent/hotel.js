@@ -16,10 +16,11 @@ import {
     MDBIcon
 } from 'mdb-react-ui-kit';
 import dayjs from 'dayjs';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import imgheadhotel from "../../../assets/img/imgheadhotel.png"
 import 'dayjs/locale/vi';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchProducts } from "../../../features/product/productThunk";
 dayjs.locale('vi');
 const { Title } = Typography;
 const { Header, Footer, Sider, Content } = Layout;
@@ -52,7 +53,11 @@ const itemsutilities = [
 
 const Hotel = () => {
     const products = useSelector((state) => state.product.products);
+    const dispatch = useDispatch();
 
+    useEffect(() => {
+        dispatch(fetchProducts());
+    }, []);
     const onChange = (key) => {
         console.log(key);
     };
@@ -196,7 +201,7 @@ const Hotel = () => {
                 <Layout hasSider >
                     <Sider style={{ marginRight: 40, backgroundColor: '#f5f5f5' }}>
                         &emsp;&emsp;&emsp;&ensp;<img src={logoTravel} /><br /><br />
-                        <div style={{ display: 'flex', width: '100%', height: '30%', backgroundColor: 'white', borderRadius: 10, padding: '5px 5px 5px' }}>
+                        <div style={{ display: 'flex', width: '100%', height: '150px', backgroundColor: 'white', borderRadius: 10, padding: '5px 5px 5px' }}>
                             <div>
                                 <div style={{ display: 'flex' }}>
                                     <Title level={2} style={{ fontSize: 16 }}>Phạm vi giá</Title>
@@ -221,7 +226,7 @@ const Hotel = () => {
                                 />
                             </div>
                         </div><br />
-                        <div style={{ width: '100%', height: '45%', backgroundColor: 'white', borderRadius: 10, padding: '5px 5px 5px' }}>
+                        <div style={{ width: '100%', height: '200px', backgroundColor: 'white', borderRadius: 10, padding: '5px 5px 5px' }}>
                             <div>
                                 <Title level={2} style={{ fontSize: 16 }}>Hạng sao</Title>
                                 <Checkbox><Rate allowHalf disabled defaultValue={1} /></Checkbox>
@@ -251,7 +256,7 @@ const Hotel = () => {
                                         boxShadow: '0 0 3px 1px #ACAEB1', marginTop: 20,
                                         padding: '2px 2px 2px 2px', display: 'flex'
                                     }}>
-                                        <div>
+                                        <div style={{ width: '60%' }}>
                                             <img src={hotelimg} style={{ borderRadius: 8, height: 150 }} />
                                             <div style={{ marginTop: 8 }}>
                                                 <img src={hotelimg} style={{ borderRadius: 8, height: 48, marginRight: 6 }} />
@@ -259,13 +264,13 @@ const Hotel = () => {
                                                 <img src={hotelimg} style={{ borderRadius: 8, height: 48, marginRight: 6 }} />
                                             </div>
                                         </div>
-                                        <div style={{ marginLeft: 10 }}>
-                                            <h1 style={{ fontSize: 18, marginTop: 10 }}>{items.homestay_Name}</h1>
+                                        <div style={{ width: '50%', marginRight: 50 }}>
+                                            <h1 style={{ fontSize: 18, marginTop: 10, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: 250 }}>{items.homestay_Name}</h1>
                                             <Rate allowHalf disabled defaultValue={items.star} size='sm' /><br />
                                             <div style={{ display: 'flex', marginTop: 10 }}><CompassOutlined style={{ marginTop: 3 }} />&ensp; <Title style={{ fontSize: 16 }}>{items.province_Name}</Title></div>
                                             <h1 style={{ width: '100%', height: 20, backgroundColor: 'rgb(242, 243, 243)', borderRadius: 8, fontSize: 14, padding: '0 2px 0 2px' }}>Thanh toán khi nhận phòng</h1>
                                         </div>
-                                        <div style={{ marginLeft: 180, borderLeft: '1px solid #ACAEB1', padding: '45px 8px 2px 2px' }}>
+                                        <div style={{ marginLeft: 10, borderLeft: '1px solid #ACAEB1', padding: '8px 8px 2px 2px', width: '40%' }}>
                                             <div style={{ display: 'flex', color: 'rgb(5, 165, 105)' }}><ShopOutlined style={{ marginTop: 3, fontSize: 14 }} /> Ưu đãi dành riêng cho bạn...</div>
                                             <div style={{ float: 'right' }}>
                                                 <div style={{ fontSize: 16 }}><del>{items.price} VND</del></div>

@@ -118,7 +118,7 @@ function ProductList() {
 
     return (
         <div>
-            <div>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <h3 style={contentStyle}>
                     <div style={{ position: 'relative' }}>
                         <img src={slideform} style={{ width: '100%', backgroundSize: 'auto' }} />
@@ -146,13 +146,13 @@ function ProductList() {
                                     <Col className="gutter-row" span={12}>
                                         <RangePicker size='large'
                                             defaultValue={[dayjs('2023/09/01', dateFormat), dayjs('2023/10/01', dateFormat)]}
-                                            format={dateFormat}
+                                            format={dateFormat} style={{ width: '340px', minWidth: '50px' }}
                                         />&emsp;
                                     </Col>
                                     <Col className="gutter-row" span={12}>
                                         <Select
                                             defaultValue="lucy"
-                                            style={{ width: '100%', minWidth: '50px' }} // Thêm maxWidth ở đây
+                                            style={{ width: '340px', minWidth: '50px' }} // Thêm maxWidth ở đây
                                             size='large'
                                             options={[
                                                 { value: 'jack', label: '2 người lớn một phòng' },
@@ -160,7 +160,7 @@ function ProductList() {
                                                 { value: 'Yiminghe', label: 'yiminghe' },
                                                 { value: 'disabled', label: 'Disabled', disabled: true },
                                             ]}
-                                            suffixIcon={<TeamOutlined style={{ position: 'absolute', right: '150px', fontSize: 18 }} />}
+                                            suffixIcon={<TeamOutlined style={{ fontSize: 18 }} />}
                                         />
                                     </Col>
                                 </Row>
@@ -194,7 +194,7 @@ function ProductList() {
             <section style={{ padding: '0 150px 0 150px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Title>Chương trình khuyến mại</Title>
-                    <div><a href='/khach-san' style={{ fontSize: 18, textDecoration: 'none' }}>Xem tất cả ></a></div>
+                    <div><a href='/home-stay' style={{ fontSize: 18, textDecoration: 'none' }}>Xem tất cả ></a></div>
                 </div>
 
                 <Carousel style={{}}>
