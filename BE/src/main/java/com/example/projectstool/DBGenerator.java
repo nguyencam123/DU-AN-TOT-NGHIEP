@@ -19,6 +19,7 @@ import com.example.demo.entities.Region;
 import com.example.demo.entities.ScenicSpot;
 import com.example.demo.entities.ScenicSpotHomestay;
 import com.example.demo.entities.User;
+import com.example.demo.infrastructure.contant.Status;
 import com.example.demo.infrastructure.contant.TypePromotion;
 import com.example.demo.repositories.AdminRepository;
 import com.example.demo.repositories.ApprovalHistoryRepository;
@@ -469,12 +470,18 @@ public class DBGenerator implements CommandLineRunner {
         booking1.setTotalPrice(new BigDecimal(1200000));
         booking1.setPromotion(promotion1);
         booking1.setHomestay(homestay1);
+        booking1.setStartDate(1697987691L);
+        booking1.setEndDate(1698620161L);
+        booking1.setStatus(Status.HOAT_DONG);
         bookingRepository.save(booking1);
 
         Booking booking2 = new Booking();
         booking2.setUser(user2);
         booking2.setTotalPrice(new BigDecimal(1200000));
         booking2.setHomestay(homestay2);
+        booking2.setStatus(Status.HOAT_DONG);
+        booking2.setStartDate(1697987691L);
+        booking2.setEndDate(1698620161L);
         bookingRepository.save(booking2);
 
         //cart
