@@ -4,13 +4,11 @@ import com.example.demo.entities.base.PrimaryEntity;
 import com.example.demo.infrastructure.contant.EntityProperties;
 import com.example.demo.infrastructure.contant.Status;
 import com.example.demo.infrastructure.contant.StatusServicePack;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "homestay")
@@ -41,6 +39,9 @@ public class Homestay extends PrimaryEntity {
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private OwnerHomestay ownerHomestay;
+
+    @OneToMany(mappedBy = "homestay", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ImgHomestay> images;
 
     @Column(length = EntityProperties.LENGTH_NAME)
     private String name;

@@ -1,7 +1,10 @@
 package com.example.demo.cors.homestayowner.model.request;
 
 import com.example.demo.cors.common.base.PageableRequest;
+import com.example.demo.entities.ImgHomestay;
 import lombok.*;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -12,13 +15,15 @@ public class HomestayownerHomestayRequest extends PageableRequest {
 
       private String name;
 
+      private Long startDate;
+
       private String address;
 
-      private String servicePack;
+      private String region;
 
-      private String statusDate;
+      private String province;
 
-      private String statusHomestay;
+      private List<String> img;
 
       private String statusServicePack;
 
