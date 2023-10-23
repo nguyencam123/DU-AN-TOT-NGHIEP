@@ -33,7 +33,6 @@ function AddProductForm() {
   const categorys = useSelector((state) => state.category.categorys)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formErrors, setFormErrors] = useState({});
-
   //
 
   const listFilter = [
@@ -77,9 +76,6 @@ function AddProductForm() {
   //
   useEffect(() => {
     dispatch(fetchProducts());
-  }, []);
-  useEffect(() => {
-    dispatch(fetchCategory());
   }, []);
   //
   //delete
@@ -210,7 +206,7 @@ function AddProductForm() {
       {error ? <p>Error: {error}</p> : null} */}
       <Table columns={columns} dataSource={products} />
 
-      <Pagination style={{ float: 'right',  marginTop:'20px'}} defaultCurrent={1} total={50} />
+      <Pagination style={{ float: 'right', marginTop: '20px' }} defaultCurrent={1} total={50} />
       {/* popup form */}
       <Modal title="Thêm sản phẩm" open={isModalOpen}
         onOk={handleOk} onCancel={handleCancel}

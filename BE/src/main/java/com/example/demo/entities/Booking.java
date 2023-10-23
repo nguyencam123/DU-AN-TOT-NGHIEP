@@ -5,6 +5,7 @@ import com.example.demo.infrastructure.contant.Status;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,5 +29,13 @@ public class Booking extends PrimaryEntity {
     @ManyToOne
     @JoinColumn(name = "promotion_id")
     private Promotion promotion;
+
+    private Long startDate;
+
+    private Long endDate;
+
+    @OneToOne
+    @JoinColumn(name = "homestay_id")
+    private Homestay homestay;
 
 }

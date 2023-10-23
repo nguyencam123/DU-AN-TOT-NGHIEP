@@ -27,8 +27,8 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
     }
 
     @Override
-    public List<CustomerHomestayResponse> getAllHomestay() {
-        return customerHomestayRepository.getAllHomestay();
+    public List<CustomerHomestayResponse> getHomestayByConvenientId(CustomerHomestayRequest customerHomestayRequest) {
+        return customerHomestayRepository.getHomestayByConvenientId(customerHomestayRequest);
     }
 
 }

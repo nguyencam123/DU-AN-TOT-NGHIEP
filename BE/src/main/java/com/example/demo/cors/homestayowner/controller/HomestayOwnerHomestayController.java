@@ -2,7 +2,9 @@ package com.example.demo.cors.homestayowner.controller;
 
 import com.example.demo.cors.common.base.ResponseObject;
 import com.example.demo.cors.homestayowner.model.request.HomestayownerHomestayRequest;
+import com.example.demo.cors.homestayowner.repository.HomestayOwnerImgHomestayRepo;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerHomestayService;
+import com.example.demo.cors.homestayowner.service.HomestayOwnerImgHomestayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +15,8 @@ public class HomestayOwnerHomestayController {
 
     @Autowired
     private HomestayOwnerHomestayService homestayownerHomestayService;
+    @Autowired
+    private HomestayOwnerImgHomestayService homestayOwnerImgHomestayService;
 
     @GetMapping("get-homestay")
     public ResponseObject getPageHomestayownerHomestay(HomestayownerHomestayRequest homestayownerHomestayRequest) {
@@ -22,6 +26,11 @@ public class HomestayOwnerHomestayController {
     @PostMapping("add-homestay")
     public ResponseObject addHomestay(@RequestBody HomestayownerHomestayRequest homestayOwnerAddHomestayRequest){
         return new ResponseObject(homestayownerHomestayService.addHomestay(homestayOwnerAddHomestayRequest));
+    }
+
+    @GetMapping("get-imghomestay")
+    public ResponseObject getPageHomestayownerHomestay(@RequestParam("id") String id) {
+        return new ResponseObject(homestayOwnerImgHomestayService.getImgHomestayByHomestayId(id));
     }
 
 }

@@ -6,9 +6,11 @@ const initialState = {
     isLoggedIn: false,
     admin: null,
     isAdmin: false,
-    supperadmin: null,
-    issupperAdmin: false,
-    userData: null
+    partner: null,
+    ispartner: false,
+    userData: null,
+    adminData: null,
+    partnerData: null
 };
 
 const userSlice = createSlice({
@@ -23,21 +25,23 @@ const userSlice = createSlice({
         adminloginSuccess: (state, action) => {
             state.admin = action.payload.admin;
             state.isAdmin = true;
+            state.adminData = action.payload.adminData
         },
-        supperadminloginSuccess: (state, action) => {
-            state.supperadmin = action.payload.supperadmin;
-            state.issupperAdmin = true;
+        partnerloginSuccess: (state, action) => {
+            state.partner = action.payload.partner;
+            state.ispartner = true;
+            state.adminData = action.payload.adminData
         },
         logout: (state) => {
             state.user = null
             state.isLoggedIn = false
             state.admin = null
             state.isAdmin = false
-            state.supperadmin = null
-            state.issupperAdmin = false
+            state.partner = null
+            state.ispartner = false
         },
     },
 });
 
-export const { loginSuccess, logout, adminloginSuccess, supperadminloginSuccess } = userSlice.actions;
+export const { loginSuccess, logout, adminloginSuccess, partnerloginSuccess } = userSlice.actions;
 export default userSlice.reducer;

@@ -13,17 +13,17 @@ import java.util.List;
 @Repository
 public interface HomestayOwnerHomestayRepository extends HomestayRepository {
 
-      @Query(value = "select a.name as name,b.name as address,c.name as servicePack,a.start_date as statusDate,a.status as statusHomestay,a.status_service_pack as statusServicePack  from homestay a \n" +
-              "inner join address b on a.address_id=b.id \n" +
-              "inner join service_pack c on a.service_pack_id=c.id",nativeQuery = true)
+      @Query(value = "select  a.name , a.address, a.price,a.start_date as startDate,a.number_person as numberPerson,b.name as province,c.name as region,a.status from homestay a\n" +
+              "inner join province b on a.province_id=b.id\n" +
+              "inner join region c on a.region_id=c.id",nativeQuery = true)
       Page<HomestayOwnerHomestayReponse> getALlHomestayPage(Pageable pageable);
 
-      @Query(value = "select a.name as name,b.name as address,e.name as servicePack,a.start_date as statusDate,a.status as statusHomestay,a.status_service_pack as statusServicePack \n" +
-              "from homestay a  \n" +
-              "inner join [address] b on a.address_id=b.id\n" +
-              "inner join service_pack e on a.service_pack_id=e.id\n" +
-              "inner join convenient_homestay d on a.id=d.homestay_id\n" +
-              "where d.id=:id",nativeQuery = true)
+      @Query(value = "select  a.name , a.address, a.price,a.start_date as startDate,a.number_person as numberPerson,b.name as province,c.name as region,a.status from homestay a\n" +
+              "inner join province b on a.province_id=b.id\n" +
+              "inner join region c on a.region_id=c.id\n" +
+              "inner join detail_homestay d on a.id=d.homestay_id\n" +
+              "inner join convenient_homestay e on d.convenient_homestay_id=e.id\n" +
+              "where e.id=:id",nativeQuery = true)
       Page<HomestayOwnerHomestayReponse> getHomestayByConvient(String id,Pageable pageable);
 
 }

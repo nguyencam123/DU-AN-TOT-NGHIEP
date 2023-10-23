@@ -52,11 +52,8 @@ function LoginComponent() {
     useEffect(() => {
         if (isLoggedIn) {
             navigate('/')
-        } else if (isAdmin) {
-            navigate('/admin/createform')
-            openNotificationadmin()
         }
-    }, [isLoggedIn, isAdmin]);
+    }, [isLoggedIn]);
 
     return (
         <div>

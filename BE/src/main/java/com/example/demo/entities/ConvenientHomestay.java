@@ -20,10 +20,6 @@ public class ConvenientHomestay extends PrimaryEntity {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "homestay_id")
-    private Homestay homestay;
-
-    @ManyToOne
     @JoinColumn(name = "convenient_homestay_type_id")
     private ConvenientHomestayType convenientHomestayType;
 

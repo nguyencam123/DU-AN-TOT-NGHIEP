@@ -20,7 +20,4 @@ public interface CustomerHomestayResponse extends IsIdentified {
     @Value("#{target.province_name}")
     String getProvince_Name();
 
-    @Value("#{target.star}")
-    String getStar();
-
 }
