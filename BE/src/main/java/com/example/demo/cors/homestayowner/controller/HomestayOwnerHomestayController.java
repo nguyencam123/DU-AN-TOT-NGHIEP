@@ -32,5 +32,4 @@ public class HomestayOwnerHomestayController {
     public ResponseObject getPageHomestayownerHomestay(@RequestParam("id") String id) {
         return new ResponseObject(homestayOwnerImgHomestayService.getImgHomestayByHomestayId(id));
     }
-
 }
