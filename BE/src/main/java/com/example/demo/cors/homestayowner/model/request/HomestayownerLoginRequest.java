@@ -9,8 +9,8 @@ import lombok.*;
 @ToString
 public class HomestayownerLoginRequest {
 
-    private String username;
+    private String uname;
 
-    private String password;
+    private String pass;
 
 }

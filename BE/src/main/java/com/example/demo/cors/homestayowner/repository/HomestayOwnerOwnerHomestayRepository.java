@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface HomestayOwnerOwnerHomestayRepository extends OwnerHomestayRepository {
        @Query(value = "Select a.code,a.name,a.email,a.password,a.username,a.status \n" +
                "from owner_homestay a \n" +
-               "where a.username= :#{#homestayownerLoginRequest.username} and a.password=:#{#homestayownerLoginRequest.password}",nativeQuery = true)
+               "where a.username= :#{#homestayownerLoginRequest.uname} and a.password=:#{#homestayownerLoginRequest.pass}",nativeQuery = true)
        HomestayOwnerLoginReponse getLoginOwnerHomestay(HomestayownerLoginRequest homestayownerLoginRequest);
+
 }
