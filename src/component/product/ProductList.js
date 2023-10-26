@@ -92,17 +92,17 @@ function ProductList() {
         {
             key: '1',
             label: 'Hồ Chí Minh',
-            children: <ProductTabs city="Hồ Chí Minh" />,
+            children: <ProductTabs city="Ho Chi Minh" />,
         },
         {
             key: '2',
             label: 'Hà Nội',
-            children: <ProductTabs city="Hà Nội" />,
+            children: <ProductTabs city="Ha Noi" />,
         },
         {
             key: '3',
             label: 'Đà Nẵng',
-            children: <ProductTabs city="Đà Nẵng" />,
+            children: <ProductTabs city="Da Nang" />,
         },
         {
             key: '4',
@@ -112,7 +112,7 @@ function ProductList() {
         {
             key: '5',
             label: 'Vũng Tàu',
-            children: <ProductTabs city="Vũng Tàu" />,
+            children: <ProductTabs city="Vung Tau" />,
         },
     ];
 
