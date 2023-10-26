@@ -108,7 +108,11 @@
             <artifactId>poi-ooxml</artifactId>
             <version>5.1.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.cloudinary</groupId>
+            <artifactId>cloudinary-http44</artifactId>
+            <version>1.27.0</version> <!-- Thay version bằng phiên bản mới nhất -->
+        </dependency>
     </dependencies>
 
     <build>

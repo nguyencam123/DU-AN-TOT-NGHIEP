@@ -1,6 +1,7 @@
 package com.example.demo.entities;
 
 import com.example.demo.entities.base.PrimaryEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -16,6 +17,7 @@ public class ImgHomestay extends PrimaryEntity {
 
     @ManyToOne
     @JoinColumn(name = "homestay_id")
+    @JsonBackReference
     private Homestay homestay;
 
     private String imgUrl;

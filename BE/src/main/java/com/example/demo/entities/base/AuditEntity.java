@@ -12,7 +12,6 @@ import lombok.Setter;
 @MappedSuperclass
 @EntityListeners(AuditEntityListener.class)
 public abstract class AuditEntity {
-
     @Column(updatable = false)
     private Long createdDate;
 

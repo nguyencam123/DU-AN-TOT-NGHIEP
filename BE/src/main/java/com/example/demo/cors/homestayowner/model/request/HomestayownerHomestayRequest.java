@@ -2,6 +2,8 @@ package com.example.demo.cors.homestayowner.model.request;
 
 import com.example.demo.cors.common.base.PageableRequest;
 import lombok.*;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -11,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class HomestayownerHomestayRequest extends PageableRequest {
+public class HomestayownerHomestayRequest extends PageableRequest{
 
       private String name;
 
