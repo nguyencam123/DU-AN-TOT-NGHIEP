@@ -9,7 +9,6 @@ const PartnerLayout = ({ children }) => {
     return (
         <div style={{ backgroundColor: '#f5f5f5' }}>
             <Headerpartner />
-
             <div className="admin-content">
                 <Outlet />
             </div>
