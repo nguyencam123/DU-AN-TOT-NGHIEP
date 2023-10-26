@@ -47,6 +47,7 @@ const columns = [
 ];
 
 const HomeStayProduct = () => {
+  
   return (
     <section>
       <Title level={5}>HomeStay</Title>
