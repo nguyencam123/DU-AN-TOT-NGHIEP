@@ -3,6 +3,7 @@ import { Space, Typography, Button, Table, Popconfirm, Modal, Form, Input } from
 import { useDispatch, useSelector } from 'react-redux'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import { useState } from 'react'
+import { fetchHomestay } from '../../../features/owner_homestay/homestayThunk'
 const { Title } = Typography
 
 const columns = [
@@ -47,10 +48,11 @@ const columns = [
 ];
 
 const HomeStayProduct = () => {
+  const products = useSelector((state) => state.homestay.homestays)
   return (
     <section>
       <Title level={5}>HomeStay</Title>
-      <Table columns={columns} />
+      <Table columns={columns} dataSource={products}/>
     </section>
   )
 }
