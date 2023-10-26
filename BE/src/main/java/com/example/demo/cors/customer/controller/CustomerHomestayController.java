@@ -23,9 +23,18 @@ public class CustomerHomestayController {
         return new ResponseObject(customerHomestayService.getListHomestay(request));
     }
 
-    @GetMapping("/getAllByConvenientId")
-    public ResponseObject getHomestayByConvenientId(@RequestBody CustomerHomestayRequest request) {
+    @GetMapping("/getByConvenient")
+    public ResponseObject getHomestayByConvenientId(CustomerHomestayRequest request) {
         return new ResponseObject(customerHomestayService.getHomestayByConvenientId(request));
     }
 
+    @GetMapping("/getByProvince")
+    public ResponseObject getHomestayByProvince(CustomerHomestayRequest request) {
+        return new ResponseObject(customerHomestayService.getHomestayByProvince(request));
+    }
+
+    @GetMapping("/getByRegion")
+    public ResponseObject getHomestayByRegion(CustomerHomestayRequest request) {
+        return new ResponseObject(customerHomestayService.getHomestayByRegion(request));
+    }
 }
