@@ -3,6 +3,8 @@ package com.example.demo.cors.admin.model.response;
 import com.example.demo.entities.base.IsIdentified;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.math.BigDecimal;
+
 public interface AdminBookingResponse extends IsIdentified {
 
     @Value("#{target.stt}")
@@ -22,6 +24,9 @@ public interface AdminBookingResponse extends IsIdentified {
 
     @Value("#{target.end_date}")
     Long getEndDate();
+
+    @Value("#{target.total_price}")
+    BigDecimal getTotalPrice();
 
     @Value("#{target.homestay_name}")
     String getHomestayName();
