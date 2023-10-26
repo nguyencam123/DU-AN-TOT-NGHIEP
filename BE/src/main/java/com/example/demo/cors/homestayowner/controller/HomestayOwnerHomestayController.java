@@ -5,7 +5,6 @@ import com.example.demo.cors.homestayowner.model.conventer.HomestayOwnerHomestay
 import com.example.demo.cors.homestayowner.model.request.HomestayownerHomestayRequest;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerHomestayService;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerImgHomestayService;
-import com.example.demo.entities.ImgHomestay;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
