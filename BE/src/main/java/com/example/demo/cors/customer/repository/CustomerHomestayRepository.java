@@ -53,5 +53,4 @@ public interface CustomerHomestayRepository extends HomestayRepository {
             """, nativeQuery = true)
     Page<CustomerHomestayResponse> getHomestayByRegion(Pageable pageable, CustomerHomestayRequest customerHomestayRequest);
 
-
 }

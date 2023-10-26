@@ -37,4 +37,5 @@ public class CustomerHomestayController {
     public ResponseObject getHomestayByRegion(CustomerHomestayRequest request) {
         return new ResponseObject(customerHomestayService.getHomestayByRegion(request));
     }
+
 }
