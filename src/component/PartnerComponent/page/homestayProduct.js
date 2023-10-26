@@ -48,7 +48,11 @@ const columns = [
 ];
 
 const HomeStayProduct = () => {
+<<<<<<< HEAD
+  
+=======
   const products = useSelector((state) => state.homestay.homestays)
+>>>>>>> 88c1a1fa43c86faf6c78f0a22d6acc01c2f12ba0
   return (
     <section>
       <Title level={5}>HomeStay</Title>
