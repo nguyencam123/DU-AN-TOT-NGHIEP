@@ -5,7 +5,6 @@ import { QuestionCircleOutlined, EditOutlined, DeleteOutlined, EyeOutlined } fro
 import { useState } from 'react'
 import { fetchHomestay } from '../../../features/owner_homestay/homestayThunk'
 import { fetchConvenient } from '../../../features/owner_homestay/convenientThunk'
-
 import { PlusOutlined } from '@ant-design/icons';
 import {
   Cascader,
@@ -20,10 +19,11 @@ import {
   TreeSelect,
   Upload
 } from 'antd';
-import FormItemLabel from 'antd/es/form/FormItemLabel'
+
 
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
+
 const { Title } = Typography
 
 const normFile = (e) => {
@@ -112,6 +112,7 @@ const HomeStayProduct = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+
   return (
     <section>
       <Title level={5}>HomeStay</Title>
@@ -190,7 +191,7 @@ const HomeStayProduct = () => {
           </Form.Item>
         </Row>
       </Modal>
-      <Table columns={columns} dataSource={products} />
+      <Table columns={columns} dataSource={products} /> 
     </section>
   )
 }
