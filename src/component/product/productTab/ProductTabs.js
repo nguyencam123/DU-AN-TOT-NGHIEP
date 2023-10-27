@@ -33,11 +33,31 @@ const ProductTabs = (props) => {
     }, [products, props.city]);
 
 
+    // const loadMore = () => {
+    //     const startIndex = productlist.length;
+    //     const endIndex = startIndex + 8;
+    //     setProducts([...productlist, ...products.slice(startIndex, endIndex)]);
+    // };
     const loadMore = () => {
         const startIndex = productlist.length;
         const endIndex = startIndex + 8;
-        setProducts([...productlist, ...products.slice(startIndex, endIndex)]);
+        const newProducts = [...productlist, ...products.slice(startIndex, endIndex)];
+
+        const fuse = new Fuse(newProducts, {
+            keys: ['province_Name'],
+            includeScore: true,
+            threshold: 0.4,
+            ignoreLocation: true,
+            distance: 100,
+        });
+
+        const results = fuse.search(props.city);
+
+        const filteredProducts = results.map(result => result.item);
+
+        setProducts(filteredProducts);
     };
+
 
     return (
         <section style={{ padding: '0 200px 0 200px' }}>

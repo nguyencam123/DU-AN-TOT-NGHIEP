@@ -3,6 +3,7 @@ package com.example.demo.entities;
 import com.example.demo.entities.base.PrimaryEntity;
 import com.example.demo.infrastructure.contant.EntityProperties;
 import com.example.demo.infrastructure.contant.Status;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -53,5 +54,6 @@ public class Homestay extends PrimaryEntity {
     private Integer numberPerson;
 
     @OneToMany(mappedBy = "homestay", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<ImgHomestay> images;
 }
