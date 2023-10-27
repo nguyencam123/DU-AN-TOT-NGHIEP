@@ -19,6 +19,7 @@ import {
   TreeSelect,
   Upload
 } from 'antd';
+import { province } from './province'
 
 
 const { RangePicker } = DatePicker;
@@ -87,9 +88,27 @@ const HomeStayProduct = () => {
     name: '',
     type: ''
   }]);
+  const [homestay, setHomestay] = useState({
+    name: '',
+    address: '',
+    province: '',
+    startDate: '',
+    endDate: '',
+    numberPerson: 0,
+    price: 10.0,
+    desc: '',
+    cancelPolicy: 1.0,
+  });
   const [imgUrl, setImgUrl] = useState([]);
-  let plainOptions = convenients;
+  let plainOptionConvenient = convenients;
   console.log(convenients);
+  let plainProvince = [];
+  province.forEach((province) => {
+    plainProvince.push({
+      value: province,
+      label: province,
+    })
+  })
 
 
   const onChangeConvenient = (list) => {
@@ -101,6 +120,42 @@ const HomeStayProduct = () => {
     setImgUrl(list);
     console.log(list);
   }
+
+  const onChangeName = (e) => {
+    setHomestay({ ...homestay, name: e.target.value });
+  };
+
+  const onChangePrice = (e) => {
+    setHomestay({ ...homestay, price: e.target.value });
+  };
+
+  const onChangeNumberPerson = (e) => {
+    setHomestay({ ...homestay, numberPerson: e.target.value });
+  };
+
+  const onChangeDesc = (e) => {
+    setHomestay({ ...homestay, desc: e.target.value });
+  };
+
+  const onChangeAddress = (e) => {
+    setHomestay({ ...homestay, address: e.target.value });
+  };
+
+  const onChangeProvince = (value) => {
+    setHomestay({ ...homestay, province: value });
+  };
+
+  const onChangeCancelPolicy = (e) => {
+    setHomestay({ ...homestay, cancelPolicy: e.target.value });
+  };
+
+  const onChangeDate = (value) => {
+    if (value !== null) {
+      setHomestay({ ...homestay, startDate: value[0].format('YYYY-MM-DD'), endDate: value[1].format('YYYY-MM-DD') });
+      console.log(homestay.startDate);
+      console.log(homestay.endDate);
+    }
+  };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
@@ -123,51 +178,49 @@ const HomeStayProduct = () => {
         <Row>
           <Col span={6}>
             <Form.Item label="Tên">
-              <Input />
+              <Input onChange={onChangeName} value={homestay.name} />
             </Form.Item>
           </Col>
           <Col span={16} push={2}>
             <Form.Item label="Địa chỉ cụ thể">
-              <Input />
+              <Input onChange={onChangeAddress} value={homestay.address} />
             </Form.Item>
           </Col>
         </Row>
         <Row>
           <Col span={6}>
             <Form.Item label="Thành Phố">
-              <Select>
-                <Select.Option value="demo">Demo</Select.Option>
-              </Select>
+              <Select onChange={onChangeProvince} options={plainProvince} />
             </Form.Item>
           </Col>
           <Col span={10} push={2}>
             <Form.Item label="Thời hạn đăng">
-              <RangePicker />
+              <RangePicker onChange={onChangeDate} value={[homestay.startDate, homestay.endDate]} />
             </Form.Item>
           </Col>
           <Col span={4} push={2}>
             <Form.Item label="Số người ở">
-              <InputNumber />
+              <InputNumber onChange={onChangeNumberPerson} />
             </Form.Item>
           </Col>
         </Row>
         <Form.Item label="Giá">
-          <Input />
+          <Input onChange={onChangePrice} />
         </Form.Item>
         <Form.Item label="Mô tả">
-          <TextArea rows={4} />
+          <TextArea rows={4} onChange={onChangeDesc} />
         </Form.Item>
         <Row>
           <Col>
             <Form.Item label="Số phần trăm tiền hóa đơn khách phải trả khi hủy phòng">
-              <InputNumber max={100} min={0} />
+              <InputNumber max={100} min={0} onChange={onChangeCancelPolicy} />
             </Form.Item>
           </Col>
         </Row>
         <Row>
           <Form.Item label='Tiện nghi'>
             <Checkbox.Group value={checkedList} onChange={onChangeConvenient} >
-              {plainOptions.map((option) => {
+              {plainOptionConvenient.map((option) => {
                 return (<Checkbox value={option.name}>{option.name}</Checkbox>
                 )
               })}
@@ -191,7 +244,7 @@ const HomeStayProduct = () => {
           </Form.Item>
         </Row>
       </Modal>
-      <Table columns={columns} dataSource={products} /> 
+      <Table columns={columns} dataSource={products} />
     </section>
   )
 }
