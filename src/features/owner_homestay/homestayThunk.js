@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const BASE_URL = 'http://localhost:8080/api/v2/homestay';
 
-export const fetchProduct = () => async (dispatch) => {
+export const fetchHomestay = () => async (dispatch) => {
   dispatch(fetchProductsStart());
   try {
     const response = await axios.get(BASE_URL + "/get-homestay");

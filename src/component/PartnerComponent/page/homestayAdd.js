@@ -31,62 +31,59 @@ const normFile = (e) => {
 
 const HomeStayAdd = () => {
   return (
-    <section>
-      <Title level={5}>Thêm mới homestay</Title>
-      <div>
-        <Form
-          labelCol={{
-            span: 4,
-          }}
-          wrapperCol={{
-            span: 14,
-          }}
-          layout="horizontal"
-          style={{
-            maxWidth: 600,
-          }}
-        >
-          <Form.Item label="Tên">
-            <Input />
-          </Form.Item>
-          <Form.Item label="Địa chỉ cụ thể">
-            <Input />
-          </Form.Item>
-          <Form.Item label="Thành Phố">
-            <Select>
-              <Select.Option value="demo">Demo</Select.Option>
-            </Select>
-          </Form.Item>
-          <Form.Item label="Thời hạn đăng">
-            <RangePicker />
-          </Form.Item>
-          <Form.Item label="Giá">
-            <Input />
-          </Form.Item>
-          <Form.Item label="Số người ở ">
-            <InputNumber />
-          </Form.Item>
-          <Form.Item label="Mô tả">
-            <TextArea rows={4} />
-          </Form.Item>
-          <Form.Item label="Upload" valuePropName="fileList" getValueFromEvent={normFile}>
-            <Upload action="/upload.do" listType="picture-card">
-              <div>
-                <PlusOutlined />
-                <div
-                  style={{
-                    marginTop: 8,
-                  }}
-                >
-                  Upload
-                </div>
+    <div>
+      <Form
+        labelCol={{
+          span: 4,
+        }}
+        wrapperCol={{
+          span: 14,
+        }}
+        layout="horizontal"
+        style={{
+          maxWidth: 600,
+        }}
+      >
+        <Form.Item label="Tên">
+          <Input />
+        </Form.Item>
+        <Form.Item label="Địa chỉ cụ thể">
+          <Input />
+        </Form.Item>
+        <Form.Item label="Thành Phố">
+          <Select>
+            <Select.Option value="demo">Demo</Select.Option>
+          </Select>
+        </Form.Item>
+        <Form.Item label="Thời hạn đăng">
+          <RangePicker />
+        </Form.Item>
+        <Form.Item label="Giá">
+          <Input />
+        </Form.Item>
+        <Form.Item label="Số người ở ">
+          <InputNumber />
+        </Form.Item>
+        <Form.Item label="Mô tả">
+          <TextArea rows={4} />
+        </Form.Item>
+        <Form.Item label="Upload" valuePropName="fileList" getValueFromEvent={normFile}>
+          <Upload action="/upload.do" listType="picture-card">
+            <div>
+              <PlusOutlined />
+              <div
+                style={{
+                  marginTop: 8,
+                }}
+              >
+                Upload
               </div>
-            </Upload>
-          </Form.Item>
-          <Button type="primary" >Add</Button>
-        </Form>
-      </div>
-    </section>
+            </div>
+          </Upload>
+        </Form.Item>
+        <Button type="primary" >Add</Button>
+      </Form>
+    </div>
   )
 }
-export default HomeStayAdd
+export default HomeStayAdd();
