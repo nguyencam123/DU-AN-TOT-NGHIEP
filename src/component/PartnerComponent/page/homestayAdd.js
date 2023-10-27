@@ -46,69 +46,28 @@ const HomeStayAdd = () => {
             maxWidth: 600,
           }}
         >
-          <Form.Item label="Checkbox" name="disabled" valuePropName="checked">
-            <Checkbox>Checkbox</Checkbox>
-          </Form.Item>
-          <Form.Item label="Radio">
-            <Radio.Group>
-              <Radio value="apple"> Apple </Radio>
-              <Radio value="pear"> Pear </Radio>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item label="Input">
+          <Form.Item label="Tên">
             <Input />
           </Form.Item>
-          <Form.Item label="Select">
+          <Form.Item label="Địa chỉ cụ thể">
+            <Input />
+          </Form.Item>
+          <Form.Item label="Thành Phố">
             <Select>
               <Select.Option value="demo">Demo</Select.Option>
             </Select>
           </Form.Item>
-          <Form.Item label="TreeSelect">
-            <TreeSelect
-              treeData={[
-                {
-                  title: 'Light',
-                  value: 'light',
-                  children: [
-                    {
-                      title: 'Bamboo',
-                      value: 'bamboo',
-                    },
-                  ],
-                },
-              ]}
-            />
-          </Form.Item>
-          <Form.Item label="Cascader">
-            <Cascader
-              options={[
-                {
-                  value: 'zhejiang',
-                  label: 'Zhejiang',
-                  children: [
-                    {
-                      value: 'hangzhou',
-                      label: 'Hangzhou',
-                    },
-                  ],
-                },
-              ]}
-            />
-          </Form.Item>
-          <Form.Item label="DatePicker">
-            <DatePicker />
-          </Form.Item>
-          <Form.Item label="RangePicker">
+          <Form.Item label="Thời hạn đăng">
             <RangePicker />
           </Form.Item>
-          <Form.Item label="InputNumber">
+          <Form.Item label="Giá">
+            <Input />
+          </Form.Item>
+          <Form.Item label="Số người ở ">
             <InputNumber />
           </Form.Item>
-          <Form.Item label="TextArea">
+          <Form.Item label="Mô tả">
             <TextArea rows={4} />
-          </Form.Item>
-          <Form.Item label="Switch" valuePropName="checked">
-            <Switch />
           </Form.Item>
           <Form.Item label="Upload" valuePropName="fileList" getValueFromEvent={normFile}>
             <Upload action="/upload.do" listType="picture-card">
@@ -124,10 +83,7 @@ const HomeStayAdd = () => {
               </div>
             </Upload>
           </Form.Item>
-          <Form.Item label="Slider">
-            <Slider />
-          </Form.Item>
-          <Button>Add</Button>
+          <Button type="primary" >Add</Button>
         </Form>
       </div>
     </section>

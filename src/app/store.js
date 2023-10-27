@@ -14,7 +14,7 @@ export const store = configureStore({
     product: productReducer,
     category: categoryReducer,
     addproduct: addproductReducer,
-    homestay: ownerHomestayReducer
+    ownerHomestay: ownerHomestayReducer
   },
   middleware: (getDefaultMiddleware) => [...getDefaultMiddleware()],
 });

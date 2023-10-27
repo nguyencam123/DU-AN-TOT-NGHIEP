@@ -1,8 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Space, Typography, Button, Table, Popconfirm, Modal, Form, Input } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
-import { QuestionCircleOutlined } from '@ant-design/icons'
+import { QuestionCircleOutlined, EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons'
 import { useState } from 'react'
+<<<<<<< HEAD
+=======
+import { fetchProduct } from '../../../features/owner_homestay/homestayThunk'
+>>>>>>> 393e16589ab436b495a97f11da3ea0429f044cce
 const { Title } = Typography
 
 const columns = [
@@ -31,7 +35,8 @@ const columns = [
     key: 'action',
     render: (_, record) => (
       <Space size="middle">
-        <a>Sửa</a>
+        <a> <EyeOutlined /> </a>
+        <a> <EditOutlined /> </a>
         <Popconfirm
           title="Xóa mục này"
           description="Bạn chắc chắn muốn xóa mục này chứ?"
@@ -39,7 +44,7 @@ const columns = [
           cancelText="hủy"
           okText="xóa"
         >
-          <a>Delete</a>
+          <a><DeleteOutlined /></a>
         </Popconfirm>
       </Space>
     ),
@@ -47,11 +52,23 @@ const columns = [
 ];
 
 const HomeStayProduct = () => {
+<<<<<<< HEAD
 
   return (
     <section>
       <Title level={5}>HomeStay</Title>
       <Table columns={columns} />
+=======
+  useEffect(() => {
+    dispatch(fetchProduct());
+  }, []);
+  const dispatch = useDispatch();
+  const products = useSelector((state) => state.ownerHomestay.homestays)
+  return (
+    <section>
+      <Title level={5}>HomeStay</Title>
+      <Table columns={columns} dataSource={products} />
+>>>>>>> 393e16589ab436b495a97f11da3ea0429f044cce
     </section>
   )
 }
