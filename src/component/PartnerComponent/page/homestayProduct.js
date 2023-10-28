@@ -34,49 +34,50 @@ const normFile = (e) => {
   return e?.fileList;
 };
 
-const columns = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name'
-  },
-  {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address'
-  },
-  {
-    title: 'Price',
-    dataIndex: 'price',
-    key: 'price'
-  },
-  {
-    title: 'Status',
-    dataIndex: 'status',
-    key: 'status'
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    render: (_, record) => (
-      <Space size="middle">
-        <a> <EyeOutlined /> </a>
-        <a> <EditOutlined /> </a>
-        <Popconfirm
-          title="Xóa mục này"
-          description="Bạn chắc chắn muốn xóa mục này chứ?"
-          icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-          cancelText="hủy"
-          okText="xóa"
-        >
-          <a><DeleteOutlined /></a>
-        </Popconfirm>
-      </Space>
-    ),
-  },
-];
 
 const HomeStayProduct = () => {
+  const columns = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name'
+    },
+    {
+      title: 'Address',
+      dataIndex: 'address',
+      key: 'address'
+    },
+    {
+      title: 'Price',
+      dataIndex: 'price',
+      key: 'price'
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status'
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (_, record) => (
+        <Space size="middle">
+          <a onClick={(row) => { console.log(row.data); }}> <EyeOutlined /> </a>
+          <a> <EditOutlined /> </a>
+          <Popconfirm
+            title="Xóa mục này"
+            description="Bạn chắc chắn muốn xóa mục này chứ?"
+            icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+            cancelText="hủy"
+            okText="xóa"
+          >
+            <a><DeleteOutlined /></a>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
   useEffect(() => {
     dispatch(fetchHomestay());
     dispatch(fetchConvenient());
@@ -145,6 +146,10 @@ const HomeStayProduct = () => {
     setHomestay({ ...homestay, province: value });
   };
 
+  const clickViewHomestayDetail = (value) => {
+    setHomestay({ ...homestay, province: value });
+  };
+
   const onChangeCancelPolicy = (value) => {
     setHomestay({ ...homestay, cancelPolicy: value });
   };
@@ -162,11 +167,12 @@ const HomeStayProduct = () => {
   };
   const handleOk = () => {
     setIsModalOpen(false);
+    console.log("???")
     dispatch(addHomestay(homestay, imgUrl))
-  };
+  }
   const handleCancel = () => {
     setIsModalOpen(false);
-  };
+  }
 
   return (
     <section>
@@ -174,7 +180,7 @@ const HomeStayProduct = () => {
       <Button type="primary" onClick={showModal}>
         Thêm mới HomeStay
       </Button>
-      <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={1200} okText='Thêm mới' cancelText='Hủy' >
+      <Modal title="Basic Modal" open={isModalOpen} onOk={() => handleOk()} onCancel={handleCancel} width={1200} okText='Thêm mới' cancelText='Hủy' >
         <Row>
           <Col span={6}>
             <Form.Item label="Tên">
@@ -212,7 +218,7 @@ const HomeStayProduct = () => {
           </Col>
           <Col span={10} push={2}>
             <Form.Item label="Số người ở">
-              <InputNumber onChange={onChangeNumberPerson} value={homestay.numberPerson}/>
+              <InputNumber onChange={onChangeNumberPerson} value={homestay.numberPerson} />
             </Form.Item>
           </Col>
         </Row>
