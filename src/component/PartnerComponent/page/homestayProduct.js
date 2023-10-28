@@ -3,6 +3,9 @@ import { Space, Typography, Button, Table, Popconfirm, Modal, Form, Input, Row, 
 import { useDispatch, useSelector } from 'react-redux'
 import { QuestionCircleOutlined, EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons'
 import { useState } from 'react'
+<<<<<<< HEAD
+import { fetchProduct } from '../../../features/owner_homestay/homestayThunk'
+=======
 import { addHomestay, fetchHomestay } from '../../../features/owner_homestay/homestayThunk'
 import { fetchConvenient } from '../../../features/owner_homestay/convenientThunk'
 import { PlusOutlined } from '@ant-design/icons';
@@ -25,6 +28,7 @@ import { province } from './province'
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
+>>>>>>> 5f04fb9c734cac93ecde44d475d163a8a7758d24
 const { Title } = Typography
 
 const normFile = (e) => {
@@ -36,6 +40,8 @@ const normFile = (e) => {
 
 
 const HomeStayProduct = () => {
+<<<<<<< HEAD
+=======
   const columns = [
     {
       title: 'Name',
@@ -78,6 +84,7 @@ const HomeStayProduct = () => {
     },
   ];
 
+>>>>>>> 5f04fb9c734cac93ecde44d475d163a8a7758d24
   useEffect(() => {
     dispatch(fetchHomestay());
     dispatch(fetchConvenient());
