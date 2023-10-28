@@ -12,3 +12,14 @@ export const fetchHomestay = () => async (dispatch) => {
     dispatch(fetchProductsFailure(error.message));
   }
 };
+
+export const addHomestay = (homestay, imgUrl) => async (dispatch) => {
+  console.log(12);
+  dispatch(fetchProductsStart());
+  try {
+    await axios.post(BASE_URL + "/add-homestay", homestay);
+  } catch (error) {
+    dispatch(fetchProductsFailure(error.message));
+  }
+};
+
