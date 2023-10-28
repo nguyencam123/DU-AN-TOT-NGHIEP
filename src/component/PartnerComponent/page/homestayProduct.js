@@ -3,7 +3,7 @@ import { Space, Typography, Button, Table, Popconfirm, Modal, Form, Input, Row, 
 import { useDispatch, useSelector } from 'react-redux'
 import { QuestionCircleOutlined, EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons'
 import { useState } from 'react'
-import { fetchHomestay } from '../../../features/owner_homestay/homestayThunk'
+import { addHomestay, fetchHomestay } from '../../../features/owner_homestay/homestayThunk'
 import { fetchConvenient } from '../../../features/owner_homestay/convenientThunk'
 import { PlusOutlined } from '@ant-design/icons';
 import {
@@ -129,8 +129,8 @@ const HomeStayProduct = () => {
     setHomestay({ ...homestay, price: e.target.value });
   };
 
-  const onChangeNumberPerson = (e) => {
-    setHomestay({ ...homestay, numberPerson: e.target.value });
+  const onChangeNumberPerson = (value) => {
+    setHomestay({ ...homestay, numberPerson: value });
   };
 
   const onChangeDesc = (e) => {
@@ -145,16 +145,15 @@ const HomeStayProduct = () => {
     setHomestay({ ...homestay, province: value });
   };
 
-  const onChangeCancelPolicy = (e) => {
-    setHomestay({ ...homestay, cancelPolicy: e.target.value });
+  const onChangeCancelPolicy = (value) => {
+    setHomestay({ ...homestay, cancelPolicy: value });
   };
 
-  const onChangeDate = (value) => {
-    if (value !== null) {
-      setHomestay({ ...homestay, startDate: value[0].format('YYYY-MM-DD'), endDate: value[1].format('YYYY-MM-DD') });
-      console.log(homestay.startDate);
-      console.log(homestay.endDate);
-    }
+  const onChangeStartdate = (value) => {
+    setHomestay({ ...homestay, startDate: value });
+  };
+  const onChangeEnddate = (value) => {
+    setHomestay({ ...homestay, endDate: value });
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -163,6 +162,7 @@ const HomeStayProduct = () => {
   };
   const handleOk = () => {
     setIsModalOpen(false);
+    dispatch(addHomestay(homestay, imgUrl))
   };
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -193,20 +193,29 @@ const HomeStayProduct = () => {
               <Select onChange={onChangeProvince} options={plainProvince} />
             </Form.Item>
           </Col>
-          <Col span={10} push={2}>
-            <Form.Item label="Thời hạn đăng">
-              <RangePicker onChange={onChangeDate} value={[homestay.startDate, homestay.endDate]} />
+          <Col span={6} push={2}>
+            <Form.Item label="Ngày bắt đầu">
+              <DatePicker onChange={onChangeStartdate} value={homestay.startDate} />
             </Form.Item>
           </Col>
-          <Col span={4} push={2}>
-            <Form.Item label="Số người ở">
-              <InputNumber onChange={onChangeNumberPerson} />
+          <Col span={6} push={2}>
+            <Form.Item label="Ngày bắt đầu">
+              <DatePicker onChange={onChangeEnddate} value={homestay.endDate} />
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item label="Giá">
-          <Input onChange={onChangePrice} />
-        </Form.Item>
+        <Row>
+          <Col span={8}>
+            <Form.Item label="Giá">
+              <Input onChange={onChangePrice} value={homestay.price} />
+            </Form.Item>
+          </Col>
+          <Col span={10} push={2}>
+            <Form.Item label="Số người ở">
+              <InputNumber onChange={onChangeNumberPerson} value={homestay.numberPerson}/>
+            </Form.Item>
+          </Col>
+        </Row>
         <Form.Item label="Mô tả">
           <TextArea rows={4} onChange={onChangeDesc} />
         </Form.Item>
