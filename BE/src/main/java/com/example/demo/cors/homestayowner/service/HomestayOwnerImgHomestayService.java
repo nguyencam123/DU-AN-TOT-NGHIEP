@@ -2,8 +2,10 @@ package com.example.demo.cors.homestayowner.service;
 
 import com.example.demo.cors.homestayowner.model.reponse.HomestayOwnerImgHomestayReponse;
 
+import java.util.List;
+
 public interface HomestayOwnerImgHomestayService {
 
-    HomestayOwnerImgHomestayReponse getImgHomestayByHomestayId(String id);
+    List<HomestayOwnerImgHomestayReponse> getImgHomestayByHomestayId(String id);
 
 }

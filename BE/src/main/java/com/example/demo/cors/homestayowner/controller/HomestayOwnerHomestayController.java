@@ -31,19 +31,9 @@ public class HomestayOwnerHomestayController {
         return new ResponseObject(homestayownerHomestayService.getAllPageable(homestayownerHomestayRequest));
     }
 
-    @PostMapping("add-homestay")
-    public ResponseObject addHomestay(@RequestBody HomestayownerHomestayRequest homestayOwnerAddHomestayRequest){
-        return new ResponseObject(homestayownerHomestayService.addHomestay(homestayOwnerAddHomestayRequest));
-    }
-
     @GetMapping("get-imghomestay")
     public ResponseObject getPageHomestayownerHomestay(@RequestParam("id") String id) {
         return new ResponseObject(homestayOwnerImgHomestayService.getImgHomestayByHomestayId(id));
-    }
-
-    @PostMapping("addImage")
-    public ResponseObject addImagesHomestay(@RequestParam("id") String id, @RequestParam("images") List<MultipartFile> images) throws IOException{
-        return new ResponseObject(homestayownerHomestayService.addImgHomestay(id,images));
     }
 
     @PostMapping("add-homestays")
@@ -53,7 +43,7 @@ public class HomestayOwnerHomestayController {
     }
 
     @PutMapping("update-homestays")
-    public ResponseObject addhomestays(@RequestParam("id") String id,@RequestParam("homestay") String homestay,@RequestParam("image") List<MultipartFile> images) throws IOException{
+    public ResponseObject updatehomestays(@RequestParam("id") String id,@RequestParam("homestay") String homestay,@RequestParam("image") List<MultipartFile> images) throws IOException{
         HomestayownerHomestayRequest request=conventer.convert(homestay);
         return new ResponseObject(homestayownerHomestayService.updateHomestays(id,request,images));
     }

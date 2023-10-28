@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestayService {
@@ -53,40 +52,6 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
     }
 
     @Override
-    public Homestay addHomestay(HomestayownerHomestayRequest request) {
-        Homestay homestay=new Homestay();
-        homestay.setName(request.getName());
-        homestay.setStartDate(request.getStartDate());
-        homestay.setEndDate(request.getEndDate());
-        homestay.setDesc(request.getDesc());
-        homestay.setPrice(request.getPrice());
-        homestay.setNumberPerson(request.getNumberPerson());
-        homestay.setAddress(request.getAddress());
-        homestay.setProvince(provinceRepository.findById(request.getProvince()).orElse(null));
-        homestay.setRegion(regionRepository.findById(request.getRegion()).orElse(null));
-        homestay.setImages(null);
-        homestay.setStatus(Status.KHONG_HOAT_DONG);
-        return homestayownerHomestayRepository.save(homestay);
-    }
-
-    @Override
-    public List<ImgHomestay> addImgHomestay(String id, List<MultipartFile> multipartFiles)  throws IOException {
-        Homestay homestay = homestayownerHomestayRepository.findById(id).orElse(null);
-        List<ImgHomestay> newImages = new ArrayList<>();
-        if (homestay != null) {
-            for (MultipartFile image : multipartFiles) {
-                ImgHomestay imgHomestay = new ImgHomestay();
-                imgHomestay.setHomestay(homestay);
-                Map uploadResult = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.asMap("folder", "homestay_images"));
-                imgHomestay.setImgUrl(uploadResult.get("url").toString());
-                homestayOwnerImgHomestayRepo.save(imgHomestay);
-                newImages.add(imgHomestay);
-            }
-        }
-        return newImages;
-    }
-
-    @Override
     public Homestay addHomestays(HomestayownerHomestayRequest request, List<MultipartFile> multipartFiles) throws IOException{
         Homestay homestay=new Homestay();
         homestay.setName(request.getName());
@@ -109,6 +74,7 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
             homestayOwnerImgHomestayRepo.save(imgHomestay);
             newImages.add(imgHomestay);
         }
+        homestay1.setImages(newImages);
         return homestay1;
     }
 
