@@ -3,9 +3,6 @@ import { Space, Typography, Button, Table, Popconfirm, Modal, Form, Input, Row, 
 import { useDispatch, useSelector } from 'react-redux'
 import { QuestionCircleOutlined, EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons'
 import { useState } from 'react'
-<<<<<<< HEAD
-import { fetchProduct } from '../../../features/owner_homestay/homestayThunk'
-=======
 import { addHomestay, fetchHomestay } from '../../../features/owner_homestay/homestayThunk'
 import { fetchConvenient } from '../../../features/owner_homestay/convenientThunk'
 import { PlusOutlined } from '@ant-design/icons';
@@ -23,12 +20,11 @@ import {
   Upload
 } from 'antd';
 import { province } from './province'
-
+import moment from 'moment';
 
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
->>>>>>> 5f04fb9c734cac93ecde44d475d163a8a7758d24
 const { Title } = Typography
 
 const normFile = (e) => {
@@ -40,8 +36,30 @@ const normFile = (e) => {
 
 
 const HomeStayProduct = () => {
-<<<<<<< HEAD
-=======
+  useEffect(() => {
+    dispatch(fetchHomestay());
+    dispatch(fetchConvenient());
+  }, []);
+  const dispatch = useDispatch();
+  const products = useSelector((state) => state.ownerHomestay.homestays)
+  const convenients = useSelector((state) => state.convenient.convenients)
+  //upload file
+  const [file, setFile] = useState(null);
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+  };
+  //modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleOk = () => {
+    setIsModalOpen(false);
+  }
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  }
   const columns = [
     {
       title: 'Name',
@@ -83,192 +101,124 @@ const HomeStayProduct = () => {
       ),
     },
   ];
-
->>>>>>> 5f04fb9c734cac93ecde44d475d163a8a7758d24
-  useEffect(() => {
-    dispatch(fetchHomestay());
-    dispatch(fetchConvenient());
-  }, []);
-  const dispatch = useDispatch();
-  const products = useSelector((state) => state.ownerHomestay.homestays)
-  const convenients = useSelector((state) => state.convenient.convenients)
-  const [checkedList, setCheckedList] = useState([{
-    name: '',
-    type: ''
-  }]);
-  const [homestay, setHomestay] = useState({
-    name: '',
-    address: '',
-    province: '',
-    startDate: '',
-    endDate: '',
-    numberPerson: 0,
-    price: 10.0,
-    desc: '',
-    cancelPolicy: 1.0,
-  });
-  const [imgUrl, setImgUrl] = useState([]);
-  let plainOptionConvenient = convenients;
-  console.log(convenients);
-  let plainProvince = [];
-  province.forEach((province) => {
-    plainProvince.push({
-      value: province,
-      label: province,
-    })
-  })
-
-
-  const onChangeConvenient = (list) => {
-    console.log(list);
-    setCheckedList(list);
+  //
+  const [name, setname] = useState("")
+  const [startDate, setstartDate] = useState(1666838400000)
+  const [endDate, setendDate] = useState(1666838400000)
+  const [desc, setdesc] = useState("")
+  const [price, setprice] = useState(0)
+  const [numberPerson, setnumberPerson] = useState(0)
+  const [address, setaddress] = useState("")
+  const [province, setprovince] = useState("2695a00e-a933-4c28-819c-9b66f3184e8d")
+  const [region, setregion] = useState("a72af500-5ee5-4268-8d91-d7383d4a9011")
+  //
+  const homestay = {
+    name: name,
+    startDate: startDate,
+    endDate: endDate,
+    desc: desc,
+    price: price,
+    numberPerson: numberPerson,
+    address: address,
+    province: province,
+    region: region
   };
 
-  const onChangeImg = (list) => {
-    setImgUrl(list);
-    console.log(list);
-  }
-
-  const onChangeName = (e) => {
-    setHomestay({ ...homestay, name: e.target.value });
-  };
-
-  const onChangePrice = (e) => {
-    setHomestay({ ...homestay, price: e.target.value });
-  };
-
-  const onChangeNumberPerson = (value) => {
-    setHomestay({ ...homestay, numberPerson: value });
-  };
-
-  const onChangeDesc = (e) => {
-    setHomestay({ ...homestay, desc: e.target.value });
-  };
-
-  const onChangeAddress = (e) => {
-    setHomestay({ ...homestay, address: e.target.value });
-  };
-
-  const onChangeProvince = (value) => {
-    setHomestay({ ...homestay, province: value });
-  };
-
-  const clickViewHomestayDetail = (value) => {
-    setHomestay({ ...homestay, province: value });
-  };
-
-  const onChangeCancelPolicy = (value) => {
-    setHomestay({ ...homestay, cancelPolicy: value });
-  };
-
-  const onChangeStartdate = (value) => {
-    setHomestay({ ...homestay, startDate: value });
-    console.log(value);
-  };
-  const onChangeEnddate = (value) => {
-    setHomestay({ ...homestay, endDate: value });
-  };
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-  const handleOk = () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setIsModalOpen(false);
-    console.log("???")
-    dispatch(addHomestay(homestay, imgUrl))
-  }
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  }
-
+    dispatch(addHomestay(homestay, file))
+  };
   return (
-    <section>
-      <Title level={5}>HomeStay</Title>
-      <Button type="primary" onClick={showModal}>
-        Thêm mới HomeStay
-      </Button>
-      <Modal title="Basic Modal" open={isModalOpen} onOk={() => handleOk()} onCancel={handleCancel} width={1200} okText='Thêm mới' cancelText='Hủy' >
-        <Row>
-          <Col span={6}>
-            <Form.Item label="Tên">
-              <Input onChange={onChangeName} value={homestay.name} />
-            </Form.Item>
-          </Col>
-          <Col span={16} push={2}>
-            <Form.Item label="Địa chỉ cụ thể">
-              <Input onChange={onChangeAddress} value={homestay.address} />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row>
-          <Col span={6}>
-            <Form.Item label="Thành Phố">
-              <Select onChange={onChangeProvince} options={plainProvince} />
-            </Form.Item>
-          </Col>
-          <Col span={6} push={2}>
-            <Form.Item label="Ngày bắt đầu">
-              <DatePicker onChange={onChangeStartdate} value={homestay.startDate} />
-            </Form.Item>
-          </Col>
-          <Col span={6} push={2}>
-            <Form.Item label="Ngày bắt đầu">
-              <DatePicker onChange={onChangeEnddate} value={homestay.endDate} />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row>
-          <Col span={8}>
-            <Form.Item label="Giá">
-              <Input onChange={onChangePrice} value={homestay.price} />
-            </Form.Item>
-          </Col>
-          <Col span={10} push={2}>
-            <Form.Item label="Số người ở">
-              <InputNumber onChange={onChangeNumberPerson} value={homestay.numberPerson} />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Form.Item label="Mô tả">
-          <TextArea rows={4} onChange={onChangeDesc} />
-        </Form.Item>
-        <Row>
-          <Col>
-            <Form.Item label="Số phần trăm tiền hóa đơn khách phải trả khi hủy phòng">
-              <InputNumber max={100} min={0} onChange={onChangeCancelPolicy} />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row>
-          <Form.Item label='Tiện nghi'>
-            <Checkbox.Group value={checkedList} onChange={onChangeConvenient} >
-              {plainOptionConvenient.map((option) => {
-                return (<Checkbox value={option.name}>{option.name}</Checkbox>
-                )
-              })}
-            </Checkbox.Group>
-          </Form.Item>
-        </Row>
-        <Row style={{ marginTop: '15px' }}>
-          <Form.Item label="Upload" valuePropName="fileList" getValueFromEvent={normFile}>
-            <Upload action="/upload.do" listType="picture-card" multiple maxCount={50} onChange={onChangeImg}>
-              <div>
-                <PlusOutlined />
-                <div
-                  style={{
-                    marginTop: 8,
-                  }}
-                >
-                  Upload
-                </div>
-              </div>
-            </Upload>
-          </Form.Item>
-        </Row>
+    <>
+      <Title>Quản lý Homestay</Title>
+      <div style={{ marginBottom: 20, float: 'right' }}>
+        <Button type="primary" onClick={showModal}>
+          Thêm mới HomeStay
+        </Button>
+      </div>
+      <Modal title="Basic Modal" open={isModalOpen} onCancel={handleCancel}
+        width={1200} okText='Thêm mới' cancelText='Hủy' onOk={handleSubmit}>
+        <Form
+          name="basic"
+          labelCol={{
+            span: 8,
+          }}
+          wrapperCol={{
+            span: 24,
+          }}
+          style={{
+            maxWidth: 800,
+          }}
+          initialValues={{
+            remember: true,
+          }}
+          autoComplete="off"
+        >
+          <Row gutter={24}>
+            {/* Trường thứ nhất */}
+            <Col span={12}>
+              <Form.Item
+                label="Name product"
+                name="name"
+              >
+                <Input value={name}
+                  onChange={(e) => setname(e.target.value)} />
+              </Form.Item>
+            </Col>
+            {/* Trường thứ hai */}
+            <Col span={12}>
+              <Form.Item
+                label="Price"
+                name="price"
+              >
+                <Input value={price}
+                  onChange={(e) => setprice(e.target.value)} />
+              </Form.Item>
+            </Col>
+
+          </Row>
+          <Row gutter={24}>
+            <Col span={12}>
+              <Form.Item
+                label="mô tả"
+                name="desc"
+              >
+                <Input value={desc}
+                  onChange={(e) => setdesc(e.target.value)} />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="numberPerson"
+                name="numberPerson"
+              >
+                <Input value={numberPerson}
+                  onChange={(e) => setnumberPerson(e.target.value)} />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={24}>
+            <Col span={12}>
+              <Form.Item
+                label="địa chỉ"
+                name="address"
+              >
+                <Input value={address}
+                  onChange={(e) => setaddress(e.target.value)} />
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label htmlFor="image">Chọn ảnh</label>
+            <input type="file" id="image" accept="image/*" onChange={handleFileChange} />
+          </div>
+        </form>
       </Modal>
       <Table columns={columns} dataSource={products} />
-    </section>
-  )
+    </>
+  );
 }
 export default HomeStayProduct
