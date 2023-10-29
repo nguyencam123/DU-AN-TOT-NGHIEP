@@ -2,7 +2,12 @@ package com.example.demo.cors.homestayowner.model.reponse;
 
 import org.springframework.beans.factory.annotation.Value;
 
+import java.util.List;
+
 public interface HomestayOwnerHomestayReponse {
+
+    @Value("#{target.id}")
+    String getId();
 
     @Value("#{target.name}")
     String getName();
@@ -28,4 +33,6 @@ public interface HomestayOwnerHomestayReponse {
     @Value("#{target.status}")
     String getStatus();
 
+    @Value("#{target.imageUrls}")
+    List<String> getImageUrls();
 }
