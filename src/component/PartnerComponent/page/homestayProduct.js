@@ -3,9 +3,9 @@ import { Space, Typography, Button, Table, Popconfirm, Modal, Form, Input, Row, 
 import { useDispatch, useSelector } from 'react-redux'
 import { QuestionCircleOutlined, EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons'
 import { useState } from 'react'
-<<<<<<< HEAD
+
 import { fetchProduct } from '../../../features/owner_homestay/homestayThunk'
-=======
+
 import { addHomestay, fetchHomestay } from '../../../features/owner_homestay/homestayThunk'
 import { fetchConvenient } from '../../../features/owner_homestay/convenientThunk'
 import { PlusOutlined } from '@ant-design/icons';
@@ -28,7 +28,6 @@ import { province } from './province'
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
->>>>>>> 5f04fb9c734cac93ecde44d475d163a8a7758d24
 const { Title } = Typography
 
 const normFile = (e) => {
@@ -40,8 +39,7 @@ const normFile = (e) => {
 
 
 const HomeStayProduct = () => {
-<<<<<<< HEAD
-=======
+
   const columns = [
     {
       title: 'Name',
@@ -84,7 +82,6 @@ const HomeStayProduct = () => {
     },
   ];
 
->>>>>>> 5f04fb9c734cac93ecde44d475d163a8a7758d24
   useEffect(() => {
     dispatch(fetchHomestay());
     dispatch(fetchConvenient());
@@ -92,6 +89,7 @@ const HomeStayProduct = () => {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.ownerHomestay.homestays)
   const convenients = useSelector((state) => state.convenient.convenients)
+  const user = useSelector((state) => state.user.partner)
   const [checkedList, setCheckedList] = useState([{
     name: '',
     type: ''
@@ -162,11 +160,10 @@ const HomeStayProduct = () => {
   };
 
   const onChangeStartdate = (value) => {
-    setHomestay({ ...homestay, startDate: value });
-    console.log(value);
-  };
-  const onChangeEnddate = (value) => {
-    setHomestay({ ...homestay, endDate: value });
+    if (value != null) {
+      setHomestay({ ...homestay, startDate: value[0].format('YYYY-MM-DD'), endDate: value[1].format('YYYY-MM-DD') });
+    }
+    console.log(homestay);
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -175,7 +172,7 @@ const HomeStayProduct = () => {
   };
   const handleOk = () => {
     setIsModalOpen(false);
-    console.log("???")
+    console.log(imgUrl.fileList);
     dispatch(addHomestay(homestay, imgUrl))
   }
   const handleCancel = () => {
@@ -207,19 +204,14 @@ const HomeStayProduct = () => {
               <Select onChange={onChangeProvince} options={plainProvince} />
             </Form.Item>
           </Col>
-          <Col span={6} push={2}>
-            <Form.Item label="Ngày bắt đầu">
-              <DatePicker onChange={onChangeStartdate} value={homestay.startDate} />
-            </Form.Item>
-          </Col>
-          <Col span={6} push={2}>
-            <Form.Item label="Ngày bắt đầu">
-              <DatePicker onChange={onChangeEnddate} value={homestay.endDate} />
+          <Col span={12} push={2}>
+            <Form.Item label="Ngày">
+              <RangePicker onChange={onChangeStartdate} />
             </Form.Item>
           </Col>
         </Row>
         <Row>
-          <Col span={8}>
+          <Col span={6}>
             <Form.Item label="Giá">
               <Input onChange={onChangePrice} value={homestay.price} />
             </Form.Item>

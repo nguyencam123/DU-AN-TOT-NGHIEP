@@ -18,10 +18,9 @@ export const addHomestay = (homestay, imgUrl) => async (dispatch) => {
   homestay.region = "a72af500-5ee5-4268-8d91-d7383d4a9011"
   homestay.startDate = 1666838400000
   homestay.endDate = 1666838400000
-  console.log(homestay);
   dispatch(fetchProductsStart());
   try {
-    await axios.post(BASE_URL + "/add-homestay",  homestay  );
+    await axios.post(BASE_URL + "/add-homestays", homestay, imgUrl.fileList);
   } catch (error) {
     dispatch(fetchProductsFailure(error.message));
   }

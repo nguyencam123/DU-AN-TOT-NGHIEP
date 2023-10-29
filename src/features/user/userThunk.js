@@ -91,7 +91,7 @@ export const loginpartner = (username, password) => async (dispatch) => {
     if (accounts.success) {
       dispatch(partnerloginSuccess({ partner: accounts }));
       localStorage.setItem('partner', 'true');
-      dispatch(partnerloginSuccess({ partner: accounts, partnerData: accounts }))
+      dispatch(partnerloginSuccess({ partner: accounts, partnerData: accounts.data }))
     } else {
       openNotification()
     }
