@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react'
-import { Space, Typography, Button, Table, Popconfirm, Modal, Form, Input, Row, Col } from 'antd'
+import { Space, Typography, Button, Table, Popconfirm, Modal, Form, Input, Row, Col, message } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 import { QuestionCircleOutlined, EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons'
 import { useState } from 'react'
-import { addHomestay, fetchHomestay } from '../../../features/owner_homestay/homestayThunk'
+import { EditHomestay, addHomestay, fetchHomestay } from '../../../features/owner_homestay/homestayThunk'
 import { fetchConvenient } from '../../../features/owner_homestay/convenientThunk'
 import { PlusOutlined } from '@ant-design/icons';
 import {
@@ -27,13 +27,6 @@ const { TextArea } = Input;
 
 const { Title } = Typography
 
-const normFile = (e) => {
-  if (Array.isArray(e)) {
-    return e;
-  }
-  return e?.fileList;
-};
-
 
 const HomeStayProduct = () => {
   useEffect(() => {
@@ -44,21 +37,49 @@ const HomeStayProduct = () => {
   const products = useSelector((state) => state.ownerHomestay.homestays)
   const convenients = useSelector((state) => state.convenient.convenients)
   //upload file
-  const [file, setFile] = useState(null);
+  // const normFile = (e) => {
+  //   if (Array.isArray(e)) {
+  //     return e;
+  //   }
+  //   return e?.fileList;
+  // };
+
+  const [file, setFile] = useState([]);
+  // const handleFileChange = ({ fileList: newFileList }) => {
+  //   setFile(newFileList);
+  // };
   const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    setFile(selectedFile);
+    let selectedFile = e.target.files;
+    let fileList = [...selectedFile]; // Chuyển đổi FileList thành mảng
+    setFile(fileList);
+    console.log(file)
   };
   //modal
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isViewmodal, setIsviewmodal] = useState(false)
+  const [isAddFrom, setIsAddForm] = useState(true)
+  const showModalView = (record) => {
+    console.log(record)
+    setIsviewmodal(true)
+    setname(record.name)
+    setdesc(record.desc)
+    setprice(record.price)
+    setnumberPerson(record.numberPerson)
+    setaddress(record.address)
+    setprice(record.price)
+    setstartDate(record.startDate)
+    setendDate(record.endDate)
+  }
   const showModal = () => {
     setIsModalOpen(true);
+    setIsAddForm(true);
   };
   const handleOk = () => {
     setIsModalOpen(false);
   }
   const handleCancel = () => {
     setIsModalOpen(false);
+    setIsviewmodal(false)
   }
   const columns = [
     {
@@ -86,8 +107,8 @@ const HomeStayProduct = () => {
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
-          <a onClick={(row) => { console.log(row.data); }}> <EyeOutlined /> </a>
-          <a> <EditOutlined /> </a>
+          <a> <EyeOutlined onClick={() => showModalView(record)} /> </a>
+          <a> <EditOutlined onClick={() => handleEditRow(record)} /> </a>
           <Popconfirm
             title="Xóa mục này"
             description="Bạn chắc chắn muốn xóa mục này chứ?"
@@ -102,15 +123,25 @@ const HomeStayProduct = () => {
     },
   ];
   //
+
+  //
+
   const [name, setname] = useState("")
   const [startDate, setstartDate] = useState(1666838400000)
-  const [endDate, setendDate] = useState(1666838400000)
+  // const handleDateChangestart = (dates) => {
+  //   setstartDate(moment(dates).format("yyyy/MM/dd"));
+  // };
+  const [endDate, setendDate] = useState(1666924800000)
+  // const handleDateChangeend = (dates) => {
+  //   setendDate(moment(dates).format("yyyy/MM/dd"));
+  // };
   const [desc, setdesc] = useState("")
   const [price, setprice] = useState(0)
   const [numberPerson, setnumberPerson] = useState(0)
   const [address, setaddress] = useState("")
   const [province, setprovince] = useState("2695a00e-a933-4c28-819c-9b66f3184e8d")
   const [region, setregion] = useState("a72af500-5ee5-4268-8d91-d7383d4a9011")
+  const [recordid, setRecordid] = useState("");
   //
   const homestay = {
     name: name,
@@ -120,15 +151,36 @@ const HomeStayProduct = () => {
     price: price,
     numberPerson: numberPerson,
     address: address,
-    province: province,
-    region: region
+    province: "51d5796b-6813-4e6f-9f7c-0045112cfedb",
+    region: "ac0eb453-7dba-4083-814d-5cd0995adb67"
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsModalOpen(false);
-    dispatch(addHomestay(homestay, file))
+    if (isAddFrom) {
+      dispatch(addHomestay(homestay, file));
+      dispatch(fetchHomestay());
+      message.info('Thêm thành công');
+    } else {
+      dispatch(EditHomestay(homestay, file, recordid));
+      dispatch(fetchHomestay());
+      message.info('Sửa thành công');
+    }
   };
+  const handleEditRow = (record) => {
+    setIsModalOpen(true);
+    setIsAddForm(false);
+    setRecordid(record.id)
+    setname(record.name)
+    setdesc(record.desc)
+    setprice(record.price)
+    setnumberPerson(record.numberPerson)
+    setaddress(record.address)
+    setprice(record.price)
+    setstartDate(record.startDate)
+    setendDate(record.endDate)
+    console.log(record)
+  }
   return (
     <>
       <Title>Quản lý Homestay</Title>
@@ -137,8 +189,8 @@ const HomeStayProduct = () => {
           Thêm mới HomeStay
         </Button>
       </div>
-      <Modal title="Basic Modal" open={isModalOpen} onCancel={handleCancel}
-        width={1200} okText='Thêm mới' cancelText='Hủy' onOk={handleSubmit}>
+      <Modal title={isAddFrom == true ? "Thêm homstay" : "Sửa homestay"} open={isModalOpen} onCancel={handleCancel}
+        width={900} okText={isAddFrom == true ? "Thêm homstay" : "Sửa homestay"} cancelText='Hủy' onOk={handleSubmit}>
         <Form
           name="basic"
           labelCol={{
@@ -158,66 +210,90 @@ const HomeStayProduct = () => {
           <Row gutter={24}>
             {/* Trường thứ nhất */}
             <Col span={12}>
-              <Form.Item
-                label="Name product"
-                name="name"
-              >
-                <Input value={name}
-                  onChange={(e) => setname(e.target.value)} />
-              </Form.Item>
+              <Title level={5}>Tên homestay</Title>
+              <Input value={name}
+                onChange={(e) => setname(e.target.value)} />
             </Col>
             {/* Trường thứ hai */}
             <Col span={12}>
-              <Form.Item
-                label="Price"
-                name="price"
-              >
-                <Input value={price}
-                  onChange={(e) => setprice(e.target.value)} />
-              </Form.Item>
+              <Title level={5}>Giá</Title>
+              <Input value={price}
+                onChange={(e) => setprice(e.target.value)} />
+
             </Col>
 
           </Row>
           <Row gutter={24}>
             <Col span={12}>
-              <Form.Item
-                label="mô tả"
-                name="desc"
-              >
-                <Input value={desc}
-                  onChange={(e) => setdesc(e.target.value)} />
-              </Form.Item>
+              <Title level={5}>Mô tả</Title>
+              <Input value={desc}
+                onChange={(e) => setdesc(e.target.value)} />
+
             </Col>
             <Col span={12}>
-              <Form.Item
-                label="numberPerson"
-                name="numberPerson"
-              >
-                <Input value={numberPerson}
-                  onChange={(e) => setnumberPerson(e.target.value)} />
-              </Form.Item>
+              <Title level={5}>Số người ở</Title>
+              <Input value={numberPerson}
+                onChange={(e) => setnumberPerson(e.target.value)} />
+
             </Col>
           </Row>
           <Row gutter={24}>
             <Col span={12}>
-              <Form.Item
-                label="địa chỉ"
-                name="address"
-              >
-                <Input value={address}
-                  onChange={(e) => setaddress(e.target.value)} />
-              </Form.Item>
+              <Title level={5}>Địa chỉ</Title>
+              <Input value={address}
+                onChange={(e) => setaddress(e.target.value)} />
+
+            </Col>
+            <Col span={12}>
+              <Title level={5}>Ngày bắt đầu</Title>
+              {/* <DatePicker onChange={handleDateChangestart} /> */}
+              {/* <DatePicker /> */}
+
+            </Col>
+          </Row>
+          <Row gutter={24}>
+            <Col span={12}>
+              <Title level={5}>Ngày kết thúc</Title>
+              {/* <DatePicker onChange={handleDateChangeend} /> */}
+              {/* <DatePicker /> */}
+
             </Col>
           </Row>
         </Form>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} style={{ marginTop: 20 }}>
           <div>
             <label htmlFor="image">Chọn ảnh</label>
-            <input type="file" id="image" accept="image/*" onChange={handleFileChange} />
+            <input type="file" id="image" multiple accept="image/*" onChange={handleFileChange} />
           </div>
+          {/* <Form.Item label="Upload" valuePropName="fileList" getValueFromEvent={normFile}>
+            <Upload action="image/*" listType="picture-card" multiple maxCount={50} onChange={handleFileChange}>
+              <div>
+                <PlusOutlined />
+                <div
+                  style={{
+                    marginTop: 8,
+                  }}
+                >
+                  Upload
+                </div>
+              </div>
+            </Upload>
+          </Form.Item> */}
         </form>
       </Modal>
-      <Table columns={columns} dataSource={products} />
+      <Modal title="Xem thông tin chi tiết sản phẩm" open={isViewmodal} onCancel={handleCancel}
+        width={600}>
+        <div style={{ fontSize: 18, fontWeight: 600 }}>
+          Tên homestay : {name}<br />
+          Mô tả : {desc}<br />
+          Giá : {price}<br />
+          Số lượng người : {numberPerson}<br />
+          Địa chỉ : {address}<br />
+          Ngày bắt đầu : {startDate}<br />
+          Ngày kết thúc : {endDate}
+        </div>
+      </Modal>
+      <Table columns={columns} dataSource={products} rowKey="key" />
     </>
   );
 }
