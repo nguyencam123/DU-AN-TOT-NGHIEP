@@ -14,13 +14,14 @@ export const fetchHomestay = () => async (dispatch) => {
 };
 
 export const addHomestay = (homestay, imgUrl) => async (dispatch) => {
-  homestay.province = "2695a00e-a933-4c28-819c-9b66f3184e8d";
-  homestay.region = "a72af500-5ee5-4268-8d91-d7383d4a9011"
-  homestay.startDate = 1666838400000
-  homestay.endDate = 1666838400000
+  homestay.startDate = 127645124
+  homestay.endDate = 127645124
+  const formData = new FormData();
+  formData.append('image', imgUrl);
+  formData.append('homestay', JSON.stringify(homestay));
   dispatch(fetchProductsStart());
   try {
-    await axios.post(BASE_URL + "/add-homestays", homestay, imgUrl.fileList);
+    await axios.post(BASE_URL + "/add-homestays", formData);
   } catch (error) {
     dispatch(fetchProductsFailure(error.message));
   }
