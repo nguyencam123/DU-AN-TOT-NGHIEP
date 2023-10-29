@@ -6,6 +6,8 @@ import com.example.demo.cors.homestayowner.service.HomestayOwnerImgHomestayServi
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class HomestayOwnerImgHomestayServiceImpl implements HomestayOwnerImgHomestayService {
 
@@ -13,7 +15,7 @@ public class HomestayOwnerImgHomestayServiceImpl implements HomestayOwnerImgHome
     private HomestayOwnerImgHomestayRepo homestayOwnerImgHomestayRepo;
 
     @Override
-    public HomestayOwnerImgHomestayReponse getImgHomestayByHomestayId(String id) {
+    public List<HomestayOwnerImgHomestayReponse> getImgHomestayByHomestayId(String id) {
         return homestayOwnerImgHomestayRepo.getImgHomestayByHomestayId(id);
     }
 }

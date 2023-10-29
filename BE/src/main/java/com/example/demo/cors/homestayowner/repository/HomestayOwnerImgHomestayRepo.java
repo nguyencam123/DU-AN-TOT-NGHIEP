@@ -6,11 +6,13 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface HomestayOwnerImgHomestayRepo extends ImgHomestayRepository {
 
-    @Query(value = "Select a.img_url from img_homestay a where a.homestay_id=:id",nativeQuery = true)
-    HomestayOwnerImgHomestayReponse getImgHomestayByHomestayId(String id);
+    @Query(value = "Select a.img_url as imgUrl from img_homestay a where a.homestay_id=:id",nativeQuery = true)
+    List<HomestayOwnerImgHomestayReponse> getImgHomestayByHomestayId(String id);
 
     @Query(value = "Delete from img_homestay where homestay_id=:idHomestay",nativeQuery = true)
     @Modifying

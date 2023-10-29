@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/api/v2/booking/")
+@RequestMapping("/api/v2/booking")
 public class HomestayOwnerBookingController {
 
     @Autowired

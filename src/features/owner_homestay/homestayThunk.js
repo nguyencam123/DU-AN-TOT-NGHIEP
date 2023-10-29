@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const BASE_URL = 'http://localhost:8080/api/v2/homestay';
 
-export const fetchProduct = () => async (dispatch) => {
+export const fetchHomestay = () => async (dispatch) => {
   dispatch(fetchProductsStart());
   try {
     const response = await axios.get(BASE_URL + "/get-homestay");
@@ -12,3 +12,16 @@ export const fetchProduct = () => async (dispatch) => {
     dispatch(fetchProductsFailure(error.message));
   }
 };
+
+export const addHomestay = (homestay, imgUrl) => async (dispatch) => {
+  const formData = new FormData();
+  formData.append('image', imgUrl);
+  formData.append('homestay', JSON.stringify(homestay));
+  dispatch(fetchProductsStart());
+  try {
+    await axios.post(BASE_URL + "/add-homestays", formData);
+  } catch (error) {
+    dispatch(fetchProductsFailure(error.message));
+  }
+};
+

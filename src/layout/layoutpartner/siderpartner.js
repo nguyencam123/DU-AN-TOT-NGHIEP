@@ -10,7 +10,6 @@ import {
 import { Link, Route, Routes } from 'react-router-dom'; // Import thư viện Link và Route
 import HomeStayProduct from '../../component/PartnerComponent/page/homestayProduct';
 import HomeStayAdd from '../../component/PartnerComponent/page/homestayAdd';
-import HomeStayConvenient from '../../component/PartnerComponent/page/homestayConvenient';
 const { Header, Content, Sider } = Layout;
 
 
@@ -26,9 +25,7 @@ function getItem(label, key, icon, route) {
 const items = [
   { label: 'Homestay', key: '1', icon: <PieChartOutlined />, route: 'partner/homestay', component: <HomeStayProduct /> },
   { label: 'Đặt phòng', key: '2', icon: <DesktopOutlined />, route: 'partner/statistical', component: <HomeStayProduct /> },
-  { label: 'Đăng homestay', key: '3', icon: <DesktopOutlined />, route: 'partner/add', component: <HomeStayAdd /> },
-  { label: 'Thống kê', key: '4', icon: <DesktopOutlined />, route: 'partner/categor', component: <HomeStayProduct /> },
-  { label: 'Tiện nghi', key: '5', icon: <DesktopOutlined />, route: 'partner/convenient', component: <HomeStayConvenient /> },
+  { label: 'Thống kê', key: '4', icon: <DesktopOutlined />, route: 'partner/categor', component: <HomeStayProduct /> }
 
 ];
 
