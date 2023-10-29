@@ -13,12 +13,17 @@ import org.springframework.stereotype.Repository;
 public interface AdminHomestayRepository extends HomestayRepository {
 
     @Query(value = """
-            SELECT dbo.homestay.name, dbo.address.name AS [address], dbo.owner_homestay.name AS [name_homestay], dbo.owner_homestay.phone_number as [phone_number], dbo.owner_homestay.email as [email], dbo.service_pack.name AS [name_pack]
-            FROM dbo.address 
-            INNER JOIN dbo.homestay ON dbo.address.id = dbo.homestay.address_id 
+            SELECT dbo.homestay.name, dbo.homestay.address, dbo.owner_homestay.name AS [name_homestay], dbo.owner_homestay.phone_number as [phone_number], dbo.owner_homestay.email as [email],dbo.homestay.status
+            FROM dbo.homestay
             INNER JOIN dbo.owner_homestay ON dbo.homestay.owner_id = dbo.owner_homestay.id 
-            INNER JOIN dbo.service_pack ON dbo.homestay.service_pack_id = dbo.service_pack.id
             """,nativeQuery = true)
     Page<AdminHomestayResponse> getAll(Pageable pageable, @Param("request") AdminHomestayRequest request);
 
+    @Query(value = """
+            SELECT dbo.homestay.name, dbo.homestay.address, dbo.owner_homestay.name AS [name_homestay], dbo.owner_homestay.phone_number as [phone_number], dbo.owner_homestay.email as [email],dbo.homestay.status
+            FROM dbo.homestay
+            INNER JOIN dbo.owner_homestay ON dbo.homestay.owner_id = dbo.owner_homestay.id 
+            WHERE (dbo.homestay.id = :#{#request.homestayId})
+            """,nativeQuery = true)
+    Page<AdminHomestayResponse> getAllByID(Pageable pageable, @Param("request") AdminHomestayRequest request);
 }

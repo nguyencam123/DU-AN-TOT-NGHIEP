@@ -11,4 +11,6 @@ public interface AdminHomestayService {
     PageableObject<AdminHomestayResponse> getAll(AdminHomestayRequest request);
 
     Homestay changeStatus(AdminChangeStatusHomestayRequest adminChangeStatusHomestayRequest);
+
+    PageableObject<AdminHomestayResponse> getAllById(AdminHomestayRequest request);
 }

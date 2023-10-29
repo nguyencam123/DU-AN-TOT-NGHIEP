@@ -25,4 +25,8 @@ public class AdminHomestayController {
         return new ResponseObject(adminHomestayService.changeStatus(adminChangeStatusHomestayRequest));
     }
 
+    @GetMapping("/byid")
+    public ResponseObject getAllById(@RequestBody AdminHomestayRequest adminHomestayRequest){
+        return new ResponseObject(adminHomestayService.getAllById(adminHomestayRequest));
+    }
 }

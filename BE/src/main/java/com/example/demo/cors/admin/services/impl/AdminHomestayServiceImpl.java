@@ -21,24 +21,28 @@ import java.util.Optional;
 public class AdminHomestayServiceImpl implements AdminHomestayService {
 
     @Autowired
-    private AdminHomestayRepository adminHotelRepository;
-
-    @Autowired
-    private HomestayRepository homestayRepository;
+    private AdminHomestayRepository adminHomestayRepository;
 
     @Override
     public PageableObject<AdminHomestayResponse> getAll(AdminHomestayRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(),request.getSize());
-        Page<AdminHomestayResponse> adminHomestayReponsis= adminHotelRepository.getAll(pageable,request);
+        Page<AdminHomestayResponse> adminHomestayReponsis= adminHomestayRepository.getAll(pageable,request);
         return new PageableObject<>(adminHomestayReponsis);
     }
 
     @Override
     public Homestay changeStatus(AdminChangeStatusHomestayRequest adminChangeStatusHomestayRequest) {
-        Optional<Homestay> homestay = homestayRepository.findById(adminChangeStatusHomestayRequest.getHomestayId());
-        homestay.get().setStatus(Status.valueOf(String.valueOf(adminChangeStatusHomestayRequest.getStatus())));
-        homestayRepository.save(homestay.get());
-        return homestay.get();
+        Homestay homestay = adminHomestayRepository.findById(adminChangeStatusHomestayRequest.getHomestayId()).orElse(null);
+        homestay.setStatus(Status.HOAT_DONG);
+        Homestay homestay1 = adminHomestayRepository.save(homestay);
+        return homestay1;
+    }
+
+    @Override
+    public PageableObject<AdminHomestayResponse> getAllById(AdminHomestayRequest adminHomestayRequest) {
+        Pageable pageable = PageRequest.of(adminHomestayRequest.getPage(),adminHomestayRequest.getSize());
+        Page<AdminHomestayResponse> getAllbyid= adminHomestayRepository.getAllByID(pageable,adminHomestayRequest);
+        return new PageableObject<>(getAllbyid);
     }
 
 

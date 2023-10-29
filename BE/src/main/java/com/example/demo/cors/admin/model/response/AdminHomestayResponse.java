@@ -19,7 +19,6 @@ public interface AdminHomestayResponse {
     @Value("#{target.email}")
     String getOwnerHomestayEmail();
 
-    @Value("#{target.name_pack}")
-    String getNamePack();
-
+    @Value("#{target.status}")
+    String getStatus();
 }
