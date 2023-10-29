@@ -16,10 +16,12 @@ export const fetchHomestay = () => async (dispatch) => {
 export const addHomestay = (homestay, imgUrl) => async (dispatch) => {
   homestay.province = "2695a00e-a933-4c28-819c-9b66f3184e8d";
   homestay.region = "a72af500-5ee5-4268-8d91-d7383d4a9011"
+  homestay.startDate = 1666838400000
+  homestay.endDate = 1666838400000
   console.log(homestay);
   dispatch(fetchProductsStart());
   try {
-    await axios.post(BASE_URL + "/add-homestay", { homestay, imgUrl } );
+    await axios.post(BASE_URL + "/add-homestay",  homestay  );
   } catch (error) {
     dispatch(fetchProductsFailure(error.message));
   }
