@@ -1,8 +1,9 @@
 package com.example.demo.cors.customer.model.response;
 
+import com.example.demo.entities.base.IsIdentified;
 import org.springframework.beans.factory.annotation.Value;
 
-public interface CustomerConvenientHomestayResponse {
+public interface CustomerConvenientHomestayResponse extends IsIdentified {
 
     @Value("#{target.convenient_name}")
     String getConvenient_Name();

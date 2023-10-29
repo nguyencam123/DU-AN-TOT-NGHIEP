@@ -9,4 +9,5 @@ import lombok.Setter;
 public class CustomerBookingRequest extends PageableRequest {
 
     private String userId;
+
 }
