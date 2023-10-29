@@ -163,6 +163,7 @@ const HomeStayProduct = () => {
 
   const onChangeStartdate = (value) => {
     setHomestay({ ...homestay, startDate: value });
+    console.log(value);
   };
   const onChangeEnddate = (value) => {
     setHomestay({ ...homestay, endDate: value });
