@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/api/v2/convenient/")
+@RequestMapping("/api/v2/convenient")
 public class HomestayOwnerConvenientController {
 
     @Autowired
@@ -19,7 +19,7 @@ public class HomestayOwnerConvenientController {
         return new ResponseObject(homestayOwnerConvenientSerivce.getHomestayOwnerConvenientHomestay());
     }
 
-    @GetMapping("get-homestay-by-convenient")
+    @GetMapping("/get-homestay-by-convenient")
     public ResponseObject getHomestayByConvenient(@RequestParam("id") String id,HomestayownerHomestayRequest homestayownerHomestayRequest){
         return new ResponseObject(homestayOwnerConvenientSerivce.getPageablebyConvenient(id,homestayownerHomestayRequest));
     }

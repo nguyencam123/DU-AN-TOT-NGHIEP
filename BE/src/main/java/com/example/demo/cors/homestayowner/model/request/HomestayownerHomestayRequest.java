@@ -4,14 +4,13 @@ import com.example.demo.cors.common.base.PageableRequest;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class HomestayownerHomestayRequest extends PageableRequest {
+public class HomestayownerHomestayRequest extends PageableRequest{
 
       private String name;
 
