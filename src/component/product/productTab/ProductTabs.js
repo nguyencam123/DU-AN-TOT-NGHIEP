@@ -86,7 +86,7 @@ const ProductTabs = (props) => {
                             style={{
                                 width: 270
                             }}
-                            cover={<img alt="example" src={imgproduct} />}
+                            cover={<img alt="example" src={product.image} />}
                         >
                             <Meta title={product.homestay_Name} />
                             <div>
