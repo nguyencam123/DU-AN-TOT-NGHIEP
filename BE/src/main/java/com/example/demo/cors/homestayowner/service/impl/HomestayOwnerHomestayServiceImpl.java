@@ -5,10 +5,7 @@ import com.cloudinary.utils.ObjectUtils;
 import com.example.demo.cors.common.base.PageableObject;
 import com.example.demo.cors.homestayowner.model.reponse.HomestayOwnerHomestayReponse;
 import com.example.demo.cors.homestayowner.model.request.HomestayownerHomestayRequest;
-import com.example.demo.cors.homestayowner.repository.HomestayOwnerHomestayRepository;
-import com.example.demo.cors.homestayowner.repository.HomestayOwnerImgHomestayRepo;
-import com.example.demo.cors.homestayowner.repository.HomestayOwnerProvinceRepository;
-import com.example.demo.cors.homestayowner.repository.HomestayOwnerRegionRepository;
+import com.example.demo.cors.homestayowner.repository.*;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerHomestayService;
 import com.example.demo.entities.Homestay;
 import com.example.demo.entities.ImgHomestay;
@@ -42,7 +39,24 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
     private HomestayOwnerImgHomestayRepo homestayOwnerImgHomestayRepo;
 
     @Autowired
+    private HomestayOwnerOwnerHomestayRepository homestayOwnerOwnerHomestayRepository;
+
+    @Autowired
     private Cloudinary cloudinary;
+
+    @Override
+    public PageableObject<Homestay> getPageHomestay(String id,HomestayownerHomestayRequest request) {
+        Pageable pageable = PageRequest.of(request.getPage(),request.getSize());
+        Page<Homestay> res=homestayownerHomestayRepository.getHomestayByOwnerH(id,pageable);
+        return new PageableObject<>(res);
+    }
+
+    @Override
+    public PageableObject<Homestay> getAll(HomestayownerHomestayRequest homestayownerHomestayRequest) {
+        Pageable pageable = PageRequest.of(homestayownerHomestayRequest.getPage(),homestayownerHomestayRequest.getSize());
+        Page<Homestay> res=homestayownerHomestayRepository.findAll(pageable);
+        return new PageableObject<>(res);
+    }
 
     @Override
     public PageableObject<HomestayOwnerHomestayReponse> getAllPageable(HomestayownerHomestayRequest homestayownerHomestayRequest) {
@@ -63,6 +77,7 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
         homestay.setAddress(request.getAddress());
         homestay.setProvince(provinceRepository.findById(request.getProvince()).orElse(null));
         homestay.setRegion(regionRepository.findById(request.getRegion()).orElse(null));
+        homestay.setOwnerHomestay(homestayOwnerOwnerHomestayRepository.findById(request.getOwnerHomestay()).orElse(null));
         homestay.setStatus(Status.KHONG_HOAT_DONG);
         Homestay homestay1=homestayownerHomestayRepository.save(homestay);
         List<ImgHomestay> newImages = new ArrayList<>();
@@ -104,4 +119,5 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
         }
         return homestay1;
     }
+
 }
