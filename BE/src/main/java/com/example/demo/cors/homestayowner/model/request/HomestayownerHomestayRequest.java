@@ -30,6 +30,8 @@ public class HomestayownerHomestayRequest extends PageableRequest{
 
       private String region;
 
+      private String ownerHomestay;
+
       private String status;
 
 }
