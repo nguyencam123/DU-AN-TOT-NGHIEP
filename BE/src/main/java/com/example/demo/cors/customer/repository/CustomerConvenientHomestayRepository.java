@@ -12,9 +12,8 @@ import org.springframework.stereotype.Repository;
 public interface CustomerConvenientHomestayRepository extends ConvenientHomestayRepository {
 
     @Query(value = """
-            SELECT a.name AS convenient_name, b.name AS convenient_type_name FROM convenient_homestay a
+            SELECT a.id, a.name AS convenient_name, b.name AS convenient_type_name FROM convenient_homestay a
             JOIN convenient_homestay_type b ON b.id = a.convenient_homestay_type_id\s
-            GROUP BY a.name, b.name
             """, nativeQuery = true)
     Page<CustomerConvenientHomestayResponse> getAllConvenient(Pageable pageable);
 

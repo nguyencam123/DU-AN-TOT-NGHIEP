@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface CustomerLoginRepository extends UserRepository {
 
     @Query(value = """
-            SELECT a.status, a.code, a.name, a.password, a.username, a.phone_number, a.email
+            SELECT a.id, a.status, a.code, a.name, a.password, a.username, a.phone_number, a.email
             FROM dbo.[user] a
             WHERE (a.username =:#{#customerLoginRequest.uname}) AND (a.password =:#{#customerLoginRequest.pass})
             """, nativeQuery = true)

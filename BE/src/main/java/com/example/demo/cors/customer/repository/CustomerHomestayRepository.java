@@ -53,5 +53,16 @@ public interface CustomerHomestayRepository extends HomestayRepository {
             """, nativeQuery = true)
     Page<CustomerHomestayResponse> getHomestayByRegion(Pageable pageable, CustomerHomestayRequest customerHomestayRequest);
 
+    @Query(value = """
+            SELECT ROW_NUMBER() OVER(ORDER BY a.created_date DESC) AS stt, a.id, a.name AS homestay_name, b.img_url AS image, c.name AS province_name, a.price
+            FROM homestay a
+            JOIN img_homestay b ON b.homestay_id = a.id
+            JOIN province c ON c.id = a.province_id
+            JOIN detail_homestay d ON d.homestay_id = a.id
+            JOIN region e ON e.id = a.region_id
+            WHERE a.id =:#{#customerHomestayRequest.homestayId}
+            GROUP BY a.created_date, a.id, a.name, c.name, b.img_url, a.price
+            """, nativeQuery = true)
+    CustomerHomestayResponse getHomestayById(CustomerHomestayRequest customerHomestayRequest);
 
 }
