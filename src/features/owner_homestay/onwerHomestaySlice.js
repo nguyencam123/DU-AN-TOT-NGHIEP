@@ -30,9 +30,13 @@ const ownerHomestaySlice = createSlice({
     },
     addproduct: (state, action) => {
       state.homestays.push(action.payload)
+    },
+    edithomestay: (state, action) => {
+      const productIdToEdit = action.payload;
+      state.homestays = state.homestays.find(homestay => homestay.id === productIdToEdit)
     }
   },
 });
 
-export const { fetchProductsStart, fetchProductsSuccess, fetchProductsFailure, deleteProduct, addproduct } = ownerHomestaySlice.actions;
+export const { fetchProductsStart, fetchProductsSuccess, fetchProductsFailure, deleteProduct, addproduct, edithomestay } = ownerHomestaySlice.actions;
 export default ownerHomestaySlice.reducer;

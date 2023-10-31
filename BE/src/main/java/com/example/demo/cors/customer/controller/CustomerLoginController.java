@@ -22,5 +22,5 @@ public class CustomerLoginController {
     public ResponseObject getCustomerLogin(@RequestBody CustomerLoginRequest customerLoginRequest) {
         return new ResponseObject(customerLoginService.getCustomerLogin(customerLoginRequest));
     }
-
+    
 }

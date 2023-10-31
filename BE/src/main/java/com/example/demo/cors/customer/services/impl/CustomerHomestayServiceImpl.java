@@ -45,4 +45,9 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
         return new PageableObject<>(res);
     }
 
+    @Override
+    public CustomerHomestayResponse getHomestayById(CustomerHomestayRequest customerHomestayRequest) {
+        return customerHomestayRepository.getHomestayById(customerHomestayRequest);
+    }
+
 }

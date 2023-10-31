@@ -1,0 +1,24 @@
+package com.example.demo.cors.homestayowner.controller;
+
+import com.example.demo.cors.common.base.ResponseObject;
+import com.example.demo.cors.homestayowner.service.HomestayOwnerProvinceService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@CrossOrigin(origins = "http://localhost:3000")
+@RestController
+@RequestMapping("/api/v2/province")
+public class HomestayOwnerProvinceController {
+
+    @Autowired
+    private HomestayOwnerProvinceService homestayOwnerProvinceService;
+
+    @GetMapping("")
+    public ResponseObject getProvince() {
+        return new ResponseObject(homestayOwnerProvinceService.getAll());
+    }
+
+}

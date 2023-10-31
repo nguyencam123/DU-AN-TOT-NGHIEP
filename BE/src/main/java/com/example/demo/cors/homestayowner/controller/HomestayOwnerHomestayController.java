@@ -26,6 +26,16 @@ public class HomestayOwnerHomestayController {
     @Autowired
     private HomestayOwnerHomestayConventer conventer;
 
+    @GetMapping("get-homestay-by-id")
+    public ResponseObject getAllHomestayownerHomestay(@RequestParam("id") String id,HomestayownerHomestayRequest homestayownerHomestayRequest) {
+        return new ResponseObject(homestayownerHomestayService.getPageHomestay(id,homestayownerHomestayRequest));
+    }
+
+    @GetMapping("get-all")
+    public ResponseObject getAllHomestayownerHomestay(HomestayownerHomestayRequest homestayownerHomestayRequest) {
+        return new ResponseObject(homestayownerHomestayService.getAll(homestayownerHomestayRequest));
+    }
+
     @GetMapping("get-homestay")
     public ResponseObject getPageHomestayownerHomestay(HomestayownerHomestayRequest homestayownerHomestayRequest) {
         return new ResponseObject(homestayownerHomestayService.getAllPageable(homestayownerHomestayRequest));
