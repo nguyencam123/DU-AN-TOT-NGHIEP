@@ -127,6 +127,7 @@ const HomeStayProduct = () => {
   //
 
   const [name, setname] = useState("")
+
   const [startDate, setstartDate] = useState(1666838400000)
   // const handleDateChangestart = (dates) => {
   //   setstartDate(moment(dates).format("yyyy/MM/dd"));
@@ -298,3 +299,4 @@ const HomeStayProduct = () => {
   );
 }
 export default HomeStayProduct
+
