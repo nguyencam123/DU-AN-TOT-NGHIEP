@@ -33,6 +33,10 @@ public class Homestay extends PrimaryEntity {
 
     private String address;
 
+    private String timeCheckIn;
+
+    private String timeCheckOut;
+
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private OwnerHomestay ownerHomestay;
