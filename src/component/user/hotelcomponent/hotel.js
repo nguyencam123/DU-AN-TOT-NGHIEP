@@ -33,7 +33,12 @@ const text = <section>
 </section>;
 const utilities = <div style={{ width: '100%', height: '30%', backgroundColor: 'white', borderRadius: 10, padding: '5px 5px 5px' }}>
     <div>
-
+        <Checkbox>Wifi</Checkbox><br />
+        <Checkbox>Hồ bơi</Checkbox><br />
+        <Checkbox>Chỗ để xe</Checkbox><br />
+        <Checkbox>Lễ tân 24/24</Checkbox><br />
+        <Checkbox>Thang máy</Checkbox><br />
+        <Checkbox>Phòng họp</Checkbox>
     </div>
 </div>
 const items = [

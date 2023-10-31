@@ -40,12 +40,14 @@ export const loginUser = (username, password) => async (dispatch) => {
       pass: password,
     });
     const accounts = response.data;
-
-    dispatch(loginSuccess({ user: accounts }));
-    localStorage.setItem('isLoggedIn', 'true');
-    openNotificationlogin()
-    dispatch(loginSuccess({ user: accounts, userData: accounts }))
-
+    if (accounts.success) {
+      dispatch(loginSuccess({ user: accounts }));
+      localStorage.setItem('isLoggedIn', 'true');
+      openNotificationlogin()
+      dispatch(loginSuccess({ user: accounts, userData: accounts }))
+    } else {
+      openNotification()
+    }
     //   dispatch(adminloginSuccess({ admin: accounts }));
     //   localStorage.setItem('isAdmin', 'true');
     //   openNotificationadmin();
@@ -57,7 +59,6 @@ export const loginUser = (username, password) => async (dispatch) => {
 
   } catch (error) {
     console.error('Đăng nhập thất bại:', error);
-    openNotification()
 
   }
 };
@@ -68,27 +69,32 @@ export const loginAdmin = (username, password) => async (dispatch) => {
       pass: password,
     });
     const accounts = response.data;
-
-    dispatch(adminloginSuccess({ admin: accounts }));
-    localStorage.setItem('isAdmin', 'true');
-    dispatch(adminloginSuccess({ admin: accounts, adminData: accounts }))
+    if (accounts.success) {
+      dispatch(adminloginSuccess({ admin: accounts }));
+      localStorage.setItem('isAdmin', 'true');
+      dispatch(adminloginSuccess({ admin: accounts, adminData: accounts }))
+    } else {
+      openNotification()
+    }
   } catch (error) {
     console.error('Đăng nhập thất bại:', error);
     openNotification()
-
   }
 };
 export const loginpartner = (username, password) => async (dispatch) => {
   try {
     const response = await axios.post('http://localhost:8080/api/v2/login', {
-      username: username,
-      password: password,
+      uname: username,
+      pass: password,
     });
     const accounts = response.data;
-
-    dispatch(partnerloginSuccess({ partner: accounts }));
-    localStorage.setItem('partner', 'true');
-    dispatch(partnerloginSuccess({ partner: accounts, partnerData: accounts }))
+    if (accounts.success) {
+      dispatch(partnerloginSuccess({ partner: accounts }));
+      localStorage.setItem('partner', 'true');
+      dispatch(partnerloginSuccess({ partner: accounts, partnerData: accounts.data }))
+    } else {
+      openNotification()
+    }
   } catch (error) {
     console.error('Đăng nhập thất bại:', error);
     openNotification()

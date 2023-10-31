@@ -1,27 +1,64 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Row, Col, Rate, Typography } from 'antd';
 import { useSelector } from 'react-redux';
-
+import Fuse from 'fuse.js';
 import imgproduct from '../../../assets/svg/Rectangle 153.svg'
 import { EnvironmentOutlined } from "@ant-design/icons";
 
 const { Title } = Typography
+const { Meta } = Card;
 
 
 const ProductTabs = (props) => {
-    const { Meta } = Card;
     const products = useSelector((state) => state.product.products);
     const loading = useSelector((state) => state.product.loading);
     const error = useSelector((state) => state.product.error);
-    useEffect(() => {
-        setProducts(products.slice(0, 6));
-    }, [products]);
+
     const [productlist, setProducts] = useState([]);
+
+    useEffect(() => {
+        const fuse = new Fuse(products, {
+            keys: ['province_Name'],
+            includeScore: true,
+            threshold: 0.4, // Điều chỉnh ngưỡng tìm kiếm tùy chọn
+            ignoreLocation: true,
+            distance: 100,
+        });
+
+        const results = fuse.search(props.city);
+
+        const filteredProducts = results.map(result => result.item);
+
+        setProducts(filteredProducts.slice(0, 6));
+    }, [products, props.city]);
+
+
+    // const loadMore = () => {
+    //     const startIndex = productlist.length;
+    //     const endIndex = startIndex + 8;
+    //     setProducts([...productlist, ...products.slice(startIndex, endIndex)]);
+    // };
     const loadMore = () => {
         const startIndex = productlist.length;
         const endIndex = startIndex + 8;
-        setProducts([...productlist, ...products.slice(startIndex, endIndex)]);
+        const newProducts = [...productlist, ...products.slice(startIndex, endIndex)];
+
+        const fuse = new Fuse(newProducts, {
+            keys: ['province_Name'],
+            includeScore: true,
+            threshold: 0.4,
+            ignoreLocation: true,
+            distance: 100,
+        });
+
+        const results = fuse.search(props.city);
+
+        const filteredProducts = results.map(result => result.item);
+
+        setProducts(filteredProducts);
     };
+
+
     return (
         <section style={{ padding: '0 200px 0 200px' }}>
             {
@@ -49,11 +86,12 @@ const ProductTabs = (props) => {
                             style={{
                                 width: 270
                             }}
-                            cover={<img alt="example" src={imgproduct} />}
+                            cover={<img alt="example" src={product.image} />}
                         >
                             <Meta title={product.homestay_Name} />
                             <div>
-                                <Rate allowHalf disabled defaultValue={product.star} />
+                                {/* <Rate allowHalf disabled defaultValue={product.star} /> */}
+                                <br />
                                 <div style={{ display: 'flex' }}>
                                     <EnvironmentOutlined style={{ marginTop: 5 }} />&ensp;
                                     {product.province_Name}
@@ -64,16 +102,18 @@ const ProductTabs = (props) => {
                     </Col>
                 ))}
             </Row>
-            {productlist.length < products.length && (
-                <div className="d-flex justify-content-center" style={{ marginTop: '20px' }}>
-                    <button onClick={loadMore}
-                        style={{
-                            borderRadius: 8, backgroundColor: '#5392F9',
-                            color: 'white', width: 380, height: 45, fontSize: 18, borderColor: '#5392F9'
-                        }}>Xem thêm các chỗ nghỉ({props.city})</button>
-                </div>
-            )}
+            {
+                productlist.length < products.length && (
+                    <div className="d-flex justify-content-center" style={{ marginTop: '20px' }}>
+                        <button onClick={loadMore}
+                            style={{
+                                borderRadius: 8, backgroundColor: '#5392F9',
+                                color: 'white', width: 380, height: 45, fontSize: 18, borderColor: '#5392F9'
+                            }}>Xem thêm các chỗ nghỉ({props.city})</button>
+                    </div>
+                )
+            }
         </section>
-    )
+    );
 }
 export default ProductTabs

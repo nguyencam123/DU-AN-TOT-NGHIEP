@@ -11,8 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class CustomerHomestayServiceImpl implements CustomerHomestayService {
 
@@ -27,8 +25,29 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
     }
 
     @Override
-    public List<CustomerHomestayResponse> getHomestayByConvenientId(CustomerHomestayRequest customerHomestayRequest) {
-        return customerHomestayRepository.getHomestayByConvenientId(customerHomestayRequest);
+    public PageableObject<CustomerHomestayResponse> getHomestayByConvenientId(CustomerHomestayRequest request) {
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+        Page<CustomerHomestayResponse> res = customerHomestayRepository.getHomestayByConvenientId(pageable, request);
+        return new PageableObject<>(res);
+    }
+
+    @Override
+    public PageableObject<CustomerHomestayResponse> getHomestayByProvince(CustomerHomestayRequest request) {
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+        Page<CustomerHomestayResponse> res = customerHomestayRepository.getHomestayByProvince(pageable, request);
+        return new PageableObject<>(res);
+    }
+
+    @Override
+    public PageableObject<CustomerHomestayResponse> getHomestayByRegion(CustomerHomestayRequest request) {
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+        Page<CustomerHomestayResponse> res = customerHomestayRepository.getHomestayByRegion(pageable, request);
+        return new PageableObject<>(res);
+    }
+
+    @Override
+    public CustomerHomestayResponse getHomestayById(CustomerHomestayRequest customerHomestayRequest) {
+        return customerHomestayRepository.getHomestayById(customerHomestayRequest);
     }
 
 }

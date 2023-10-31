@@ -6,7 +6,6 @@ import com.example.demo.cors.customer.services.CustomerHomestayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,9 +22,24 @@ public class CustomerHomestayController {
         return new ResponseObject(customerHomestayService.getListHomestay(request));
     }
 
-    @GetMapping("/getAllByConvenientId")
-    public ResponseObject getHomestayByConvenientId(@RequestBody CustomerHomestayRequest request) {
+    @GetMapping("/getByConvenient")
+    public ResponseObject getHomestayByConvenientId(CustomerHomestayRequest request) {
         return new ResponseObject(customerHomestayService.getHomestayByConvenientId(request));
+    }
+
+    @GetMapping("/getByProvince")
+    public ResponseObject getHomestayByProvince(CustomerHomestayRequest request) {
+        return new ResponseObject(customerHomestayService.getHomestayByProvince(request));
+    }
+
+    @GetMapping("/getByRegion")
+    public ResponseObject getHomestayByRegion(CustomerHomestayRequest request) {
+        return new ResponseObject(customerHomestayService.getHomestayByRegion(request));
+    }
+
+    @GetMapping("/getOne")
+    public ResponseObject getHomestayById(CustomerHomestayRequest request) {
+        return new ResponseObject(customerHomestayService.getHomestayById(request));
     }
 
 }
