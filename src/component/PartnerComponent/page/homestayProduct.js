@@ -134,13 +134,13 @@ const HomeStayProduct = () => {
 
   const [name, setname] = useState("")
 
-  const [startDate, setstartDate] = useState(1666838400000)
+  const [startDate, setstartDate] = useState(null)
   const handleDateChangestart = (dates) => {
-    setstartDate(moment(dates).valueOf);
+    setstartDate(moment(dates).valueOf());
   };
-  const [endDate, setendDate] = useState(1666924800000)
+  const [endDate, setendDate] = useState(null)
   const handleDateChangeend = (dates) => {
-    setendDate(moment(dates).valueOf);
+    setendDate(moment(dates).valueOf());
   };
   const [desc, setdesc] = useState("")
   const [price, setprice] = useState(0)
