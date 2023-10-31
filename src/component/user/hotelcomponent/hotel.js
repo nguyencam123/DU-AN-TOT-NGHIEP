@@ -262,17 +262,17 @@ const Hotel = () => {
                                         padding: '2px 2px 2px 2px', display: 'flex'
                                     }}>
                                         <div style={{ width: '60%' }}>
-                                            <img src={hotelimg} style={{ borderRadius: 8, height: 150 }} />
-                                            <div style={{ marginTop: 8 }}>
-                                                <img src={hotelimg} style={{ borderRadius: 8, height: 48, marginRight: 6 }} />
-                                                <img src={hotelimg} style={{ borderRadius: 8, height: 48, marginRight: 6 }} />
-                                                <img src={hotelimg} style={{ borderRadius: 8, height: 48, marginRight: 6 }} />
+                                            <img src={items.images[0]?.imgUrl} style={{ borderRadius: 8, height: 150, width: 255 }} />
+                                            <div style={{ marginTop: 8, display: 'flex' }}>
+                                                <img src={items.images[1]?.imgUrl} style={{ borderRadius: 8, height: 48, marginRight: 6, width: 80 }} />
+                                                <img src={items.images[2]?.imgUrl} style={{ borderRadius: 8, height: 48, marginRight: 6, width: 80 }} />
+                                                <img src={items.images[3]?.imgUrl} style={{ borderRadius: 8, height: 48, marginRight: 6, width: 80 }} />
                                             </div>
                                         </div>
                                         <div style={{ width: '50%', marginRight: 50 }}>
-                                            <h1 style={{ fontSize: 18, marginTop: 10, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: 250 }}>{items.homestay_Name}</h1>
+                                            <h1 style={{ fontSize: 18, marginTop: 10, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: 250 }}>{items.name}</h1>
                                             <Rate allowHalf disabled defaultValue={items.star} size='sm' /><br />
-                                            <div style={{ display: 'flex', marginTop: 10 }}><CompassOutlined style={{ marginTop: 3 }} />&ensp; <Title style={{ fontSize: 16 }}>{items.province_Name}</Title></div>
+                                            <div style={{ display: 'flex', marginTop: 10 }}><CompassOutlined style={{ marginTop: 3 }} />&ensp; <Title style={{ fontSize: 16 }}>{items.province.name}</Title></div>
                                             <h1 style={{ width: '100%', height: 20, backgroundColor: 'rgb(242, 243, 243)', borderRadius: 8, fontSize: 14, padding: '0 2px 0 2px' }}>Thanh toán khi nhận phòng</h1>
                                         </div>
                                         <div style={{ marginLeft: 10, borderLeft: '1px solid #ACAEB1', padding: '8px 8px 2px 2px', width: '40%' }}>
