@@ -6,7 +6,7 @@ const BASE_URL = 'http://localhost:8080/api/v2/homestay';
 export const fetchHomestay = () => async (dispatch) => {
   dispatch(fetchProductsStart());
   try {
-    const response = await axios.get(BASE_URL + "/get-homestay?size=999");
+    const response = await axios.get(BASE_URL + "/get-all?size=999");
     dispatch(fetchProductsSuccess(response.data.data.data)); // Lấy dữ liệu từ response.data.data
   } catch (error) {
     dispatch(fetchProductsFailure(error.message));
@@ -14,7 +14,6 @@ export const fetchHomestay = () => async (dispatch) => {
 };
 
 export const addHomestay = (homestay, imgUrl) => async (dispatch) => {
-  console.log(homestay)
   const formData = new FormData();
   imgUrl.forEach((imageUrl) => {
     formData.append('image', imageUrl);
@@ -29,7 +28,9 @@ export const addHomestay = (homestay, imgUrl) => async (dispatch) => {
 };
 export const EditHomestay = (homestay, imgUrl, id) => async (dispatch) => {
   const formData = new FormData();
-  formData.append('image', imgUrl);
+  imgUrl.forEach((imageUrl) => {
+    formData.append('image', imageUrl);
+  });
   formData.append('homestay', JSON.stringify(homestay));
   dispatch(fetchProductsStart());
   console.log(id)

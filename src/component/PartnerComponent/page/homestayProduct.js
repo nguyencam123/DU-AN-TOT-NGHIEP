@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
-import { Space, Typography, Button, Table, Popconfirm, Modal, Form, Input, Row, Col, message } from 'antd'
+import { Space, Typography, Button, Table, Popconfirm, Modal, Form, Input, Row, Col, message, Image } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
-import { QuestionCircleOutlined, EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons'
+import { QuestionCircleOutlined, EditOutlined, DeleteOutlined, EyeOutlined, DownloadOutlined, SwapOutlined, RotateLeftOutlined, RotateRightOutlined, ZoomOutOutlined, ZoomInOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import { EditHomestay, addHomestay, fetchHomestay } from '../../../features/owner_homestay/homestayThunk'
 import { fetchConvenient } from '../../../features/owner_homestay/convenientThunk'
@@ -52,7 +52,6 @@ const HomeStayProduct = () => {
     let selectedFile = e.target.files;
     let fileList = [...selectedFile]; // Chuyển đổi FileList thành mảng
     setFile(fileList);
-    console.log(file)
   };
   //modal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -69,10 +68,17 @@ const HomeStayProduct = () => {
     setprice(record.price)
     setstartDate(record.startDate)
     setendDate(record.endDate)
+    setIamge(record.images)
   }
   const showModal = () => {
     setIsModalOpen(true);
     setIsAddForm(true);
+    setname('')
+    setdesc('')
+    setprice(null)
+    setnumberPerson(null)
+    setaddress('')
+    setprice(null)
   };
   const handleOk = () => {
     setIsModalOpen(false);
@@ -129,20 +135,23 @@ const HomeStayProduct = () => {
   const [name, setname] = useState("")
 
   const [startDate, setstartDate] = useState(1666838400000)
-  // const handleDateChangestart = (dates) => {
-  //   setstartDate(moment(dates).format("yyyy/MM/dd"));
-  // };
+  const handleDateChangestart = (dates) => {
+    setstartDate(moment(dates).valueOf);
+  };
   const [endDate, setendDate] = useState(1666924800000)
-  // const handleDateChangeend = (dates) => {
-  //   setendDate(moment(dates).format("yyyy/MM/dd"));
-  // };
+  const handleDateChangeend = (dates) => {
+    setendDate(moment(dates).valueOf);
+  };
   const [desc, setdesc] = useState("")
   const [price, setprice] = useState(0)
   const [numberPerson, setnumberPerson] = useState(0)
   const [address, setaddress] = useState("")
-  const [province, setprovince] = useState("2695a00e-a933-4c28-819c-9b66f3184e8d")
-  const [region, setregion] = useState("a72af500-5ee5-4268-8d91-d7383d4a9011")
+  const [province, setprovince] = useState([])
+  const [region, setregion] = useState([])
+  // const [province, setprovince] = useState("2695a00e-a933-4c28-819c-9b66f3184e8d")
+  // const [region, setregion] = useState("a72af500-5ee5-4268-8d91-d7383d4a9011")
   const [recordid, setRecordid] = useState("");
+  const [image, setIamge] = useState([]);
   //
   const homestay = {
     name: name,
@@ -153,7 +162,8 @@ const HomeStayProduct = () => {
     numberPerson: numberPerson,
     address: address,
     province: "51d5796b-6813-4e6f-9f7c-0045112cfedb",
-    region: "ac0eb453-7dba-4083-814d-5cd0995adb67"
+    region: "ac0eb453-7dba-4083-814d-5cd0995adb67",
+    ownerHomestay: "4abd5cd0-081f-4a15-90a2-f97776751497"
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -180,7 +190,7 @@ const HomeStayProduct = () => {
     setprice(record.price)
     setstartDate(record.startDate)
     setendDate(record.endDate)
-    console.log(record)
+    setFile(record.images)
   }
   return (
     <>
@@ -190,7 +200,7 @@ const HomeStayProduct = () => {
           Thêm mới HomeStay
         </Button>
       </div>
-      <Modal title={isAddFrom == true ? "Thêm homstay" : "Sửa homestay"} open={isModalOpen} onCancel={handleCancel}
+      <Modal title={isAddFrom == true ? <div style={{ fontSize: 24 }}>Thêm homstay </div> : <div style={{ fontSize: 24 }}>Sửa homestay</div>} open={isModalOpen} onCancel={handleCancel}
         width={900} okText={isAddFrom == true ? "Thêm homstay" : "Sửa homestay"} cancelText='Hủy' onOk={handleSubmit}>
         <Form
           name="basic"
@@ -239,25 +249,27 @@ const HomeStayProduct = () => {
             </Col>
           </Row>
           <Row gutter={24}>
+            {/* <DatePicker /> */}
             <Col span={12}>
               <Title level={5}>Địa chỉ</Title>
               <Input value={address}
                 onChange={(e) => setaddress(e.target.value)} />
-
             </Col>
             <Col span={12}>
-              <Title level={5}>Ngày bắt đầu</Title>
-              {/* <DatePicker onChange={handleDateChangestart} /> */}
-              {/* <DatePicker /> */}
-
+              <Title level={5}>Địa chỉ chi tiết</Title>
+              <Input value={address}
+                onChange={(e) => setaddress(e.target.value)} />
             </Col>
           </Row>
           <Row gutter={24}>
             <Col span={12}>
+              <Title level={5}>Ngày bắt đầu</Title>
+              <DatePicker onChange={handleDateChangestart} />
+            </Col>
+            <Col span={12}>
               <Title level={5}>Ngày kết thúc</Title>
-              {/* <DatePicker onChange={handleDateChangeend} /> */}
+              <DatePicker onChange={handleDateChangeend} />
               {/* <DatePicker /> */}
-
             </Col>
           </Row>
         </Form>
@@ -282,16 +294,43 @@ const HomeStayProduct = () => {
           </Form.Item> */}
         </form>
       </Modal>
-      <Modal title="Xem thông tin chi tiết sản phẩm" open={isViewmodal} onCancel={handleCancel}
-        width={600}>
+      <Modal title={<div style={{ fontSize: '22px' }}>Xem thông tin chi tiết homstay</div>} open={isViewmodal} onCancel={handleCancel}
+        width={800} style={{ fontSize: '40px' }}>
         <div style={{ fontSize: 18, fontWeight: 600 }}>
-          Tên homestay : {name}<br />
-          Mô tả : {desc}<br />
-          Giá : {price}<br />
-          Số lượng người : {numberPerson}<br />
-          Địa chỉ : {address}<br />
-          Ngày bắt đầu : {startDate}<br />
-          Ngày kết thúc : {endDate}
+          <div style={{ display: 'flex' }}><div style={{ width: 150 }}>Tên homestay </div> : {name}</div><br />
+          <div style={{ display: 'flex' }}><div style={{ width: 150 }}>Mô tả          </div> : {desc}</div><br />
+          <div style={{ display: 'flex' }}><div style={{ width: 150 }}>Giá            </div> : {price}</div><br />
+          <div style={{ display: 'flex' }}><div style={{ width: 150 }}>Số lượng người </div> : {numberPerson}</div><br />
+          <div style={{ display: 'flex' }}><div style={{ width: 150 }}>Địa chỉ        </div> : {address}</div><br />
+          <div style={{ display: 'flex' }}><div style={{ width: 150 }}>Ngày bắt đầu   </div> : {startDate}</div><br />
+          <div style={{ display: 'flex' }}><div style={{ width: 150 }}>Ngày kết thúc  </div> : {endDate}</div><br />
+          <div>Ảnh homstay  <br />
+            <div style={{ width: 700, padding: 20, borderRadius: 10, display: 'flex', justifyContent: 'center', border: '1px solid black' }}>
+              {
+                image.map((imageurl, index) => (
+                  <Image key={index} src={imageurl.imgUrl} alt={`Homestay Image ${index}`}
+                    style={{ width: 130, height: 80, marginRight: 30, marginTop: 10 }} preview={{
+                      toolbarRender: (
+                        _,
+                        {
+                          transform: { scale },
+                          actions: { onFlipY, onFlipX, onRotateLeft, onRotateRight, onZoomOut, onZoomIn },
+                        },
+                      ) => (
+                        <Space className="toolbar-wrapper">
+                          <SwapOutlined rotate={90} onClick={onFlipY} />
+                          <SwapOutlined onClick={onFlipX} />
+                          <RotateLeftOutlined onClick={onRotateLeft} />
+                          <RotateRightOutlined onClick={onRotateRight} />
+                          <ZoomOutOutlined disabled={scale === 1} onClick={onZoomOut} />
+                          <ZoomInOutlined disabled={scale === 50} onClick={onZoomIn} />
+                        </Space>
+                      ),
+                    }} />
+                ))
+              }
+            </div>
+          </div>
         </div>
       </Modal>
       <Table columns={columns} dataSource={products} rowKey="key" />
