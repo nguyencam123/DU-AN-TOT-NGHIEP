@@ -1,12 +1,21 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progress, Space } from 'antd';
 import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, StarTwoTone } from '@ant-design/icons'
 import { Table } from 'react-bootstrap';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { fetchProducts } from '../../../features/product/productThunk';
 const { Header, Content, Footer } = Layout;
 
 
 export const DetailHomestay = () => {
+  const params = useParams();
+  console.log(params.id);
+  const navigate = useNavigate();
+  const handleBookingHomestay = (id) => {
+    navigate(`/homestay/booking/${id}`)
+  }
 
   return (
     <>
@@ -24,8 +33,8 @@ export const DetailHomestay = () => {
             fontSize: '12px'
           }}
         >
-          <Breadcrumb.Item>Home</Breadcrumb.Item>
-          <Breadcrumb.Item>List</Breadcrumb.Item>
+          <Breadcrumb.Item>Homestay</Breadcrumb.Item>
+          <Breadcrumb.Item>Detail</Breadcrumb.Item>
           <Breadcrumb.Item>App</Breadcrumb.Item>
         </Breadcrumb>
         <div
@@ -52,7 +61,7 @@ export const DetailHomestay = () => {
                 <div style={{ fontSize: '12px', marginBottom: '0' }}>Giá mỗi phòng mỗi đêm từ</div>
                 <div style={{ fontSize: '24', color: 'rgb(255, 94, 31)', lineHeight: '28px', fontWeight: '700', marginTop: '-5px' }}>800000 <span style={{ fontSize: '22' }}>VND</span> </div>
               </div>
-              <Button style={{ width: '100%', backgroundColor: 'rgb(255, 94, 31)' }}>Chọn phòng</Button>
+              <Button onClick={() => handleBookingHomestay(params.id)} style={{ width: '100%', backgroundColor: 'rgb(255, 94, 31)' }}>Chọn phòng</Button>
             </Col>
           </Row>
           <Row style={{ marginTop: '15px' }}>
@@ -252,7 +261,7 @@ export const DetailHomestay = () => {
               <Rate style={{ fontSize: '18px' }} defaultValue={1} disabled />
             </Col>
           </Row>
-          <Row style={{ margin: '20px 10px 10px 10px', border: '2px solid rgba(242,243,243,1.00)', borderRadius: '5px', minHeight:'70px' }}>
+          <Row style={{ margin: '20px 10px 10px 10px', border: '2px solid rgba(242,243,243,1.00)', borderRadius: '5px', minHeight: '70px' }}>
             <Col span={5} >
               <h5 style={{ marginLeft: '15px', marginTop: '10px', textAlign: 'center' }}>Anh Tran Quang Huy</h5>
             </Col>
@@ -264,18 +273,18 @@ export const DetailHomestay = () => {
               <div style={{ fontWeight: '500', marginTop: '10px' }}>
                 Vui long luu y, tre em co the bi thu them phi khi nhan phong tai khach san. Vui long lien he khach san truoc khi nhan phong de biet them thong tin chi tiet.
               </div>
-              <div style={{margin:'15px 0'}}>
+              <div style={{ margin: '15px 0' }}>
                 <Image
                   style={{ borderRadius: '10px' }}
                   width={85}
                   height={85}
-                  src = "http://res.cloudinary.com/dcwkiozwf/image/upload/v1698477662/homestay_images/naaveb7ytdgyolqe3n1e.jpg"
-                  />
+                  src="http://res.cloudinary.com/dcwkiozwf/image/upload/v1698477662/homestay_images/naaveb7ytdgyolqe3n1e.jpg"
+                />
               </div>
             </Col>
           </Row>
 
-          <Row style={{ margin: '20px 10px 10px 10px', border: '2px solid rgba(242,243,243,1.00)', borderRadius: '5px', minHeight:'30px' }}>
+          <Row style={{ margin: '20px 10px 10px 10px', border: '2px solid rgba(242,243,243,1.00)', borderRadius: '5px', minHeight: '30px' }}>
             <Col span={5} >
               <h5 style={{ marginLeft: '15px', marginTop: '10px', textAlign: 'center' }}>Anh Tran Quang Huy</h5>
             </Col>
@@ -287,13 +296,13 @@ export const DetailHomestay = () => {
               <div style={{ fontWeight: '500', marginTop: '10px' }}>
                 Vui long luu y, tre em co the bi thu them phi khi nhan phong tai khach san. Vui long lien he khach san truoc khi nhan phong de biet them thong tin chi tiet.
               </div>
-              <div style={{margin:'15px 0'}}>
+              <div style={{ margin: '15px 0' }}>
                 <Image
                   style={{ borderRadius: '10px' }}
                   width={85}
                   height={85}
-                  src = "http://res.cloudinary.com/dcwkiozwf/image/upload/v1698477662/homestay_images/naaveb7ytdgyolqe3n1e.jpg"
-                  />
+                  src="http://res.cloudinary.com/dcwkiozwf/image/upload/v1698477662/homestay_images/naaveb7ytdgyolqe3n1e.jpg"
+                />
               </div>
             </Col>
           </Row>
