@@ -1,7 +1,7 @@
 import { fetchProductsStart, fetchProductsSuccess, fetchProductsFailure, addproduct, edithomestay } from '../owner_homestay/onwerHomestaySlice';
-import axios from 'axios';
+import axios from '../../app/axiosConfig';
 
-const BASE_URL = 'http://localhost:8080/api/v2/homestay';
+const BASE_URL = '/homestay';
 
 export const fetchHomestay = () => async (dispatch) => {
   dispatch(fetchProductsStart());

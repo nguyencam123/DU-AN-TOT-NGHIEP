@@ -161,9 +161,9 @@ const HomeStayProduct = () => {
     price: price,
     numberPerson: numberPerson,
     address: address,
-    province: "51d5796b-6813-4e6f-9f7c-0045112cfedb",
-    region: "ac0eb453-7dba-4083-814d-5cd0995adb67",
-    ownerHomestay: "4abd5cd0-081f-4a15-90a2-f97776751497"
+    province: "ffd39119-662e-4c12-9571-8344f8e94893",
+    region: "56000efa-316d-4627-a0c7-c48f1873082f",
+    ownerHomestay: "e482121b-28df-4ec0-96b7-c37251b6f1d1"
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
