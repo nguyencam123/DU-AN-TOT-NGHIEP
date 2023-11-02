@@ -10,7 +10,9 @@ import com.example.demo.cors.homestayowner.service.HomestayOwnerHomestayService;
 import com.example.demo.entities.Homestay;
 import com.example.demo.entities.ImgHomestay;
 import com.example.demo.infrastructure.contant.Status;
+import com.example.demo.infrastructure.exception.rest.RestApiException;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestayService {
 
     @Autowired
@@ -106,6 +109,7 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
         homestay.setAddress(request.getAddress());
         homestay.setProvince(provinceRepository.findById(request.getProvince()).orElse(null));
         homestay.setRegion(regionRepository.findById(request.getRegion()).orElse(null));
+        homestay.setOwnerHomestay(homestayOwnerOwnerHomestayRepository.findById(request.getOwnerHomestay()).orElse(null));
         Homestay homestay1=homestayownerHomestayRepository.save(homestay);
         homestayOwnerImgHomestayRepo.deleteByHomestay(id);
         List<ImgHomestay> newImages = new ArrayList<>();
