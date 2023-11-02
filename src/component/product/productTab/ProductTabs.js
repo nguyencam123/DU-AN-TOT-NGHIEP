@@ -18,7 +18,7 @@ const ProductTabs = (props) => {
 
     useEffect(() => {
         const fuse = new Fuse(products, {
-            keys: ['province_Name'],
+            keys: ['province.name'],
             includeScore: true,
             threshold: 0.4, // Điều chỉnh ngưỡng tìm kiếm tùy chọn
             ignoreLocation: true,
@@ -27,24 +27,18 @@ const ProductTabs = (props) => {
 
         const results = fuse.search(props.city);
 
-        const filteredProducts = results.map(result => result.item);
+        const filteredProducts = results.map(result => result.item).filter(item => item !== undefined);
+
 
         setProducts(filteredProducts.slice(0, 6));
     }, [products, props.city]);
-
-
-    // const loadMore = () => {
-    //     const startIndex = productlist.length;
-    //     const endIndex = startIndex + 8;
-    //     setProducts([...productlist, ...products.slice(startIndex, endIndex)]);
-    // };
     const loadMore = () => {
         const startIndex = productlist.length;
         const endIndex = startIndex + 8;
         const newProducts = [...productlist, ...products.slice(startIndex, endIndex)];
 
         const fuse = new Fuse(newProducts, {
-            keys: ['province_Name'],
+            keys: ['province.name'],
             includeScore: true,
             threshold: 0.4,
             ignoreLocation: true,
@@ -86,24 +80,24 @@ const ProductTabs = (props) => {
                             style={{
                                 width: 270
                             }}
-                            cover={<img alt="example" src={product.image} />}
+                            cover={<img alt="example" src={product.images[0]?.imgUrl} />} // Dùng ?. để kiểm tra nếu imgUrl không tồn tại
                         >
-                            <Meta title={product.homestay_Name} />
+                            <Meta title={product.name} />
                             <div>
-                                {/* <Rate allowHalf disabled defaultValue={product.star} /> */}
                                 <br />
                                 <div style={{ display: 'flex' }}>
                                     <EnvironmentOutlined style={{ marginTop: 5 }} />&ensp;
-                                    {product.province_Name}
+                                    {product.province.name}
                                 </div>
                                 <Title level={3} style={{ color: 'red' }}>{product.price}VNĐ</Title>
                             </div>
                         </Card>
+
                     </Col>
                 ))}
             </Row>
             {
-                productlist.length < products.length && (
+                productlist.length < products.length && productlist.length > 0 && (
                     <div className="d-flex justify-content-center" style={{ marginTop: '20px' }}>
                         <button onClick={loadMore}
                             style={{
@@ -113,6 +107,7 @@ const ProductTabs = (props) => {
                     </div>
                 )
             }
+
         </section>
     );
 }
