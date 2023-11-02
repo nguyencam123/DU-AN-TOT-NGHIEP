@@ -17,6 +17,7 @@ import LoginAdmin from './component/admin/login/loginadmin';
 import PartnerLayout from './layout/layoutpartner/partnerlayout';
 import { DetailHomestay } from './component/user/hotelcomponent/detailHomestay';
 import { BookingHomestay } from './component/user/hotelcomponent/bookingHomestay';
+import { BookingReviewHomestay } from './component/user/hotelcomponent/bookingReview';
 
 
 function App() {
@@ -35,7 +36,8 @@ function App() {
     { path: 'hop-tac/login', element: <LoginPartner /> },
     { path: 'login-admin', element: <LoginAdmin /> },
     { path: 'homestay/detail/:id', element: <DetailHomestay /> },
-    { path: 'homestay/booking/:id', element: <BookingHomestay /> }
+    { path: 'homestay/booking/:id', element: <BookingHomestay /> },
+    { path: 'review/booking/:id', element: <BookingReviewHomestay /> }
   ];
   //
   return (
