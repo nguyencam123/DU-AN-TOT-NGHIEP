@@ -5,6 +5,7 @@ import com.example.demo.cors.homestayowner.model.conventer.HomestayOwnerHomestay
 import com.example.demo.cors.homestayowner.model.request.HomestayownerHomestayRequest;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerHomestayService;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerImgHomestayService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +16,7 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v2/homestay/")
+@RequiredArgsConstructor
 public class HomestayOwnerHomestayController {
 
     @Autowired
