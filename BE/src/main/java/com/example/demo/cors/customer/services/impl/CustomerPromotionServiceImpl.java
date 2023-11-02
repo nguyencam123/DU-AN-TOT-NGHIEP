@@ -2,7 +2,6 @@ package com.example.demo.cors.customer.services.impl;
 
 import com.example.demo.cors.common.base.PageableObject;
 import com.example.demo.cors.customer.model.request.CustomerPromotionRequest;
-import com.example.demo.cors.customer.model.response.CustomerConvenientHomestayResponse;
 import com.example.demo.cors.customer.model.response.CustomerPromotionResponse;
 import com.example.demo.cors.customer.repository.CustomerPromotionRepository;
 import com.example.demo.cors.customer.services.CustomerPromotionService;
@@ -19,7 +18,7 @@ public class CustomerPromotionServiceImpl implements CustomerPromotionService {
     private CustomerPromotionRepository customerPromotionRepository;
 
     @Override
-    public PageableObject<CustomerPromotionResponse> getAllPromotion( CustomerPromotionRequest request) {
+    public PageableObject<CustomerPromotionResponse> getAllPromotion(CustomerPromotionRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
         Page<CustomerPromotionResponse> res = customerPromotionRepository.getAllPromotion(pageable);
         return new PageableObject<>(res);
