@@ -3,21 +3,32 @@ package com.example.demo.cors.customer.model.response;
 import com.example.demo.entities.base.IsIdentified;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.util.List;
+
 public interface CustomerHomestayResponse extends IsIdentified {
 
-    @Value("#{target.stt}")
-    String getStt();
+    @Value("#{target.name}")
+    String getName();
 
-    @Value("#{target.homestay_name}")
-    String getHomestay_Name();
-
-    @Value("#{target.image}")
-    String getImage();
+    @Value("#{target.address}")
+    String getAddress();
 
     @Value("#{target.price}")
     String getPrice();
 
-    @Value("#{target.province_name}")
-    String getProvince_Name();
+    @Value("#{target.numberPerson}")
+    String getNumberPerson();
+
+    @Value("#{target.province}")
+    String getProvince();
+
+    @Value("#{target.region}")
+    String getRegion();
+
+    @Value("#{target.status}")
+    String getStatus();
+
+    @Value("#{target.imageUrls}")
+    List<String> getImageUrls();
 
 }
