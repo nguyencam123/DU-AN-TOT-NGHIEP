@@ -252,7 +252,7 @@ export const DetailHomestay = () => {
               <Rate style={{ fontSize: '18px' }} defaultValue={1} disabled />
             </Col>
           </Row>
-          <Row style={{ margin: '20px 10px 10px 10px', border: '2px solid rgba(242,243,243,1.00)', borderRadius: '5px', minHeight:'70px' }}>
+          <Row style={{ margin: '20px 10px 10px 10px', border: '2px solid rgba(242,243,243,1.00)', borderRadius: '5px', minHeight: '70px' }}>
             <Col span={5} >
               <h5 style={{ marginLeft: '15px', marginTop: '10px', textAlign: 'center' }}>Anh Tran Quang Huy</h5>
             </Col>
@@ -264,18 +264,18 @@ export const DetailHomestay = () => {
               <div style={{ fontWeight: '500', marginTop: '10px' }}>
                 Vui long luu y, tre em co the bi thu them phi khi nhan phong tai khach san. Vui long lien he khach san truoc khi nhan phong de biet them thong tin chi tiet.
               </div>
-              <div style={{margin:'15px 0'}}>
+              <div style={{ margin: '15px 0' }}>
                 <Image
                   style={{ borderRadius: '10px' }}
                   width={85}
                   height={85}
-                  src = "http://res.cloudinary.com/dcwkiozwf/image/upload/v1698477662/homestay_images/naaveb7ytdgyolqe3n1e.jpg"
-                  />
+                  src="http://res.cloudinary.com/dcwkiozwf/image/upload/v1698477662/homestay_images/naaveb7ytdgyolqe3n1e.jpg"
+                />
               </div>
             </Col>
           </Row>
 
-          <Row style={{ margin: '20px 10px 10px 10px', border: '2px solid rgba(242,243,243,1.00)', borderRadius: '5px', minHeight:'30px' }}>
+          <Row style={{ margin: '20px 10px 10px 10px', border: '2px solid rgba(242,243,243,1.00)', borderRadius: '5px', minHeight: '30px' }}>
             <Col span={5} >
               <h5 style={{ marginLeft: '15px', marginTop: '10px', textAlign: 'center' }}>Anh Tran Quang Huy</h5>
             </Col>
@@ -287,13 +287,13 @@ export const DetailHomestay = () => {
               <div style={{ fontWeight: '500', marginTop: '10px' }}>
                 Vui long luu y, tre em co the bi thu them phi khi nhan phong tai khach san. Vui long lien he khach san truoc khi nhan phong de biet them thong tin chi tiet.
               </div>
-              <div style={{margin:'15px 0'}}>
+              <div style={{ margin: '15px 0' }}>
                 <Image
                   style={{ borderRadius: '10px' }}
                   width={85}
                   height={85}
-                  src = "http://res.cloudinary.com/dcwkiozwf/image/upload/v1698477662/homestay_images/naaveb7ytdgyolqe3n1e.jpg"
-                  />
+                  src="http://res.cloudinary.com/dcwkiozwf/image/upload/v1698477662/homestay_images/naaveb7ytdgyolqe3n1e.jpg"
+                />
               </div>
             </Col>
           </Row>
