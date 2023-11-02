@@ -1,6 +1,10 @@
 package com.example.demo.entities;
 
 import com.example.demo.entities.base.PrimaryEntity;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import com.example.demo.infrastructure.contant.EntityProperties;
 import com.example.demo.infrastructure.contant.Status;
 import jakarta.persistence.Column;
@@ -9,11 +13,15 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Collection;
+
 @Entity
 @Table(name = "owner_homestay")
 @Getter
 @Setter
-public class OwnerHomestay extends PrimaryEntity {
+@NoArgsConstructor
+@AllArgsConstructor
+public class OwnerHomestay extends PrimaryEntity implements UserDetails{
 
     @Column(length = EntityProperties.LENGTH_CODE)
     private String code;
@@ -41,4 +49,38 @@ public class OwnerHomestay extends PrimaryEntity {
 
     private Status status;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getUsername(){
+        return username;
+    }
+
+    @Override
+    public String getPassword(){
+        return password;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

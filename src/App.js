@@ -16,6 +16,7 @@ import { useSelector } from 'react-redux';
 import LoginAdmin from './component/admin/login/loginadmin';
 import PartnerLayout from './layout/layoutpartner/partnerlayout';
 import { DetailHomestay } from './component/user/hotelcomponent/detailHomestay';
+import { BookingHomestay } from './component/user/hotelcomponent/bookingHomestay';
 
 
 function App() {
@@ -33,7 +34,8 @@ function App() {
     { path: 'hop-tac', element: <HomePartner /> },
     { path: 'hop-tac/login', element: <LoginPartner /> },
     { path: 'login-admin', element: <LoginAdmin /> },
-    { path: 'detail', element: <DetailHomestay /> }
+    { path: 'homestay/detail/:id', element: <DetailHomestay /> },
+    { path: 'homestay/booking/:id', element: <BookingHomestay /> }
   ];
   //
   return (

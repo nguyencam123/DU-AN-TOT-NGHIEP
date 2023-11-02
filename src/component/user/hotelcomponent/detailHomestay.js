@@ -1,12 +1,21 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progress, Space } from 'antd';
 import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, StarTwoTone } from '@ant-design/icons'
 import { Table } from 'react-bootstrap';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { fetchProducts } from '../../../features/product/productThunk';
 const { Header, Content, Footer } = Layout;
 
 
 export const DetailHomestay = () => {
+  const params = useParams();
+  console.log(params.id);
+  const navigate = useNavigate();
+  const handleBookingHomestay = (id) => {
+    navigate(`/homestay/booking/${id}`)
+  }
 
   return (
     <>
@@ -24,8 +33,8 @@ export const DetailHomestay = () => {
             fontSize: '12px'
           }}
         >
-          <Breadcrumb.Item>Home</Breadcrumb.Item>
-          <Breadcrumb.Item>List</Breadcrumb.Item>
+          <Breadcrumb.Item>Homestay</Breadcrumb.Item>
+          <Breadcrumb.Item>Detail</Breadcrumb.Item>
           <Breadcrumb.Item>App</Breadcrumb.Item>
         </Breadcrumb>
         <div
@@ -52,7 +61,7 @@ export const DetailHomestay = () => {
                 <div style={{ fontSize: '12px', marginBottom: '0' }}>Giá mỗi phòng mỗi đêm từ</div>
                 <div style={{ fontSize: '24', color: 'rgb(255, 94, 31)', lineHeight: '28px', fontWeight: '700', marginTop: '-5px' }}>800000 <span style={{ fontSize: '22' }}>VND</span> </div>
               </div>
-              <Button style={{ width: '100%', backgroundColor: 'rgb(255, 94, 31)' }}>Chọn phòng</Button>
+              <Button onClick={() => handleBookingHomestay(params.id)} style={{ width: '100%', backgroundColor: 'rgb(255, 94, 31)' }}>Chọn phòng</Button>
             </Col>
           </Row>
           <Row style={{ marginTop: '15px' }}>
