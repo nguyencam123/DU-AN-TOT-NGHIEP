@@ -61,7 +61,7 @@ export const loginAdmin = (username, password) => async (dispatch) => {
     const accounts = response.data;
     if (accounts.success) {
       dispatch(adminloginSuccess({ admin: accounts }));
-      localStorage.setItem('isAdmin', 'true');
+      localStorage.setItem('userDetail', JSON.stringify(accounts));
       dispatch(adminloginSuccess({ admin: accounts, adminData: accounts }))
     } else {
       openNotification()
@@ -80,7 +80,7 @@ export const loginpartner = (username, password) => async (dispatch) => {
     const accounts = response.data;
     if (accounts.success) {
       dispatch(partnerloginSuccess({ partner: accounts }));
-      localStorage.setItem('partner', 'true');
+      localStorage.setItem('userDetail', JSON.stringify(accounts));
       dispatch(partnerloginSuccess({ partner: accounts, partnerData: accounts.data }))
     } else {
       openNotification()
@@ -94,6 +94,4 @@ export const loginpartner = (username, password) => async (dispatch) => {
 export const logoutUser = () => (dispatch) => {
   dispatch(logout());
   localStorage.removeItem('userDetail');
-  localStorage.removeItem('isAdmin');
-  localStorage.removeItem('partner');
 };

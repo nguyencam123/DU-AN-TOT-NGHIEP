@@ -7,6 +7,7 @@ import ownerHomestayReducer from '../features/owner_homestay/onwerHomestaySlice'
 import convenientReducer from '../features/owner_homestay/convenientSlice'
 import { AuthMiddleware } from './authMiddleware';
 import categoryReducer from '../features/category/categorySlides'
+import provinceReducer from '../features/owner_homestay/region/provinceSlice'
 
 
 export const store = configureStore({
@@ -16,7 +17,8 @@ export const store = configureStore({
     category: categoryReducer,
     addproduct: addproductReducer,
     ownerHomestay: ownerHomestayReducer,
-    convenient: convenientReducer
+    convenient: convenientReducer,
+    province: provinceReducer
   },
   middleware: (getDefaultMiddleware) => [...getDefaultMiddleware()],
 });
