@@ -33,7 +33,6 @@ export const EditHomestay = (homestay, imgUrl, id) => async (dispatch) => {
   });
   formData.append('homestay', JSON.stringify(homestay));
   dispatch(fetchProductsStart());
-  console.log(id)
   try {
     await axios.put(BASE_URL + `/update-homestays?id=${id}`, formData);
   } catch (error) {
