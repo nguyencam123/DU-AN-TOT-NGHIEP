@@ -21,4 +21,5 @@ public interface HomestayOwnerHomestayService {
 
     Homestay updateHomestays(String id,HomestayownerHomestayRequest request,List<MultipartFile> multipartFiles) throws IOException;
 
+    Homestay deleteHomestays(String id);
 }

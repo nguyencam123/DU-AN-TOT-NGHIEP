@@ -1,7 +1,7 @@
 package com.example.demo.cors.homestayowner.repository;
 
 import com.example.demo.cors.homestayowner.model.reponse.HomestayOwnerLoginReponse;
-import com.example.demo.cors.homestayowner.model.request.HomestayownerLoginRequest;
+import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayownerLoginRequest;
 import com.example.demo.entities.OwnerHomestay;
 import com.example.demo.repositories.OwnerHomestayRepository;
 import org.springframework.context.annotation.Primary;
@@ -26,4 +26,5 @@ public interface HomestayOwnerOwnerHomestayRepository extends OwnerHomestayRepos
 
        boolean existsByEmail(String email);
 
+       boolean existsByPhoneNumber(String phonenumber);
 }

@@ -35,6 +35,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/api/v2/login/**").permitAll()
                 .requestMatchers("/api/v1/login/**").permitAll()
                 .requestMatchers("/api/v3/login/**").permitAll()
+                .requestMatchers("/api/v1/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -50,7 +51,7 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH")); // Thêm các phương thức khác vào đây
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

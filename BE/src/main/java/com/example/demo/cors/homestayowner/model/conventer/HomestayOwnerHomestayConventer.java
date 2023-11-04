@@ -25,12 +25,6 @@ public class HomestayOwnerHomestayConventer implements Converter<String, Homesta
             if (!jsonNode.has("address") || jsonNode.get("address").textValue().isEmpty()||jsonNode.get("address").isNull()) {
                 throw new RestApiException("Trường 'address' bị trống");
             }
-            if (!jsonNode.has("startDate") || !jsonNode.get("startDate").isLong() || jsonNode.get("startDate").isNull()) {
-                throw new RestApiException("Trường 'startDate' bị trống");
-            }
-            if (!jsonNode.has("endDate") || !jsonNode.get("endDate").isLong() || jsonNode.get("endDate").isNull()) {
-                throw new RestApiException("Trường 'endDate' bị trống");
-            }
             if (!jsonNode.has("price") || !jsonNode.get("price").isDouble() || jsonNode.get("price").isNull()) {
                 throw new RestApiException("Trường 'price' bị trống");
             }

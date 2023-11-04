@@ -1,4 +1,4 @@
-package com.example.demo.cors.homestayowner.model.request;
+package com.example.demo.cors.homestayowner.model.request.loginrequest;
 
 import lombok.*;
 

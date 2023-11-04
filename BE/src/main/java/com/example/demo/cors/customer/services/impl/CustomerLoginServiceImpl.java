@@ -1,12 +1,15 @@
 package com.example.demo.cors.customer.services.impl;
 
 import com.example.demo.cors.customer.model.request.CustomerLoginRequest;
+import com.example.demo.cors.customer.model.request.CustomerPasswordRequest;
 import com.example.demo.cors.customer.model.request.CustomerRequest;
 import com.example.demo.cors.customer.model.request.CustomerUserPasswordRequest;
 import com.example.demo.cors.customer.model.response.CustomerAuthenticationReponse;
 import com.example.demo.cors.customer.model.response.CustomerLoginResponse;
 import com.example.demo.cors.customer.repository.CustomerLoginRepository;
 import com.example.demo.cors.customer.services.CustomerLoginService;
+import com.example.demo.cors.homestayowner.model.reponse.loginreponse.HomestayOwnerAuthenticationReponse;
+import com.example.demo.entities.OwnerHomestay;
 import com.example.demo.entities.User;
 import com.example.demo.infrastructure.contant.Status;
 import com.example.demo.infrastructure.exception.rest.RestApiException;
@@ -17,6 +20,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.Random;
 
 @Service
@@ -121,6 +125,33 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         var jwtToken=jwtService.generateToken(user);
         return CustomerAuthenticationReponse.builder()
                 .token(jwtToken)
+                .id(user.getId())
+                .code(user.getCode())
+                .name(user.getName())
+                .birthday(user.getBirthday())
+                .gender(user.getGender())
+                .address(user.getAddress())
+                .phoneNumber(user.getPhoneNumber())
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .identificationNumber(user.getIdentificationNumber())
+                .point(user.getPoint())
+                .point(user.getPoint())
+                .build();
+    }
+
+    @Override
+    public CustomerAuthenticationReponse changePassword(CustomerPasswordRequest request, Principal connecteUser) {
+        var user=(User) ((UsernamePasswordAuthenticationToken) connecteUser).getPrincipal();
+        if(!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())){
+            throw new IllegalStateException("Wrong password");
+        };
+        if(!request.getNewPassword().equals(request.getConfirmationPassword())){
+            throw new IllegalStateException("password aren't the same");
+        }
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        customerLoginRepository.save(user);
+        return CustomerAuthenticationReponse.builder()
                 .id(user.getId())
                 .code(user.getCode())
                 .name(user.getName())
