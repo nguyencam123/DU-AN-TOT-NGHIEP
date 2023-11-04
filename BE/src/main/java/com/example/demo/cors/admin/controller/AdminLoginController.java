@@ -6,8 +6,6 @@ import com.example.demo.cors.admin.model.response.AdminLoginResponse;
 import com.example.demo.cors.admin.model.request.AdminLoginRequest;
 import com.example.demo.cors.admin.services.AdminLoginService;
 import com.example.demo.cors.common.base.ResponseObject;
-import com.example.demo.cors.homestayowner.model.request.HomestayOwnerOwnerHomestayRequest;
-import com.example.demo.cors.homestayowner.model.request.HomestayOwnerUsenamePasswordRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

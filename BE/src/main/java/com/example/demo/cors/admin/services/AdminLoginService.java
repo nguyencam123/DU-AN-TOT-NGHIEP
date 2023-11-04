@@ -1,13 +1,14 @@
 package com.example.demo.cors.admin.services;
 
+import com.example.demo.cors.admin.model.request.AdminLoginRequest;
+import com.example.demo.cors.admin.model.request.AdminPassRequest;
 import com.example.demo.cors.admin.model.request.AdminRequest;
 import com.example.demo.cors.admin.model.request.AdminUserPasswordRequest;
 import com.example.demo.cors.admin.model.response.AdminAuthenticationReponse;
 import com.example.demo.cors.admin.model.response.AdminLoginResponse;
-import com.example.demo.cors.admin.model.request.AdminLoginRequest;
-import com.example.demo.cors.homestayowner.model.reponse.HomestayOwnerAuthenticationReponse;
-import com.example.demo.cors.homestayowner.model.request.HomestayOwnerOwnerHomestayRequest;
-import com.example.demo.cors.homestayowner.model.request.HomestayOwnerUsenamePasswordRequest;
+import com.example.demo.cors.customer.model.request.CustomerPasswordRequest;
+
+import java.security.Principal;
 
 public interface AdminLoginService {
 
@@ -17,5 +18,6 @@ public interface AdminLoginService {
 
     AdminAuthenticationReponse authenticate(AdminUserPasswordRequest request);
 
+    AdminAuthenticationReponse changePassword(AdminPassRequest request, Principal connecteUser);
 
 }
