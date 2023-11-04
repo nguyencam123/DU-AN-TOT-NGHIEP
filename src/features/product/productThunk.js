@@ -1,7 +1,7 @@
 import { fetchProductsStart, fetchProductsSuccess, fetchProductsFailure } from './productSlide';
-import axios from 'axios';
+import axios from '../../app/axiosConfig';
 
-const BASE_URL = 'http://localhost:8080/api/v1/homestay';
+const BASE_URL = '/homestay/get-all?size=999';
 
 export const fetchProducts = () => async (dispatch) => {
     dispatch(fetchProductsStart());

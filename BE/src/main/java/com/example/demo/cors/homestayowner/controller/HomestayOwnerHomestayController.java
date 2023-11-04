@@ -5,6 +5,7 @@ import com.example.demo.cors.homestayowner.model.conventer.HomestayOwnerHomestay
 import com.example.demo.cors.homestayowner.model.request.HomestayownerHomestayRequest;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerHomestayService;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerImgHomestayService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +16,7 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v2/homestay/")
+@RequiredArgsConstructor
 public class HomestayOwnerHomestayController {
 
     @Autowired
@@ -25,6 +27,16 @@ public class HomestayOwnerHomestayController {
 
     @Autowired
     private HomestayOwnerHomestayConventer conventer;
+
+    @GetMapping("get-homestay-by-id")
+    public ResponseObject getAllHomestayownerHomestay(@RequestParam("id") String id,HomestayownerHomestayRequest homestayownerHomestayRequest) {
+        return new ResponseObject(homestayownerHomestayService.getPageHomestay(id,homestayownerHomestayRequest));
+    }
+
+    @GetMapping("get-all")
+    public ResponseObject getAllHomestayownerHomestay(HomestayownerHomestayRequest homestayownerHomestayRequest) {
+        return new ResponseObject(homestayownerHomestayService.getAll(homestayownerHomestayRequest));
+    }
 
     @GetMapping("get-homestay")
     public ResponseObject getPageHomestayownerHomestay(HomestayownerHomestayRequest homestayownerHomestayRequest) {
@@ -46,6 +58,11 @@ public class HomestayOwnerHomestayController {
     public ResponseObject updatehomestays(@RequestParam("id") String id,@RequestParam("homestay") String homestay,@RequestParam("image") List<MultipartFile> images) throws IOException{
         HomestayownerHomestayRequest request=conventer.convert(homestay);
         return new ResponseObject(homestayownerHomestayService.updateHomestays(id,request,images));
+    }
+
+    @PutMapping("delete-homestays")
+    public ResponseObject updatehomestays(@RequestParam("id") String id){
+        return new ResponseObject(homestayownerHomestayService.deleteHomestays(id));
     }
 
 }

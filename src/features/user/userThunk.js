@@ -35,43 +35,33 @@ const openNotificationadmin = () => {
 };
 export const loginUser = (username, password) => async (dispatch) => {
   try {
-    const response = await axios.post('http://localhost:8080/api/v1/login', {
-      uname: username,
-      pass: password,
+    const response = await axios.post('http://localhost:8080/api/v1/login/authenticate', {
+      username: username,
+      password: password,
     });
     const accounts = response.data;
     if (accounts.success) {
       dispatch(loginSuccess({ user: accounts }));
-      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('userDetail', JSON.stringify(accounts));
       openNotificationlogin()
       dispatch(loginSuccess({ user: accounts, userData: accounts }))
     } else {
       openNotification()
     }
-    //   dispatch(adminloginSuccess({ admin: accounts }));
-    //   localStorage.setItem('isAdmin', 'true');
-    //   openNotificationadmin();
-
-    //   dispatch(supperadminloginSuccess({ supperadmin: accounts }));
-    //   localStorage.setItem('issupperAdmin', 'true');
-
-    // openNotification()
-
   } catch (error) {
     console.error('Đăng nhập thất bại:', error);
-
   }
 };
 export const loginAdmin = (username, password) => async (dispatch) => {
   try {
-    const response = await axios.post('http://localhost:8080/api/v3/login', {
-      uname: username,
-      pass: password,
+    const response = await axios.post('http://localhost:8080/api/v3/login/authenticate', {
+      username: username,
+      password: password,
     });
     const accounts = response.data;
     if (accounts.success) {
       dispatch(adminloginSuccess({ admin: accounts }));
-      localStorage.setItem('isAdmin', 'true');
+      localStorage.setItem('userDetail', JSON.stringify(accounts));
       dispatch(adminloginSuccess({ admin: accounts, adminData: accounts }))
     } else {
       openNotification()
@@ -83,15 +73,15 @@ export const loginAdmin = (username, password) => async (dispatch) => {
 };
 export const loginpartner = (username, password) => async (dispatch) => {
   try {
-    const response = await axios.post('http://localhost:8080/api/v2/login', {
-      uname: username,
-      pass: password,
+    const response = await axios.post('http://localhost:8080/api/v2/login/authenticate', {
+      username: username,
+      password: password,
     });
     const accounts = response.data;
     if (accounts.success) {
       dispatch(partnerloginSuccess({ partner: accounts }));
-      localStorage.setItem('partner', 'true');
-      dispatch(partnerloginSuccess({ partner: accounts, partnerData: accounts }))
+      localStorage.setItem('userDetail', JSON.stringify(accounts));
+      dispatch(partnerloginSuccess({ partner: accounts, partnerData: accounts.data }))
     } else {
       openNotification()
     }
@@ -103,7 +93,5 @@ export const loginpartner = (username, password) => async (dispatch) => {
 };
 export const logoutUser = () => (dispatch) => {
   dispatch(logout());
-  localStorage.removeItem('isLoggedIn');
-  localStorage.removeItem('isAdmin');
-  localStorage.removeItem('partner');
+  localStorage.removeItem('userDetail');
 };

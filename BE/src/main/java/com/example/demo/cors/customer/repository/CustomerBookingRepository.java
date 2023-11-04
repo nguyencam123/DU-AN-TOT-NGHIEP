@@ -2,6 +2,7 @@ package com.example.demo.cors.customer.repository;
 
 import com.example.demo.cors.customer.model.request.CustomerBookingRequest;
 import com.example.demo.cors.customer.model.response.CustomerBookingResponse;
+import com.example.demo.entities.Booking;
 import com.example.demo.repositories.BookingRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,5 +19,7 @@ public interface CustomerBookingRepository extends BookingRepository {
             WHERE b.id =:#{#customerBookingRequest.userId}
             """, nativeQuery = true)
     Page<CustomerBookingResponse> getBookingByUser(Pageable pageable, CustomerBookingRequest customerBookingRequest);
+
+    Page<Booking> findByUserId(Pageable pageable, String userId);
 
 }

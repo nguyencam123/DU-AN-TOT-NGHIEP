@@ -1,19 +1,17 @@
 package com.example.demo.cors.homestayowner.repository;
 
 import com.example.demo.cors.homestayowner.model.reponse.HomestayOwnerHomestayReponse;
+import com.example.demo.entities.Homestay;
 import com.example.demo.repositories.HomestayRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
 
 @Repository
 public interface HomestayOwnerHomestayRepository extends HomestayRepository {
 
-      @Query(value ="SELECT a.id,\n" +
+      @Query(value = "SELECT a.id,\n" +
               "       a.name,\n" +
               "       a.address,\n" +
               "       a.price,\n" +
@@ -54,5 +52,9 @@ public interface HomestayOwnerHomestayRepository extends HomestayRepository {
               "    WHERE d.homestay_id = a.id\n" +
               ") AS imageUrls where e.id=:id",nativeQuery = true)
       Page<HomestayOwnerHomestayReponse> getHomestayByConvient(String id,Pageable pageable);
+
+      @Query(value = "Select * from homestay a\n" +
+              "where a.owner_id=:id",nativeQuery = true)
+      Page<Homestay> getHomestayByOwnerH(String id, Pageable pageable);
 
 }

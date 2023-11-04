@@ -2,13 +2,11 @@ package com.example.demo.cors.customer.controller;
 
 import com.example.demo.cors.common.base.ResponseObject;
 import com.example.demo.cors.customer.model.request.CustomerLoginRequest;
+import com.example.demo.cors.customer.model.request.CustomerRequest;
+import com.example.demo.cors.customer.model.request.CustomerUserPasswordRequest;
 import com.example.demo.cors.customer.services.CustomerLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -22,5 +20,13 @@ public class CustomerLoginController {
     public ResponseObject getCustomerLogin(@RequestBody CustomerLoginRequest customerLoginRequest) {
         return new ResponseObject(customerLoginService.getCustomerLogin(customerLoginRequest));
     }
+    @PostMapping("/authenticate")
+    public ResponseObject authenticate(@RequestBody CustomerUserPasswordRequest request){
+        return new ResponseObject(customerLoginService.CustomerAuthenticate(request));
+    }
 
+    @PostMapping("/registers")
+    public ResponseObject registers(@RequestBody CustomerRequest request){
+        return new ResponseObject(customerLoginService.CustomerRegister(request));
+    }
 }

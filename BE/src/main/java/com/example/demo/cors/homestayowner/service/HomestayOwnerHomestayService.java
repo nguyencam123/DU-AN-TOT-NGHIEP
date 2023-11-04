@@ -11,10 +11,15 @@ import java.util.List;
 
 public interface HomestayOwnerHomestayService {
 
+    PageableObject<Homestay> getPageHomestay(String id,HomestayownerHomestayRequest request);
+
+    PageableObject<Homestay> getAll(HomestayownerHomestayRequest homestayownerHomestayRequest);
+
     PageableObject<HomestayOwnerHomestayReponse> getAllPageable(HomestayownerHomestayRequest homestayownerHomestayRequest);
 
     Homestay addHomestays(HomestayownerHomestayRequest request,List<MultipartFile> multipartFiles) throws IOException;
 
     Homestay updateHomestays(String id,HomestayownerHomestayRequest request,List<MultipartFile> multipartFiles) throws IOException;
 
+    Homestay deleteHomestays(String id);
 }

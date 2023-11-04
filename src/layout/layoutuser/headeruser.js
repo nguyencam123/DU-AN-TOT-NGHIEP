@@ -94,10 +94,10 @@ const HeaderUser = () => {
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="me-auto">
                             <Link to={"/"} className="textnabar">
-                                <strong>trang chủ</strong>
+                                <strong>Trang chủ</strong>
                             </Link>
                             <Link to={"/home-stay"} className="textnabar">
-                                <strong>homestay</strong>
+                                <strong>Homestay</strong>
                             </Link>
                             <Link to={"/phieu-giam-gia"} className="textnabar">
                                 <strong>Phiếu giảm giá</strong>

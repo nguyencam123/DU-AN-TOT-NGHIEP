@@ -1,8 +1,9 @@
 package com.example.demo.cors.customer.model.response;
 
+import com.example.demo.entities.base.IsIdentified;
 import org.springframework.beans.factory.annotation.Value;
 
-public interface CustomerLoginResponse {
+public interface CustomerLoginResponse extends IsIdentified {
 
     @Value("#{target.status}")
     Integer getStatus();
