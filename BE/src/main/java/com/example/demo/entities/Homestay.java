@@ -60,4 +60,5 @@ public class Homestay extends PrimaryEntity {
     @OneToMany(mappedBy = "homestay", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<ImgHomestay> images;
+
 }

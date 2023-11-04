@@ -1,11 +1,16 @@
 package com.example.demo.cors.admin.repository;
 
-import com.example.demo.cors.admin.model.response.AdminLoginResponse;
 import com.example.demo.cors.admin.model.request.AdminLoginRequest;
+import com.example.demo.cors.admin.model.response.AdminLoginResponse;
+import com.example.demo.entities.Admin;
 import com.example.demo.repositories.AdminRepository;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
+@Primary
 @Repository
 public interface AdminLoginRepository extends AdminRepository {
 
@@ -16,4 +21,10 @@ public interface AdminLoginRepository extends AdminRepository {
             """, nativeQuery = true)
     AdminLoginResponse getLogin(AdminLoginRequest adminLoginRequest);
 
+    @Override
+    Optional<Admin> findByUsername(String username);
+
+    boolean existsByUsername(String username);
+
+    boolean existsByEmail(String email);
 }
