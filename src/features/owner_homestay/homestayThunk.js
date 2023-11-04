@@ -1,7 +1,7 @@
 import { fetchProductsStart, fetchProductsSuccess, fetchProductsFailure, addproduct, edithomestay } from '../owner_homestay/onwerHomestaySlice';
-import axios from 'axios';
+import axios from '../../app/axiosConfig';
 
-const BASE_URL = 'http://localhost:8080/api/v2/homestay';
+const BASE_URL = '/homestay';
 
 export const fetchHomestay = () => async (dispatch) => {
   dispatch(fetchProductsStart());
@@ -33,7 +33,6 @@ export const EditHomestay = (homestay, imgUrl, id) => async (dispatch) => {
   });
   formData.append('homestay', JSON.stringify(homestay));
   dispatch(fetchProductsStart());
-  console.log(id)
   try {
     await axios.put(BASE_URL + `/update-homestays?id=${id}`, formData);
   } catch (error) {

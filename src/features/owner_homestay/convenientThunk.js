@@ -1,7 +1,7 @@
 import { fetchProductsStart, fetchProductsSuccess, fetchProductsFailure } from '../owner_homestay/convenientSlice';
-import axios from 'axios';
+import axios from '../../app/axiosConfig';
 
-const BASE_URL = 'http://localhost:8080/api/v2/convenient';
+const BASE_URL = '/convenient';
 
 export const fetchConvenient = () => async (dispatch) => {
   dispatch(fetchProductsStart());
