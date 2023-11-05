@@ -1,5 +1,6 @@
 package com.example.demo.cors.admin.services;
 
+import com.example.demo.cors.admin.model.request.AdminApprovalRequest;
 import com.example.demo.cors.admin.model.request.AdminChangeStatusHomestayRequest;
 import com.example.demo.cors.admin.model.response.AdminHomestayResponse;
 import com.example.demo.cors.admin.model.request.AdminHomestayRequest;
@@ -11,8 +12,6 @@ public interface AdminHomestayService {
     PageableObject<AdminHomestayResponse> getAllChoDuyet(AdminHomestayRequest request);
 
     PageableObject<AdminHomestayResponse> getAllDaDuyet(AdminHomestayRequest request);
-
-    Homestay changeStatus(AdminChangeStatusHomestayRequest adminChangeStatusHomestayRequest);
 
     PageableObject<AdminHomestayResponse> getAllById(AdminHomestayRequest request);
 }

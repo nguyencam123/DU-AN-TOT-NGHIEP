@@ -1,5 +1,6 @@
 package com.example.demo.cors.admin.services.impl;
 
+import com.example.demo.cors.admin.model.request.AdminApprovalRequest;
 import com.example.demo.cors.admin.model.request.AdminChangeStatusHomestayRequest;
 import com.example.demo.cors.admin.model.response.AdminHomestayResponse;
 import com.example.demo.cors.admin.model.request.AdminHomestayRequest;
@@ -35,14 +36,6 @@ public class AdminHomestayServiceImpl implements AdminHomestayService {
         Pageable pageable = PageRequest.of(request.getPage(),request.getSize());
         Page<AdminHomestayResponse> adminHomestayReponsis= adminHomestayRepository.getAllDaDuyet(pageable,request);
         return new PageableObject<>(adminHomestayReponsis);
-    }
-
-    @Override
-    public Homestay changeStatus(AdminChangeStatusHomestayRequest adminChangeStatusHomestayRequest) {
-        Homestay homestay = adminHomestayRepository.findById(adminChangeStatusHomestayRequest.getHomestayId()).orElse(null);
-        homestay.setStatus(Status.HOAT_DONG);
-        Homestay homestay1 = adminHomestayRepository.save(homestay);
-        return homestay1;
     }
 
     @Override

@@ -1,7 +1,9 @@
 package com.example.demo.cors.admin.controller;
 
+import com.example.demo.cors.admin.model.request.AdminApprovalRequest;
 import com.example.demo.cors.admin.model.request.AdminChangeStatusHomestayRequest;
 import com.example.demo.cors.admin.model.request.AdminHomestayRequest;
+import com.example.demo.cors.admin.services.AdminApprovalService;
 import com.example.demo.cors.admin.services.AdminHomestayService;
 import com.example.demo.cors.common.base.ResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,9 @@ public class AdminHomestayController {
     @Autowired
     private AdminHomestayService adminHomestayService;
 
+    @Autowired
+    private AdminApprovalService adminApprovalService;
+
     @GetMapping("/cho-duyet")
     public ResponseObject getAllChoDuyet(AdminHomestayRequest adminHomestayRequest){
         return new ResponseObject(adminHomestayService.getAllChoDuyet(adminHomestayRequest));
@@ -25,9 +30,14 @@ public class AdminHomestayController {
         return new ResponseObject(adminHomestayService.getAllDaDuyet(adminHomestayRequest));
     }
 
-    @PutMapping("/change-status")
-    public ResponseObject changeStatus(@RequestBody AdminChangeStatusHomestayRequest adminChangeStatusHomestayRequest) {
-        return new ResponseObject(adminHomestayService.changeStatus(adminChangeStatusHomestayRequest));
+    @PostMapping("/agree")
+    public ResponseObject agree(@RequestBody AdminApprovalRequest adminApprovalRequest) {
+        return new ResponseObject(adminApprovalService.agree(adminApprovalRequest));
+    }
+
+    @PostMapping("/disAgree")
+    public ResponseObject disAgree(@RequestBody AdminApprovalRequest adminApprovalRequest) {
+        return new ResponseObject(adminApprovalService.disAgree(adminApprovalRequest));
     }
 
     @GetMapping("/byid")
