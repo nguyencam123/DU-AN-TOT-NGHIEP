@@ -232,10 +232,10 @@ public class DBGenerator implements CommandLineRunner {
         //owner homestay
         OwnerHomestay ownerHomestay1 = new OwnerHomestay();
         ownerHomestay1.setCode("OH01");
-        ownerHomestay1.setName("Vu Tien Dung");
+        ownerHomestay1.setName("Nguyen Quoc Cuong");
         ownerHomestay1.setPhoneNumber("0987654321");
-        ownerHomestay1.setEmail("dungvt@gmail.com");
-        ownerHomestay1.setUsername("dungvt@gmail.com");
+        ownerHomestay1.setEmail("cuongnguyen.nd2015@gmail.com");
+        ownerHomestay1.setUsername("cuongnguyen.nd2015@gmail.com");
         ownerHomestay1.setPassword("12345678");
         ownerHomestay1.setGender(true);
         ownerHomestayRepository.save(ownerHomestay1);
@@ -264,6 +264,7 @@ public class DBGenerator implements CommandLineRunner {
         homestay1.setRegion(region2);
         homestay1.setProvince(province2);
         homestay1.setPromotion(promotion1);
+        homestay1.setStatus(Status.KHONG_HOAT_DONG);
         homestay1.setOwnerHomestay(ownerHomestay1);
         homestay1.setPoint(8.0);
         homestay1.setPrice(new BigDecimal(1200000));
