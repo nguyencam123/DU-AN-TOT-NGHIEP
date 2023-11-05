@@ -19,12 +19,6 @@ public interface CustomerHomestayResponse extends IsIdentified {
     @Value("#{target.numberPerson}")
     String getNumberPerson();
 
-    @Value("#{target.province}")
-    String getProvince();
-
-    @Value("#{target.region}")
-    String getRegion();
-
     @Value("#{target.status}")
     String getStatus();
 

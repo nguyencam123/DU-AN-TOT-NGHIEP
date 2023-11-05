@@ -5,7 +5,9 @@ import com.cloudinary.utils.ObjectUtils;
 import com.example.demo.cors.common.base.PageableObject;
 import com.example.demo.cors.homestayowner.model.reponse.HomestayOwnerHomestayReponse;
 import com.example.demo.cors.homestayowner.model.request.HomestayownerHomestayRequest;
-import com.example.demo.cors.homestayowner.repository.*;
+import com.example.demo.cors.homestayowner.repository.HomestayOwnerHomestayRepository;
+import com.example.demo.cors.homestayowner.repository.HomestayOwnerImgHomestayRepo;
+import com.example.demo.cors.homestayowner.repository.HomestayOwnerOwnerHomestayRepository;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerHomestayService;
 import com.example.demo.entities.Homestay;
 import com.example.demo.entities.ImgHomestay;
@@ -32,12 +34,6 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
     private HomestayOwnerHomestayRepository homestayownerHomestayRepository;
 
     @Autowired
-    private HomestayOwnerProvinceRepository provinceRepository;
-
-    @Autowired
-    private HomestayOwnerRegionRepository regionRepository;
-
-    @Autowired
     private HomestayOwnerImgHomestayRepo homestayOwnerImgHomestayRepo;
 
     @Autowired
@@ -47,39 +43,37 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
     private Cloudinary cloudinary;
 
     @Override
-    public PageableObject<Homestay> getPageHomestay(String id,HomestayownerHomestayRequest request) {
-        Pageable pageable = PageRequest.of(request.getPage(),request.getSize());
-        Page<Homestay> res=homestayownerHomestayRepository.getHomestayByOwnerH(id,pageable);
+    public PageableObject<Homestay> getPageHomestay(String id, HomestayownerHomestayRequest request) {
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+        Page<Homestay> res = homestayownerHomestayRepository.getHomestayByOwnerH(id, pageable);
         return new PageableObject<>(res);
     }
 
     @Override
     public PageableObject<Homestay> getAll(HomestayownerHomestayRequest homestayownerHomestayRequest) {
-        Pageable pageable = PageRequest.of(homestayownerHomestayRequest.getPage(),homestayownerHomestayRequest.getSize());
-        Page<Homestay> res=homestayownerHomestayRepository.findAll(pageable);
+        Pageable pageable = PageRequest.of(homestayownerHomestayRequest.getPage(), homestayownerHomestayRequest.getSize());
+        Page<Homestay> res = homestayownerHomestayRepository.findAll(pageable);
         return new PageableObject<>(res);
     }
 
     @Override
     public PageableObject<HomestayOwnerHomestayReponse> getAllPageable(HomestayownerHomestayRequest homestayownerHomestayRequest) {
-        Pageable pageable = PageRequest.of(homestayownerHomestayRequest.getPage(),homestayownerHomestayRequest.getSize());
-        Page<HomestayOwnerHomestayReponse> res=homestayownerHomestayRepository.getALlHomestayPage(pageable);
+        Pageable pageable = PageRequest.of(homestayownerHomestayRequest.getPage(), homestayownerHomestayRequest.getSize());
+        Page<HomestayOwnerHomestayReponse> res = homestayownerHomestayRepository.getALlHomestayPage(pageable);
         return new PageableObject<>(res);
     }
 
     @Override
-    public Homestay addHomestays(HomestayownerHomestayRequest request, List<MultipartFile> multipartFiles) throws IOException{
-        Homestay homestay=new Homestay();
+    public Homestay addHomestays(HomestayownerHomestayRequest request, List<MultipartFile> multipartFiles) throws IOException {
+        Homestay homestay = new Homestay();
         homestay.setName(request.getName());
         homestay.setDesc(request.getDesc());
         homestay.setPrice(request.getPrice());
         homestay.setNumberPerson(request.getNumberPerson());
         homestay.setAddress(request.getAddress());
-        homestay.setProvince(provinceRepository.findById(request.getProvince()).orElse(null));
-        homestay.setRegion(regionRepository.findById(request.getRegion()).orElse(null));
         homestay.setOwnerHomestay(homestayOwnerOwnerHomestayRepository.findById(request.getOwnerHomestay()).orElse(null));
         homestay.setStatus(Status.KHONG_HOAT_DONG);
-        Homestay homestay1=homestayownerHomestayRepository.save(homestay);
+        Homestay homestay1 = homestayownerHomestayRepository.save(homestay);
         List<ImgHomestay> newImages = new ArrayList<>();
         for (MultipartFile image : multipartFiles) {
             ImgHomestay imgHomestay = new ImgHomestay();
@@ -102,10 +96,8 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
         homestay.setPrice(request.getPrice());
         homestay.setNumberPerson(request.getNumberPerson());
         homestay.setAddress(request.getAddress());
-        homestay.setProvince(provinceRepository.findById(request.getProvince()).orElse(null));
-        homestay.setRegion(regionRepository.findById(request.getRegion()).orElse(null));
         homestay.setOwnerHomestay(homestayOwnerOwnerHomestayRepository.findById(request.getOwnerHomestay()).orElse(null));
-        Homestay homestay1=homestayownerHomestayRepository.save(homestay);
+        Homestay homestay1 = homestayownerHomestayRepository.save(homestay);
         homestayOwnerImgHomestayRepo.deleteByHomestay(id);
         List<ImgHomestay> newImages = new ArrayList<>();
         for (MultipartFile image : multipartFiles) {
@@ -123,7 +115,7 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
     public Homestay deleteHomestays(String id) {
         Homestay homestay = homestayownerHomestayRepository.findById(id).orElse(null);
         homestay.setStatus(Status.XOA_PHONG);
-        Homestay homestay1=homestayownerHomestayRepository.save(homestay);
+        Homestay homestay1 = homestayownerHomestayRepository.save(homestay);
         return homestay1;
     }
 
