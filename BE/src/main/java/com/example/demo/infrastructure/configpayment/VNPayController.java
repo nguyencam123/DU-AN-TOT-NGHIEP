@@ -18,8 +18,8 @@ public class VNPayController {
     private VNPayService vnPayService;
 
     @PostMapping("/submit-booking")
-    public ResponseEntity<String> submidBooking(@RequestBody CustomerVNPayRequest vnPayRequest, HttpServletRequest request) {
-        String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+    public ResponseEntity<String> submidBooking(@RequestBody CustomerVNPayRequest vnPayRequest) {
+        String baseUrl = "";
         String vnpayUrl = vnPayService.createOrder(vnPayRequest, baseUrl);
         return ResponseEntity.ok(vnpayUrl);
     }

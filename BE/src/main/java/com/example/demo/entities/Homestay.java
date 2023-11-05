@@ -21,14 +21,6 @@ public class Homestay extends PrimaryEntity {
     @JoinColumn(name = "promotion_id")
     private Promotion promotion;
 
-    @ManyToOne
-    @JoinColumn(name = "province_id")
-    private Province province;
-
-    @ManyToOne
-    @JoinColumn(name = "region_id")
-    private Region region;
-
     private String address;
 
     private String timeCheckIn;
