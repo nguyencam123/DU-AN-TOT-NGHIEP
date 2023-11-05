@@ -1,13 +1,24 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progress, Space } from 'antd';
 import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, InfoCircleTwoTone, StarTwoTone } from '@ant-design/icons'
 import { Form, Table } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getOneProduct } from '../../../features/product/productThunk';
+import { useDispatch, useSelector } from 'react-redux';
 const { Header, Content, Footer } = Layout;
 
 
 export const BookingReviewHomestay = () => {
+  const params = useParams();
+  useEffect(() => {
+    dispatch(getOneProduct(params.id));
+  }, []);
+  const dispatch = useDispatch();
+  const detailHomestay = useSelector((state) => state.product.productDetails);
+  const navigate = useNavigate();
+  const handleReviewBookingHomestay = (id) => {
+  }
 
   return (
     <>
@@ -27,7 +38,7 @@ export const BookingReviewHomestay = () => {
         >
           <Breadcrumb.Item>Homestay</Breadcrumb.Item>
           <Breadcrumb.Item>Review booking</Breadcrumb.Item>
-          <Breadcrumb.Item>App</Breadcrumb.Item>
+          <Breadcrumb.Item>{detailHomestay.name}</Breadcrumb.Item>
         </Breadcrumb>
         <div
           style={{
@@ -35,7 +46,7 @@ export const BookingReviewHomestay = () => {
             paddingRight: 100,
             paddingBottom: 50,
             paddingLeft: 100,
-            minHeight: 380,
+            minHeight: 380
 
           }}
         >
@@ -58,7 +69,7 @@ export const BookingReviewHomestay = () => {
                 <Row style={{ margin: '10px' }} style={{ borderBottom: '1px solid', padding: '0px 10px 10px 10px', }}>
                   <Col span={5}>
                     <Image
-                      src='https://d1785e74lyxkqq.cloudfront.net/_next/static/v2/6/6aa2fd01a9460e1a71bb0efb713f0212.svg'
+                      src={detailHomestay.images[0].imgUrl}
                       style={{ marginTop: '10px' }}
                       width={128}
                       height={128}
@@ -75,7 +86,7 @@ export const BookingReviewHomestay = () => {
                       </Col>
                       <Col span={16} push={0}>
                         <div style={{ marginTop: '15px' }}>
-                          <span style={{ marginTop: '20px', color: 'rgb(3, 18, 26)', fontSize: '20px', fontWeight: '700' }}> Millennium Hanoi Hotel</span>
+                          <span style={{ marginTop: '20px', color: 'rgb(3, 18, 26)', fontSize: '20px', fontWeight: '700' }}> {detailHomestay.name}</span>
                         </div>
                       </Col>
                       <hr />
@@ -105,17 +116,17 @@ export const BookingReviewHomestay = () => {
                     </div>
                     <div>
                       <Image
-                        src='https://d1785e74lyxkqq.cloudfront.net/_next/static/v2/6/6aa2fd01a9460e1a71bb0efb713f0212.svg'
+                        src={detailHomestay.images[1].imgUrl}
                         width={70}
                         height={70}
                       />
                       <Image
-                        src='https://d1785e74lyxkqq.cloudfront.net/_next/static/v2/6/6aa2fd01a9460e1a71bb0efb713f0212.svg'
+                        src={detailHomestay.images[2].imgUrl}
                         width={70}
                         height={70}
                       />
                       <Image
-                        src='https://d1785e74lyxkqq.cloudfront.net/_next/static/v2/6/6aa2fd01a9460e1a71bb0efb713f0212.svg'
+                        src={detailHomestay.images[3].imgUrl}
                         width={70}
                         height={70}
                       />
@@ -210,7 +221,7 @@ export const BookingReviewHomestay = () => {
                   </Col>
                   <Col span={8} push={4}>
                     <div style={{ padding: '20px 0px 5px 20px', fontSize: '18px', fontWeight: '700', float: 'right' }}>
-                      692.000 VND
+                    {detailHomestay.price + detailHomestay.price*11/100} VND
                     </div>
                   </Col>
                 </Row>
@@ -234,7 +245,7 @@ export const BookingReviewHomestay = () => {
                   </Col>
                   <Col span={8} push={4}>
                     <div style={{ fontWeight: '600', fontSize: '18px', float: 'right' }}>
-                      620.000 VND
+                    {detailHomestay.price} VND
                     </div>
                   </Col>
                 </Row>
@@ -246,7 +257,7 @@ export const BookingReviewHomestay = () => {
                   </Col>
                   <Col span={8} push={4}>
                     <div style={{ fontWeight: '600', fontSize: '18px', float: 'right' }}>
-                      72.000 VND
+                      {detailHomestay.price*11/100} VND
                     </div>
                   </Col>
                 </Row>
