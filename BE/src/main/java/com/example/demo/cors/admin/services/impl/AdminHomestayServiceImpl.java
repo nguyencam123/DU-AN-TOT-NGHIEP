@@ -24,9 +24,16 @@ public class AdminHomestayServiceImpl implements AdminHomestayService {
     private AdminHomestayRepository adminHomestayRepository;
 
     @Override
-    public PageableObject<AdminHomestayResponse> getAll(AdminHomestayRequest request) {
+    public PageableObject<AdminHomestayResponse> getAllChoDuyet(AdminHomestayRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(),request.getSize());
-        Page<AdminHomestayResponse> adminHomestayReponsis= adminHomestayRepository.getAll(pageable,request);
+        Page<AdminHomestayResponse> adminHomestayReponsis= adminHomestayRepository.getAllChoDuyet(pageable,request);
+        return new PageableObject<>(adminHomestayReponsis);
+    }
+
+    @Override
+    public PageableObject<AdminHomestayResponse> getAllDaDuyet(AdminHomestayRequest request) {
+        Pageable pageable = PageRequest.of(request.getPage(),request.getSize());
+        Page<AdminHomestayResponse> adminHomestayReponsis= adminHomestayRepository.getAllDaDuyet(pageable,request);
         return new PageableObject<>(adminHomestayReponsis);
     }
 

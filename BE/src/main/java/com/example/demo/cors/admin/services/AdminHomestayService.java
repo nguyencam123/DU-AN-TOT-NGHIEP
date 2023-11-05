@@ -8,7 +8,9 @@ import com.example.demo.entities.Homestay;
 
 public interface AdminHomestayService {
 
-    PageableObject<AdminHomestayResponse> getAll(AdminHomestayRequest request);
+    PageableObject<AdminHomestayResponse> getAllChoDuyet(AdminHomestayRequest request);
+
+    PageableObject<AdminHomestayResponse> getAllDaDuyet(AdminHomestayRequest request);
 
     Homestay changeStatus(AdminChangeStatusHomestayRequest adminChangeStatusHomestayRequest);
 

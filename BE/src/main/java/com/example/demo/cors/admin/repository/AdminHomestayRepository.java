@@ -15,9 +15,18 @@ public interface AdminHomestayRepository extends HomestayRepository {
     @Query(value = """
             SELECT dbo.homestay.name, dbo.homestay.address, dbo.owner_homestay.name AS [name_homestay], dbo.owner_homestay.phone_number as [phone_number], dbo.owner_homestay.email as [email],dbo.homestay.status
             FROM dbo.homestay
-            INNER JOIN dbo.owner_homestay ON dbo.homestay.owner_id = dbo.owner_homestay.id 
+            INNER JOIN dbo.owner_homestay ON dbo.homestay.owner_id = dbo.owner_homestay.id
+            WHERE dbo.homestay.status = 1
             """,nativeQuery = true)
-    Page<AdminHomestayResponse> getAll(Pageable pageable, @Param("request") AdminHomestayRequest request);
+    Page<AdminHomestayResponse> getAllChoDuyet(Pageable pageable, @Param("request") AdminHomestayRequest request);
+
+    @Query(value = """
+            SELECT dbo.homestay.name, dbo.homestay.address, dbo.owner_homestay.name AS [name_homestay], dbo.owner_homestay.phone_number as [phone_number], dbo.owner_homestay.email as [email],dbo.homestay.status
+            FROM dbo.homestay
+            INNER JOIN dbo.owner_homestay ON dbo.homestay.owner_id = dbo.owner_homestay.id
+            WHERE dbo.homestay.status = 0
+            """,nativeQuery = true)
+    Page<AdminHomestayResponse> getAllDaDuyet(Pageable pageable, @Param("request") AdminHomestayRequest request);
 
     @Query(value = """
             SELECT dbo.homestay.name, dbo.homestay.address, dbo.owner_homestay.name AS [name_homestay], dbo.owner_homestay.phone_number as [phone_number], dbo.owner_homestay.email as [email],dbo.homestay.status

@@ -15,9 +15,14 @@ public class AdminHomestayController {
     @Autowired
     private AdminHomestayService adminHomestayService;
 
-    @GetMapping()
-    public ResponseObject getAll(AdminHomestayRequest adminHomestayRequest){
-        return new ResponseObject(adminHomestayService.getAll(adminHomestayRequest));
+    @GetMapping("/cho-duyet")
+    public ResponseObject getAllChoDuyet(AdminHomestayRequest adminHomestayRequest){
+        return new ResponseObject(adminHomestayService.getAllChoDuyet(adminHomestayRequest));
+    }
+
+    @GetMapping("/da-duyet")
+    public ResponseObject getAllDaDuyet(AdminHomestayRequest adminHomestayRequest){
+        return new ResponseObject(adminHomestayService.getAllDaDuyet(adminHomestayRequest));
     }
 
     @PutMapping("/change-status")
