@@ -81,18 +81,52 @@ export const BookingHomestay = () => {
                 </Form>
               </div>
             </Col>
-            <Col span={6} push={1} style={{marginTop:'30px'}}>
-              <div style={{ backgroundColor: 'white', borderRadius:'10px' }}>
+            <Col span={6} push={1} style={{ marginTop: '8px' }}>
+              <div style={{ backgroundColor: 'white', borderRadius: '10px' }}>
                 <Row style={{ margin: '25px 0px 0px 15px' }}>
                   <Col span={4}>
-                  <Image
-                    src='https://d1785e74lyxkqq.cloudfront.net/_next/static/v2/6/6aa2fd01a9460e1a71bb0efb713f0212.svg'
-                    style={{ marginTop: '10px' }}
-                  />
+                    <Image
+                      src='https://d1785e74lyxkqq.cloudfront.net/_next/static/v2/6/6aa2fd01a9460e1a71bb0efb713f0212.svg'
+                      style={{ marginTop: '10px' }}
+                    />
                   </Col>
                   <Col span={20}>
                     <div>Homestay Name</div>
                     <div>Homestay Name</div>
+                  </Col>
+                </Row>
+                <Row style={{ marginTop: '15px', backgroundColor: 'rgba(247,249,250,1.00)' }}>
+                  <Col span={11} push={1}>
+                    <div style={{ color: 'rgb(104, 113, 118)' }}>Ngày nhận phòng: </div>
+                  </Col>
+                  <Col span={11} push={1}>
+                    <div style={{ fontWeight: '500' }}>Thu, 9 Nov 2023, Từ 14:00</div>
+                  </Col>
+                </Row>
+                <Row style={{ backgroundColor: 'rgba(247,249,250,1.00)' }}>
+                  <Col span={11} push={1}>
+                    <div style={{ color: 'rgb(104, 113, 118)' }}>Ngày trả phòng: </div>
+                  </Col>
+                  <Col span={11} push={1}>
+                    <div style={{ fontWeight: '500' }}>Fri, 10 Nov 2023, Trước 12:00 </div>
+                  </Col>
+                </Row>
+                <Row style={{ margin: '25px 0px 0px 15px', paddingBottom:'20px' }}>
+                  <Col span={10}>
+                    <div >
+                      Số phòng :
+                    </div>
+                    <Image
+                      style={{ borderRadius: '10px', marginTop: '10px' }}
+                      width={70}
+                      height={70}
+                      src="http://res.cloudinary.com/dcwkiozwf/image/upload/v1698477662/homestay_images/naaveb7ytdgyolqe3n1e.jpg"
+                    />
+                  </Col>
+                  <Col span={8} push={1}>
+                    <div style={{ fontWeight: '500' }}>
+                      20 phòng
+                    </div>
                   </Col>
                 </Row>
               </div>

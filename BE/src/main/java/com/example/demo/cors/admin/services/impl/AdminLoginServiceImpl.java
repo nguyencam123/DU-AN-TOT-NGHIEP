@@ -1,5 +1,6 @@
 package com.example.demo.cors.admin.services.impl;
 
+import com.example.demo.cors.admin.model.request.AdminPassRequest;
 import com.example.demo.cors.admin.model.request.AdminRequest;
 import com.example.demo.cors.admin.model.request.AdminUserPasswordRequest;
 import com.example.demo.cors.admin.model.response.AdminAuthenticationReponse;
@@ -7,8 +8,8 @@ import com.example.demo.cors.admin.model.response.AdminLoginResponse;
 import com.example.demo.cors.admin.model.request.AdminLoginRequest;
 import com.example.demo.cors.admin.repository.AdminLoginRepository;
 import com.example.demo.cors.admin.services.AdminLoginService;
-import com.example.demo.cors.homestayowner.model.reponse.HomestayOwnerAuthenticationReponse;
 import com.example.demo.entities.Admin;
+import com.example.demo.entities.User;
 import com.example.demo.infrastructure.contant.Status;
 import com.example.demo.infrastructure.exception.rest.RestApiException;
 import com.example.demo.infrastructure.security.token.JwtService;
@@ -18,6 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.Random;
 
 @Service
@@ -112,6 +114,30 @@ public class AdminLoginServiceImpl implements AdminLoginService {
         System.err.println(jwtToken);
         return AdminAuthenticationReponse.builder().
                 token(jwtToken)
+                .id(admin.getId())
+                .code(admin.getCode())
+                .name(admin.getName())
+                .birthday(admin.getBirthday())
+                .gender(admin.getGender())
+                .address(admin.getAddress())
+                .phoneNumber(admin.getPhoneNumber())
+                .email(admin.getEmail())
+                .username(admin.getUsername())
+                .status(admin.getStatus()).build();
+    }
+
+    @Override
+    public AdminAuthenticationReponse changePassword(AdminPassRequest request, Principal connecteUser) {
+        var admin=(Admin) ((UsernamePasswordAuthenticationToken) connecteUser).getPrincipal();
+        if(!passwordEncoder.matches(request.getCurrentPassword(), admin.getPassword())){
+            throw new IllegalStateException("Wrong password");
+        };
+        if(!request.getNewPassword().equals(request.getConfirmationPassword())){
+            throw new IllegalStateException("password aren't the same");
+        }
+        admin.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        adminLoginRepository.save(admin);
+        return AdminAuthenticationReponse.builder()
                 .id(admin.getId())
                 .code(admin.getCode())
                 .name(admin.getName())

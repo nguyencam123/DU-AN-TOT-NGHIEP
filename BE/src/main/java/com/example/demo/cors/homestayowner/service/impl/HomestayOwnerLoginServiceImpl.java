@@ -1,10 +1,11 @@
 package com.example.demo.cors.homestayowner.service.impl;
 
-import com.example.demo.cors.homestayowner.model.reponse.HomestayOwnerAuthenticationReponse;
 import com.example.demo.cors.homestayowner.model.reponse.HomestayOwnerLoginReponse;
-import com.example.demo.cors.homestayowner.model.request.HomestayOwnerOwnerHomestayRequest;
-import com.example.demo.cors.homestayowner.model.request.HomestayOwnerUsenamePasswordRequest;
-import com.example.demo.cors.homestayowner.model.request.HomestayownerLoginRequest;
+import com.example.demo.cors.homestayowner.model.reponse.loginreponse.HomestayOwnerAuthenticationReponse;
+import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayOwnerOwnerHomestayRequest;
+import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayOwnerUsenamePasswordRequest;
+import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayownerLoginRequest;
+import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayOwnerPasswordRequest;
 import com.example.demo.cors.homestayowner.repository.HomestayOwnerOwnerHomestayRepository;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerLoginService;
 import com.example.demo.entities.OwnerHomestay;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.security.Principal;
 import java.util.Random;
 
 @Service
@@ -76,6 +78,9 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         if (homestayownerOwnerHomestayRepository.existsByEmail(request.getEmail())) {
             throw new RestApiException("Email is already in use");
         }
+        if (homestayownerOwnerHomestayRepository.existsByPhoneNumber(request.getPhoneNumber())) {
+            throw new RestApiException("PhoneNumber is already in use");
+        }
         ownerHomestay.setName(request.getName());
         ownerHomestay.setBirthday(request.getBirthday());
         ownerHomestay.setGender(request.getGender());
@@ -98,7 +103,8 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                 .phoneNumber(ownerHomestay.getPhoneNumber())
                 .email(ownerHomestay.getEmail())
                 .username(ownerHomestay.getUsername())
-                .status(ownerHomestay.getStatus()).build();
+                .status(ownerHomestay.getStatus())
+                .build();
     }
 
     @Override
@@ -109,19 +115,45 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                         request.getPassword()
                 )
         );
-        var user=homestayownerOwnerHomestayRepository.findByUsername(request.getUsername()).orElseThrow();
-        var jwtToken=jwtService.generateToken(user);
+        var ownerHomestay=homestayownerOwnerHomestayRepository.findByUsername(request.getUsername()).orElseThrow();
+        var jwtToken=jwtService.generateToken(ownerHomestay);
+        return HomestayOwnerAuthenticationReponse.builder().
+                token(jwtToken)
+                .id(ownerHomestay.getId())
+                .code(ownerHomestay.getCode())
+                .name(ownerHomestay.getName())
+                .birthday(ownerHomestay.getBirthday())
+                .gender(ownerHomestay.getGender())
+                .address(ownerHomestay.getAddress())
+                .phoneNumber(ownerHomestay.getPhoneNumber())
+                .email(ownerHomestay.getEmail())
+                .username(ownerHomestay.getUsername())
+                .status(ownerHomestay.getStatus())
+                .build();
+    }
+
+    @Override
+    public HomestayOwnerAuthenticationReponse changePassword(HomestayOwnerPasswordRequest request, Principal connecteUser) {
+        var ownerHomestay=(OwnerHomestay) ((UsernamePasswordAuthenticationToken) connecteUser).getPrincipal();
+        if(!passwordEncoder.matches(request.getCurrentPassword(), ownerHomestay.getPassword())){
+            throw new IllegalStateException("Wrong password");
+        };
+        if(!request.getNewPassword().equals(request.getConfirmationPassword())){
+            throw new IllegalStateException("password aren't the same");
+        }
+        ownerHomestay.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        homestayownerOwnerHomestayRepository.save(ownerHomestay);
         return HomestayOwnerAuthenticationReponse.builder()
-                .token(jwtToken)
-                .code(user.getCode())
-                .name(user.getName())
-                .birthday(user.getBirthday())
-                .gender(user.getGender())
-                .address(user.getAddress())
-                .phoneNumber(user.getPhoneNumber())
-                .email(user.getEmail())
-                .username(user.getUsername())
-                .status(user.getStatus())
+                .id(ownerHomestay.getId())
+                .code(ownerHomestay.getCode())
+                .name(ownerHomestay.getName())
+                .birthday(ownerHomestay.getBirthday())
+                .gender(ownerHomestay.getGender())
+                .address(ownerHomestay.getAddress())
+                .phoneNumber(ownerHomestay.getPhoneNumber())
+                .email(ownerHomestay.getEmail())
+                .username(ownerHomestay.getUsername())
+                .status(ownerHomestay.getStatus())
                 .build();
     }
 

@@ -21,21 +21,28 @@ import {
 } from 'antd';
 import { province } from './province'
 import moment from 'moment';
+import { fetchProvince } from '../../../features/owner_homestay/region/provinceThunk'
 
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
-
+const { Option } = Select;
 const { Title } = Typography
 
 
 const HomeStayProduct = () => {
+  const [messageApi, contextHolder] = message.useMessage();
+
+
+
   useEffect(() => {
     dispatch(fetchHomestay());
     dispatch(fetchConvenient());
+    dispatch(fetchProvince());
   }, []);
   const dispatch = useDispatch();
   const products = useSelector((state) => state.ownerHomestay.homestays)
   const convenients = useSelector((state) => state.convenient.convenients)
+  const provinces = useSelector((state) => state.province.provinces)
   //upload file
   // const normFile = (e) => {
   //   if (Array.isArray(e)) {
@@ -146,38 +153,42 @@ const HomeStayProduct = () => {
   const [price, setprice] = useState(0)
   const [numberPerson, setnumberPerson] = useState(0)
   const [address, setaddress] = useState("")
-  const [province, setprovince] = useState([])
+  const [province, setprovince] = useState(null)
   const [region, setregion] = useState([])
-  // const [province, setprovince] = useState("2695a00e-a933-4c28-819c-9b66f3184e8d")
-  // const [region, setregion] = useState("a72af500-5ee5-4268-8d91-d7383d4a9011")
+
   const [recordid, setRecordid] = useState("");
   const [image, setIamge] = useState([]);
+  //getuserid
+  const userDetail = JSON.parse(localStorage.getItem('userDetail'));
+  const UserID = userDetail.data.id;
+  console.log(UserID)
   //
   const homestay = {
     name: name,
     startDate: startDate,
     endDate: endDate,
     desc: desc,
-    price: price,
-    numberPerson: numberPerson,
+    price: parseFloat(price),
+    numberPerson: parseInt(numberPerson),
     address: address,
-    province: "51d5796b-6813-4e6f-9f7c-0045112cfedb",
-    region: "ac0eb453-7dba-4083-814d-5cd0995adb67",
-    ownerHomestay: "4abd5cd0-081f-4a15-90a2-f97776751497"
+    province: province,
+    region: "fa8dbcc1-801c-4345-b5e5-2c4c91b90059",
+    ownerHomestay: "8500b680-81a5-41fa-a775-4a95d32a9703"
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsModalOpen(false);
     if (isAddFrom) {
-      dispatch(addHomestay(homestay, file));
-      dispatch(fetchHomestay());
+      await dispatch(addHomestay(homestay, file));
       message.info('Thêm thành công');
     } else {
-      dispatch(EditHomestay(homestay, file, recordid));
-      dispatch(fetchHomestay());
+      await dispatch(EditHomestay(homestay, file, recordid));
       message.info('Sửa thành công');
     }
+    dispatch(fetchHomestay());
   };
+
+
   const handleEditRow = (record) => {
     setIsModalOpen(true);
     setIsAddForm(false);
@@ -230,22 +241,18 @@ const HomeStayProduct = () => {
               <Title level={5}>Giá</Title>
               <Input value={price}
                 onChange={(e) => setprice(e.target.value)} />
-
             </Col>
-
           </Row>
           <Row gutter={24}>
             <Col span={12}>
               <Title level={5}>Mô tả</Title>
               <Input value={desc}
                 onChange={(e) => setdesc(e.target.value)} />
-
             </Col>
             <Col span={12}>
               <Title level={5}>Số người ở</Title>
               <Input value={numberPerson}
                 onChange={(e) => setnumberPerson(e.target.value)} />
-
             </Col>
           </Row>
           <Row gutter={24}>
@@ -264,13 +271,29 @@ const HomeStayProduct = () => {
           <Row gutter={24}>
             <Col span={12}>
               <Title level={5}>Ngày bắt đầu</Title>
-              <DatePicker onChange={handleDateChangestart} />
+              <DatePicker onChange={handleDateChangestart} style={{ width: '100%' }} />
             </Col>
             <Col span={12}>
               <Title level={5}>Ngày kết thúc</Title>
-              <DatePicker onChange={handleDateChangeend} />
+              <DatePicker onChange={handleDateChangeend} style={{ width: '100%' }} />
               {/* <DatePicker /> */}
             </Col>
+          </Row>
+          <Row gutter={24}>
+            <Col span={12}>
+              <Title level={5}>Chọn Thành phố</Title>
+              <Select defaultValue="Chọn thành phố homstay" style={{ width: '100%' }} onChange={(value) => setprovince(value)}>
+                {provinces.map((province) => (
+                  <Option key={province.id} value={province.id}>
+                    {province.name}
+                  </Option>
+                ))}
+              </Select>
+            </Col>
+            {/* <Col span={12}>
+              <Title level={5}>Ngày kết thúc</Title>
+              <DatePicker onChange={handleDateChangeend} />
+            </Col> */}
           </Row>
         </Form>
         <form onSubmit={handleSubmit} style={{ marginTop: 20 }}>
@@ -309,7 +332,7 @@ const HomeStayProduct = () => {
               {
                 image.map((imageurl, index) => (
                   <Image key={index} src={imageurl.imgUrl} alt={`Homestay Image ${index}`}
-                    style={{ width: 130, height: 80, marginRight: 30, marginTop: 10 }} preview={{
+                    style={{ width: 130 }} preview={{
                       toolbarRender: (
                         _,
                         {

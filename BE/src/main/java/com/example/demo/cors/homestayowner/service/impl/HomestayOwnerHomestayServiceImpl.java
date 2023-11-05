@@ -10,7 +10,6 @@ import com.example.demo.cors.homestayowner.service.HomestayOwnerHomestayService;
 import com.example.demo.entities.Homestay;
 import com.example.demo.entities.ImgHomestay;
 import com.example.demo.infrastructure.contant.Status;
-import com.example.demo.infrastructure.exception.rest.RestApiException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,8 +71,6 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
     public Homestay addHomestays(HomestayownerHomestayRequest request, List<MultipartFile> multipartFiles) throws IOException{
         Homestay homestay=new Homestay();
         homestay.setName(request.getName());
-        homestay.setStartDate(request.getStartDate());
-        homestay.setEndDate(request.getEndDate());
         homestay.setDesc(request.getDesc());
         homestay.setPrice(request.getPrice());
         homestay.setNumberPerson(request.getNumberPerson());
@@ -101,8 +98,6 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
     public Homestay updateHomestays(String id, HomestayownerHomestayRequest request, List<MultipartFile> multipartFiles) throws IOException {
         Homestay homestay = homestayownerHomestayRepository.findById(id).orElse(null);
         homestay.setName(request.getName());
-        homestay.setStartDate(request.getStartDate());
-        homestay.setEndDate(request.getEndDate());
         homestay.setDesc(request.getDesc());
         homestay.setPrice(request.getPrice());
         homestay.setNumberPerson(request.getNumberPerson());
@@ -121,6 +116,14 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
             homestayOwnerImgHomestayRepo.save(imgHomestay);
             newImages.add(imgHomestay);
         }
+        return homestay1;
+    }
+
+    @Override
+    public Homestay deleteHomestays(String id) {
+        Homestay homestay = homestayownerHomestayRepository.findById(id).orElse(null);
+        homestay.setStatus(Status.XOA_PHONG);
+        Homestay homestay1=homestayownerHomestayRepository.save(homestay);
         return homestay1;
     }
 
