@@ -95,12 +95,12 @@ export const BookingReviewHomestay = () => {
                       <Col span={8}>
                         <div style={{ color: 'rgb(104, 113, 118)', fontWeight: '600', lineHeight: '28px', fontSize: '16px' }}>  Ngày nhận phòng:</div>
                         <div style={{ color: 'black', fontWeight: '600', lineHeight: '28px', fontSize: '16px' }}> 9 Nov 2023 </div>
-                        <div style={{ color: 'rgb(104, 113, 118)', fontWeight: '600', lineHeight: '28px', fontSize: '16px' }}> Từ 14:00</div>
+                        <div style={{ color: 'rgb(104, 113, 118)', fontWeight: '600', lineHeight: '28px', fontSize: '16px' }}> Từ { detailHomestay.timeCheckIn}</div>
                       </Col>
                       <Col span={8}>
                         <div style={{ color: 'rgb(104, 113, 118)', fontWeight: '600', lineHeight: '28px', fontSize: '16px' }}>  Ngày trả phòng:</div>
                         <div style={{ color: 'black', fontWeight: '600', lineHeight: '28px', fontSize: '16px' }}> 10 Nov 2023 </div>
-                        <div style={{ color: 'rgb(104, 113, 118)', fontWeight: '600', lineHeight: '28px', fontSize: '16px' }}> Trước 12:00</div>
+                        <div style={{ color: 'rgb(104, 113, 118)', fontWeight: '600', lineHeight: '28px', fontSize: '16px' }}> Trước {detailHomestay.timeCheckOut}</div>
                       </Col>
                       <Col span={8}>
                         <div style={{ color: 'rgb(104, 113, 118)', fontWeight: '600', lineHeight: '28px', fontSize: '16px' }}>  Số đêm nghỉ</div>
@@ -116,17 +116,17 @@ export const BookingReviewHomestay = () => {
                     </div>
                     <div>
                       <Image
-                        src={detailHomestay.images[1].imgUrl}
+                        src={detailHomestay?.images?.[1]?.imgUrl}
                         width={70}
                         height={70}
                       />
                       <Image
-                        src={detailHomestay.images[2].imgUrl}
+                        src={detailHomestay?.images?.[2]?.imgUrl}
                         width={70}
                         height={70}
                       />
                       <Image
-                        src={detailHomestay.images[3].imgUrl}
+                        src={detailHomestay?.images?.[3]?.imgUrl}
                         width={70}
                         height={70}
                       />
@@ -168,13 +168,13 @@ export const BookingReviewHomestay = () => {
                 <Col span={18}>
                   <div style={{ marginLeft: '10px', marginTop: '10px' }}>
                     <div style={{ lineHeight: '12px', marginTop: '3px' }}><ClockCircleTwoTone style={{ fontSize: '12px' }} /> <b>Thời gian nhận/trả Homestay</b></div>
-                    <span style={{ lineHeight: '12px', marginLeft: '17px', }}>Giờ nhận phòng: <b>Từ 12:00</b></span>
-                    <span style={{ lineHeight: '12px', marginLeft: '17px', }}>Giờ trả phòng: <b>Trước 14:00</b></span>
+                    <span style={{ lineHeight: '12px', marginLeft: '17px', }}>Giờ nhận phòng: <b>Từ {detailHomestay.timeCheckIn}</b></span>
+                    <span style={{ lineHeight: '12px', marginLeft: '17px', }}>Giờ trả phòng: <b>Trước {detailHomestay.timeCheckOut}</b></span>
                   </div>
                   <hr style={{ width: '96%', marginLeft: '2%' }} />
                   <div style={{ marginLeft: '10px', marginTop: '10px' }}>
-                    <div style={{ lineHeight: '12px', marginTop: '3px' }}><ClockCircleTwoTone style={{ fontSize: '12px' }} /><b> Chính sách hủy phòng</b></div>
-                    <span style={{ lineHeight: '12px', marginLeft: '17px', }}>Việc hủy phòng trước ngày abcxyz sẽ được hoàn toàn miễn phí. Sau ngày abcxyz bạn sẽ phải mất một khoản tiền khi hủy phòng</span>
+                    <div style={{ lineHeight: '12px', marginTop: '3px' }}><ClockCircleTwoTone style={{ fontSize: '12px' }} /><b> Mô tả</b></div>
+                    <span style={{ lineHeight: '12px', marginLeft: '17px', }}>{ detailHomestay.desc }</span>
                   </div>
                   <hr style={{ width: '96%', marginLeft: '2%' }} />
                   <div style={{ marginLeft: '10px', marginTop: '10px' }}>
@@ -189,7 +189,7 @@ export const BookingReviewHomestay = () => {
                       <tbody>
                         <tr>
                           <td>Thời gian nhận trả phòng</td>
-                          <td>Từ 12:00 - trước 14:00</td>
+                          <td>Từ {detailHomestay.timeCheckIn} - trước { detailHomestay.timeCheckOut}</td>
                         </tr>
                         <tr>
                           <td>Diện tích</td>
@@ -200,8 +200,8 @@ export const BookingReviewHomestay = () => {
                           <td>Có</td>
                         </tr>
                         <tr>
-                          <td>Bể bơi</td>
-                          <td>Có</td>
+                          <td>Số người</td>
+                          <td>{ detailHomestay.numberPerson}</td>
                         </tr>
                       </tbody>
                     </Table>
