@@ -75,6 +75,8 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
         homestay.setPrice(request.getPrice());
         homestay.setNumberPerson(request.getNumberPerson());
         homestay.setAddress(request.getAddress());
+        homestay.setStartDate(request.getStartDate());
+        homestay.setEndDate(request.getEndDate());
         homestay.setProvince(provinceRepository.findById(request.getProvince()).orElse(null));
         homestay.setRegion(regionRepository.findById(request.getRegion()).orElse(null));
         homestay.setOwnerHomestay(homestayOwnerOwnerHomestayRepository.findById(request.getOwnerHomestay()).orElse(null));
@@ -102,6 +104,8 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
         homestay.setPrice(request.getPrice());
         homestay.setNumberPerson(request.getNumberPerson());
         homestay.setAddress(request.getAddress());
+        homestay.setStartDate(request.getStartDate());
+        homestay.setEndDate(request.getEndDate());
         homestay.setProvince(provinceRepository.findById(request.getProvince()).orElse(null));
         homestay.setRegion(regionRepository.findById(request.getRegion()).orElse(null));
         homestay.setOwnerHomestay(homestayOwnerOwnerHomestayRepository.findById(request.getOwnerHomestay()).orElse(null));
