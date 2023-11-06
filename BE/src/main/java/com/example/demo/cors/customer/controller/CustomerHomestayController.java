@@ -27,16 +27,6 @@ public class CustomerHomestayController {
         return new ResponseObject(customerHomestayService.getHomestayByConvenientId(request));
     }
 
-    @GetMapping("/getByProvince")
-    public ResponseObject getHomestayByProvince(CustomerHomestayRequest request) {
-        return new ResponseObject(customerHomestayService.getHomestayByProvince(request));
-    }
-
-    @GetMapping("/getByRegion")
-    public ResponseObject getHomestayByRegion(CustomerHomestayRequest request) {
-        return new ResponseObject(customerHomestayService.getHomestayByRegion(request));
-    }
-
     @GetMapping("/getOne")
     public ResponseObject getHomestayById(CustomerHomestayRequest request) {
         return new ResponseObject(customerHomestayService.getHomestayById(request));

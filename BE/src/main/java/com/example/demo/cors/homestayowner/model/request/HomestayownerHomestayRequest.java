@@ -4,6 +4,7 @@ import com.example.demo.cors.common.base.PageableRequest;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,10 +26,6 @@ public class HomestayownerHomestayRequest extends PageableRequest{
       private Integer numberPerson;
 
       private String address;
-
-      private String province;
-
-      private String region;
 
       private String ownerHomestay;
 

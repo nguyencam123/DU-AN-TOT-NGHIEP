@@ -1,13 +1,25 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progress, Space } from 'antd';
 import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, InfoCircleTwoTone, StarTwoTone } from '@ant-design/icons'
 import { Form, Table } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getOneProduct } from '../../../features/product/productThunk';
+import { useDispatch, useSelector } from 'react-redux';
 const { Header, Content, Footer } = Layout;
 
 
 export const BookingHomestay = () => {
+  const params = useParams();
+  useEffect(() => {
+    dispatch(getOneProduct(params.id));
+  }, []);
+  const dispatch = useDispatch();
+  const detailHomestay = useSelector((state) => state.product.productDetails);
+  const navigate = useNavigate();
+  const handleReviewBookingHomestay = (id) => {
+    navigate(`/review/booking/${id}`)
+  }
 
   return (
     <>
@@ -27,7 +39,7 @@ export const BookingHomestay = () => {
         >
           <Breadcrumb.Item>Homestay</Breadcrumb.Item>
           <Breadcrumb.Item>Booking</Breadcrumb.Item>
-          <Breadcrumb.Item>App</Breadcrumb.Item>
+          <Breadcrumb.Item>{detailHomestay.name}</Breadcrumb.Item>
         </Breadcrumb>
         <div
           style={{
@@ -91,8 +103,8 @@ export const BookingHomestay = () => {
                     />
                   </Col>
                   <Col span={20}>
-                    <div>Homestay Name</div>
-                    <div>Homestay Name</div>
+                    <div>{detailHomestay.name}</div>
+                    <div>{detailHomestay.name}</div>
                   </Col>
                 </Row>
                 <Row style={{ marginTop: '15px', backgroundColor: 'rgba(247,249,250,1.00)' }}>
@@ -120,12 +132,12 @@ export const BookingHomestay = () => {
                       style={{ borderRadius: '10px', marginTop: '10px' }}
                       width={70}
                       height={70}
-                      src="http://res.cloudinary.com/dcwkiozwf/image/upload/v1698477662/homestay_images/naaveb7ytdgyolqe3n1e.jpg"
+                      src={detailHomestay.images[0].imgUrl}
                     />
                   </Col>
                   <Col span={8} push={1}>
                     <div style={{ fontWeight: '500' }}>
-                      20 phòng
+                    {detailHomestay.numberPerson} phòng
                     </div>
                   </Col>
                 </Row>
@@ -146,7 +158,7 @@ export const BookingHomestay = () => {
                   </Col>
                   <Col span={8} push={4}>
                     <div style={{ padding: '20px 0px 5px 20px', fontSize: '18px', fontWeight: '700', float: 'right' }}>
-                      692.000 VND
+                      {detailHomestay.price + detailHomestay.price*11/100} VND
                     </div>
                   </Col>
                 </Row>
@@ -170,7 +182,7 @@ export const BookingHomestay = () => {
                   </Col>
                   <Col span={8} push={4}>
                     <div style={{ fontWeight: '600', fontSize: '18px', float: 'right' }}>
-                      620.000 VND
+                      {detailHomestay.price} VND
                     </div>
                   </Col>
                 </Row>
@@ -182,7 +194,7 @@ export const BookingHomestay = () => {
                   </Col>
                   <Col span={8} push={4}>
                     <div style={{ fontWeight: '600', fontSize: '18px', float: 'right' }}>
-                      72.000 VND
+                      {detailHomestay.price*11/100} VND
                     </div>
                   </Col>
                 </Row>
@@ -198,7 +210,7 @@ export const BookingHomestay = () => {
                 </Col>
                 <Col span={16} >
                   <div style={{ float: 'right', marginTop: '5px' }}>
-                    <Button style={{ color: 'white', fontWeight: '500', fontSize: '14px', backgroundColor: 'rgb(255, 94, 31)', width: '85px', height: '40px' }}>Tiếp tục</Button>
+                    <Button onClick={() => handleReviewBookingHomestay(params.id)} style={{ color: 'white', fontWeight: '500', fontSize: '14px', backgroundColor: 'rgb(255, 94, 31)', width: '85px', height: '40px' }}>Tiếp tục</Button>
                   </div>
                 </Col>
               </Row>

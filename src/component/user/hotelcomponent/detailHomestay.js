@@ -4,19 +4,23 @@ import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progres
 import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, StarTwoTone } from '@ant-design/icons'
 import { Table } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { fetchProducts } from '../../../features/product/productThunk';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchProducts, getOneProduct } from '../../../features/product/productThunk';
 const { Header, Content, Footer } = Layout;
-
 
 export const DetailHomestay = () => {
   const params = useParams();
-  console.log(params.id);
+  const detailHomestay = useSelector((state) => state.product.productDetails)
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getOneProduct(params.id));
+    dispatch(fetchProducts());
+  }, []);
+  // const imgHomestay = detailHomestay[0].images
   const handleBookingHomestay = (id) => {
     navigate(`/homestay/booking/${id}`)
   }
-
   return (
     <>
       <Content
@@ -35,7 +39,7 @@ export const DetailHomestay = () => {
         >
           <Breadcrumb.Item>Homestay</Breadcrumb.Item>
           <Breadcrumb.Item>Detail</Breadcrumb.Item>
-          <Breadcrumb.Item>App</Breadcrumb.Item>
+          <Breadcrumb.Item>{detailHomestay.name}</Breadcrumb.Item>
         </Breadcrumb>
         <div
           style={{
@@ -46,20 +50,20 @@ export const DetailHomestay = () => {
         >
           <Row>
             <Col>
-              <h4>Homestay name</h4>
-              <span>Homestay name</span>
+              <h4>{detailHomestay.name}</h4>
+              <span>{detailHomestay.name}</span>
             </Col>
           </Row>
           <Row style={{ marginTop: '10px' }}>
             <Col span={8}>
               <EnvironmentOutlined style={{ fontSize: '10px', alignItems: 'center' }} />
-              <span style={{ fontSize: '12px', marginTop: '3px' }}>Ho hoan kiem abc xyzn ,asf</span>
-              <div style={{ fontSize: '18px', alignItems: 'center', marginTop: '10px' }}>Tổng số phòng của homestay: 20</div>
+              <span style={{ fontSize: '12px', marginTop: '3px' }}>{detailHomestay.address}</span>
+              <div style={{ fontSize: '18px', alignItems: 'center', marginTop: '10px' }}>Tổng số phòng của homestay: {detailHomestay.numberPerson}</div>
             </Col>
             <Col span={6} push={10} >
               <div>
                 <div style={{ fontSize: '12px', marginBottom: '0' }}>Giá mỗi phòng mỗi đêm từ</div>
-                <div style={{ fontSize: '24', color: 'rgb(255, 94, 31)', lineHeight: '28px', fontWeight: '700', marginTop: '-5px' }}>800000 <span style={{ fontSize: '22' }}>VND</span> </div>
+                <div style={{ fontSize: '24', color: 'rgb(255, 94, 31)', lineHeight: '28px', fontWeight: '700', marginTop: '-5px' }}>{detailHomestay.price} <span style={{ fontSize: '22' }}>VND</span> </div>
               </div>
               <Button onClick={() => handleBookingHomestay(params.id)} style={{ width: '100%', backgroundColor: 'rgb(255, 94, 31)' }}>Chọn phòng</Button>
             </Col>
@@ -70,27 +74,27 @@ export const DetailHomestay = () => {
                 style={{ borderRadius: '10px' }}
                 width={730}
                 height={400}
-                src="http://res.cloudinary.com/dcwkiozwf/image/upload/v1698477662/homestay_images/naaveb7ytdgyolqe3n1e.jpg"
+                src={detailHomestay?.images?.[0]?.imgUrl}
               />
             </Col>
-            <Col span={4} style={{ marginLeft: '12px' }}>
+             <Col span={4} style={{ marginLeft: '12px' }}>
               <Image
                 style={{ borderRadius: '10px', marginBottom: '10px' }}
                 width={250}
                 height={128}
-                src="http://res.cloudinary.com/dcwkiozwf/image/upload/v1698477662/homestay_images/naaveb7ytdgyolqe3n1e.jpg"
+                src={detailHomestay?.images?.[1]?.imgUrl}
               />
               <Image
                 style={{ borderRadius: '10px', marginTop: '7px' }}
                 width={250}
                 height={128}
-                src="http://res.cloudinary.com/dcwkiozwf/image/upload/v1698477662/homestay_images/naaveb7ytdgyolqe3n1e.jpg"
+                src={detailHomestay?.images?.[2]?.imgUrl}
               />
               <Image
                 style={{ borderRadius: '10px', marginTop: '15px' }}
                 width={250}
                 height={128}
-                src="http://res.cloudinary.com/dcwkiozwf/image/upload/v1698477662/homestay_images/naaveb7ytdgyolqe3n1e.jpg"
+                src={detailHomestay?.images?.[3]?.imgUrl}
               />
             </Col>
             <Col span={4} push={1}>
@@ -98,19 +102,19 @@ export const DetailHomestay = () => {
                 style={{ borderRadius: '10px', marginBottom: '10px' }}
                 width={250}
                 height={128}
-                src="http://res.cloudinary.com/dcwkiozwf/image/upload/v1698477662/homestay_images/naaveb7ytdgyolqe3n1e.jpg"
+                src={detailHomestay?.images?.[4]?.imgUrl}
               />
               <Image
                 style={{ borderRadius: '10px', marginTop: '7px' }}
                 width={250}
                 height={128}
-                src="http://res.cloudinary.com/dcwkiozwf/image/upload/v1698477662/homestay_images/naaveb7ytdgyolqe3n1e.jpg"
+                src={detailHomestay?.images?.[5]?.imgUrl}
               />
               <Image
                 style={{ borderRadius: '10px', marginTop: '15px' }}
                 width={250}
                 height={128}
-                src="http://res.cloudinary.com/dcwkiozwf/image/upload/v1698477662/homestay_images/naaveb7ytdgyolqe3n1e.jpg"
+                src={detailHomestay?.images?.[6]?.imgUrl}
               />
             </Col>
           </Row>

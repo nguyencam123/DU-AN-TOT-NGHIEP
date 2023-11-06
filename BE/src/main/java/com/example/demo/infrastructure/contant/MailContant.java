@@ -352,7 +352,7 @@ public class MailContant {
             "                                                                                                    tự động vui lòng\n" +
             "                                                                                                    không phải hồi email\n" +
             "                                                                                                    này. Mọi thắc mắc\n" +
-            "                                                                                                    xin liên hệ xưởng dự án của Bộ môn Phát Triển Phần Mềm.\n" +
+            "                                                                                                    xin liên hệ admin TravelViVu.\n" +
             "                                                                                                    </p>\n" +
             "                                                                                            </div>\n" +
             "\n" +

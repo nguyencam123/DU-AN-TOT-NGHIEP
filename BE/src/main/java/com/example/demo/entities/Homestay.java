@@ -7,8 +7,10 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Nationalized;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,21 +23,21 @@ public class Homestay extends PrimaryEntity {
     @JoinColumn(name = "promotion_id")
     private Promotion promotion;
 
-    @ManyToOne
-    @JoinColumn(name = "province_id")
-    private Province province;
-
-    @ManyToOne
-    @JoinColumn(name = "region_id")
-    private Region region;
-
+    @Nationalized
     private String address;
+
+    @Nationalized
+    private String timeCheckIn;
+
+    @Nationalized
+    private String timeCheckOut;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private OwnerHomestay ownerHomestay;
 
     @Column(length = EntityProperties.LENGTH_NAME)
+    @Nationalized
     private String name;
 
     private Double point;
@@ -47,6 +49,7 @@ public class Homestay extends PrimaryEntity {
     private Long endDate;
 
     @Column(length = EntityProperties.LENGTH_NOTE, name = "[desc]")
+    @Nationalized
     private String desc;
 
     private BigDecimal price;

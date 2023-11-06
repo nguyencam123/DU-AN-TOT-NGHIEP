@@ -14,8 +14,6 @@ import com.example.demo.entities.ImgHomestay;
 import com.example.demo.entities.ImgScenicSpot;
 import com.example.demo.entities.OwnerHomestay;
 import com.example.demo.entities.Promotion;
-import com.example.demo.entities.Province;
-import com.example.demo.entities.Region;
 import com.example.demo.entities.ScenicSpot;
 import com.example.demo.entities.ScenicSpotHomestay;
 import com.example.demo.entities.User;
@@ -35,8 +33,6 @@ import com.example.demo.repositories.ImgHomestayRepository;
 import com.example.demo.repositories.ImgScenicSpotRepository;
 import com.example.demo.repositories.OwnerHomestayRepository;
 import com.example.demo.repositories.PromotionRepository;
-import com.example.demo.repositories.ProvinceRepository;
-import com.example.demo.repositories.RegionRepository;
 import com.example.demo.repositories.ScenicSpotHomestayRepository;
 import com.example.demo.repositories.ScenicSpotRepository;
 import com.example.demo.repositories.UserRepository;
@@ -78,10 +74,6 @@ public class DBGenerator implements CommandLineRunner {
     @Autowired
     private PromotionRepository promotionRepository;
     @Autowired
-    private ProvinceRepository provinceRepository;
-    @Autowired
-    private RegionRepository regionRepository;
-    @Autowired
     private ScenicSpotRepository scenicSpotRepository;
     @Autowired
     private UserRepository userRepository;
@@ -95,53 +87,6 @@ public class DBGenerator implements CommandLineRunner {
     private DetailHomestayRepository detailHomestayRepository;
 
     public void run(String... args) throws Exception {
-
-        //region
-        Region region1 = new Region();
-        region1.setCode("RG01");
-        region1.setName("Mien Trung");
-        regionRepository.save(region1);
-
-        Region region2 = new Region();
-        region2.setCode("RG02");
-        region2.setName("Mien Bac");
-        regionRepository.save(region2);
-
-        Region region3 = new Region();
-        region3.setCode("RG03");
-        region3.setName("Mien Nam");
-        regionRepository.save(region3);
-
-        //province
-        Province province1 = new Province();
-        province1.setCode("PR01");
-        province1.setName("TP Da Nang");
-        province1.setRegion(region1);
-        provinceRepository.save(province1);
-
-        Province province2 = new Province();
-        province2.setCode("PR02");
-        province2.setName("TP Ha Noi");
-        province2.setRegion(region2);
-        provinceRepository.save(province2);
-
-        Province province3 = new Province();
-        province3.setCode("PR03");
-        province3.setName("TP Ho Chi Minh");
-        province3.setRegion(region3);
-        provinceRepository.save(province3);
-
-        Province province4 = new Province();
-        province4.setCode("PR04");
-        province4.setName("TP Nha Trang");
-        province4.setRegion(region3);
-        provinceRepository.save(province4);
-
-        Province province5 = new Province();
-        province5.setCode("PR05");
-        province5.setName("TP Hue");
-        province5.setRegion(region1);
-        provinceRepository.save(province5);
 
         //scenic spot
         ScenicSpot scenicSpot1 = new ScenicSpot();
@@ -232,10 +177,10 @@ public class DBGenerator implements CommandLineRunner {
         //owner homestay
         OwnerHomestay ownerHomestay1 = new OwnerHomestay();
         ownerHomestay1.setCode("OH01");
-        ownerHomestay1.setName("Vu Tien Dung");
+        ownerHomestay1.setName("Nguyen Quoc Cuong");
         ownerHomestay1.setPhoneNumber("0987654321");
-        ownerHomestay1.setEmail("dungvt@gmail.com");
-        ownerHomestay1.setUsername("dungvt@gmail.com");
+        ownerHomestay1.setEmail("cuongnguyen.nd2015@gmail.com");
+        ownerHomestay1.setUsername("cuongnguyen.nd2015@gmail.com");
         ownerHomestay1.setPassword("12345678");
         ownerHomestay1.setGender(true);
         ownerHomestayRepository.save(ownerHomestay1);
@@ -261,9 +206,8 @@ public class DBGenerator implements CommandLineRunner {
         Homestay homestay1 = new Homestay();
         homestay1.setName("Fpoly Homestay");
         homestay1.setAddress("Đường Trịnh Văn Bô, Nam Từ Liêm, Hà Nội");
-        homestay1.setRegion(region2);
-        homestay1.setProvince(province2);
         homestay1.setPromotion(promotion1);
+        homestay1.setStatus(Status.KHONG_HOAT_DONG);
         homestay1.setOwnerHomestay(ownerHomestay1);
         homestay1.setPoint(8.0);
         homestay1.setPrice(new BigDecimal(1200000));
@@ -273,8 +217,6 @@ public class DBGenerator implements CommandLineRunner {
         Homestay homestay2 = new Homestay();
         homestay2.setName("H2 homestay");
         homestay2.setAddress("số nhà 11 ngõ 465 Đường Hoàng Hoa Thám, Ba Đình, Hà Nội, Quận Ba Đình, Hà Nội");
-        homestay2.setRegion(region2);
-        homestay2.setProvince(province2);
         homestay2.setPromotion(promotion1);
         homestay2.setOwnerHomestay(ownerHomestay1);
         homestay2.setPoint(8.8);
@@ -285,8 +227,6 @@ public class DBGenerator implements CommandLineRunner {
         Homestay homestay3 = new Homestay();
         homestay3.setName("Sweet Home Homestay");
         homestay3.setAddress("41 An Thượng 3, Đà Nẵng, Việt Nam");
-        homestay3.setRegion(region1);
-        homestay3.setProvince(province1);
         homestay3.setPromotion(promotion1);
         homestay3.setOwnerHomestay(ownerHomestay1);
         homestay3.setPoint(9.0);
@@ -297,8 +237,6 @@ public class DBGenerator implements CommandLineRunner {
         Homestay homestay4 = new Homestay();
         homestay4.setName("Cozy Homestay");
         homestay4.setAddress("100 Cô Giang 21, Quận 1, TP.Hồ Chí Minh, Việt Nam");
-        homestay4.setRegion(region3);
-        homestay4.setProvince(province3);
         homestay4.setPromotion(promotion1);
         homestay4.setOwnerHomestay(ownerHomestay2);
         homestay4.setPoint(7.0);
@@ -309,8 +247,6 @@ public class DBGenerator implements CommandLineRunner {
         Homestay homestay5 = new Homestay();
         homestay5.setName("Melissa Homestay Nha Trang");
         homestay5.setAddress("100A Trần Phú, Lộc Thọ, Nha Trang, Khánh Hòa, Việt Nam");
-        homestay5.setRegion(region3);
-        homestay5.setProvince(province4);
         homestay5.setPromotion(promotion1);
         homestay5.setOwnerHomestay(ownerHomestay2);
         homestay5.setPoint(6.9);

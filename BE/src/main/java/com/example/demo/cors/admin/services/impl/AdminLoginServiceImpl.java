@@ -65,10 +65,10 @@ public class AdminLoginServiceImpl implements AdminLoginService {
         if (isNullOrEmpty(request.getPassword())) {
             throw new RestApiException("Password cannot be empty");
         }
-        Admin admin=new Admin();
+        Admin admin = new Admin();
         Random random = new Random();
         int number = random.nextInt(1000);
-        String code=String.format("G%04d",number);
+        String code = String.format("G%04d", number);
         admin.setCode(code);
         if (adminLoginRepository.existsByUsername(request.getUsername())) {
             throw new RestApiException("Username is already in use");
@@ -86,7 +86,7 @@ public class AdminLoginServiceImpl implements AdminLoginService {
         admin.setPassword(passwordEncoder.encode(request.getPassword()));
         admin.setStatus(Status.HOAT_DONG);
         adminLoginRepository.save(admin);
-        var jwtServices=jwtService.generateToken(admin);
+        var jwtServices = jwtService.generateToken(admin);
         return AdminAuthenticationReponse.builder().
                 token(jwtServices)
                 .id(admin.getId())
@@ -109,8 +109,9 @@ public class AdminLoginServiceImpl implements AdminLoginService {
                         request.getPassword()
                 )
         );
-        var admin=adminLoginRepository.findByUsername(request.getUsername()).orElseThrow();
-        var jwtToken=jwtService.generateToken(admin);
+        var admin = adminLoginRepository.findByUsername(request.getUsername()).orElseThrow();
+        var jwtToken = jwtService.generateToken(admin);
+        System.err.println(jwtToken);
         return AdminAuthenticationReponse.builder().
                 token(jwtToken)
                 .id(admin.getId())

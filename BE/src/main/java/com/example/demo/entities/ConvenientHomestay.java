@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Nationalized;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ import java.util.List;
 public class ConvenientHomestay extends PrimaryEntity {
 
     @Column(length = EntityProperties.LENGTH_NAME)
+    @Nationalized
     private String name;
 
     @ManyToOne
@@ -23,6 +25,7 @@ public class ConvenientHomestay extends PrimaryEntity {
     private ConvenientHomestayType convenientHomestayType;
 
     @Column(length = EntityProperties.LENGTH_NOTE, name = "[desc]")
+    @Nationalized
     private String desc;
 
     @OneToMany(mappedBy = "convenientHomestay", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
