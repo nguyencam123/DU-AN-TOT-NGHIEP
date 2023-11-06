@@ -48,20 +48,8 @@ const HomeStayProduct = () => {
   }, []);
   const dispatch = useDispatch();
   const products = useSelector((state) => state.ownerHomestay.homestays)
-  const convenients = useSelector((state) => state.convenient.convenients)
-  const provinces = useSelector((state) => state.province.provinces)
-  //upload file
-  // const normFile = (e) => {
-  //   if (Array.isArray(e)) {
-  //     return e;
-  //   }
-  //   return e?.fileList;
-  // };
-
   const [file, setFile] = useState([]);
-  // const handleFileChange = ({ fileList: newFileList }) => {
-  //   setFile(newFileList);
-  // };
+
   const handleFileChange = (e) => {
     let selectedFile = e.target.files;
     let fileList = [...selectedFile]; // Chuyển đổi FileList thành mảng
@@ -168,14 +156,11 @@ const HomeStayProduct = () => {
     const newAddress = `${selectedWardName}, ${selectedDistrictName}, ${selectedCityName}`;
     setaddress(newAddress);
   }
-
+  console.log(address)
   // Use useEffect to call updateAddress whenever the selectedCity, selectedDistrict, or selectedWard changes
   useEffect(() => {
     updateAddress();
   }, [selectedCity, selectedDistrict, selectedWard]);
-
-  const [province, setprovince] = useState(null)
-  const [region, setregion] = useState([])
 
   const [recordid, setRecordid] = useState("");
   const [image, setIamge] = useState([]);
@@ -191,10 +176,9 @@ const HomeStayProduct = () => {
     price: parseFloat(price),
     numberPerson: parseInt(numberPerson),
     address: address,
-    province: province,
-    region: "fa8dbcc1-801c-4345-b5e5-2c4c91b90059",
     ownerHomestay: UserID
   };
+  const convenient = "48a5d30c-01fb-40ab-ad54-348314128968,8162b960-f3b8-4b69-aaf1-e2b7ba283be2"
   //validateform
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Vui lòng nhập tên sản phẩm'),
@@ -209,27 +193,33 @@ const HomeStayProduct = () => {
       .required('Vui lòng nhập số lượng người')
       .typeError('Vui lòng nhập số lượng người')
       .positive('Số lượng người phải là số dương'),
-    address: Yup.string().required('Vui lòng chọn đầy đủ địa chỉ của bạn'),
-    province: Yup.string().required('Vui lòng chọn thành phố homestay'),
+    address: Yup.string()
+      .transform(value => (value ? value.replace(/,/g, '') : value))
+      .test('notEmpty', 'Vui lòng chọn đầy đủ địa chỉ của bạn', value => {
+        return value && value.trim().length > 0;
+      }),
+
+    // province: Yup.string().required('Vui lòng chọn thành phố homestay'),
     startDate: Yup.number().required('Vui lòng chọn ngày bắt đầu'),
     endDate: Yup.number().required('Vui lòng chọn ngày kết thúc'),
   })
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsModalOpen(false);
     try {
       await validationSchema.validate(homestay, { abortEarly: false });
       if (isAddFrom) {
+        await setIsModalOpen(false);
         await message.info('Đang tiến hành thêm bạn vui lòng đợi một vài giây nhé!');
-        await dispatch(addHomestay(homestay, file));
+        await dispatch(addHomestay(homestay, file, convenient));
         message.info('Thêm thành công');
         setname('')
         setprice(0)
         setdesc('')
         setnumberPerson(0)
       } else {
+        await setIsModalOpen(false);
         await message.info('Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!');
-        await dispatch(EditHomestay(homestay, file, recordid));
+        await dispatch(EditHomestay(homestay, file, recordid, convenient));
         message.info('Sửa thành công');
       }
       dispatch(fetchHomestay());
@@ -240,6 +230,7 @@ const HomeStayProduct = () => {
         errorObject[error.path] = error.message;
       });
       setFormErrors(errorObject);
+
     }
   };
 
@@ -302,7 +293,7 @@ const HomeStayProduct = () => {
         </Button>
       </div>
       <Modal title={isAddFrom == true ? <div style={{ fontSize: 24 }}>Thêm homstay </div> : <div style={{ fontSize: 24 }}>Sửa homestay</div>} open={isModalOpen} onCancel={handleCancel}
-        width={900} okText={isAddFrom == true ? "Thêm homstay" : "Sửa homestay"} cancelText='Hủy' onOk={handleSubmit}>
+        width={900} okText={isAddFrom == true ? "Thêm homstay" : "Sửa homestay"} cancelText='Hủy' onOk={handleSubmit} maskClosable={false}>
         <Form
           name="basic"
           labelCol={{

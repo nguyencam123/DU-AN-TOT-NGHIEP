@@ -14,25 +14,27 @@ export const fetchHomestay = () => async (dispatch) => {
   }
 };
 
-export const addHomestay = (homestay, imgUrl) => async (dispatch) => {
+export const addHomestay = (homestay, imgUrl, convenient) => async (dispatch) => {
   const formData = new FormData();
   imgUrl.forEach((imageUrl) => {
     formData.append('image', imageUrl);
   });
   formData.append('homestay', JSON.stringify(homestay));
+  formData.append('convenient', JSON.stringify(convenient));
   dispatch(fetchProductsStart());
   try {
-    await axios.post(BASE_URL + "/add-homestays", formData);
+    await axios.post(BASE_URL + "/add-homestay", formData);
   } catch (error) {
     dispatch(fetchProductsFailure(error.message));
   }
 };
-export const EditHomestay = (homestay, imgUrl, id) => async (dispatch) => {
+export const EditHomestay = (homestay, imgUrl, id, convenient) => async (dispatch) => {
   const formData = new FormData();
   imgUrl.forEach((imageUrl) => {
     formData.append('image', imageUrl);
   });
   formData.append('homestay', JSON.stringify(homestay));
+  formData.append('convenient', JSON.stringify(convenient));
   dispatch(fetchProductsStart());
   try {
     await axios.put(BASE_URL + `/update-homestays?id=${id}`, formData);

@@ -28,6 +28,11 @@ public class HomestayOwnerHomestayController {
     @Autowired
     private HomestayOwnerHomestayConventer conventer;
 
+    @GetMapping("get-homestays")
+    public ResponseObject getHomestay(HomestayownerHomestayRequest homestayownerHomestayRequest) {
+        return new ResponseObject(homestayownerHomestayService.getHomestay(homestayownerHomestayRequest));
+    }
+
     @GetMapping("get-homestay-by-id")
     public ResponseObject getAllHomestayownerHomestay(@RequestParam("id") String id,HomestayownerHomestayRequest homestayownerHomestayRequest) {
         return new ResponseObject(homestayownerHomestayService.getPageHomestay(id,homestayownerHomestayRequest));
@@ -48,16 +53,16 @@ public class HomestayOwnerHomestayController {
         return new ResponseObject(homestayOwnerImgHomestayService.getImgHomestayByHomestayId(id));
     }
 
-    @PostMapping("add-homestays")
-    public ResponseObject addhomestays(@RequestParam("homestay") String homestay,@RequestParam("image") List<MultipartFile> images) throws IOException{
-         HomestayownerHomestayRequest request=conventer.convert(homestay);
-         return new ResponseObject(homestayownerHomestayService.addHomestays(request,images));
+    @PostMapping("add-homestay")
+    public ResponseObject addhomestays(@RequestParam("homestay") String homestay,@RequestParam("image") List<MultipartFile> images,@RequestParam("convenient") List<String> idConvenientHomestay) throws IOException{
+        HomestayownerHomestayRequest request=conventer.convert(homestay);
+        return new ResponseObject(homestayownerHomestayService.addHomestay(request,images,idConvenientHomestay));
     }
 
     @PutMapping("update-homestays")
-    public ResponseObject updatehomestays(@RequestParam("id") String id,@RequestParam("homestay") String homestay,@RequestParam("image") List<MultipartFile> images) throws IOException{
+    public ResponseObject updatehomestays(@RequestParam("id") String id,@RequestParam("homestay") String homestay,@RequestParam("image") List<MultipartFile> images,List<String> idConvenientHomestay) throws IOException{
         HomestayownerHomestayRequest request=conventer.convert(homestay);
-        return new ResponseObject(homestayownerHomestayService.updateHomestays(id,request,images));
+        return new ResponseObject(homestayownerHomestayService.updateHomestays(id,request,images,idConvenientHomestay));
     }
 
     @PutMapping("delete-homestays")

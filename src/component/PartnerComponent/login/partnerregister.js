@@ -13,64 +13,78 @@ import {
 }
     from 'mdb-react-ui-kit';
 import { DatePicker } from 'antd';
-
+import moment from 'moment';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Họ và tên không được để trống'),
-    birthday: Yup.date().required('Ngày sinh không được để trống'),
-    gender: Yup.boolean().required('Giới tính không được để trống'),
-    address: Yup.string().required('Địa chỉ không được để trống'),
-    phoneNumber: Yup.string().required('Số điện thoại không được để trống'),
-    email: Yup.string().email('Email không hợp lệ').required('Email không được để trống'),
-    username: Yup.string().required('Tài khoản không được để trống'),
-    password: Yup.string().required('Mật khẩu không được để trống')
-});
+// const validationSchema = Yup.object().shape({
+//     name: Yup.string().required('Họ và tên không được để trống'),
+//     birthday: Yup.date().required('Ngày sinh không được để trống'),
+//     gender: Yup.boolean().required('Giới tính không được để trống'),
+//     address: Yup.string().required('Địa chỉ không được để trống'),
+//     phoneNumber: Yup.string().required('Số điện thoại không được để trống'),
+//     email: Yup.string().email('Email không hợp lệ').required('Email không được để trống'),
+//     username: Yup.string().required('Tài khoản không được để trống'),
+//     password: Yup.string().required('Mật khẩu không được để trống')
+// });
 
 const PartnerRegister = () => {
-    const [selectedDate, setSelectedDate] = useState(12345678);
+    const [name, setname] = useState('')
+    const [birthday, setbirthday] = useState(856345)
+    const [gender, setgender] = useState(true)
+    const [address, setaddress] = useState('')
+    const [phoneNumber, setphoneNumber] = useState(0)
+    const [email, setemail] = useState('')
+    const [username, setusername] = useState('')
+    const [password, setpassword] = useState('')
 
-    const formik = useFormik({
-        initialValues: {
-            name: '',
-            birthday: '',
-            gender: true,
-            address: '',
-            phoneNumber: '',
-            email: '',
-            username: '',
-            password: ''
-        },
-        validationSchema: validationSchema,
-        onSubmit: (values) => {
-            // Gửi dữ liệu đăng ký đến API ở đây
+    const handleDateChangestart = (dates) => {
+        setbirthday(moment(dates).valueOf());
+    };
+    const formData = {
+        name: name,
+        birthday: birthday,
+        gender: gender,
+        address: address,
+        phoneNumber: phoneNumber,
+        email: email,
+        username: username,
+        password: password
+    }
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (password.length < 8 || username.length < 8) {
+            alert('Mật khẩu và tài khoản phải có ít nhất 8 ký tự');
+            return;
+        }
+        else if (phoneNumber.toString().length !== 10) {
+            alert('Số điện thoại phải có đúng 10 số');
+            return;
+        }
+        else {
             fetch('http://localhost:8080/api/v2/login/registers', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(values)
+                body: JSON.stringify(formData),
             })
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Success:', data);
+                    // Xử lý kết quả từ API (nếu cần)
+
                 })
-                .catch((error) => {
+                .catch(error => {
                     console.error('Error:', error);
                 });
         }
-    });
-    const handleDateChange = (date) => {
-        setSelectedDate(parseFloat(date));
-        formik.setFieldValue('birthday', parseFloat(date)); // Cập nhật giá trị của formik khi ngày thay đổi
-    }
+    };
     return (
         <MDBContainer fluid style={{ width: '60%' }}>
             <MDBCard className='mx-5 mb-5 p-5 shadow-5' style={{ marginTop: '100px', background: 'hsla(0, 0%, 100%, 0.8)', backdropFilter: 'blur(30px)' }}>
                 <MDBCardBody className='p-5 text-center'>
                     <h2 className="fw-bold mb-5">Đăng ký ngay</h2>
-                    <form onSubmit={formik.handleSubmit}>
+                    <form onSubmit={handleSubmit}>
                         <MDBRow>
                             <MDBCol col='6'>
                                 <MDBInput
@@ -78,9 +92,9 @@ const PartnerRegister = () => {
                                     label='Họ và Tên'
                                     id='name'
                                     type='text'
-                                    {...formik.getFieldProps('name')}
+                                    onChange={(e) => setname(e.target.value)}
+                                    required
                                 />
-                                {formik.touched.name && formik.errors.name ? <div className="text-danger">{formik.errors.name}</div> : null}
                             </MDBCol>
                             <MDBCol col='6'>
                                 <MDBInput
@@ -88,9 +102,10 @@ const PartnerRegister = () => {
                                     label='Địa chỉ'
                                     id='address'
                                     type='text'
-                                    {...formik.getFieldProps('address')}
+                                    required
+
+                                    onChange={(e) => setaddress(e.target.value)}
                                 />
-                                {formik.touched.address && formik.errors.address ? <div className="text-danger">{formik.errors.address}</div> : null}
                             </MDBCol>
                         </MDBRow>
                         <MDBRow>
@@ -100,9 +115,10 @@ const PartnerRegister = () => {
                                     label='Tài khoản'
                                     id='username'
                                     type='text'
-                                    {...formik.getFieldProps('username')}
+                                    required
+
+                                    onChange={(e) => setusername(e.target.value)}
                                 />
-                                {formik.touched.username && formik.errors.username ? <div className="text-danger">{formik.errors.username}</div> : null}
                             </MDBCol>
                             <MDBCol col='6'>
                                 <MDBInput
@@ -110,15 +126,16 @@ const PartnerRegister = () => {
                                     label='Mật khẩu'
                                     id='password'
                                     type='password'
-                                    {...formik.getFieldProps('password')}
+                                    required
+
+                                    onChange={(e) => setpassword(e.target.value)}
                                 />
-                                {formik.touched.password && formik.errors.password ? <div className="text-danger">{formik.errors.password}</div> : null}
                             </MDBCol>
                         </MDBRow>
-                        <MDBInput wrapperClass='mb-4' label='Email' id='email' type='email' {...formik.getFieldProps('email')} />
-                        {formik.touched.email && formik.errors.email ? <div className="text-danger">{formik.errors.email}</div> : null}
-                        <MDBInput wrapperClass='mb-4' label='Số điện thoại' id='phoneNumber' type='phoneNumber' {...formik.getFieldProps('phoneNumber')} />
-                        {formik.touched.phoneNumber && formik.errors.phoneNumber ? <div className="text-danger">{formik.errors.phoneNumber}</div> : null}
+                        <MDBInput wrapperClass='mb-4' required label='Email' id='email' type='email'
+                            onChange={(e) => setemail(e.target.value)} />
+                        <MDBInput wrapperClass='mb-4' label='Số điện thoại' id='phoneNumber' type='phoneNumber' required
+                            onChange={(e) => setphoneNumber(e.target.value)} />
                         <MDBRow>
                             <MDBCol col='6'>
                                 Giới tính &emsp;&emsp;
@@ -127,8 +144,7 @@ const PartnerRegister = () => {
                                         type="radio"
                                         name="gender"
                                         value={true}
-                                        onChange={formik.handleChange}
-                                        checked={formik.values.gender === true}
+                                        defaultChecked={true}
                                     />
                                     Nam
                                 </label>
@@ -138,26 +154,21 @@ const PartnerRegister = () => {
                                         type="radio"
                                         name="gender"
                                         value={false}
-                                        onChange={formik.handleChange}
-                                        checked={formik.values.gender === false}
                                     />
                                     Nữ
                                 </label>
-                                {formik.touched.gender && formik.errors.gender ? <div className="text-danger">{formik.errors.gender}</div> : null}
                             </MDBCol>
                             <MDBCol col='6'>
                                 <div style={{ display: 'flex' }}>Ngày sinh &ensp;
                                     <DatePicker
                                         style={{ width: '86%', height: 36 }}
-                                        selected={selectedDate}
-                                        onChange={handleDateChange}
                                         dateFormat="dd/MM/yyyy"
+                                        required
+                                        onChange={handleDateChangestart}
                                     />
                                 </div>
-                                {formik.touched.birthday && formik.errors.birthday ? <div className="text-danger">{formik.errors.birthday}</div> : null}
                             </MDBCol>
                         </MDBRow>
-
                         <MDBBtn type="submit" className='w-100 mb-4' size='md'>Đăng ký</MDBBtn>
                     </form>
                 </MDBCardBody>

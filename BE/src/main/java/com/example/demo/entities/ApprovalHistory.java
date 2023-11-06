@@ -9,6 +9,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Nationalized;
 
 @Entity
 @Table(name = "approval_history")
@@ -25,6 +26,7 @@ public class ApprovalHistory extends PrimaryEntity {
     private Homestay homestay;
 
     @Column(length = EntityProperties.LENGTH_NOTE, name = "[desc]")
+    @Nationalized
     private String desc;
 
 }
