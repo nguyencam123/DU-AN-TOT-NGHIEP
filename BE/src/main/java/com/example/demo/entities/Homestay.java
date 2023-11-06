@@ -21,15 +21,11 @@ public class Homestay extends PrimaryEntity {
     @JoinColumn(name = "promotion_id")
     private Promotion promotion;
 
-    @ManyToOne
-    @JoinColumn(name = "province_id")
-    private Province province;
-
-    @ManyToOne
-    @JoinColumn(name = "region_id")
-    private Region region;
-
     private String address;
+
+    private String timeCheckIn;
+
+    private String timeCheckOut;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
@@ -56,4 +52,5 @@ public class Homestay extends PrimaryEntity {
     @OneToMany(mappedBy = "homestay", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<ImgHomestay> images;
+
 }
