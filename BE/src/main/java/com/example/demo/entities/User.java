@@ -10,6 +10,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Nationalized;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -22,29 +23,38 @@ import java.util.Collection;
 public class User extends PrimaryEntity implements UserDetails {
 
     @Column(length = EntityProperties.LENGTH_CODE)
+    @Nationalized
     private String code;
 
     @Column(length = EntityProperties.LENGTH_NAME)
+    @Nationalized
     private String name;
 
     private Long birthday;
 
     private Boolean gender;
 
+    @Nationalized
     private String address;
 
     @Column(length = EntityProperties.LENGTH_PHONE)
+    @Nationalized
     private String phoneNumber;
 
     @Column(length = EntityProperties.LENGTH_EMAIL)
+    @Nationalized
     private String email;
 
+    @Nationalized
     private String username;
 
+    @Nationalized
     private String password;
 
+    @Nationalized
     private String identificationNumber;
 
+    @Nationalized
     private String avatarUrl;
 
     private Integer point;

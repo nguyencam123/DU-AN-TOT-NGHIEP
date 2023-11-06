@@ -13,6 +13,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Nationalized;
 
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class Comment extends PrimaryEntity {
     private Double point;
 
     @Column(length = EntityProperties.LENGTH_NOTE)
+    @Nationalized
     private String comment;
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

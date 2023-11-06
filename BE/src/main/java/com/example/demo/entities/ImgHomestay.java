@@ -8,6 +8,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Nationalized;
 
 @Entity
 @Table(name = "img_homestay")
@@ -20,6 +21,7 @@ public class ImgHomestay extends PrimaryEntity {
     @JsonBackReference
     private Homestay homestay;
 
+    @Nationalized
     private String imgUrl;
 
 }
