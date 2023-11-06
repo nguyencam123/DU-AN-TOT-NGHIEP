@@ -2,11 +2,12 @@ import { fetchProductsStart, fetchProductsSuccess, fetchProductsFailure, addprod
 import axios from '../../app/axiosConfig';
 
 const BASE_URL = '/homestay';
-
+const userDetail = JSON.parse(localStorage.getItem('userDetail'));
+const id = userDetail?.data.id;
 export const fetchHomestay = () => async (dispatch) => {
   dispatch(fetchProductsStart());
   try {
-    const response = await axios.get(BASE_URL + "/get-all?size=999");
+    const response = await axios.get(BASE_URL + `/get-homestay-by-id?id=${id}&size=999`);
     dispatch(fetchProductsSuccess(response.data.data.data)); // Lấy dữ liệu từ response.data.data
   } catch (error) {
     dispatch(fetchProductsFailure(error.message));

@@ -22,6 +22,8 @@ import {
 import { province } from './province'
 import moment from 'moment';
 import { fetchProvince } from '../../../features/owner_homestay/region/provinceThunk'
+import axios from 'axios'
+import * as Yup from 'yup'
 
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
@@ -31,7 +33,12 @@ const { Title } = Typography
 
 const HomeStayProduct = () => {
   const [messageApi, contextHolder] = message.useMessage();
-
+  const [cities, setCities] = useState([]);
+  const [selectedCity, setSelectedCity] = useState('');
+  const [districts, setDistricts] = useState([]);
+  const [selectedDistrict, setSelectedDistrict] = useState('');
+  const [wards, setWards] = useState([]);
+  const [selectedWard, setSelectedWard] = useState('');
 
 
   useEffect(() => {
@@ -71,7 +78,7 @@ const HomeStayProduct = () => {
     setdesc(record.desc)
     setprice(record.price)
     setnumberPerson(record.numberPerson)
-    setaddress(record.address)
+    // setaddress(record.address)
     setprice(record.price)
     setstartDate(record.startDate)
     setendDate(record.endDate)
@@ -84,7 +91,7 @@ const HomeStayProduct = () => {
     setdesc('')
     setprice(null)
     setnumberPerson(null)
-    setaddress('')
+    // setaddress('')
     setprice(null)
   };
   const handleOk = () => {
@@ -140,7 +147,7 @@ const HomeStayProduct = () => {
   //
 
   const [name, setname] = useState("")
-
+  const [formErrors, setFormErrors] = useState({});
   const [startDate, setstartDate] = useState(null)
   const handleDateChangestart = (dates) => {
     setstartDate(moment(dates).valueOf());
@@ -153,6 +160,20 @@ const HomeStayProduct = () => {
   const [price, setprice] = useState(0)
   const [numberPerson, setnumberPerson] = useState(0)
   const [address, setaddress] = useState("")
+  const updateAddress = () => {
+    const selectedCityName = cities.find(city => city.Id === selectedCity)?.Name || '';
+    const selectedDistrictName = districts.find(district => district.Id === selectedDistrict)?.Name || '';
+    const selectedWardName = wards.find(ward => ward.Id === selectedWard)?.Name || '';
+
+    const newAddress = `${selectedWardName}, ${selectedDistrictName}, ${selectedCityName}`;
+    setaddress(newAddress);
+  }
+
+  // Use useEffect to call updateAddress whenever the selectedCity, selectedDistrict, or selectedWard changes
+  useEffect(() => {
+    updateAddress();
+  }, [selectedCity, selectedDistrict, selectedWard]);
+
   const [province, setprovince] = useState(null)
   const [region, setregion] = useState([])
 
@@ -161,7 +182,6 @@ const HomeStayProduct = () => {
   //getuserid
   const userDetail = JSON.parse(localStorage.getItem('userDetail'));
   const UserID = userDetail.data.id;
-  console.log(UserID)
   //
   const homestay = {
     name: name,
@@ -173,20 +193,56 @@ const HomeStayProduct = () => {
     address: address,
     province: province,
     region: "fa8dbcc1-801c-4345-b5e5-2c4c91b90059",
-    ownerHomestay: "8500b680-81a5-41fa-a775-4a95d32a9703"
+    ownerHomestay: UserID
   };
+  //validateform
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required('Vui lòng nhập tên sản phẩm'),
+    price: Yup.number()
+      .required('Vui lòng nhập giá sản phẩm')
+      .typeError('Vui lòng nhập giá sản phẩm')
+      .positive('Giá phải là số dương'),
+    file: Yup.array()
+      .min(5, 'Vui lòng tải lên ít nhất 5 ảnh')
+      .max(20, 'Vui lòng tải lên nhiều nhất 20 ảnh'),
+    numberPerson: Yup.number()
+      .required('Vui lòng nhập số lượng người')
+      .typeError('Vui lòng nhập số lượng người')
+      .positive('Số lượng người phải là số dương'),
+    address: Yup.string().required('Vui lòng chọn đầy đủ địa chỉ của bạn'),
+    province: Yup.string().required('Vui lòng chọn thành phố homestay'),
+    startDate: Yup.number().required('Vui lòng chọn ngày bắt đầu'),
+    endDate: Yup.number().required('Vui lòng chọn ngày kết thúc'),
+  })
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsModalOpen(false);
-    if (isAddFrom) {
-      await dispatch(addHomestay(homestay, file));
-      message.info('Thêm thành công');
-    } else {
-      await dispatch(EditHomestay(homestay, file, recordid));
-      message.info('Sửa thành công');
+    try {
+      await validationSchema.validate(homestay, { abortEarly: false });
+      if (isAddFrom) {
+        await message.info('Đang tiến hành thêm bạn vui lòng đợi một vài giây nhé!');
+        await dispatch(addHomestay(homestay, file));
+        message.info('Thêm thành công');
+        setname('')
+        setprice(0)
+        setdesc('')
+        setnumberPerson(0)
+      } else {
+        await message.info('Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!');
+        await dispatch(EditHomestay(homestay, file, recordid));
+        message.info('Sửa thành công');
+      }
+      dispatch(fetchHomestay());
+      setFormErrors({});
+    } catch (errors) {
+      const errorObject = {};
+      errors.inner.forEach(error => {
+        errorObject[error.path] = error.message;
+      });
+      setFormErrors(errorObject);
     }
-    dispatch(fetchHomestay());
   };
+
 
 
   const handleEditRow = (record) => {
@@ -202,7 +258,41 @@ const HomeStayProduct = () => {
     setstartDate(record.startDate)
     setendDate(record.endDate)
     setFile(record.images)
+    setFormErrors({});
   }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          'https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json'
+        );
+        setCities(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (selectedCity) {
+      const selectedCityData = cities.find(city => city.Id === selectedCity);
+      if (selectedCityData) {
+        setDistricts(selectedCityData.Districts);
+      }
+    }
+  }, [selectedCity, cities]);
+
+  useEffect(() => {
+    if (selectedDistrict) {
+      const selectedDistrictData = districts.find(district => district.Id === selectedDistrict);
+      if (selectedDistrictData) {
+        setWards(selectedDistrictData.Wards);
+      }
+    }
+  }, [selectedDistrict, districts]);
+
   return (
     <>
       <Title>Quản lý Homestay</Title>
@@ -229,66 +319,113 @@ const HomeStayProduct = () => {
           }}
           autoComplete="off"
         >
-          <Row gutter={24}>
+          <Row gutter={24} style={{ marginLeft: 1 }}>
             {/* Trường thứ nhất */}
             <Col span={12}>
-              <Title level={5}>Tên homestay</Title>
-              <Input value={name}
-                onChange={(e) => setname(e.target.value)} />
+              <Form.Item
+                label={<Title level={5}>Tên homestay</Title>}
+                validateStatus={formErrors.name ? 'error' : ''} // Hiển thị lỗi cho trường name nếu có
+                help={formErrors.name} // Hiển thị thông báo lỗi cho trường name nếu có
+              >
+                <Input value={name} onChange={(e) => setname(e.target.value)} />
+              </Form.Item>
             </Col>
             {/* Trường thứ hai */}
             <Col span={12}>
-              <Title level={5}>Giá</Title>
-              <Input value={price}
-                onChange={(e) => setprice(e.target.value)} />
+              <Form.Item
+                label={<Title level={5}>Giá homestay</Title>}
+                validateStatus={formErrors.price ? 'error' : ''}
+                help={formErrors.price}
+              >
+                <Input value={price} onChange={(e) => setprice(e.target.value)} />
+              </Form.Item>
             </Col>
           </Row>
-          <Row gutter={24}>
+          <Row gutter={24} style={{ marginLeft: 3 }}>
             <Col span={12}>
-              <Title level={5}>Mô tả</Title>
-              <Input value={desc}
-                onChange={(e) => setdesc(e.target.value)} />
+              <Form.Item
+                label={<Title level={5}>Số người ở</Title>}
+                validateStatus={formErrors.numberPerson ? 'error' : ''}
+                help={formErrors.numberPerson}
+              >
+                <Input value={numberPerson} onChange={(e) => setnumberPerson(e.target.value)} />
+              </Form.Item>
             </Col>
-            <Col span={12}>
-              <Title level={5}>Số người ở</Title>
-              <Input value={numberPerson}
-                onChange={(e) => setnumberPerson(e.target.value)} />
-            </Col>
-          </Row>
-          <Row gutter={24}>
-            {/* <DatePicker /> */}
-            <Col span={12}>
-              <Title level={5}>Địa chỉ</Title>
-              <Input value={address}
-                onChange={(e) => setaddress(e.target.value)} />
-            </Col>
-            <Col span={12}>
-              <Title level={5}>Địa chỉ chi tiết</Title>
-              <Input value={address}
-                onChange={(e) => setaddress(e.target.value)} />
-            </Col>
-          </Row>
-          <Row gutter={24}>
-            <Col span={12}>
-              <Title level={5}>Ngày bắt đầu</Title>
-              <DatePicker onChange={handleDateChangestart} style={{ width: '100%' }} />
-            </Col>
-            <Col span={12}>
-              <Title level={5}>Ngày kết thúc</Title>
-              <DatePicker onChange={handleDateChangeend} style={{ width: '100%' }} />
-              {/* <DatePicker /> */}
-            </Col>
-          </Row>
-          <Row gutter={24}>
-            <Col span={12}>
+            {/* <Col span={12}>
               <Title level={5}>Chọn Thành phố</Title>
-              <Select defaultValue="Chọn thành phố homstay" style={{ width: '100%' }} onChange={(value) => setprovince(value)}>
+              <Select defaultValue="Chọn thành phố homstay" onChange={(value) => setprovince(value)}>
                 {provinces.map((province) => (
                   <Option key={province.id} value={province.id}>
                     {province.name}
                   </Option>
                 ))}
               </Select>
+            </Col> */}
+          </Row>
+          <Row gutter={24} style={{ marginTop: 20, marginBottom: 20, marginLeft: 20 }}>
+            {/* <DatePicker /> */}
+            <div style={{ display: 'flex' }}>
+              <div style={{ marginRight: 30, marginLeft: 20 }}>
+                <Title level={5}>Tỉnh/Thành phố:</Title>
+                <select value={selectedCity} onChange={(e) => setSelectedCity(e.target.value)} style={{ borderRadius: 10 }}>
+                  <option value="">Chọn tỉnh/thành phố</option>
+                  {cities.map(city => (
+                    <option key={city.Id} value={city.Id}>
+                      {city.Name}
+                    </option>
+                  ))}
+                </select>
+                <div style={{ color: 'red' }}>{formErrors.selectedCity}</div>
+              </div>
+              <div style={{ marginRight: 30 }}>
+                <Title level={5}>Quận/Huyện:</Title>
+                <select value={selectedDistrict} onChange={(e) => setSelectedDistrict(e.target.value)} style={{ borderRadius: 10 }}>
+                  <option value="">Chọn quận/huyện</option>
+                  {districts.map(district => (
+                    <option key={district.Id} value={district.Id}>
+                      {district.Name}
+                    </option>
+                  ))}
+                </select>
+                <div style={{ color: 'red' }}>{formErrors.selectedDistrict}</div>
+              </div>
+              <div>
+                <Title level={5}>Phường/Xã:</Title>
+                <select value={selectedWard} onChange={(e) => setSelectedWard(e.target.value)} style={{ borderRadius: 10 }}>
+                  <option value="">Chọn phường/xã</option>
+                  {wards.map(ward => (
+                    <option key={ward.Id} value={ward.Id}>
+                      {ward.Name}
+                    </option>
+                  ))}
+                </select>
+                <div style={{ color: 'red' }}>{formErrors.selectedWard}</div>
+              </div>
+            </div>
+          </Row>
+          <Row gutter={24} style={{ marginLeft: 4 }}>
+            <Col span={12}>
+              <Form.Item
+                label={<Title level={5}>Ngày bắt đầu</Title>}
+              >
+                <DatePicker onChange={handleDateChangestart} style={{ width: '100%' }} />
+                <div style={{ color: 'red' }}>{formErrors.startDate}</div>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label={<Title level={5}>Ngày kết thúc</Title>}
+              >
+                <DatePicker onChange={handleDateChangeend} style={{ width: '100%' }} />
+                <div style={{ color: 'red' }}>{formErrors.endDate}</div>
+              </Form.Item>
+              {/* <DatePicker /> */}
+            </Col>
+          </Row>
+          <Row gutter={24} >
+            <Col span={24}>
+              <Title level={5}>Mô tả homestay</Title>
+              <TextArea style={{ width: '900px' }} value={desc} onChange={(e) => setdesc(e.target.value)} />
             </Col>
             {/* <Col span={12}>
               <Title level={5}>Ngày kết thúc</Title>
@@ -301,20 +438,7 @@ const HomeStayProduct = () => {
             <label htmlFor="image">Chọn ảnh</label>
             <input type="file" id="image" multiple accept="image/*" onChange={handleFileChange} />
           </div>
-          {/* <Form.Item label="Upload" valuePropName="fileList" getValueFromEvent={normFile}>
-            <Upload action="image/*" listType="picture-card" multiple maxCount={50} onChange={handleFileChange}>
-              <div>
-                <PlusOutlined />
-                <div
-                  style={{
-                    marginTop: 8,
-                  }}
-                >
-                  Upload
-                </div>
-              </div>
-            </Upload>
-          </Form.Item> */}
+          <div style={{ color: 'red' }}>{formErrors.file}</div>
         </form>
       </Modal>
       <Modal title={<div style={{ fontSize: '22px' }}>Xem thông tin chi tiết homstay</div>} open={isViewmodal} onCancel={handleCancel}
@@ -328,11 +452,17 @@ const HomeStayProduct = () => {
           <div style={{ display: 'flex' }}><div style={{ width: 150 }}>Ngày bắt đầu   </div> : {startDate}</div><br />
           <div style={{ display: 'flex' }}><div style={{ width: 150 }}>Ngày kết thúc  </div> : {endDate}</div><br />
           <div>Ảnh homstay  <br />
-            <div style={{ width: 700, padding: 20, borderRadius: 10, display: 'flex', justifyContent: 'center', border: '1px solid black' }}>
+            <div style={{ width: 700, padding: 20, flexWrap: 'wrap', borderRadius: 10, display: 'flex', justifyContent: 'center', border: '1px solid black' }}>
               {
                 image.map((imageurl, index) => (
-                  <Image key={index} src={imageurl.imgUrl} alt={`Homestay Image ${index}`}
-                    style={{ width: 130 }} preview={{
+                  <Image
+                    key={index}
+                    src={imageurl.imgUrl}
+                    alt={`Homestay Image ${index}`}
+                    style={{
+                      maxWidth: '200px', // Đảm bảo ảnh không vượt quá chiều rộng của phần tử cha
+                      margin: '0 10px 10px 0', // Thêm khoảng cách giữa các ảnh
+                    }} preview={{
                       toolbarRender: (
                         _,
                         {
