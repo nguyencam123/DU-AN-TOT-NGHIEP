@@ -1,15 +1,21 @@
 package com.example.demo.entities;
 
 import com.example.demo.entities.base.PrimaryEntity;
+import com.example.demo.infrastructure.contant.EntityProperties;
 import com.example.demo.infrastructure.contant.Status;
+<<<<<<< HEAD
+import jakarta.persistence.*;
+=======
 import com.example.demo.infrastructure.contant.StatusBooking;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+>>>>>>> 219d63d7fc9cbdafa5d0da600e150bb2508fa568
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Nationalized;
 
 import java.math.BigDecimal;
 
@@ -34,6 +40,17 @@ public class Booking extends PrimaryEntity {
     private Long startDate;
 
     private Long endDate;
+
+    @Nationalized
+    private String name;
+
+    @Column(length = EntityProperties.LENGTH_EMAIL)
+    @Nationalized
+    private String email;
+
+    @Column(length = EntityProperties.LENGTH_PHONE)
+    @Nationalized
+    private String phoneNumber;
 
     @OneToOne
     @JoinColumn(name = "homestay_id")

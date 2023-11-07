@@ -91,6 +91,11 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
         homestay.setAddress(request.getAddress());
         homestay.setStartDate(request.getStartDate());
         homestay.setEndDate(request.getEndDate());
+        homestay.setAcreage(request.getAcreage());
+        homestay.setRoomNumber(request.getRoomNumber());
+        homestay.setTimeCheckIn(request.getTimeCheckIn());
+        homestay.setTimeCheckOut(request.getTimeCheckOut());
+        homestay.setCancellationPolicy(request.getCancellationPolicy());
         homestay.setOwnerHomestay(homestayOwnerOwnerHomestayRepository.findById(request.getOwnerHomestay()).orElse(null));
     }
 
