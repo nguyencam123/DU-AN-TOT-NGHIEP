@@ -15,7 +15,7 @@ public interface CustomerCommentRepository extends CommentRepository {
 
     @Query(value = """
             SELECT COUNT(*) FROM comment a
-            WHERE a.homestay_id =:#{#customerCommentRequest.homestayId} AND a.point =:#{#customerCommentRequest.point}
+            WHERE a.homestay_id =:#{#customerCommentRequest.homestayId} AND (a.point BETWEEN :#{#customerCommentRequest.pointMin} AND :#{#customerCommentRequest.pointMax})
             """, nativeQuery = true)
     Integer getNumberOfReviewers(CustomerCommentRequest customerCommentRequest);
 

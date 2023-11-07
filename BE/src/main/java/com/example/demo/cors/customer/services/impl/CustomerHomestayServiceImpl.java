@@ -20,7 +20,7 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
     @Override
     public PageableObject<Homestay> getListHomestay(CustomerHomestayRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-        Page<Homestay> res = customerHomestayRepository.findAll(pageable);
+        Page<Homestay> res = customerHomestayRepository.getAllHomestay(pageable);
         return new PageableObject<>(res);
     }
 
