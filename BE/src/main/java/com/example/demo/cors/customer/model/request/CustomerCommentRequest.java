@@ -10,4 +10,6 @@ public class CustomerCommentRequest extends PageableRequest {
 
     private String homestayId;
 
+    private Double point;
+
 }

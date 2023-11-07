@@ -22,4 +22,6 @@ public interface CustomerHomestayRepository extends HomestayRepository {
 
     Homestay findHomestayById(String id);
 
+    Page<Homestay> findByAddressContains(Pageable pageable, String address);
+
 }

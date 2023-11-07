@@ -91,21 +91,18 @@ public class DBGenerator implements CommandLineRunner {
         //scenic spot
         ScenicSpot scenicSpot1 = new ScenicSpot();
         scenicSpot1.setName("Quat Lam");
-        scenicSpot1.setStar(3.5);
         scenicSpot1.setProvince("Nam Dinh");
         scenicSpot1.setRegion("Mien Bac");
         scenicSpotRepository.save(scenicSpot1);
 
         ScenicSpot scenicSpot2 = new ScenicSpot();
         scenicSpot2.setName("Ho Hoan Kiem");
-        scenicSpot2.setStar(4.5);
         scenicSpot2.setProvince("Ha Noi");
         scenicSpot2.setRegion("Mien Bac");
         scenicSpotRepository.save(scenicSpot2);
 
         ScenicSpot scenicSpot3 = new ScenicSpot();
         scenicSpot3.setName("TP Ho Chi Minh");
-        scenicSpot3.setStar(4.0);
         scenicSpot3.setProvince("TP Ho Chi Minh");
         scenicSpot3.setRegion("Mien Nam");
         scenicSpotRepository.save(scenicSpot3);
@@ -209,7 +206,7 @@ public class DBGenerator implements CommandLineRunner {
         homestay1.setPromotion(promotion1);
         homestay1.setStatus(Status.KHONG_HOAT_DONG);
         homestay1.setOwnerHomestay(ownerHomestay1);
-        homestay1.setPoint(8.0);
+        homestay1.setPoint(5.0);
         homestay1.setPrice(new BigDecimal(1200000));
         homestay1.setNumberPerson(10);
         homestayRepository.save(homestay1);
@@ -219,7 +216,7 @@ public class DBGenerator implements CommandLineRunner {
         homestay2.setAddress("số nhà 11 ngõ 465 Đường Hoàng Hoa Thám, Ba Đình, Hà Nội, Quận Ba Đình, Hà Nội");
         homestay2.setPromotion(promotion1);
         homestay2.setOwnerHomestay(ownerHomestay1);
-        homestay2.setPoint(8.8);
+        homestay2.setPoint(4.5);
         homestay2.setPrice(new BigDecimal(1500000));
         homestay2.setNumberPerson(12);
         homestayRepository.save(homestay2);
@@ -229,7 +226,7 @@ public class DBGenerator implements CommandLineRunner {
         homestay3.setAddress("41 An Thượng 3, Đà Nẵng, Việt Nam");
         homestay3.setPromotion(promotion1);
         homestay3.setOwnerHomestay(ownerHomestay1);
-        homestay3.setPoint(9.0);
+        homestay3.setPoint(4.0);
         homestay3.setPrice(new BigDecimal(1000000));
         homestay3.setNumberPerson(8);
         homestayRepository.save(homestay3);
@@ -239,7 +236,7 @@ public class DBGenerator implements CommandLineRunner {
         homestay4.setAddress("100 Cô Giang 21, Quận 1, TP.Hồ Chí Minh, Việt Nam");
         homestay4.setPromotion(promotion1);
         homestay4.setOwnerHomestay(ownerHomestay2);
-        homestay4.setPoint(7.0);
+        homestay4.setPoint(3.0);
         homestay4.setPrice(new BigDecimal(2000000));
         homestay4.setNumberPerson(12);
         homestayRepository.save(homestay4);
@@ -249,7 +246,7 @@ public class DBGenerator implements CommandLineRunner {
         homestay5.setAddress("100A Trần Phú, Lộc Thọ, Nha Trang, Khánh Hòa, Việt Nam");
         homestay5.setPromotion(promotion1);
         homestay5.setOwnerHomestay(ownerHomestay2);
-        homestay5.setPoint(6.9);
+        homestay5.setPoint(3.9);
         homestay5.setPrice(new BigDecimal(800000));
         homestay1.setNumberPerson(10);
         homestayRepository.save(homestay5);
@@ -296,35 +293,35 @@ public class DBGenerator implements CommandLineRunner {
         comment1.setComment("Good");
         comment1.setUser(user1);
         comment1.setHomestay(homestay1);
-        comment1.setPoint(8.0);
+        comment1.setPoint(4.0);
         commentRepository.save(comment1);
 
         Comment comment2 = new Comment();
         comment2.setComment("Very Good");
         comment2.setUser(user2);
         comment2.setHomestay(homestay1);
-        comment2.setPoint(8.0);
+        comment2.setPoint(3.0);
         commentRepository.save(comment2);
 
         Comment comment3 = new Comment();
         comment3.setComment("Not ok");
         comment3.setUser(user1);
         comment3.setHomestay(homestay5);
-        comment3.setPoint(6.8);
+        comment3.setPoint(4.8);
         commentRepository.save(comment3);
 
         Comment comment4 = new Comment();
         comment4.setComment("Good");
         comment4.setUser(user1);
         comment4.setHomestay(homestay3);
-        comment4.setPoint(8.5);
+        comment4.setPoint(3.5);
         commentRepository.save(comment4);
 
         Comment comment5 = new Comment();
         comment5.setComment("Not Bad");
         comment5.setUser(user2);
         comment5.setHomestay(homestay4);
-        comment5.setPoint(7.8);
+        comment5.setPoint(3.8);
         commentRepository.save(comment5);
 
         //img comment
