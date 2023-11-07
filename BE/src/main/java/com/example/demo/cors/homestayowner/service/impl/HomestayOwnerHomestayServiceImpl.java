@@ -3,7 +3,6 @@ package com.example.demo.cors.homestayowner.service.impl;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.example.demo.cors.common.base.PageableObject;
-import com.example.demo.cors.homestayowner.model.reponse.HomestayOwnerHomestayReponse;
 import com.example.demo.cors.homestayowner.model.request.HomestayOwnerDetailHomestayRequest;
 import com.example.demo.cors.homestayowner.model.request.HomestayownerHomestayRequest;
 import com.example.demo.cors.homestayowner.repository.*;
@@ -24,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -50,36 +50,15 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
     private Cloudinary cloudinary;
 
     @Override
-    public PageableObject<Homestay> getHomestay(HomestayownerHomestayRequest request) {
-        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-        Page<Homestay> res = homestayownerHomestayRepository.findAll(pageable);
-        return new PageableObject<>(res);
-    }
-
-    @Override
     public PageableObject<Homestay> getPageHomestay(String id, HomestayownerHomestayRequest request) {
-        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-        Page<Homestay> res = homestayownerHomestayRepository.getHomestayByOwnerH(id, pageable);
-        return new PageableObject<>(res);
-    }
-
-    @Override
-    public PageableObject<Homestay> getAll(HomestayownerHomestayRequest homestayownerHomestayRequest) {
-        Pageable pageable = PageRequest.of(homestayownerHomestayRequest.getPage(), homestayownerHomestayRequest.getSize());
-        Page<Homestay> res = homestayownerHomestayRepository.findAll(pageable);
-        return new PageableObject<>(res);
-    }
-
-    @Override
-    public PageableObject<HomestayOwnerHomestayReponse> getAllPageable(HomestayownerHomestayRequest homestayownerHomestayRequest) {
-        Pageable pageable = PageRequest.of(homestayownerHomestayRequest.getPage(), homestayownerHomestayRequest.getSize());
-        Page<HomestayOwnerHomestayReponse> res = homestayownerHomestayRepository.getALlHomestayPage(pageable);
-        return new PageableObject<>(res);
+            Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+            Page<Homestay> res = homestayownerHomestayRepository.getHomestayByOwnerH(id, pageable);
+            return new PageableObject<>(res);
     }
 
     @Override
     @Transactional
-    public Homestay updateHomestays(String id, HomestayownerHomestayRequest request, List<MultipartFile> multipartFiles,List<String> idConvenientHomestay) throws IOException {
+    public Homestay updateHomestays(String id, HomestayownerHomestayRequest request, List<MultipartFile> multipartFiles, List<String> idConvenientHomestay) throws IOException {
         Homestay homestay = homestayownerHomestayRepository.findById(id).orElse(null);
         homestay.setName(request.getName());
         homestay.setDesc(request.getDesc());
@@ -102,11 +81,11 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
             newImages.add(imgHomestay);
         }
 
-        List<DetailHomestay> detailHomestays=new ArrayList<>();
+        List<DetailHomestay> detailHomestays = new ArrayList<>();
         for (String detail : idConvenientHomestay) {
-            DetailHomestay detailHomestay=new DetailHomestay();
+            DetailHomestay detailHomestay = new DetailHomestay();
             detailHomestay.setHomestay(homestay1);
-            ConvenientHomestay convenientHomestay=homestayOwnerConvenientHomestayRepository.findById(detail).orElse(null);
+            ConvenientHomestay convenientHomestay = homestayOwnerConvenientHomestayRepository.findById(detail).orElse(null);
             detailHomestay.setConvenientHomestay(convenientHomestay);
             homestayOwnerDetailHomestayReposritory.save(detailHomestay);
             detailHomestays.add(detailHomestay);
@@ -126,15 +105,15 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
 
     @Override
     public DetailHomestay addDetailHomestay(HomestayOwnerDetailHomestayRequest request) {
-        DetailHomestay detailHomestays=new DetailHomestay();
+        DetailHomestay detailHomestays = new DetailHomestay();
         detailHomestays.setHomestay(homestayownerHomestayRepository.findById(request.getIdHomestay()).orElse(null));
         detailHomestays.setConvenientHomestay(homestayOwnerConvenientHomestayRepository.findById(request.getIdConvenientHomestay()).orElse(null));
-        DetailHomestay res=homestayOwnerDetailHomestayReposritory.save(detailHomestays);
+        DetailHomestay res = homestayOwnerDetailHomestayReposritory.save(detailHomestays);
         return res;
     }
 
     @Override
-    public Homestay addHomestay(HomestayownerHomestayRequest request, List<MultipartFile> multipartFiles,List<String> idConvenientHomestay) throws IOException {
+    public Homestay addHomestay(HomestayownerHomestayRequest request, List<MultipartFile> multipartFiles, List<String> idConvenientHomestay) throws IOException {
         Homestay homestay = new Homestay();
         homestay.setName(request.getName());
         homestay.setDesc(request.getDesc());
@@ -158,11 +137,11 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
         }
         homestay1.setImages(newImages);
 
-        List<DetailHomestay> detailHomestays=new ArrayList<>();
+        List<DetailHomestay> detailHomestays = new ArrayList<>();
         for (String detail : idConvenientHomestay) {
-            DetailHomestay detailHomestay=new DetailHomestay();
+            DetailHomestay detailHomestay = new DetailHomestay();
             detailHomestay.setHomestay(homestay1);
-            ConvenientHomestay convenientHomestay=homestayOwnerConvenientHomestayRepository.findById(detail).orElse(null);
+            ConvenientHomestay convenientHomestay = homestayOwnerConvenientHomestayRepository.findById(detail).orElse(null);
             detailHomestay.setConvenientHomestay(convenientHomestay);
             homestayOwnerDetailHomestayReposritory.save(detailHomestay);
             detailHomestays.add(detailHomestay);
