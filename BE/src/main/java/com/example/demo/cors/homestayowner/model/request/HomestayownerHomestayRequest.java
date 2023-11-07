@@ -2,6 +2,7 @@ package com.example.demo.cors.homestayowner.model.request;
 
 import com.example.demo.cors.common.base.PageableRequest;
 import lombok.*;
+import org.hibernate.annotations.Nationalized;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -21,11 +22,21 @@ public class HomestayownerHomestayRequest extends PageableRequest{
 
       private String desc;
 
+      private Double acreage;
+
+      private String timeCheckIn;
+
+      private String timeCheckOut;
+
+      private Integer roomNumber;
+
       private BigDecimal price;
 
       private Integer numberPerson;
 
       private String address;
+
+      private Double CancellationPolicy;
 
       private String ownerHomestay;
 
