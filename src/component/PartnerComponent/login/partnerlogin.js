@@ -41,8 +41,12 @@ const LoginPartner = () => {
       openNotificationpartner()
     }
   }, [ispartner]);
+
+  const hadleRegister = () => {
+    navigate('/hop-tac/register')
+  }
   return (
-    <MDBContainer className="p-3 my-5 d-flex flex-column w-50">
+    <MDBContainer className="p-3 my-5 d-flex flex-column w-50" >
 
       <MDBInput wrapperClass='mb-4' label='Email' id='form1' type='email' value={username}
         onChange={(e) => setUsername(e.target.value)} />
@@ -51,13 +55,13 @@ const LoginPartner = () => {
 
       <div className="d-flex justify-content-between mx-3 mb-4">
         <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Remember me' />
-        <a href="!#">Forgot password?</a>
+        <a href="!#">Quên mật khẩu?</a>
       </div>
 
       <MDBBtn className="mb-4" onClick={() => handleLogin()}>Đăng nhập</MDBBtn>
 
       <div className="text-center">
-        <p>Chưa có tài khoản? <a href="#!">Đăng ký ngay</a></p>
+        <p>Chưa có tài khoản? <a style={{ color: 'blue' }} onClick={() => hadleRegister()}>Đăng ký ngay</a></p>
 
       </div>
     </MDBContainer>
