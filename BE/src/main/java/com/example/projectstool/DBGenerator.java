@@ -204,7 +204,7 @@ public class DBGenerator implements CommandLineRunner {
         homestay1.setName("Fpoly Homestay");
         homestay1.setAddress("Đường Trịnh Văn Bô, Nam Từ Liêm, Hà Nội");
         homestay1.setPromotion(promotion1);
-        homestay1.setStatus(Status.KHONG_HOAT_DONG);
+        homestay1.setStatus(Status.HOAT_DONG);
         homestay1.setOwnerHomestay(ownerHomestay1);
         homestay1.setPoint(5.0);
         homestay1.setPrice(new BigDecimal(1200000));
@@ -219,6 +219,7 @@ public class DBGenerator implements CommandLineRunner {
         homestay2.setPoint(4.5);
         homestay2.setPrice(new BigDecimal(1500000));
         homestay2.setNumberPerson(12);
+        homestay2.setStatus(Status.HOAT_DONG);
         homestayRepository.save(homestay2);
 
         Homestay homestay3 = new Homestay();
@@ -229,6 +230,7 @@ public class DBGenerator implements CommandLineRunner {
         homestay3.setPoint(4.0);
         homestay3.setPrice(new BigDecimal(1000000));
         homestay3.setNumberPerson(8);
+        homestay3.setStatus(Status.HOAT_DONG);
         homestayRepository.save(homestay3);
 
         Homestay homestay4 = new Homestay();
@@ -239,6 +241,7 @@ public class DBGenerator implements CommandLineRunner {
         homestay4.setPoint(3.0);
         homestay4.setPrice(new BigDecimal(2000000));
         homestay4.setNumberPerson(12);
+        homestay4.setStatus(Status.HOAT_DONG);
         homestayRepository.save(homestay4);
 
         Homestay homestay5 = new Homestay();
@@ -248,7 +251,8 @@ public class DBGenerator implements CommandLineRunner {
         homestay5.setOwnerHomestay(ownerHomestay2);
         homestay5.setPoint(3.9);
         homestay5.setPrice(new BigDecimal(800000));
-        homestay1.setNumberPerson(10);
+        homestay5.setNumberPerson(10);
+        homestay5.setStatus(Status.HOAT_DONG);
         homestayRepository.save(homestay5);
 
         //img Homestay
