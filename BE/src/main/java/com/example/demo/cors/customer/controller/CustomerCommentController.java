@@ -22,4 +22,14 @@ public class CustomerCommentController {
         return new ResponseObject(customerCommentService.getCommentByHomestayId(request));
     }
 
+    @GetMapping("/number-of-reviewers")
+    public ResponseObject getNumberOfReviewers(CustomerCommentRequest request) {
+        return new ResponseObject(customerCommentService.getNumberOfReviewers(request));
+    }
+
+    @GetMapping("/avg-point")
+    public ResponseObject getAvgPoint(CustomerCommentRequest request) {
+        return new ResponseObject(customerCommentService.getAvgPoint(request));
+    }
+
 }

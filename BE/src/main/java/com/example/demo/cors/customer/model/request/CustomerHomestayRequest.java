@@ -26,4 +26,6 @@ public class CustomerHomestayRequest extends PageableRequest {
 
     private String homestayId;
 
+    private String address;
+
 }

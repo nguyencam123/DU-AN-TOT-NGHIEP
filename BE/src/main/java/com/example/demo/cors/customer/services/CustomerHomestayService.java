@@ -12,4 +12,6 @@ public interface CustomerHomestayService {
 
     Homestay getHomestayById(CustomerHomestayRequest request);
 
+    PageableObject<Homestay> getHomestayByAddress(CustomerHomestayRequest request);
+
 }

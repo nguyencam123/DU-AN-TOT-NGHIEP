@@ -25,8 +25,6 @@ public class ScenicSpot extends PrimaryEntity {
     @Nationalized
     private String desc;
 
-    private Double star;
-
     private Status status;
 
     @Nationalized

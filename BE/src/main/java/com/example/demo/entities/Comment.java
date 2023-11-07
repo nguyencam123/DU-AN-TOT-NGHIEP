@@ -24,7 +24,7 @@ import java.util.List;
 public class Comment extends PrimaryEntity {
 
     @ManyToOne
-    @JoinColumn(name = "hotel_id")
+    @JoinColumn(name = "homestay_id")
     private Homestay homestay;
 
     @ManyToOne
