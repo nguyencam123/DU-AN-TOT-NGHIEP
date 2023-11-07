@@ -6,6 +6,7 @@ import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayOw
 import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayOwnerUsenamePasswordRequest;
 import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayownerLoginRequest;
 import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayOwnerPasswordRequest;
+import org.springframework.security.web.csrf.InvalidCsrfTokenException;
 
 import java.security.Principal;
 
@@ -18,5 +19,7 @@ public interface HomestayOwnerLoginService {
     HomestayOwnerAuthenticationReponse authenticate(HomestayOwnerUsenamePasswordRequest request);
 
     HomestayOwnerAuthenticationReponse changePassword(HomestayOwnerPasswordRequest request, Principal connecteUser);
+
+//    HomestayOwnerAuthenticationReponse forgetPassword(String userName) throws InvalidCsrfTokenException,UnknowI
 
 }
