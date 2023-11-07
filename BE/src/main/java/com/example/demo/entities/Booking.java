@@ -2,6 +2,7 @@ package com.example.demo.entities;
 
 import com.example.demo.entities.base.PrimaryEntity;
 import com.example.demo.infrastructure.contant.Status;
+import com.example.demo.infrastructure.contant.StatusBooking;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -22,7 +23,7 @@ public class Booking extends PrimaryEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private Status status;
+    private StatusBooking status;
 
     private BigDecimal totalPrice;
 
