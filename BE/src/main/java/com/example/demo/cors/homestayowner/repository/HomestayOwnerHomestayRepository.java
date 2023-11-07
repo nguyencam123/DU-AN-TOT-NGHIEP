@@ -30,7 +30,7 @@ public interface HomestayOwnerHomestayRepository extends HomestayRepository {
     Page<HomestayOwnerHomestayReponse> getHomestayByConvient(String id, Pageable pageable);
 
     @Query(value = "Select * from homestay a\n" +
-            " where a.owner_id='163cc112-3f66-40c2-be38-9d9cd536eb90' and (a.status=1 or a.status=0)", nativeQuery = true)
+            " where a.owner_id=:id and (a.status=1 or a.status=0)", nativeQuery = true)
     Page<Homestay> getHomestayByOwnerH(String id, Pageable pageable);
 
 }
