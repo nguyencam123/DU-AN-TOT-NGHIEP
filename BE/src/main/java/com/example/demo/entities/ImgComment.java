@@ -1,6 +1,7 @@
 package com.example.demo.entities;
 
 import com.example.demo.entities.base.PrimaryEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -16,6 +17,7 @@ public class ImgComment extends PrimaryEntity {
 
     @ManyToOne
     @JoinColumn(name = "comment_id")
+    @JsonBackReference
     private Comment comment;
 
     private String imgUrl;

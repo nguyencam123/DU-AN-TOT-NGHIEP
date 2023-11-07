@@ -31,6 +31,10 @@ public class Homestay extends PrimaryEntity {
 
     private String address;
 
+    private String timeCheckIn;
+
+    private String timeCheckOut;
+
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private OwnerHomestay ownerHomestay;
@@ -56,4 +60,5 @@ public class Homestay extends PrimaryEntity {
     @OneToMany(mappedBy = "homestay", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<ImgHomestay> images;
+
 }

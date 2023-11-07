@@ -5,7 +5,7 @@ const instance = axios.create({
 });
 
 const userDetail = JSON.parse(localStorage.getItem('userDetail'));
-const token = userDetail.data.token;
+const token = userDetail?.data.token;
 
 // Thiết lập tiêu đề mặc định cho tất cả các yêu cầu
 instance.defaults.headers.common['Content-Type'] = 'application/json';
