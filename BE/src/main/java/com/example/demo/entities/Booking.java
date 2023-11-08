@@ -2,6 +2,7 @@ package com.example.demo.entities;
 
 import com.example.demo.entities.base.PrimaryEntity;
 import com.example.demo.infrastructure.contant.EntityProperties;
+<<<<<<< HEAD
 import com.example.demo.infrastructure.contant.Status;
 
 import jakarta.persistence.*;
@@ -13,6 +14,10 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
+=======
+import com.example.demo.infrastructure.contant.StatusBooking;
+import jakarta.persistence.*;
+>>>>>>> 66b6150a9409c0b5e9bf7dbe5dedb2b391d181d1
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Nationalized;

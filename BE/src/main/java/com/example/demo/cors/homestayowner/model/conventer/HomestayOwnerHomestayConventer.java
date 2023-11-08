@@ -19,6 +19,21 @@ public class HomestayOwnerHomestayConventer implements Converter<String, Homesta
             if (!jsonNode.has("name") || jsonNode.get("name").textValue().isEmpty() ||jsonNode.get("name").isNull()) {
                 throw new RestApiException("Trường 'name' bị trống");
             }
+            if (!jsonNode.has("timeCheckIn") || jsonNode.get("timeCheckIn").textValue().isEmpty() ||jsonNode.get("timeCheckIn").isNull()) {
+                throw new RestApiException("Trường 'timeCheckIn' bị trống");
+            }
+            if (!jsonNode.has("timeCheckOut") || jsonNode.get("timeCheckOut").textValue().isEmpty() ||jsonNode.get("timeCheckOut").isNull()) {
+                throw new RestApiException("Trường 'timeCheckOut' bị trống");
+            }
+            if (!jsonNode.has("acreage") || jsonNode.get("acreage").isNull() || !(jsonNode.get("acreage").isDouble() && jsonNode.get("acreage").asDouble()>0)) {
+                throw new RestApiException("Trường 'acreage' bị trống");
+            }
+            if (!jsonNode.has("cancellationPolicy") || jsonNode.get("cancellationPolicy").isNull() || !(jsonNode.get("cancellationPolicy").isDouble() && jsonNode.get("cancellationPolicy").asDouble()>0)) {
+                throw new RestApiException("Trường 'cancellationPolicy' bị trống");
+            }
+            if (!jsonNode.has("roomNumber") || !(jsonNode.get("roomNumber").isInt() && jsonNode.get("roomNumber").asInt()>0) || jsonNode.get("roomNumber").isNull()) {
+                throw new RestApiException("Trường 'roomNumber' bị trống");
+            }
             if (!jsonNode.has("startDate") || !jsonNode.get("startDate").isLong() ||jsonNode.get("startDate").isNull()) {
                 throw new RestApiException("Trường 'startDate' bị trống");
             }
@@ -31,10 +46,10 @@ public class HomestayOwnerHomestayConventer implements Converter<String, Homesta
             if (!jsonNode.has("address") || jsonNode.get("address").textValue().isEmpty()||jsonNode.get("address").isNull()) {
                 throw new RestApiException("Trường 'address' bị trống");
             }
-            if (!jsonNode.has("price") || !jsonNode.get("price").isInt() || jsonNode.get("price").isNull()) {
+            if (!jsonNode.has("price") || !(jsonNode.get("price").isInt() && jsonNode.get("price").asInt()>0) || jsonNode.get("price").isNull()) {
                 throw new RestApiException("Trường 'price' bị trống");
             }
-            if (!jsonNode.has("numberPerson") || !jsonNode.get("numberPerson").isInt() || jsonNode.get("numberPerson").isNull()) {
+            if (!jsonNode.has("numberPerson") || !(jsonNode.get("numberPerson").isInt() && jsonNode.get("numberPerson").asInt()>0) || jsonNode.get("numberPerson").isNull()) {
                 throw new RestApiException("Trường 'numberPerson' bị trống");
             }
             if (!jsonNode.has("ownerHomestay") || jsonNode.get("ownerHomestay").textValue().isEmpty() || jsonNode.get("ownerHomestay").isNull()) {
