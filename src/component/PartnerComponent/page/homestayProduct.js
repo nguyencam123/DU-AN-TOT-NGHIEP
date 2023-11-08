@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Space, Typography, Button, Table, Popconfirm, Modal, Form, Input, Row, Col, message, Image } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
-import { QuestionCircleOutlined, EditOutlined, DeleteOutlined, EyeOutlined, DownloadOutlined, SwapOutlined, RotateLeftOutlined, RotateRightOutlined, ZoomOutOutlined, ZoomInOutlined } from '@ant-design/icons'
+import { QuestionCircleOutlined, EditOutlined, DeleteOutlined, EyeOutlined, DownloadOutlined, SwapOutlined, RotateLeftOutlined, RotateRightOutlined, ZoomOutOutlined, ZoomInOutlined, ReloadOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import { EditHomestay, addHomestay, fetchHomestay } from '../../../features/owner_homestay/homestayThunk'
 import { fetchConvenient } from '../../../features/owner_homestay/convenientThunk'
@@ -21,10 +21,13 @@ import {
 } from 'antd';
 import { province } from './province'
 import moment from 'moment';
+import 'moment/locale/vi';
 import { fetchProvince } from '../../../features/owner_homestay/region/provinceThunk'
 import axios from 'axios'
 import * as Yup from 'yup'
-
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 const { Option } = Select;
@@ -39,7 +42,17 @@ const HomeStayProduct = () => {
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [wards, setWards] = useState([]);
   const [selectedWard, setSelectedWard] = useState('');
-
+  const dateFormat = 'YYYY/MM/DD';
+  const isBeforeToday = (current) => {
+    return current && current.isBefore(moment().startOf('day'));
+  }
+  const disabledEndDate = (current) => {
+    // Kiểm tra xem ngày hiện tại có trước ngày bắt đầu không
+    if (current < startDate) {
+      return true;
+    }
+    return false; // Bỏ điều kiện không cho chọn ngày lớn hơn ngày hiện tại
+  };
 
   useEffect(() => {
     dispatch(fetchHomestay());
@@ -60,13 +73,12 @@ const HomeStayProduct = () => {
   const [isViewmodal, setIsviewmodal] = useState(false)
   const [isAddFrom, setIsAddForm] = useState(true)
   const showModalView = (record) => {
-    console.log(record)
     setIsviewmodal(true)
     setname(record.name)
     setdesc(record.desc)
     setprice(record.price)
     setnumberPerson(record.numberPerson)
-    // setaddress(record.address)
+    setaddressView(record.address)
     setprice(record.price)
     setstartDate(record.startDate)
     setendDate(record.endDate)
@@ -118,13 +130,13 @@ const HomeStayProduct = () => {
           <a> <EyeOutlined onClick={() => showModalView(record)} /> </a>
           <a> <EditOutlined onClick={() => handleEditRow(record)} /> </a>
           <Popconfirm
-            title="Xóa mục này"
-            description="Bạn chắc chắn muốn xóa mục này chứ?"
-            icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+            title="Cập nhật mục này"
+            description="Bạn chắc chắn muốn cập nhật trạng thái homestay thành không hoạt động?"
+            icon={<ReloadOutlined />}
             cancelText="hủy"
             okText="xóa"
           >
-            <a><DeleteOutlined /></a>
+            <a><ReloadOutlined /></a>
           </Popconfirm>
         </Space>
       ),
@@ -148,6 +160,7 @@ const HomeStayProduct = () => {
   const [price, setprice] = useState(0)
   const [numberPerson, setnumberPerson] = useState(0)
   const [address, setaddress] = useState("")
+  const [addressView, setaddressView] = useState("")
   const updateAddress = () => {
     const selectedCityName = cities.find(city => city.Id === selectedCity)?.Name || '';
     const selectedDistrictName = districts.find(district => district.Id === selectedDistrict)?.Name || '';
@@ -156,7 +169,6 @@ const HomeStayProduct = () => {
     const newAddress = `${selectedWardName}, ${selectedDistrictName}, ${selectedCityName}`;
     setaddress(newAddress);
   }
-  console.log(address)
   // Use useEffect to call updateAddress whenever the selectedCity, selectedDistrict, or selectedWard changes
   useEffect(() => {
     updateAddress();
@@ -235,7 +247,8 @@ const HomeStayProduct = () => {
   };
 
 
-
+  const [DateStart, setDateStart] = useState(null)
+  const [DateEnd, setDateEnd] = useState(null)
   const handleEditRow = (record) => {
     setIsModalOpen(true);
     setIsAddForm(false);
@@ -246,11 +259,41 @@ const HomeStayProduct = () => {
     setnumberPerson(record.numberPerson)
     setaddress(record.address)
     setprice(record.price)
-    setstartDate(record.startDate)
-    setendDate(record.endDate)
-    setFile(record.images)
+    const DateStart = moment(record.startDate).locale('vi').toDate();
+    const DateEnd = moment(record.endDate).locale('vi').toDate();
+    setDateStart(DateStart);
+    setDateEnd(DateEnd);
+    setIamge(record.images)
     setFormErrors({});
+    const addressParts = record.address.split(", ");
+    const selectedWardName = addressParts[0]; // Lấy tên phường/xã từ địa chỉ
+    const selectedDistrictName = addressParts[1]; // Lấy tên quận/huyện từ địa chỉ
+    const selectedCityName = addressParts[2];
+    const selectedCityData = cities.find(city => city.Name === selectedCityName);
+    if (selectedCityData) {
+      setSelectedCity(selectedCityData.Id);
+    }
+
+    if (selectedCityData && selectedDistrictName) {
+      const selectedDistrictData = selectedCityData.Districts.find(district => district.Name === selectedDistrictName);
+      if (selectedDistrictData) {
+        setDistricts(selectedCityData.Districts);
+        setSelectedDistrict(selectedDistrictData.Id);
+      }
+    }
+
+    if (selectedDistrictName && selectedWardName) {
+      const selectedDistrictData = districts.find(district => district.Name === selectedDistrictName);
+      if (selectedDistrictData) {
+        setWards(selectedDistrictData.Wards);
+        const selectedWardData = selectedDistrictData.Wards.find(ward => ward.Name === selectedWardName);
+        if (selectedWardData) {
+          setSelectedWard(selectedWardData.Id);
+        }
+      }
+    }
   }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -358,8 +401,8 @@ const HomeStayProduct = () => {
             <div style={{ display: 'flex' }}>
               <div style={{ marginRight: 30, marginLeft: 20 }}>
                 <Title level={5}>Tỉnh/Thành phố:</Title>
-                <select value={selectedCity} onChange={(e) => setSelectedCity(e.target.value)} style={{ borderRadius: 10 }}>
-                  <option value="">Chọn tỉnh/thành phố</option>
+                <select value={selectedCity} onChange={(e) => setSelectedCity(e.target.value)} style={{ borderRadius: 5, height: 30, width: 200 }}>
+                  <option value=''>Chọn tỉnh/thành phố</option>
                   {cities.map(city => (
                     <option key={city.Id} value={city.Id}>
                       {city.Name}
@@ -370,8 +413,8 @@ const HomeStayProduct = () => {
               </div>
               <div style={{ marginRight: 30 }}>
                 <Title level={5}>Quận/Huyện:</Title>
-                <select value={selectedDistrict} onChange={(e) => setSelectedDistrict(e.target.value)} style={{ borderRadius: 10 }}>
-                  <option value="">Chọn quận/huyện</option>
+                <select value={selectedDistrict} onChange={(e) => setSelectedDistrict(e.target.value)} style={{ borderRadius: 5, height: 30, width: 200 }} >
+                  <option value=''>Chọn quận/huyện</option>
                   {districts.map(district => (
                     <option key={district.Id} value={district.Id}>
                       {district.Name}
@@ -382,8 +425,8 @@ const HomeStayProduct = () => {
               </div>
               <div>
                 <Title level={5}>Phường/Xã:</Title>
-                <select value={selectedWard} onChange={(e) => setSelectedWard(e.target.value)} style={{ borderRadius: 10 }}>
-                  <option value="">Chọn phường/xã</option>
+                <select value={selectedWard} onChange={(e) => setSelectedWard(e.target.value)} style={{ borderRadius: 5, height: 30, width: 200 }}>
+                  <option value=''>Chọn phường/xã</option>
                   {wards.map(ward => (
                     <option key={ward.Id} value={ward.Id}>
                       {ward.Name}
@@ -399,7 +442,7 @@ const HomeStayProduct = () => {
               <Form.Item
                 label={<Title level={5}>Ngày bắt đầu</Title>}
               >
-                <DatePicker onChange={handleDateChangestart} style={{ width: '100%' }} />
+                <DatePicker onChange={handleDateChangestart} style={{ width: '100%' }} disabledDate={isBeforeToday} defaultValue={moment(DateStart).locale('vi')} format={dateFormat} />
                 <div style={{ color: 'red' }}>{formErrors.startDate}</div>
               </Form.Item>
             </Col>
@@ -407,7 +450,7 @@ const HomeStayProduct = () => {
               <Form.Item
                 label={<Title level={5}>Ngày kết thúc</Title>}
               >
-                <DatePicker onChange={handleDateChangeend} style={{ width: '100%' }} />
+                <DatePicker onChange={handleDateChangeend} style={{ width: '100%' }} disabledDate={isBeforeToday} defaultValue={moment(DateEnd).locale('vi')} format={dateFormat} />
                 <div style={{ color: 'red' }}>{formErrors.endDate}</div>
               </Form.Item>
               {/* <DatePicker /> */}
@@ -431,6 +474,38 @@ const HomeStayProduct = () => {
           </div>
           <div style={{ color: 'red' }}>{formErrors.file}</div>
         </form>
+        {isAddFrom == true ? '' : <div style={{ marginTop: 10 }}>
+          {
+            image.map((imageurl, index) => (
+              <Image
+                key={index}
+                src={imageurl.imgUrl}
+                alt={`Homestay Image ${index}`}
+                style={{
+                  maxWidth: '200px', // Đảm bảo ảnh không vượt quá chiều rộng của phần tử cha
+                  margin: '0 10px 10px 0', // Thêm khoảng cách giữa các ảnh
+                }} preview={{
+                  toolbarRender: (
+                    _,
+                    {
+                      transform: { scale },
+                      actions: { onFlipY, onFlipX, onRotateLeft, onRotateRight, onZoomOut, onZoomIn },
+                    },
+                  ) => (
+                    <Space className="toolbar-wrapper">
+                      <SwapOutlined rotate={90} onClick={onFlipY} />
+                      <SwapOutlined onClick={onFlipX} />
+                      <RotateLeftOutlined onClick={onRotateLeft} />
+                      <RotateRightOutlined onClick={onRotateRight} />
+                      <ZoomOutOutlined disabled={scale === 1} onClick={onZoomOut} />
+                      <ZoomInOutlined disabled={scale === 50} onClick={onZoomIn} />
+                    </Space>
+                  ),
+                }} />
+            ))
+          }
+        </div>
+        }
       </Modal>
       <Modal title={<div style={{ fontSize: '22px' }}>Xem thông tin chi tiết homstay</div>} open={isViewmodal} onCancel={handleCancel}
         width={800} style={{ fontSize: '40px' }}>
@@ -439,9 +514,14 @@ const HomeStayProduct = () => {
           <div style={{ display: 'flex' }}><div style={{ width: 150 }}>Mô tả          </div> : {desc}</div><br />
           <div style={{ display: 'flex' }}><div style={{ width: 150 }}>Giá            </div> : {price}</div><br />
           <div style={{ display: 'flex' }}><div style={{ width: 150 }}>Số lượng người </div> : {numberPerson}</div><br />
-          <div style={{ display: 'flex' }}><div style={{ width: 150 }}>Địa chỉ        </div> : {address}</div><br />
-          <div style={{ display: 'flex' }}><div style={{ width: 150 }}>Ngày bắt đầu   </div> : {startDate}</div><br />
-          <div style={{ display: 'flex' }}><div style={{ width: 150 }}>Ngày kết thúc  </div> : {endDate}</div><br />
+          <div style={{ display: 'flex' }}><div style={{ width: 150 }}>Địa chỉ        </div> : {addressView}</div><br />
+          <div style={{ display: 'flex' }}>
+            <div style={{ width: 150 }}>Ngày bắt đầu</div> : {moment(startDate).locale('vi').format('LL')}
+          </div><br />
+          <div style={{ display: 'flex' }}>
+            <div style={{ width: 150 }}>Ngày kết thúc</div> : {moment(endDate).locale('vi').format('LL')}
+          </div><br />
+
           <div>Ảnh homstay  <br />
             <div style={{ width: 700, padding: 20, flexWrap: 'wrap', borderRadius: 10, display: 'flex', justifyContent: 'center', border: '1px solid black' }}>
               {
