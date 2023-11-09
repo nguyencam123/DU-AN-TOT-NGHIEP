@@ -36,7 +36,7 @@ const PartnerRegister = () => {
     const [email, setemail] = useState('')
     const [username, setusername] = useState('')
     const [password, setpassword] = useState('')
-
+    const [identificationNumber, setidentificationNumber] = useState('')
     const handleDateChangestart = (dates) => {
         setbirthday(moment(dates).valueOf());
     };
@@ -48,7 +48,8 @@ const PartnerRegister = () => {
         phoneNumber: phoneNumber,
         email: email,
         username: username,
-        password: password
+        password: password,
+        identificationNumber: identificationNumber
     }
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -133,6 +134,8 @@ const PartnerRegister = () => {
                         </MDBRow>
                         <MDBInput wrapperClass='mb-4' required label='Email' id='email' type='email'
                             onChange={(e) => setemail(e.target.value)} />
+                        <MDBInput wrapperClass='mb-4' label='Số căn cước công dân' id='identificationNumber' type='number' required
+                            onChange={(e) => setidentificationNumber(e.target.value)} />
                         <MDBInput wrapperClass='mb-4' label='Số điện thoại' id='phoneNumber' type='phoneNumber' required
                             onChange={(e) => setphoneNumber(e.target.value)} />
                         <MDBRow>

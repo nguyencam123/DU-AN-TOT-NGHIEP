@@ -83,6 +83,8 @@ const HomeStayProduct = () => {
     setstartDate(record.startDate)
     setendDate(record.endDate)
     setIamge(record.images)
+    settimeCheckIn(record.timeCheckIn)
+    settimeCheckOut(record.timeCheckOut)
   }
   const showModal = () => {
     setIsModalOpen(true);
@@ -93,6 +95,9 @@ const HomeStayProduct = () => {
     setnumberPerson(null)
     // setaddress('')
     setprice(null)
+    setcancellationPolicy(0)
+    setacreage(0)
+    setroomNumber(0)
   };
   const handleOk = () => {
     setIsModalOpen(false);
@@ -283,8 +288,7 @@ const HomeStayProduct = () => {
   };
 
 
-  const [DateStart, setDateStart] = useState(null)
-  const [DateEnd, setDateEnd] = useState(null)
+
   const handleEditRow = (record) => {
     setIsModalOpen(true);
     setIsAddForm(false);
@@ -295,15 +299,19 @@ const HomeStayProduct = () => {
     setnumberPerson(record.numberPerson)
     setaddress(record.address)
     setprice(record.price)
-    const DateStart = moment(record.startDate).locale('vi').toDate();
-    const DateEnd = moment(record.endDate).locale('vi').toDate();
-    setDateStart(DateStart);
-    setDateEnd(DateEnd);
+    const formattedDateStart = moment(record.startDate).locale('vi').format('YYYY-MM-DD');
+    const formattedDateEnd = moment(record.endDate).locale('vi').format('YYYY-MM-DD');
+
+    setstartDate(formattedDateStart);
+    setendDate(formattedDateEnd);
     setIamge(record.images)
     setcancellationPolicy(record.cancellationPolicy)
     setroomNumber(record.numberPerson)
     setacreage(record.acreage)
+    settimeCheckIn(record.timeCheckIn)
+    settimeCheckOut(record.timeCheckOut)
     setFormErrors({});
+
     const addressParts = record.address.split(", ");
     const selectedWardName = addressParts[0]; // Lấy tên phường/xã từ địa chỉ
     const selectedDistrictName = addressParts[1]; // Lấy tên quận/huyện từ địa chỉ
@@ -436,34 +444,47 @@ const HomeStayProduct = () => {
           </Row>
           <Row gutter={24} style={{ marginLeft: 4 }}>
             <Col span={12}>
-              <Form.Item
-                label={<Title level={5}>Ngày bắt đầu</Title>}
-              >
-                <DatePicker onChange={handleDateChangestart} style={{ width: '100%' }} disabledDate={isBeforeToday} />
+              <Form.Item label={<Title level={5}>Ngày bắt đầu</Title>}>
+                <DatePicker
+                  onChange={handleDateChangestart}
+                  style={{ width: '100%' }}
+                  value={dayjs(startDate, 'YYYY-MM-DD')} // Remove the curly braces
+                  disabledDate={isBeforeToday}
+                />
                 <div style={{ color: 'red' }}>{formErrors.startDate}</div>
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item
-                label={<Title level={5}>Ngày kết thúc</Title>}
-              >
-                <DatePicker onChange={handleDateChangeend} style={{ width: '100%' }} disabledDate={isBeforeToday} />
+              <Form.Item label={<Title level={5}>Ngày kết thúc</Title>}>
+                <DatePicker
+                  onChange={handleDateChangeend}
+                  style={{ width: '100%' }}
+                  value={dayjs(endDate, 'YYYY-MM-DD')} // Remove the curly braces
+                  disabledDate={isBeforeToday}
+                />
                 <div style={{ color: 'red' }}>{formErrors.endDate}</div>
               </Form.Item>
-              {/* <DatePicker /> */}
             </Col>
           </Row>
+
           {/* time bắt đầu */}
           <Row gutter={24} style={{ marginLeft: 4 }}>
             <Col span={12}>
               <Title level={5}>Thời gian nhận phòng:</Title>
-              <TimePicker onChange={handleTimeChangestart} style={{ width: '67%', float: 'right' }} />
+              <TimePicker
+                onChange={handleTimeChangestart}
+                value={dayjs(timeCheckIn, 'HH:mm:ss')}
+                style={{ width: '67%', float: 'right' }}
+              />
               <div style={{ color: 'red' }}>{formErrors.timeCheckIn}</div>
-
             </Col>
             <Col span={12}>
               <Title level={5}>Thời gian trả phòng:</Title>
-              <TimePicker onChange={handleTimeChangeend} style={{ width: '67%', float: 'right' }} />
+              <TimePicker
+                onChange={handleTimeChangeend}
+                value={dayjs(timeCheckOut, 'HH:mm:ss')}
+                style={{ width: '67%', float: 'right' }}
+              />
               <div style={{ color: 'red' }}>{formErrors.timeCheckOut}</div>
             </Col>
           </Row>
@@ -577,7 +598,7 @@ const HomeStayProduct = () => {
           <table>
             <tr>
               <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Tên homestay </div> : {name}</div><br /></td>
-              <td style={{ width: 500 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Mô tả          </div> : {desc}</div><br /></td>
+              <td style={{ width: 500 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Diện tích phòng</div> : {acreage} (m2)</div><br /></td>
             </tr>
             <tr>
               <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Giá            </div> : {price} (VNĐ)</div><br /></td>
@@ -599,7 +620,7 @@ const HomeStayProduct = () => {
               </div><br /></td>
             </tr>
           </table>
-          <div style={{ display: 'flex' }}><div style={{ width: 200 }}>Diện tích phòng</div> : {acreage} (m2)</div><br />
+          <div style={{ display: 'flex' }}><div style={{ width: 200 }}>Mô tả          </div> : {desc}</div><br />
           <div style={{ display: 'flex' }}><div style={{ width: 200 }}>Địa chỉ        </div> : {addressView}</div><br />
           <div>Ảnh homstay :<br />
             <div style={{ width: 1030, padding: 20, flexWrap: 'wrap', borderRadius: 10, display: 'flex', justifyContent: 'center', border: '1px solid black' }}>
