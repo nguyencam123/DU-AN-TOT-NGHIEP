@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addProductAsync } from "../../features/product/createproductThunks";
-import { fetchProducts } from "../../features/product/productThunk";
+import { fetchProducts, getProducts } from "../../features/product/productThunk";
 import { fetchCategory } from "../../features/category/categoryThunk"
 import { useState } from "react";
 import { Space, Table, Typography, Modal, Spin, Popconfirm, Form, Input, Row, Col, Select, Button, Pagination } from 'antd';
@@ -37,7 +37,7 @@ function AddProductForm() {
 
   const listFilter = [
     {
-      name: 'Số sao',
+      name: 'Trạng thái',
       value: 'star'
     },
     {
@@ -75,7 +75,7 @@ function AddProductForm() {
   };
   //
   useEffect(() => {
-    dispatch(fetchProducts());
+    dispatch(getProducts());
   }, []);
   //
   //delete
@@ -120,29 +120,32 @@ function AddProductForm() {
 
   const columns = [
     {
-      title: 'name',
+      title: 'Tên homestay',
       dataIndex: 'name',
       key: 'name'
     },
     {
-      title: 'address',
+      title: 'Địa chỉ cụ thể',
       dataIndex: 'address',
       key: 'address'
     },
     {
-      title: 'star',
-      dataIndex: 'star',
-      key: 'star'
+      title: 'Trạng thái',
+      dataIndex: 'status',
+      key: 'status'
     },
     {
-      title: 'owner',
-      dataIndex: 'ownerHomestay.name',
-      key: 'ownerHomestay.name'
+      title: 'Chủ homestay',
+      dataIndex: 'ownerHomestay',
+      key: 'ownerHomestay', 
+      render: (data) => {
+        return data.name; 
+      }
     },
     {
-      title: 'website',
-      dataIndex: 'website',
-      key: 'website'
+      title: 'Giá thuê 1 đêm',
+      dataIndex: 'price',
+      key: 'price'
     },
     {
       title: 'Action',
@@ -158,7 +161,7 @@ function AddProductForm() {
 
   return (
     <div style={{ marginTop: '30px' }}>
-      <Title level={2}>Quản trị sản phẩm</Title>
+      <Title level={2}>Quản trị homestay</Title>
       <Title level={4}>Danh mục</Title>
       <Row>
         <Form.Item label="Lọc theo" style={{ float: 'left' }}>
@@ -171,36 +174,30 @@ function AddProductForm() {
         </Form.Item>
         <Form.Item label="Tìm kiếm theo tên" style={{ float: 'left', marginLeft: ' 50px' }}>
           <Search
-            placeholder="input search text"
+            placeholder="Tên homestay"
             allowClear
             size="medium"
             enterButton="search"
             onSearch={onSearch}
           />
         </Form.Item>
-        <Form.Item label="Tìm kiếm theo địa điểm" style={{ float: 'left', marginLeft: ' 50px' }}>
+        <Form.Item label="Tìm kiếm theo tên chủ homestay" style={{ float: 'left', marginLeft: ' 50px' }}>
           <Search
-            placeholder="input search text"
+            placeholder="Tên chủ homestay"
             allowClear
             size="medium"
             enterButton="search"
             onSearch={onSearch}
           />
         </Form.Item>
-      </Row>
-      <Row style={{ float: 'right', marginBottom: '20px' }}>
-        <Button type="primary" onClick={showModal}>Thêm</Button>
-        <Button type="primary" style={{ marginLeft: '20px', }} onClick={showModal}>Import Excel</Button>
       </Row>
       {/* {loading ? <Spin className="example" size="large" /> : null}
       {error ? <p>Error: {error}</p> : null} */}
       <Table columns={columns} dataSource={products} />
-
-      <Pagination style={{ float: 'right', marginTop: '20px' }} defaultCurrent={1} total={50} />
       {/* popup form */}
       <Modal title="Thêm sản phẩm" open={isModalOpen}
-        onOk={handleOk} onCancel={handleCancel}
-        cancelText="Hủy" okText="Thêm" width={800}>
+        onOk={handleOk} onCancel={handleCancel} 
+        cancelText="Từ chối" okText="Duyệt" width={800}>
         {/* <input
                     type="text"
                     value={productName}
