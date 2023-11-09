@@ -3,7 +3,6 @@ package com.example.demo.cors.homestayowner.service.impl;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.example.demo.cors.common.base.PageableObject;
-import com.example.demo.cors.homestayowner.model.request.HomestayOwnerDetailHomestayRequest;
 import com.example.demo.cors.homestayowner.model.request.HomestayownerHomestayRequest;
 import com.example.demo.cors.homestayowner.repository.*;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerHomestayService;
@@ -23,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -60,39 +58,11 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
     @Transactional
     public Homestay updateHomestays(String id, HomestayownerHomestayRequest request, List<MultipartFile> multipartFiles, List<String> idConvenientHomestay) throws IOException {
         Homestay homestay = homestayownerHomestayRepository.findById(id).orElse(null);
-        homestay.setName(request.getName());
-        homestay.setDesc(request.getDesc());
-        homestay.setPrice(request.getPrice());
-        homestay.setNumberPerson(request.getNumberPerson());
-        homestay.setAddress(request.getAddress());
-        homestay.setStartDate(request.getStartDate());
-        homestay.setEndDate(request.getEndDate());
-        homestay.setOwnerHomestay(homestayOwnerOwnerHomestayRepository.findById(request.getOwnerHomestay()).orElse(null));
+        getHomestay(request, homestay);
         Homestay homestay1 = homestayownerHomestayRepository.save(homestay);
         homestayOwnerImgHomestayRepo.deleteByHomestay(id);
-
-        List<ImgHomestay> newImages = new ArrayList<>();
-        for (MultipartFile image : multipartFiles) {
-            ImgHomestay imgHomestay = new ImgHomestay();
-            imgHomestay.setHomestay(homestay1);
-            Map uploadResult = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.asMap("folder", "homestay_images"));
-            imgHomestay.setImgUrl(uploadResult.get("url").toString());
-            homestayOwnerImgHomestayRepo.save(imgHomestay);
-            newImages.add(imgHomestay);
-        }
-
-        List<DetailHomestay> detailHomestays = new ArrayList<>();
-        for (String detail : idConvenientHomestay) {
-            DetailHomestay detailHomestay = new DetailHomestay();
-            detailHomestay.setHomestay(homestay1);
-            ConvenientHomestay convenientHomestay = homestayOwnerConvenientHomestayRepository.findById(detail).orElse(null);
-            detailHomestay.setConvenientHomestay(convenientHomestay);
-            homestayOwnerDetailHomestayReposritory.save(detailHomestay);
-            detailHomestays.add(detailHomestay);
-        }
-        homestay1.setDetailHomestays(detailHomestays);
-
-        return homestay1;
+        homestayOwnerDetailHomestayReposritory.deleteByHomestay(id);
+        return getImgHomestayAndConvenientHomestay(multipartFiles, idConvenientHomestay, homestay1);
     }
 
     @Override
@@ -104,17 +74,15 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
     }
 
     @Override
-    public DetailHomestay addDetailHomestay(HomestayOwnerDetailHomestayRequest request) {
-        DetailHomestay detailHomestays = new DetailHomestay();
-        detailHomestays.setHomestay(homestayownerHomestayRepository.findById(request.getIdHomestay()).orElse(null));
-        detailHomestays.setConvenientHomestay(homestayOwnerConvenientHomestayRepository.findById(request.getIdConvenientHomestay()).orElse(null));
-        DetailHomestay res = homestayOwnerDetailHomestayReposritory.save(detailHomestays);
-        return res;
-    }
-
-    @Override
     public Homestay addHomestay(HomestayownerHomestayRequest request, List<MultipartFile> multipartFiles, List<String> idConvenientHomestay) throws IOException {
         Homestay homestay = new Homestay();
+        getHomestay(request, homestay);
+        homestay.setStatus(Status.KHONG_HOAT_DONG);
+        Homestay homestay1 = homestayownerHomestayRepository.save(homestay);
+        return getImgHomestayAndConvenientHomestay(multipartFiles, idConvenientHomestay, homestay1);
+    }
+
+    private void getHomestay(HomestayownerHomestayRequest request, Homestay homestay) {
         homestay.setName(request.getName());
         homestay.setDesc(request.getDesc());
         homestay.setPrice(request.getPrice());
@@ -122,10 +90,15 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
         homestay.setAddress(request.getAddress());
         homestay.setStartDate(request.getStartDate());
         homestay.setEndDate(request.getEndDate());
+        homestay.setAcreage(request.getAcreage());
+        homestay.setRoomNumber(request.getRoomNumber());
+        homestay.setTimeCheckIn(request.getTimeCheckIn());
+        homestay.setTimeCheckOut(request.getTimeCheckOut());
+        homestay.setCancellationPolicy(request.getCancellationPolicy());
         homestay.setOwnerHomestay(homestayOwnerOwnerHomestayRepository.findById(request.getOwnerHomestay()).orElse(null));
-        homestay.setStatus(Status.KHONG_HOAT_DONG);
-        Homestay homestay1 = homestayownerHomestayRepository.save(homestay);
+    }
 
+    private Homestay getImgHomestayAndConvenientHomestay(List<MultipartFile> multipartFiles, List<String> idConvenientHomestay, Homestay homestay1) throws IOException {
         List<ImgHomestay> newImages = new ArrayList<>();
         for (MultipartFile image : multipartFiles) {
             ImgHomestay imgHomestay = new ImgHomestay();
