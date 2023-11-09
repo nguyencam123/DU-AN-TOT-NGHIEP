@@ -29,4 +29,5 @@ public class CustomerLoginController {
     public ResponseObject registers(@RequestBody CustomerRequest request){
         return new ResponseObject(customerLoginService.CustomerRegister(request));
     }
+
 }
