@@ -273,7 +273,7 @@ export const BookingReviewHomestay = () => {
                 </Col>
                 <Col span={16} >
                   <div style={{ float: 'right', marginTop: '5px' }}>
-                    <Button style={{ color: 'white', fontWeight: '500', fontSize: '14px', backgroundColor: 'rgb(255, 94, 31)', width: '85px', height: '40px' }}>Tiếp tục</Button>
+                    <Button onClick={() => handleReviewBookingHomestay()} style={{ color: 'white', fontWeight: '500', fontSize: '14px', backgroundColor: 'rgb(255, 94, 31)', width: '85px', height: '40px' }}>Tiếp tục</Button>
                   </div>
                 </Col>
               </Row>
