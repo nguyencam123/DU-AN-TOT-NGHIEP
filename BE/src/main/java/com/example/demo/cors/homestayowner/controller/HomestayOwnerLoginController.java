@@ -5,6 +5,7 @@ import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayOw
 import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayOwnerUsenamePasswordRequest;
 import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayownerLoginRequest;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerLoginService;
+import com.example.demo.entities.Homestay;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,10 +17,6 @@ public class HomestayOwnerLoginController {
     @Autowired
     private HomestayOwnerLoginService homestayownerLoginService;
 
-    @PostMapping("")
-    public ResponseObject loginHomestayOwnerHomestay(@RequestBody HomestayownerLoginRequest homestayownerLoginRequest) {
-        return new ResponseObject(homestayownerLoginService.login(homestayownerLoginRequest));
-    }
 
     @PostMapping("/authenticate")
     public ResponseObject authenticate(@RequestBody HomestayOwnerUsenamePasswordRequest request){

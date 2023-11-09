@@ -30,5 +30,7 @@ public class HomestayOwnerAuthenticationReponse {
 
     private String username;
 
+    private String avataUrl;
+
     private Status status;
 }

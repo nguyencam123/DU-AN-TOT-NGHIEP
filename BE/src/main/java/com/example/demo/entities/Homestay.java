@@ -42,11 +42,17 @@ public class Homestay extends PrimaryEntity {
 
     private Double point;
 
+    private Double acreage;
+
+    private Integer roomNumber;
+
     private Status status;
 
     private Long startDate;
 
     private Long endDate;
+
+    private Double CancellationPolicy;
 
     @Column(length = EntityProperties.LENGTH_NOTE, name = "[desc]")
     @Nationalized
