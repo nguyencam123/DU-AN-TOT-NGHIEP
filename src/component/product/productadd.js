@@ -4,10 +4,13 @@ import { addProductAsync } from "../../features/product/createproductThunks";
 import { fetchProducts, getProducts } from "../../features/product/productThunk";
 import { fetchCategory } from "../../features/category/categoryThunk"
 import { useState } from "react";
-import { Space, Table, Typography, Modal, Spin, Popconfirm, Form, Input, Row, Col, Select, Button, Pagination } from 'antd';
-import { DeleteOutlined, EditOutlined, EyeOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { Space, Table, Typography, Modal, Spin, Popconfirm, Form, Input, Row, Col, Select, Button, Pagination, Image } from 'antd';
+import { DeleteOutlined, EditOutlined, EyeOutlined, QuestionCircleOutlined, RotateLeftOutlined, RotateRightOutlined, SwapOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
 import { removeProduct } from "../../features/product/deleteproductThunks";
 import * as Yup from 'yup'
+import { DetailHomestay } from "../user/hotelcomponent/detailHomestay";
+import moment from 'moment';
+
 
 const { Title } = Typography;
 
@@ -24,13 +27,11 @@ function AddProductForm() {
   const [name, setname] = useState("")
   const [price, setprice] = useState("")
   const [image, setimage] = useState("")
+  const [viewImage, setViewImage] = useState([])
   const [category, setcategory] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("");
   const dispatch = useDispatch();
-  const loading = useSelector((state) => state.product.loading)
   const products = useSelector((state) => state.product.products)
-  const error = useSelector((state) => state.product.error)
-  const categorys = useSelector((state) => state.category.categorys)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formErrors, setFormErrors] = useState({});
   //
@@ -47,76 +48,29 @@ function AddProductForm() {
   ]
 
   const { Search } = Input;
+  const [isViewModal, setIsViewModal] = useState(false);
+  const [viewHomestay, setViewHomestay] = useState({});
 
   const onSearch = (value, _e, info) => console.log(info?.source, value);
-
-  const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Vui lòng nhập tên sản phẩm'),
-    price: Yup.string()
-      .matches(/^[0-9]+$/, 'Giá sản phẩm phải là số')
-      .required('Vui lòng nhập giá sản phẩm'),
-    image: Yup.string().required('Vui lòng chọn ảnh sản phẩm'),
-  })
 
   const handleChange = (value) => {
     console.log(value); // Giá trị ID của mục được chọn
     setcategory(value);
   }
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-  const handleOk = () => {
-    //setIsModalOpen(false);
-    handleAddProduct()
-  };
   const handleCancel = () => {
-    setIsModalOpen(false);
+    setIsViewModal(false);
+  }
+
+  const showModal = (record) => {
+    setIsViewModal(true);
+    setViewHomestay(record);
+    setViewImage(record.images)
+    console.log(record);
   };
   //
   useEffect(() => {
     dispatch(getProducts());
   }, []);
-  //
-  //delete
-  const handleDeleteProduct = (productId) => {
-    dispatch(removeProduct(productId));
-  }
-  //add
-  const handleAddProduct = () => {
-    // Tạo object chứa dữ liệu từ form
-    const productData = {
-      name: name,
-      price: price,
-      category: {
-        id: category
-      },
-      image: image
-    };
-
-    // Sử dụng Yup để validate dữ liệu
-    validationSchema.validate(productData, { abortEarly: false })
-      .then(() => {
-        // Dữ liệu hợp lệ, dispatch action hoặc thực hiện các thao tác khác ở đây
-        dispatch(addProductAsync(productData));
-
-        // Xóa dữ liệu đã nhập trong form
-        setname('');
-        setprice('');
-        setimage('');
-        setFormErrors({});
-        setIsModalOpen(false);
-      })
-      .catch(errors => {
-        // Dữ liệu không hợp lệ, xử lý lỗi nếu cần
-        const errorObject = {};
-        errors.inner.forEach(error => {
-          errorObject[error.path] = error.message;
-        });
-        setFormErrors(errorObject);
-      });
-  };
-
 
   const columns = [
     {
@@ -152,7 +106,7 @@ function AddProductForm() {
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
-          <a onClick={showModal} style={{ color: '#1677ff' }}><EyeOutlined /></a>
+          <a onClick={() => showModal(record)} style={{ color: '#1677ff' }}><EyeOutlined /></a>
         </Space>
       ),
     },
@@ -195,94 +149,76 @@ function AddProductForm() {
       {error ? <p>Error: {error}</p> : null} */}
       <Table columns={columns} dataSource={products} />
       {/* popup form */}
-      <Modal title="Thêm sản phẩm" open={isModalOpen}
-        onOk={handleOk} onCancel={handleCancel} 
-        cancelText="Từ chối" okText="Duyệt" width={800}>
-        {/* <input
-                    type="text"
-                    value={productName}
-                    onChange={(e) => setProductName(e.target.value)}
-                    placeholder="Product Name"
-                /> */}<br />
-        <Form
-          name="basic"
-          labelCol={{
-            span: 8,
-          }}
-          wrapperCol={{
-            span: 24,
-          }}
-          style={{
-            maxWidth: 800,
-          }}
-          initialValues={{
-            remember: true,
-          }}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          autoComplete="off"
-        >
-          <Row gutter={24}>
-            {/* Trường thứ nhất */}
-            <Col span={12}>
-              <Form.Item
-                label="Name product"
-                name="name"
-                validateStatus={formErrors.name ? 'error' : ''} // Hiển thị lỗi cho trường name nếu có
-                help={formErrors.name} // Hiển thị thông báo lỗi cho trường name nếu có
-              >
-                <Input value={name}
-                  onChange={(e) => setname(e.target.value)} />
-              </Form.Item>
-            </Col>
-            {/* Trường thứ hai */}
-            <Col span={12}>
-              <Form.Item
-                label="Price"
-                name="price"
-                validateStatus={formErrors.price ? 'error' : ''} // Hiển thị lỗi cho trường price nếu có
-                help={formErrors.price} // Hiển thị thông báo lỗi cho trường price nếu có
-              >
-                <Input value={price}
-                  onChange={(e) => setprice(e.target.value)} />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                label="Category"
-                name="category"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please input your category!',
-                  },
-                ]}
-              >
-                <Select
-                  style={{ width: 243 }}
-                  onChange={handleChange}
-                  options={categorys.map(category => ({ value: category.id, label: category.name }))}
-                  value={category} // Đặt giá trị mặc định dựa trên selectedCategory (ID của danh mục)
-                  initialValue={categorys.length > 0 ? categorys[0].id : undefined}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={24}>
-            <Col span={12}>
-              <Form.Item
-                label="image"
-                name="image"
-                validateStatus={formErrors.image ? 'error' : ''} // Hiển thị lỗi cho trường image nếu có
-                help={formErrors.image} // Hiển thị thông báo lỗi cho trường image nếu có
-              >
-                <Input value={image}
-                  onChange={(e) => setimage(e.target.value)} />
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
-      </Modal>
+    
+      <Modal title={<div style={{ fontSize: '22px' }}>Xem thông tin chi tiết homstay</div>} open={isViewModal} onCancel={handleCancel}
+        width={1100} style={{ fontSize: '40px' }}>
+        <div style={{ fontSize: 18, fontWeight: 600 }}>
+          <table>
+            <tr>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Tên homestay </div> : {viewHomestay.name}</div><br /></td>
+            </tr>
+            <tr>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Giá            </div> : {viewHomestay.price} (VNĐ)</div><br /></td>
+              <td style={{ width: 500 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Số lượng người </div> : {viewHomestay.numberPerson} (Người)</div><br /></td>
+            </tr>
+            <tr>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Số phòng</div> : {viewHomestay.roomNumber}</div><br /></td>
+              <td style={{ width: 500 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Chính sách hủy phòng </div> : {viewHomestay.cancellationPolicy}</div><br /></td>
+            </tr>
+            <tr>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Thời gian nhận phòng </div> : {viewHomestay.timeCheckIn}</div><br /></td>
+              <td style={{ width: 500 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Thời gian trả phòng </div> : {viewHomestay.timeCheckOut}</div><br /></td>
+            </tr>
+            <tr>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}>
+                <div style={{ width: 200 }}>Ngày bắt đầu</div> : {moment(viewHomestay.createdDate).locale('vi').format('LL')}</div><br /></td>
+              <td style={{ width: 500 }}><div style={{ display: 'flex' }}>
+                <div style={{ width: 200 }}>Ngày kết thúc</div> : {moment(viewHomestay.endDate).locale('vi').format('LL')}
+              </div><br /></td>
+            </tr>
+            <tr>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Tên homestay </div> : {viewHomestay.name}</div><br /></td>
+              <td style={{ width: 500 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Mô tả          </div> : {viewHomestay.desc}</div><br /></td>
+            </tr>
+          </table>
+          <div style={{ display: 'flex' }}><div style={{ width: 200 }}>Diện tích phòng</div> : {viewHomestay.acreage} (m2)</div><br />
+          <div style={{ display: 'flex' }}><div style={{ width: 200 }}>Địa chỉ        </div> : {viewHomestay.address}</div><br />
+          <div style={{ width: 1000 }}>Mô tả  : {viewHomestay.desc}</div><br />
+          <div>Ảnh homstay :<br />
+            <div style={{ width: 1030, padding: 20, flexWrap: 'wrap', borderRadius: 10, display: 'flex', justifyContent: 'center', border: '1px solid black' }}>
+              {
+                viewImage.map((img, index) => (
+                  <Image
+                    key={index}
+                    src={img.imgUrl}
+                    alt={`Homestay Image ${index}`}
+                    style={{
+                      maxWidth: '200px', // Đảm bảo ảnh không vượt quá chiều rộng của phần tử cha
+                      margin: '0 10px 10px 0', // Thêm khoảng cách giữa các ảnh
+                    }} preview={{
+                      toolbarRender: (
+                        _,
+                        {
+                          transform: { scale },
+                          actions: { onFlipY, onFlipX, onRotateLeft, onRotateRight, onZoomOut, onZoomIn },
+                        },
+                      ) => (
+                        <Space className="toolbar-wrapper">
+                          <SwapOutlined rotate={90} onClick={onFlipY} />
+                          <SwapOutlined onClick={onFlipX} />
+                          <RotateLeftOutlined onClick={onRotateLeft} />
+                          <RotateRightOutlined onClick={onRotateRight} />
+                          <ZoomOutOutlined disabled={scale === 1} onClick={onZoomOut} />
+                          <ZoomInOutlined disabled={scale === 50} onClick={onZoomIn} />
+                        </Space>
+                      ),
+                    }} />
+                ))
+              }
+            </div>
+          </div>
+        </div>
+        </Modal>
     </div>
   )
 }
