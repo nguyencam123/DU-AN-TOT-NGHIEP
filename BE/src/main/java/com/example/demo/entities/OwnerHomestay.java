@@ -3,6 +3,7 @@ package com.example.demo.entities;
 import com.example.demo.entities.base.PrimaryEntity;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Nationalized;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import com.example.demo.infrastructure.contant.EntityProperties;
@@ -24,27 +25,35 @@ import java.util.Collection;
 public class OwnerHomestay extends PrimaryEntity implements UserDetails{
 
     @Column(length = EntityProperties.LENGTH_CODE)
+    @Nationalized
     private String code;
 
     @Column(length = EntityProperties.LENGTH_NAME)
+    @Nationalized
     private String name;
 
     private Long birthday;
 
     private Boolean gender;
 
+    @Nationalized
     private String address;
 
     @Column(length = EntityProperties.LENGTH_PHONE)
+    @Nationalized
     private String phoneNumber;
 
     @Column(length = EntityProperties.LENGTH_EMAIL)
+    @Nationalized
     private String email;
 
+    @Nationalized
     private String username;
 
+    @Nationalized
     private String password;
 
+    @Nationalized
     private String avatarUrl;
 
     private Status status;

@@ -12,10 +12,6 @@ public class CustomerHomestayRequest extends PageableRequest {
 
     private String convenientId;
 
-    private String provinceId;
-
-    private String regionId;
-
     private Integer numberPerson;
 
     private Double point;
@@ -29,5 +25,7 @@ public class CustomerHomestayRequest extends PageableRequest {
     private Long endDate;
 
     private String homestayId;
+
+    private String address;
 
 }

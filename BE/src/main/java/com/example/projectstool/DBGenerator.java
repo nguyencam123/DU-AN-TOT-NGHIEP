@@ -14,8 +14,6 @@ import com.example.demo.entities.ImgHomestay;
 import com.example.demo.entities.ImgScenicSpot;
 import com.example.demo.entities.OwnerHomestay;
 import com.example.demo.entities.Promotion;
-import com.example.demo.entities.Province;
-import com.example.demo.entities.Region;
 import com.example.demo.entities.ScenicSpot;
 import com.example.demo.entities.ScenicSpotHomestay;
 import com.example.demo.entities.User;
@@ -35,8 +33,6 @@ import com.example.demo.repositories.ImgHomestayRepository;
 import com.example.demo.repositories.ImgScenicSpotRepository;
 import com.example.demo.repositories.OwnerHomestayRepository;
 import com.example.demo.repositories.PromotionRepository;
-import com.example.demo.repositories.ProvinceRepository;
-import com.example.demo.repositories.RegionRepository;
 import com.example.demo.repositories.ScenicSpotHomestayRepository;
 import com.example.demo.repositories.ScenicSpotRepository;
 import com.example.demo.repositories.UserRepository;
@@ -78,10 +74,6 @@ public class DBGenerator implements CommandLineRunner {
     @Autowired
     private PromotionRepository promotionRepository;
     @Autowired
-    private ProvinceRepository provinceRepository;
-    @Autowired
-    private RegionRepository regionRepository;
-    @Autowired
     private ScenicSpotRepository scenicSpotRepository;
     @Autowired
     private UserRepository userRepository;
@@ -96,71 +88,21 @@ public class DBGenerator implements CommandLineRunner {
 
     public void run(String... args) throws Exception {
 
-        //region
-        Region region1 = new Region();
-        region1.setCode("RG01");
-        region1.setName("Mien Trung");
-        regionRepository.save(region1);
-
-        Region region2 = new Region();
-        region2.setCode("RG02");
-        region2.setName("Mien Bac");
-        regionRepository.save(region2);
-
-        Region region3 = new Region();
-        region3.setCode("RG03");
-        region3.setName("Mien Nam");
-        regionRepository.save(region3);
-
-        //province
-        Province province1 = new Province();
-        province1.setCode("PR01");
-        province1.setName("TP Da Nang");
-        province1.setRegion(region1);
-        provinceRepository.save(province1);
-
-        Province province2 = new Province();
-        province2.setCode("PR02");
-        province2.setName("TP Ha Noi");
-        province2.setRegion(region2);
-        provinceRepository.save(province2);
-
-        Province province3 = new Province();
-        province3.setCode("PR03");
-        province3.setName("TP Ho Chi Minh");
-        province3.setRegion(region3);
-        provinceRepository.save(province3);
-
-        Province province4 = new Province();
-        province4.setCode("PR04");
-        province4.setName("TP Nha Trang");
-        province4.setRegion(region3);
-        provinceRepository.save(province4);
-
-        Province province5 = new Province();
-        province5.setCode("PR05");
-        province5.setName("TP Hue");
-        province5.setRegion(region1);
-        provinceRepository.save(province5);
-
         //scenic spot
         ScenicSpot scenicSpot1 = new ScenicSpot();
         scenicSpot1.setName("Quat Lam");
-        scenicSpot1.setStar(3.5);
         scenicSpot1.setProvince("Nam Dinh");
         scenicSpot1.setRegion("Mien Bac");
         scenicSpotRepository.save(scenicSpot1);
 
         ScenicSpot scenicSpot2 = new ScenicSpot();
         scenicSpot2.setName("Ho Hoan Kiem");
-        scenicSpot2.setStar(4.5);
         scenicSpot2.setProvince("Ha Noi");
         scenicSpot2.setRegion("Mien Bac");
         scenicSpotRepository.save(scenicSpot2);
 
         ScenicSpot scenicSpot3 = new ScenicSpot();
         scenicSpot3.setName("TP Ho Chi Minh");
-        scenicSpot3.setStar(4.0);
         scenicSpot3.setProvince("TP Ho Chi Minh");
         scenicSpot3.setRegion("Mien Nam");
         scenicSpotRepository.save(scenicSpot3);
@@ -261,12 +203,10 @@ public class DBGenerator implements CommandLineRunner {
         Homestay homestay1 = new Homestay();
         homestay1.setName("Fpoly Homestay");
         homestay1.setAddress("Đường Trịnh Văn Bô, Nam Từ Liêm, Hà Nội");
-        homestay1.setRegion(region2);
-        homestay1.setProvince(province2);
         homestay1.setPromotion(promotion1);
         homestay1.setStatus(Status.KHONG_HOAT_DONG);
         homestay1.setOwnerHomestay(ownerHomestay1);
-        homestay1.setPoint(8.0);
+        homestay1.setPoint(5.0);
         homestay1.setPrice(new BigDecimal(1200000));
         homestay1.setNumberPerson(10);
         homestayRepository.save(homestay1);
@@ -274,11 +214,9 @@ public class DBGenerator implements CommandLineRunner {
         Homestay homestay2 = new Homestay();
         homestay2.setName("H2 homestay");
         homestay2.setAddress("số nhà 11 ngõ 465 Đường Hoàng Hoa Thám, Ba Đình, Hà Nội, Quận Ba Đình, Hà Nội");
-        homestay2.setRegion(region2);
-        homestay2.setProvince(province2);
         homestay2.setPromotion(promotion1);
         homestay2.setOwnerHomestay(ownerHomestay1);
-        homestay2.setPoint(8.8);
+        homestay2.setPoint(4.5);
         homestay2.setPrice(new BigDecimal(1500000));
         homestay2.setNumberPerson(12);
         homestayRepository.save(homestay2);
@@ -286,11 +224,9 @@ public class DBGenerator implements CommandLineRunner {
         Homestay homestay3 = new Homestay();
         homestay3.setName("Sweet Home Homestay");
         homestay3.setAddress("41 An Thượng 3, Đà Nẵng, Việt Nam");
-        homestay3.setRegion(region1);
-        homestay3.setProvince(province1);
         homestay3.setPromotion(promotion1);
         homestay3.setOwnerHomestay(ownerHomestay1);
-        homestay3.setPoint(9.0);
+        homestay3.setPoint(4.0);
         homestay3.setPrice(new BigDecimal(1000000));
         homestay3.setNumberPerson(8);
         homestayRepository.save(homestay3);
@@ -298,11 +234,9 @@ public class DBGenerator implements CommandLineRunner {
         Homestay homestay4 = new Homestay();
         homestay4.setName("Cozy Homestay");
         homestay4.setAddress("100 Cô Giang 21, Quận 1, TP.Hồ Chí Minh, Việt Nam");
-        homestay4.setRegion(region3);
-        homestay4.setProvince(province3);
         homestay4.setPromotion(promotion1);
         homestay4.setOwnerHomestay(ownerHomestay2);
-        homestay4.setPoint(7.0);
+        homestay4.setPoint(3.0);
         homestay4.setPrice(new BigDecimal(2000000));
         homestay4.setNumberPerson(12);
         homestayRepository.save(homestay4);
@@ -310,11 +244,9 @@ public class DBGenerator implements CommandLineRunner {
         Homestay homestay5 = new Homestay();
         homestay5.setName("Melissa Homestay Nha Trang");
         homestay5.setAddress("100A Trần Phú, Lộc Thọ, Nha Trang, Khánh Hòa, Việt Nam");
-        homestay5.setRegion(region3);
-        homestay5.setProvince(province4);
         homestay5.setPromotion(promotion1);
         homestay5.setOwnerHomestay(ownerHomestay2);
-        homestay5.setPoint(6.9);
+        homestay5.setPoint(3.9);
         homestay5.setPrice(new BigDecimal(800000));
         homestay1.setNumberPerson(10);
         homestayRepository.save(homestay5);
@@ -361,35 +293,35 @@ public class DBGenerator implements CommandLineRunner {
         comment1.setComment("Good");
         comment1.setUser(user1);
         comment1.setHomestay(homestay1);
-        comment1.setPoint(8.0);
+        comment1.setPoint(4.0);
         commentRepository.save(comment1);
 
         Comment comment2 = new Comment();
         comment2.setComment("Very Good");
         comment2.setUser(user2);
         comment2.setHomestay(homestay1);
-        comment2.setPoint(8.0);
+        comment2.setPoint(3.0);
         commentRepository.save(comment2);
 
         Comment comment3 = new Comment();
         comment3.setComment("Not ok");
         comment3.setUser(user1);
         comment3.setHomestay(homestay5);
-        comment3.setPoint(6.8);
+        comment3.setPoint(4.8);
         commentRepository.save(comment3);
 
         Comment comment4 = new Comment();
         comment4.setComment("Good");
         comment4.setUser(user1);
         comment4.setHomestay(homestay3);
-        comment4.setPoint(8.5);
+        comment4.setPoint(3.5);
         commentRepository.save(comment4);
 
         Comment comment5 = new Comment();
         comment5.setComment("Not Bad");
         comment5.setUser(user2);
         comment5.setHomestay(homestay4);
-        comment5.setPoint(7.8);
+        comment5.setPoint(3.8);
         commentRepository.save(comment5);
 
         //img comment

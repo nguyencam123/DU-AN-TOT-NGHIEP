@@ -2,11 +2,14 @@ package com.example.demo.cors.homestayowner.controller;
 
 import com.example.demo.cors.common.base.ResponseObject;
 import com.example.demo.cors.homestayowner.model.conventer.HomestayOwnerHomestayConventer;
+import com.example.demo.cors.homestayowner.model.reponse.HomestayOwnerHomestayDetailReponse;
 import com.example.demo.cors.homestayowner.model.request.HomestayownerHomestayRequest;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerHomestayService;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerImgHomestayService;
+import com.example.demo.entities.Homestay;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,36 +36,25 @@ public class HomestayOwnerHomestayController {
         return new ResponseObject(homestayownerHomestayService.getPageHomestay(id,homestayownerHomestayRequest));
     }
 
-    @GetMapping("get-all")
-    public ResponseObject getAllHomestayownerHomestay(HomestayownerHomestayRequest homestayownerHomestayRequest) {
-        return new ResponseObject(homestayownerHomestayService.getAll(homestayownerHomestayRequest));
-    }
-
-    @GetMapping("get-homestay")
-    public ResponseObject getPageHomestayownerHomestay(HomestayownerHomestayRequest homestayownerHomestayRequest) {
-        return new ResponseObject(homestayownerHomestayService.getAllPageable(homestayownerHomestayRequest));
-    }
-
     @GetMapping("get-imghomestay")
     public ResponseObject getPageHomestayownerHomestay(@RequestParam("id") String id) {
         return new ResponseObject(homestayOwnerImgHomestayService.getImgHomestayByHomestayId(id));
     }
 
-    @PostMapping("add-homestays")
-    public ResponseObject addhomestays(@RequestParam("homestay") String homestay,@RequestParam("image") List<MultipartFile> images) throws IOException{
-         HomestayownerHomestayRequest request=conventer.convert(homestay);
-         return new ResponseObject(homestayownerHomestayService.addHomestays(request,images));
+    @PostMapping("add-homestay")
+    public ResponseObject addhomestays(@RequestParam("homestay") String homestay,@RequestParam("image") List<MultipartFile> images,@RequestParam("convenient") List<String> idConvenientHomestay) throws IOException{
+        HomestayownerHomestayRequest request=conventer.convert(homestay);
+        return new ResponseObject(homestayownerHomestayService.addHomestay(request,images,idConvenientHomestay));
     }
 
     @PutMapping("update-homestays")
-    public ResponseObject updatehomestays(@RequestParam("id") String id,@RequestParam("homestay") String homestay,@RequestParam("image") List<MultipartFile> images) throws IOException{
+    public ResponseObject updatehomestays(@RequestParam("id") String id,@RequestParam("homestay") String homestay,@RequestParam("image") List<MultipartFile> images,@RequestParam("convenient") List<String> idConvenientHomestay) throws IOException{
         HomestayownerHomestayRequest request=conventer.convert(homestay);
-        return new ResponseObject(homestayownerHomestayService.updateHomestays(id,request,images));
+        return new ResponseObject(homestayownerHomestayService.updateHomestays(id,request,images,idConvenientHomestay));
     }
 
     @PutMapping("delete-homestays")
     public ResponseObject updatehomestays(@RequestParam("id") String id){
         return new ResponseObject(homestayownerHomestayService.deleteHomestays(id));
     }
-
 }

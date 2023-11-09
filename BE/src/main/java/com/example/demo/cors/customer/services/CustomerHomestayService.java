@@ -10,10 +10,8 @@ public interface CustomerHomestayService {
 
     PageableObject<Homestay> getHomestayByConvenientId(CustomerHomestayRequest request);
 
-    PageableObject<Homestay> getHomestayByProvince(CustomerHomestayRequest request);
-
-    PageableObject<Homestay> getHomestayByRegion(CustomerHomestayRequest request);
-
     Homestay getHomestayById(CustomerHomestayRequest request);
+
+    PageableObject<Homestay> getHomestayByAddress(CustomerHomestayRequest request);
 
 }
