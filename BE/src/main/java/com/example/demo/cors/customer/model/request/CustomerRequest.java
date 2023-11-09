@@ -10,7 +10,6 @@ import lombok.*;
 @Builder
 public class CustomerRequest {
 
-
     private String name;
 
     private Long birthday;

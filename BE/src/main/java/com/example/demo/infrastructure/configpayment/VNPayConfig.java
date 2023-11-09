@@ -19,11 +19,15 @@ import java.util.Random;
 @Configuration
 public class VNPayConfig {
 
+    public static String vnp_Version = "2.1.0";
+    public static String vnp_Command = "2.1.0";
+    public static String vnp_Locale = "vn";
+    public static String vnp_BankCode = "";
+    public static String vnp_CurrCode = "VND";
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
     public static String vnp_ReturnUrl = "http://localhost:3000";
     public static String vnp_TmnCode = "5XP59BXC";
     public static String secretKey = "SPZJHDMKAOZGHKEFPNJCHONYJEGNAOFA";
-    public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
 
     public static String md5(String message) {
         String digest = null;

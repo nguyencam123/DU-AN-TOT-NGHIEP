@@ -7,7 +7,7 @@ import {
   Popconfirm,
   Modal,
   Form,
-  Input,
+  Input
 } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { QuestionCircleOutlined } from '@ant-design/icons';
@@ -17,12 +17,12 @@ const columns = [
   {
     title: 'name',
     dataIndex: 'name',
-    key: 'name',
+    key: 'name'
   },
   {
     title: 'address',
     dataIndex: 'address',
-    key: 'address',
+    key: 'address'
   },
   {
     title: 'Action',
@@ -40,8 +40,8 @@ const columns = [
           <a>Delete</a>
         </Popconfirm>
       </Space>
-    ),
-  },
+    )
+  }
 ];
 const onFinish = (values) => {
   console.log('Success:', values);
@@ -85,16 +85,16 @@ const CategoryList = () => {
         <Form
           name='basic'
           labelCol={{
-            span: 8,
+            span: 8
           }}
           wrapperCol={{
-            span: 16,
+            span: 16
           }}
           style={{
-            maxWidth: 600,
+            maxWidth: 600
           }}
           initialValues={{
-            remember: true,
+            remember: true
           }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
@@ -106,8 +106,8 @@ const CategoryList = () => {
             rules={[
               {
                 required: true,
-                message: 'Please input your id category!',
-              },
+                message: 'Please input your id category!'
+              }
             ]}
           >
             <Input />
@@ -118,8 +118,8 @@ const CategoryList = () => {
             rules={[
               {
                 required: true,
-                message: 'Please input your name category!',
-              },
+                message: 'Please input your name category!'
+              }
             ]}
           >
             <Input />
