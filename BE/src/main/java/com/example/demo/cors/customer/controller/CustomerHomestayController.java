@@ -32,4 +32,9 @@ public class CustomerHomestayController {
         return new ResponseObject(customerHomestayService.getHomestayById(request));
     }
 
+    @GetMapping("/getByAddress")
+    public ResponseObject getHomestayByAddress(CustomerHomestayRequest request) {
+        return new ResponseObject(customerHomestayService.getHomestayByAddress(request));
+    }
+
 }

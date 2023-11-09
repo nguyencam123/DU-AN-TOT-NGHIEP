@@ -2,6 +2,7 @@ package com.example.demo.cors.homestayowner.model.request.loginrequest;
 
 import com.example.demo.infrastructure.contant.Status;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -25,6 +26,8 @@ public class HomestayOwnerOwnerHomestayRequest {
     private String username;
 
     private String password;
+
+    private String avataUrl;
 
     private Status status;
 

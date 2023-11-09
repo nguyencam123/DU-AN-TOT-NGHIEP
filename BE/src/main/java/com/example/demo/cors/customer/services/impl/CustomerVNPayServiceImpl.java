@@ -46,7 +46,7 @@ public class CustomerVNPayServiceImpl implements CustomerVNPayService {
         vnp_Params.put("vnp_OrderInfo", customerVNPayRequest.vnp_OrderInfo);
         vnp_Params.put("vnp_OrderType", customerVNPayRequest.vnp_OrderType);
         vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrl);
-        vnp_Params.put("vnp_TxnRef", String.valueOf(customerVNPayRequest.vnp_TxnRef));
+        vnp_Params.put("vnp_TxnRef", VNPayConfig.getRandomNumber(6));
         vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
 
         List fieldList = new ArrayList(vnp_Params.keySet());

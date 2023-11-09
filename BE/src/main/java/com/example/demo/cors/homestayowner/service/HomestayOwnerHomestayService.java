@@ -1,8 +1,9 @@
 package com.example.demo.cors.homestayowner.service;
 
 import com.example.demo.cors.common.base.PageableObject;
-import com.example.demo.cors.homestayowner.model.reponse.HomestayOwnerHomestayReponse;
+import com.example.demo.cors.homestayowner.model.request.HomestayOwnerDetailHomestayRequest;
 import com.example.demo.cors.homestayowner.model.request.HomestayownerHomestayRequest;
+import com.example.demo.entities.DetailHomestay;
 import com.example.demo.entities.Homestay;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,13 +14,9 @@ public interface HomestayOwnerHomestayService {
 
     PageableObject<Homestay> getPageHomestay(String id,HomestayownerHomestayRequest request);
 
-    PageableObject<Homestay> getAll(HomestayownerHomestayRequest homestayownerHomestayRequest);
-
-    PageableObject<HomestayOwnerHomestayReponse> getAllPageable(HomestayownerHomestayRequest homestayownerHomestayRequest);
-
-    Homestay addHomestays(HomestayownerHomestayRequest request,List<MultipartFile> multipartFiles) throws IOException;
-
-    Homestay updateHomestays(String id,HomestayownerHomestayRequest request,List<MultipartFile> multipartFiles) throws IOException;
+    Homestay updateHomestays(String id,HomestayownerHomestayRequest request,List<MultipartFile> multipartFiles,List<String> idConvenientHomestay) throws IOException;
 
     Homestay deleteHomestays(String id);
+
+    Homestay addHomestay(HomestayownerHomestayRequest request,List<MultipartFile> multipartFiles,List<String> idConvenientHomestay) throws IOException;
 }

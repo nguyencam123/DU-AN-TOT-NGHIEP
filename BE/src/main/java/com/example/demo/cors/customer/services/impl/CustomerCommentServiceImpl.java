@@ -24,4 +24,14 @@ public class CustomerCommentServiceImpl implements CustomerCommentService {
         return new PageableObject<>(res);
     }
 
+    @Override
+    public Integer getNumberOfReviewers(CustomerCommentRequest request) {
+        return customerCommentRepository.getNumberOfReviewers(request);
+    }
+
+    @Override
+    public Double getAvgPoint(CustomerCommentRequest request) {
+        return customerCommentRepository.getAvgPoint(request);
+    }
+
 }

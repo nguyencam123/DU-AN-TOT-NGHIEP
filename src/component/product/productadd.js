@@ -5,7 +5,7 @@ import { fetchProducts } from "../../features/product/productThunk";
 import { fetchCategory } from "../../features/category/categoryThunk"
 import { useState } from "react";
 import { Space, Table, Typography, Modal, Spin, Popconfirm, Form, Input, Row, Col, Select, Button, Pagination } from 'antd';
-import { QuestionCircleOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, EyeOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { removeProduct } from "../../features/product/deleteproductThunks";
 import * as Yup from 'yup'
 
@@ -136,30 +136,20 @@ function AddProductForm() {
     },
     {
       title: 'owner',
-      dataIndex: 'owner',
-      key: 'owner',
+      dataIndex: 'ownerHomestay.name',
+      key: 'ownerHomestay.name'
     },
     {
       title: 'website',
       dataIndex: 'website',
-      key: 'website',
+      key: 'website'
     },
     {
       title: 'Action',
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
-          <a onClick={showModal} style={{ color: '#1677ff' }}>Sửa</a>
-          <Popconfirm
-            title="Xóa mục này"
-            description="Bạn chắc chắn muốn xóa mục này chứ?"
-            icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-            cancelText="hủy"
-            okText="xóa"
-            onConfirm={() => handleDeleteProduct(record.id)} // Truyền record.id vào hàm handleDeleteProduct
-          >
-            <a style={{ color: '#1677ff' }}>Xóa</a>
-          </Popconfirm>
+          <a onClick={showModal} style={{ color: '#1677ff' }}><EyeOutlined /></a>
         </Space>
       ),
     },

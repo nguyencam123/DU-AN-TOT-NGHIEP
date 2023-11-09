@@ -10,7 +10,5 @@ const token = userDetail?.data.token;
 // Thiết lập tiêu đề mặc định cho tất cả các yêu cầu
 instance.defaults.headers.common['Content-Type'] = 'application/json';
 instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-console.log(token)
-
 
 export default instance;

@@ -20,7 +20,7 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
     @Override
     public PageableObject<Homestay> getListHomestay(CustomerHomestayRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-        Page<Homestay> res = customerHomestayRepository.findAll(pageable);
+        Page<Homestay> res = customerHomestayRepository.getAllHomestay(pageable);
         return new PageableObject<>(res);
     }
 
@@ -34,6 +34,13 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
     @Override
     public Homestay getHomestayById(CustomerHomestayRequest request) {
         return customerHomestayRepository.findHomestayById(request.getHomestayId());
+    }
+
+    @Override
+    public PageableObject<Homestay> getHomestayByAddress(CustomerHomestayRequest request) {
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+        Page<Homestay> res = customerHomestayRepository.findByAddressContains(pageable, request.getAddress());
+        return new PageableObject<>(res);
     }
 
 }

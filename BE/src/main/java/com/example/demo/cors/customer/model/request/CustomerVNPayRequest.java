@@ -16,7 +16,5 @@ public class CustomerVNPayRequest {
     public String vnp_OrderInfo = "Thanh toan hoa don";
 
     public String vnp_OrderType = "Thanh toan hoa don";
-
-    public String vnp_TxnRef;
-
+    
 }

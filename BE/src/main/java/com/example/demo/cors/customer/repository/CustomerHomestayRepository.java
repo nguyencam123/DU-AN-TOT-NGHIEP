@@ -2,6 +2,7 @@ package com.example.demo.cors.customer.repository;
 
 import com.example.demo.cors.customer.model.request.CustomerHomestayRequest;
 import com.example.demo.entities.Homestay;
+import com.example.demo.infrastructure.contant.Status;
 import com.example.demo.repositories.HomestayRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,5 +22,12 @@ public interface CustomerHomestayRepository extends HomestayRepository {
     Page<Homestay> getHomestayByConvenientId(Pageable pageable, CustomerHomestayRequest customerHomestayRequest);
 
     Homestay findHomestayById(String id);
+
+    Page<Homestay> findByAddressContains(Pageable pageable, String address);
+
+    @Query(value = """
+            SELECT * FROM homestay a WHERE a.status = 0
+            """, nativeQuery = true)
+    Page<Homestay> getAllHomestay(Pageable pageable);
 
 }

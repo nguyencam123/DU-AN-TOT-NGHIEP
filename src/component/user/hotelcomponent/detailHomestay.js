@@ -5,18 +5,46 @@ import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, StarTwoTone }
 import { Table } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchProducts, getOneProduct } from '../../../features/product/productThunk';
+import { fetchProducts, getAvgPoint, getCommentProduct, getOneProduct } from '../../../features/product/productThunk';
 const { Header, Content, Footer } = Layout;
 
 export const DetailHomestay = () => {
   const params = useParams();
-  const detailHomestay = useSelector((state) => state.product.productDetails)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
+    dispatch(getAvgPoint(params.id));
+    dispatch(getCommentProduct(params.id));
     dispatch(getOneProduct(params.id));
-    dispatch(fetchProducts());
   }, []);
+  const detailHomestay = useSelector((state) => state.product.productDetails)
+  const comment = useSelector((state) => state.product.commentProduct)
+  const avgPoint = useSelector((state) => state.product.avgPoint)
+  console.log(avgPoint);
+  const listComment = comment.map((value) =>
+  <Row style={{ margin: '20px 10px 10px 10px', border: '2px solid rgba(242,243,243,1.00)', borderRadius: '5px', minHeight: '70px' }}>
+  <Col span={5} >
+    <h5 style={{ marginLeft: '15px', marginTop: '10px', textAlign: 'center' }}>{value.user.name}</h5>
+  </Col>
+  <Col span={18} push={1}>
+    <div style={{ backgroundColor: 'rgba(236,248,255,1.00)', width: '100px', marginTop: '15px', borderRadius: '10px' }}>
+      <StarTwoTone style={{ fontSize: '20px', paddingBottom: '5px', paddingLeft: '3px' }} />
+          <span style={{ paddingTop: '10px', fontSize: '16px', marginLeft: '10px' }}>{value.point}/5</span>
+    </div>
+    <div style={{ fontWeight: '500', marginTop: '10px' }}>
+      {value.comment}
+    </div>
+    <div style={{ margin: '15px 0' }}>
+      <Image
+        style={{ borderRadius: '10px' }}
+        width={85}
+        height={85}
+        src="http://res.cloudinary.com/dcwkiozwf/image/upload/v1698477662/homestay_images/naaveb7ytdgyolqe3n1e.jpg"
+      />
+    </div>
+  </Col>
+</Row>
+  )
   // const imgHomestay = detailHomestay[0].images
   const handleBookingHomestay = (id) => {
     navigate(`/homestay/booking/${id}`)
@@ -77,7 +105,7 @@ export const DetailHomestay = () => {
                 src={detailHomestay?.images?.[0]?.imgUrl}
               />
             </Col>
-             <Col span={4} style={{ marginLeft: '12px' }}>
+            <Col span={4} style={{ marginLeft: '12px' }}>
               <Image
                 style={{ borderRadius: '10px', marginBottom: '10px' }}
                 width={250}
@@ -136,20 +164,20 @@ export const DetailHomestay = () => {
                 <Row>
                   <Col span={6}>
                     <div style={{ width: '270px', height: '80px', marginLeft: '15px', paddingLeft: '5px', fontSize: '12px', fontWeight: '500', boxShadow: '0px 2px 5px rgba(3,18,26,0.15)', borderRadius: '5px' }}>
-                      <div style={{ marginBottom: '5px', paddingTop: '5px' }}>Anh Tran Quang Huy</div>
-                      <span>Khach san voi Blue sky la qua tuyet voi</span>
+                      <div style={{ marginBottom: '5px', paddingTop: '5px' }}>{comment?.[0]?.user.name}</div>
+                      <span>{comment?.[0]?.comment}</span>
                     </div>
                   </Col>
                   <Col span={6} push={2}>
                     <div style={{ width: '270px', height: '80px', marginLeft: '15px', fontSize: '12px', paddingLeft: '5px', fontWeight: '500', boxShadow: '0px 2px 5px rgba(3,18,26,0.15)', borderRadius: '5px' }}>
-                      <div style={{ marginBottom: '5px', paddingTop: '5px' }}>Anh Tran Quang Huy</div>
-                      <span>Khach san voi Blue sky la qua tuyet voi</span>
+                      <div style={{ marginBottom: '5px', paddingTop: '5px' }}>{comment?.[1]?.user.name}</div>
+                      <span>{comment?.[1]?.comment}</span>
                     </div>
                   </Col>
                   <Col span={6} push={4}>
                     <div style={{ width: '270px', height: '80px', marginLeft: '15px', fontSize: '12px', paddingLeft: '5px', fontWeight: '500', boxShadow: '0px 2px 5px rgba(3,18,26,0.15)', borderRadius: '5px' }}>
-                      <div style={{ marginBottom: '5px', paddingTop: '5px' }}>Anh Tran Quang Huy</div>
-                      <span>Khach san voi Blue sky la qua tuyet voi</span>
+                      <div style={{ marginBottom: '5px', paddingTop: '5px' }}>{comment?.[2]?.user.name}</div>
+                      <span>{comment?.[2]?.comment}</span>
                     </div>
                   </Col>
                 </Row>
@@ -181,8 +209,8 @@ export const DetailHomestay = () => {
             <Col span={18}>
               <div style={{ marginLeft: '10px', marginTop: '10px' }}>
                 <div style={{ lineHeight: '12px', marginTop: '3px' }}><ClockCircleTwoTone style={{ fontSize: '12px' }} /> <b>Thời gian nhận/trả Homestay</b></div>
-                <span style={{ lineHeight: '12px', marginLeft: '17px', }}>Giờ nhận phòng: <b>Từ 12:00</b></span>
-                <span style={{ lineHeight: '12px', marginLeft: '17px', }}>Giờ trả phòng: <b>Trước 14:00</b></span>
+                <span style={{ lineHeight: '12px', marginLeft: '17px', }}>Giờ nhận phòng: <b>Từ {detailHomestay.timeCheckIn}</b></span>
+                <span style={{ lineHeight: '12px', marginLeft: '17px', }}>Giờ trả phòng: <b>Trước {detailHomestay.timeCheckOut}</b></span>
               </div>
               <hr style={{ width: '96%', marginLeft: '2%' }} />
               <div style={{ marginLeft: '10px', marginTop: '10px' }}>
@@ -202,7 +230,7 @@ export const DetailHomestay = () => {
                   <tbody>
                     <tr>
                       <td>Thời gian nhận trả phòng</td>
-                      <td>Từ 12:00 - trước 14:00</td>
+                      <td>Từ {detailHomestay?.timeCheckIn} - trước {detailHomestay?.timeCheckOut}</td>
                     </tr>
                     <tr>
                       <td>Diện tích</td>
@@ -213,8 +241,8 @@ export const DetailHomestay = () => {
                       <td>Có</td>
                     </tr>
                     <tr>
-                      <td>Bể bơi</td>
-                      <td>Có</td>
+                      <td>Số người</td>
+                      <td>{ detailHomestay?.numberPerson}</td>
                     </tr>
                   </tbody>
                 </Table>
@@ -247,7 +275,7 @@ export const DetailHomestay = () => {
           <Row style={{ backgroundColor: 'white', borderRadius: '5px', minHeight: '10px', marginTop: '15px' }}>
             <Col span={4} style={{ alignItems: 'center' }}>
               <Space wrap style={{ marginLeft: '40px', marginTop: '10px' }}>
-                <Progress type="dashboard" percent={80} gapDegree={30} />
+                <Progress type="dashboard" percent={3.5*100/5} gapDegree={30} />
               </Space>
             </Col>
             <Col span={14}>
@@ -265,51 +293,7 @@ export const DetailHomestay = () => {
               <Rate style={{ fontSize: '18px' }} defaultValue={1} disabled />
             </Col>
           </Row>
-          <Row style={{ margin: '20px 10px 10px 10px', border: '2px solid rgba(242,243,243,1.00)', borderRadius: '5px', minHeight: '70px' }}>
-            <Col span={5} >
-              <h5 style={{ marginLeft: '15px', marginTop: '10px', textAlign: 'center' }}>Anh Tran Quang Huy</h5>
-            </Col>
-            <Col span={18} push={1}>
-              <div style={{ backgroundColor: 'rgba(236,248,255,1.00)', width: '100px', marginTop: '15px', borderRadius: '10px' }}>
-                <StarTwoTone style={{ fontSize: '20px', paddingBottom: '5px', paddingLeft: '3px' }} />
-                <span style={{ paddingTop: '10px', fontSize: '16px', marginLeft: '10px' }}>4/5</span>
-              </div>
-              <div style={{ fontWeight: '500', marginTop: '10px' }}>
-                Vui long luu y, tre em co the bi thu them phi khi nhan phong tai khach san. Vui long lien he khach san truoc khi nhan phong de biet them thong tin chi tiet.
-              </div>
-              <div style={{ margin: '15px 0' }}>
-                <Image
-                  style={{ borderRadius: '10px' }}
-                  width={85}
-                  height={85}
-                  src="http://res.cloudinary.com/dcwkiozwf/image/upload/v1698477662/homestay_images/naaveb7ytdgyolqe3n1e.jpg"
-                />
-              </div>
-            </Col>
-          </Row>
-
-          <Row style={{ margin: '20px 10px 10px 10px', border: '2px solid rgba(242,243,243,1.00)', borderRadius: '5px', minHeight: '30px' }}>
-            <Col span={5} >
-              <h5 style={{ marginLeft: '15px', marginTop: '10px', textAlign: 'center' }}>Anh Tran Quang Huy</h5>
-            </Col>
-            <Col span={18} push={1}>
-              <div style={{ backgroundColor: 'rgba(236,248,255,1.00)', width: '100px', marginTop: '15px', borderRadius: '10px' }}>
-                <StarTwoTone style={{ fontSize: '20px', paddingBottom: '5px', paddingLeft: '3px' }} />
-                <span style={{ paddingTop: '10px', fontSize: '16px', marginLeft: '10px' }}>4/5</span>
-              </div>
-              <div style={{ fontWeight: '500', marginTop: '10px' }}>
-                Vui long luu y, tre em co the bi thu them phi khi nhan phong tai khach san. Vui long lien he khach san truoc khi nhan phong de biet them thong tin chi tiet.
-              </div>
-              <div style={{ margin: '15px 0' }}>
-                <Image
-                  style={{ borderRadius: '10px' }}
-                  width={85}
-                  height={85}
-                  src="http://res.cloudinary.com/dcwkiozwf/image/upload/v1698477662/homestay_images/naaveb7ytdgyolqe3n1e.jpg"
-                />
-              </div>
-            </Col>
-          </Row>
+          {listComment}
         </div>
       </Content>
 
