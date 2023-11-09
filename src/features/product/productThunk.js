@@ -6,7 +6,7 @@ const BASE_URL = '/homestay/get-all?size=999';
 export const fetchProducts = () => async (dispatch) => {
   dispatch(fetchProductsStart());
   try {
-    const response = await axios.get(BASE_URL);
+    const response = await axios.get('http://localhost:8080/api/v1/homestay?size=99');
     dispatch(fetchProductsSuccess(response.data.data.data)); // Lấy dữ liệu từ response.data.data
   } catch (error) {
     dispatch(fetchProductsFailure(error.message));
