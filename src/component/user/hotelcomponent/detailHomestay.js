@@ -5,7 +5,7 @@ import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, StarTwoTone }
 import { Table } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchProducts, getCommentProduct, getOneProduct } from '../../../features/product/productThunk';
+import { fetchProducts, getAvgPoint, getCommentProduct, getOneProduct } from '../../../features/product/productThunk';
 const { Header, Content, Footer } = Layout;
 
 export const DetailHomestay = () => {
@@ -13,13 +13,14 @@ export const DetailHomestay = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
+    dispatch(getAvgPoint(params.id));
     dispatch(getCommentProduct(params.id));
     dispatch(getOneProduct(params.id));
   }, []);
   const detailHomestay = useSelector((state) => state.product.productDetails)
-  console.log(detailHomestay);
   const comment = useSelector((state) => state.product.commentProduct)
-  console.log(comment);
+  const avgPoint = useSelector((state) => state.product.avgPoint)
+  console.log(avgPoint);
   const listComment = comment.map((value) =>
   <Row style={{ margin: '20px 10px 10px 10px', border: '2px solid rgba(242,243,243,1.00)', borderRadius: '5px', minHeight: '70px' }}>
   <Col span={5} >
@@ -274,7 +275,7 @@ export const DetailHomestay = () => {
           <Row style={{ backgroundColor: 'white', borderRadius: '5px', minHeight: '10px', marginTop: '15px' }}>
             <Col span={4} style={{ alignItems: 'center' }}>
               <Space wrap style={{ marginLeft: '40px', marginTop: '10px' }}>
-                <Progress type="dashboard" percent={80} gapDegree={30} />
+                <Progress type="dashboard" percent={3.5*100/5} gapDegree={30} />
               </Space>
             </Col>
             <Col span={14}>
