@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react'
-import { Space, Typography, Button, Table, Popconfirm, Modal, Form, Input, Row, Col, message, Image } from 'antd'
+import { Space, Typography, Button, Table, Popconfirm, Modal, Form, Input, Row, Col, message, Image, TimePicker } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 import { QuestionCircleOutlined, EditOutlined, DeleteOutlined, EyeOutlined, DownloadOutlined, SwapOutlined, RotateLeftOutlined, RotateRightOutlined, ZoomOutOutlined, ZoomInOutlined, ReloadOutlined } from '@ant-design/icons'
 import { useState } from 'react'
-import { EditHomestay, addHomestay, fetchHomestay } from '../../../features/owner_homestay/homestayThunk'
+import { EditHomestay, UpdateStatus, addHomestay, fetchHomestay } from '../../../features/owner_homestay/homestayThunk'
 import { fetchConvenient } from '../../../features/owner_homestay/convenientThunk'
 import { PlusOutlined } from '@ant-design/icons';
 import {
@@ -133,8 +133,9 @@ const HomeStayProduct = () => {
             title="Cập nhật mục này"
             description="Bạn chắc chắn muốn cập nhật trạng thái homestay thành không hoạt động?"
             icon={<ReloadOutlined />}
-            cancelText="hủy"
-            okText="xóa"
+            cancelText="Hủy"
+            okText="Cập nhật"
+            onConfirm={() => handleSubmitStatus(record)}
           >
             <a><ReloadOutlined /></a>
           </Popconfirm>
@@ -148,13 +149,26 @@ const HomeStayProduct = () => {
 
   const [name, setname] = useState("")
   const [formErrors, setFormErrors] = useState({});
+  const [acreage, setacreage] = useState(0)
+  const [roomNumber, setroomNumber] = useState(0)
+  const [cancellationPolicy, setcancellationPolicy] = useState(0)
+  const [timeCheckIn, settimeCheckIn] = useState(null)
+  const handleTimeChangestart = (time, timeString) => {
+    settimeCheckIn(timeString);
+  };
+  const [timeCheckOut, settimeCheckOut] = useState(null)
+  const handleTimeChangeend = (time, timeString) => {
+    settimeCheckOut(timeString);
+  };
   const [startDate, setstartDate] = useState(null)
   const handleDateChangestart = (dates) => {
-    setstartDate(moment(dates).valueOf());
+    // setstartDate(moment(dates).valueOf());
+    setstartDate(dates);
   };
   const [endDate, setendDate] = useState(null)
   const handleDateChangeend = (dates) => {
-    setendDate(moment(dates).valueOf());
+    // setendDate(moment(dates).valueOf());
+    setendDate(dates);
   };
   const [desc, setdesc] = useState("")
   const [price, setprice] = useState(0)
@@ -180,15 +194,21 @@ const HomeStayProduct = () => {
   const userDetail = JSON.parse(localStorage.getItem('userDetail'));
   const UserID = userDetail.data.id;
   //
+  const parsedAcreage = parseFloat(acreage).toFixed(2);
   const homestay = {
     name: name,
-    startDate: startDate,
-    endDate: endDate,
+    timeCheckIn: timeCheckIn,
+    timeCheckOut: timeCheckOut,
+    cancellationPolicy: parseFloat(cancellationPolicy),
+    startDate: moment(startDate).valueOf(),
+    endDate: moment(endDate).valueOf(),
     desc: desc,
     price: parseFloat(price),
     numberPerson: parseInt(numberPerson),
     address: address,
-    ownerHomestay: UserID
+    acreage: Number(parsedAcreage),
+    ownerHomestay: UserID,
+    roomNumber: parseInt(roomNumber)
   };
   const convenient = "48a5d30c-01fb-40ab-ad54-348314128968,8162b960-f3b8-4b69-aaf1-e2b7ba283be2"
   //validateform
@@ -210,11 +230,24 @@ const HomeStayProduct = () => {
       .test('notEmpty', 'Vui lòng chọn đầy đủ địa chỉ của bạn', value => {
         return value && value.trim().length > 0;
       }),
-
+    timeCheckIn: Yup.string().required('Vui lòng chọn thời gian nhận phòng'),
+    timeCheckOut: Yup.string().required('Vui lòng chọn thời gian nhận phòng'),
+    roomNumber: Yup.number()
+      .required('Vui lòng nhập số phòng')
+      .typeError('Vui lòng nhập số phòng')
+      .positive('Số lượng phòng phải lớn hơn 0'),
+    cancellationPolicy: Yup.number()
+      .required('Vui lòng nhập số chính sách ủy phòng')
+      .typeError('Vui lòng nhập số chính sách ủy phòng')
+      .positive('Số lượng chính sách ủy phòng phải lớn hơn 0'),
     // province: Yup.string().required('Vui lòng chọn thành phố homestay'),
     startDate: Yup.number().required('Vui lòng chọn ngày bắt đầu'),
     endDate: Yup.number().required('Vui lòng chọn ngày kết thúc'),
   })
+  const handleSubmitStatus = async (record) => {
+    await message.info('Đang tiến hành sửa trạng thái bạn vui lòng đợi một vài giây nhé!');
+    await dispatch(UpdateStatus(record.id));
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -228,6 +261,10 @@ const HomeStayProduct = () => {
         setprice(0)
         setdesc('')
         setnumberPerson(0)
+        setcancellationPolicy(0)
+        setnumberPerson(0)
+        setacreage(0)
+        setFile([])
       } else {
         await setIsModalOpen(false);
         await message.info('Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!');
@@ -242,7 +279,6 @@ const HomeStayProduct = () => {
         errorObject[error.path] = error.message;
       });
       setFormErrors(errorObject);
-
     }
   };
 
@@ -264,6 +300,9 @@ const HomeStayProduct = () => {
     setDateStart(DateStart);
     setDateEnd(DateEnd);
     setIamge(record.images)
+    setcancellationPolicy(record.cancellationPolicy)
+    setroomNumber(record.numberPerson)
+    setacreage(record.acreage)
     setFormErrors({});
     const addressParts = record.address.split(", ");
     const selectedWardName = addressParts[0]; // Lấy tên phường/xã từ địa chỉ
@@ -371,7 +410,7 @@ const HomeStayProduct = () => {
                 validateStatus={formErrors.price ? 'error' : ''}
                 help={formErrors.price}
               >
-                <Input value={price} onChange={(e) => setprice(e.target.value)} />
+                <Input value={price} onChange={(e) => setprice(e.target.value)} addonAfter="VNĐ" />
               </Form.Item>
             </Col>
           </Row>
@@ -385,18 +424,62 @@ const HomeStayProduct = () => {
                 <Input value={numberPerson} onChange={(e) => setnumberPerson(e.target.value)} />
               </Form.Item>
             </Col>
-            {/* <Col span={12}>
-              <Title level={5}>Chọn Thành phố</Title>
-              <Select defaultValue="Chọn thành phố homstay" onChange={(value) => setprovince(value)}>
-                {provinces.map((province) => (
-                  <Option key={province.id} value={province.id}>
-                    {province.name}
-                  </Option>
-                ))}
-              </Select>
-            </Col> */}
+            <Col span={12}>
+              <Form.Item
+                label={<Title level={5}>Diện tích</Title>}
+                validateStatus={formErrors.acreage ? 'error' : ''}
+                help={formErrors.acreage}
+              >
+                <Input value={acreage} onChange={(e) => setacreage(e.target.value)} addonAfter="m2" />
+              </Form.Item>
+            </Col>
           </Row>
-          <Row gutter={24} style={{ marginTop: 20, marginBottom: 20, marginLeft: 20 }}>
+          <Row gutter={24} style={{ marginLeft: 4 }}>
+            <Col span={12}>
+              <Form.Item
+                label={<Title level={5}>Ngày bắt đầu</Title>}
+              >
+                <DatePicker onChange={handleDateChangestart} style={{ width: '100%' }} disabledDate={isBeforeToday} />
+                <div style={{ color: 'red' }}>{formErrors.startDate}</div>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label={<Title level={5}>Ngày kết thúc</Title>}
+              >
+                <DatePicker onChange={handleDateChangeend} style={{ width: '100%' }} disabledDate={isBeforeToday} />
+                <div style={{ color: 'red' }}>{formErrors.endDate}</div>
+              </Form.Item>
+              {/* <DatePicker /> */}
+            </Col>
+          </Row>
+          {/* time bắt đầu */}
+          <Row gutter={24} style={{ marginLeft: 4 }}>
+            <Col span={12}>
+              <Title level={5}>Thời gian nhận phòng:</Title>
+              <TimePicker onChange={handleTimeChangestart} style={{ width: '67%', float: 'right' }} />
+              <div style={{ color: 'red' }}>{formErrors.timeCheckIn}</div>
+
+            </Col>
+            <Col span={12}>
+              <Title level={5}>Thời gian trả phòng:</Title>
+              <TimePicker onChange={handleTimeChangeend} style={{ width: '67%', float: 'right' }} />
+              <div style={{ color: 'red' }}>{formErrors.timeCheckOut}</div>
+            </Col>
+          </Row>
+          <Row gutter={24} style={{ marginLeft: 4, marginTop: 20 }}>
+            <Col span={12}>
+              <Title level={5}>Chính sách hủy phòng:</Title>
+              <Input style={{ width: '67%', float: 'right' }} value={cancellationPolicy} onChange={(e) => setcancellationPolicy(e.target.value)} />
+              <div style={{ color: 'red', marginTop: 35 }}>{formErrors.cancellationPolicy}</div>
+            </Col>
+            <Col span={12}>
+              <Title level={5}>Số phòng:</Title>
+              <Input style={{ width: '67%', float: 'right' }} value={roomNumber} onChange={(e) => setroomNumber(e.target.value)} />
+              <div style={{ color: 'red', marginTop: 35 }}>{formErrors.roomNumber}</div>
+            </Col>
+          </Row>
+          <Row gutter={24} style={{ marginTop: 10, marginBottom: 20, marginLeft: 20 }}>
             {/* <DatePicker /> */}
             <div style={{ display: 'flex' }}>
               <div style={{ marginRight: 30, marginLeft: 20 }}>
@@ -436,25 +519,6 @@ const HomeStayProduct = () => {
                 <div style={{ color: 'red' }}>{formErrors.selectedWard}</div>
               </div>
             </div>
-          </Row>
-          <Row gutter={24} style={{ marginLeft: 4 }}>
-            <Col span={12}>
-              <Form.Item
-                label={<Title level={5}>Ngày bắt đầu</Title>}
-              >
-                <DatePicker onChange={handleDateChangestart} style={{ width: '100%' }} disabledDate={isBeforeToday} defaultValue={moment(DateStart).locale('vi')} format={dateFormat} />
-                <div style={{ color: 'red' }}>{formErrors.startDate}</div>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                label={<Title level={5}>Ngày kết thúc</Title>}
-              >
-                <DatePicker onChange={handleDateChangeend} style={{ width: '100%' }} disabledDate={isBeforeToday} defaultValue={moment(DateEnd).locale('vi')} format={dateFormat} />
-                <div style={{ color: 'red' }}>{formErrors.endDate}</div>
-              </Form.Item>
-              {/* <DatePicker /> */}
-            </Col>
           </Row>
           <Row gutter={24} >
             <Col span={24}>
@@ -508,22 +572,37 @@ const HomeStayProduct = () => {
         }
       </Modal>
       <Modal title={<div style={{ fontSize: '22px' }}>Xem thông tin chi tiết homstay</div>} open={isViewmodal} onCancel={handleCancel}
-        width={800} style={{ fontSize: '40px' }}>
+        width={1100} style={{ fontSize: '40px' }}>
         <div style={{ fontSize: 18, fontWeight: 600 }}>
-          <div style={{ display: 'flex' }}><div style={{ width: 150 }}>Tên homestay </div> : {name}</div><br />
-          <div style={{ display: 'flex' }}><div style={{ width: 150 }}>Mô tả          </div> : {desc}</div><br />
-          <div style={{ display: 'flex' }}><div style={{ width: 150 }}>Giá            </div> : {price}</div><br />
-          <div style={{ display: 'flex' }}><div style={{ width: 150 }}>Số lượng người </div> : {numberPerson}</div><br />
-          <div style={{ display: 'flex' }}><div style={{ width: 150 }}>Địa chỉ        </div> : {addressView}</div><br />
-          <div style={{ display: 'flex' }}>
-            <div style={{ width: 150 }}>Ngày bắt đầu</div> : {moment(startDate).locale('vi').format('LL')}
-          </div><br />
-          <div style={{ display: 'flex' }}>
-            <div style={{ width: 150 }}>Ngày kết thúc</div> : {moment(endDate).locale('vi').format('LL')}
-          </div><br />
-
-          <div>Ảnh homstay  <br />
-            <div style={{ width: 700, padding: 20, flexWrap: 'wrap', borderRadius: 10, display: 'flex', justifyContent: 'center', border: '1px solid black' }}>
+          <table>
+            <tr>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Tên homestay </div> : {name}</div><br /></td>
+              <td style={{ width: 500 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Mô tả          </div> : {desc}</div><br /></td>
+            </tr>
+            <tr>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Giá            </div> : {price} (VNĐ)</div><br /></td>
+              <td style={{ width: 500 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Số lượng người </div> : {numberPerson} (Người)</div><br /></td>
+            </tr>
+            <tr>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Số phòng</div> : {roomNumber}</div><br /></td>
+              <td style={{ width: 500 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Chính sách hủy phòng </div> : {cancellationPolicy}</div><br /></td>
+            </tr>
+            <tr>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Thời gian nhận phòng </div> : {timeCheckIn}</div><br /></td>
+              <td style={{ width: 500 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Thời gian trả phòng </div> : {timeCheckOut}</div><br /></td>
+            </tr>
+            <tr>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}>
+                <div style={{ width: 200 }}>Ngày bắt đầu</div> : {moment(startDate).locale('vi').format('LL')}</div><br /></td>
+              <td style={{ width: 500 }}><div style={{ display: 'flex' }}>
+                <div style={{ width: 200 }}>Ngày kết thúc</div> : {moment(endDate).locale('vi').format('LL')}
+              </div><br /></td>
+            </tr>
+          </table>
+          <div style={{ display: 'flex' }}><div style={{ width: 200 }}>Diện tích phòng</div> : {acreage} (m2)</div><br />
+          <div style={{ display: 'flex' }}><div style={{ width: 200 }}>Địa chỉ        </div> : {addressView}</div><br />
+          <div>Ảnh homstay :<br />
+            <div style={{ width: 1030, padding: 20, flexWrap: 'wrap', borderRadius: 10, display: 'flex', justifyContent: 'center', border: '1px solid black' }}>
               {
                 image.map((imageurl, index) => (
                   <Image

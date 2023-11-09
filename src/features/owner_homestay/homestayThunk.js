@@ -42,3 +42,11 @@ export const EditHomestay = (homestay, imgUrl, id, convenient) => async (dispatc
     dispatch(fetchProductsFailure(error.message));
   }
 };
+export const UpdateStatus = (id) => async (dispatch) => {
+  dispatch(fetchProductsStart());
+  try {
+    await axios.put(BASE_URL + `/delete-homestays?id=${id}`);
+  } catch (error) {
+    dispatch(fetchProductsFailure(error.message));
+  }
+};
