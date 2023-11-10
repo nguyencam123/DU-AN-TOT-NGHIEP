@@ -11,5 +11,4 @@ const token = userDetail?.data.token;
 instance.defaults.headers.common['Content-Type'] = 'application/json';
 instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-
 export default instance;
