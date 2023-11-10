@@ -1,5 +1,6 @@
 package com.example.demo.cors.admin.model.request;
 
+import com.example.demo.infrastructure.contant.Status;
 import lombok.*;
 
 @Getter
@@ -9,7 +10,18 @@ import lombok.*;
 @ToString
 public class AdminLoginRequest {
 
-    private String pass;
+    private String name;
 
-    private String uname;
+    private Long birthday;
+
+    private Boolean gender;
+
+    private String address;
+
+    private String phoneNumber;
+
+    private String email;
+
+    private String avataUrl;
+
 }
