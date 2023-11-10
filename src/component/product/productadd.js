@@ -1,15 +1,16 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addProductAsync } from "../../features/product/createproductThunks";
-import { fetchProducts, getProducts } from "../../features/product/productThunk";
+import { denineProducts, fetchProducts, getProducts } from "../../features/product/productThunk";
 import { fetchCategory } from "../../features/category/categoryThunk"
 import { useState } from "react";
-import { Space, Table, Typography, Modal, Spin, Popconfirm, Form, Input, Row, Col, Select, Button, Pagination, Image } from 'antd';
+import { Space, Table, Typography, Modal, Spin, Popconfirm, Form, Input, Row, Col, Select, Button, Pagination, Image, message } from 'antd';
 import { DeleteOutlined, EditOutlined, EyeOutlined, QuestionCircleOutlined, RotateLeftOutlined, RotateRightOutlined, SwapOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
 import { removeProduct } from "../../features/product/deleteproductThunks";
 import * as Yup from 'yup'
 import { DetailHomestay } from "../user/hotelcomponent/detailHomestay";
 import moment from 'moment';
+import { aproveHomestay } from "../../features/admin/adminThunk";
 
 
 const { Title } = Typography;
@@ -33,23 +34,32 @@ function AddProductForm() {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.product.products)
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formErrors, setFormErrors] = useState({});
   //
 
   const listFilter = [
     {
-      name: 'Trạng thái',
-      value: 'star'
+      name: 'Tất cả',
+      value: 'all'
     },
     {
-      name: 'Ngày tạo',
-      value: 'createdDate'
+      name: 'Chờ duyệt',
+      value: 'wait'
+    },
+    {
+      name: 'Đã duyệt',
+      value: 'aprove'
+    },
+    {
+      name: 'Từ chối',
+      value: 'denie'
     }
   ]
 
   const { Search } = Input;
   const [isViewModal, setIsViewModal] = useState(false);
   const [viewHomestay, setViewHomestay] = useState({});
+  const idAdmin = useSelector((state) => state.user.adminData?.data.id)
+  console.log(idAdmin);
 
   const onSearch = (value, _e, info) => console.log(info?.source, value);
 
@@ -60,16 +70,33 @@ function AddProductForm() {
   const handleCancel = () => {
     setIsViewModal(false);
   }
+  const handleOk =  () => {
+    setIsModalOpen(true)
+  }
 
   const showModal = (record) => {
     setIsViewModal(true);
     setViewHomestay(record);
-    setViewImage(record.images)
+    setViewImage(record.imageUrls)
     console.log(record);
+  };
+
+  const showConfirmModal = async () => {
+    const data = {
+      homestayId: viewHomestay.id,
+      adminId: idAdmin
+    }
+    await dispatch(aproveHomestay(data))
+    await message.info('Sửa thành công');
+    setIsViewModal(false);
+    dispatch(denineProducts());
+  };
+  const cancelConfirmModal = () => {
+    setIsModalOpen(false);
   };
   //
   useEffect(() => {
-    dispatch(getProducts());
+    dispatch(denineProducts());
   }, []);
 
   const columns = [
@@ -86,15 +113,16 @@ function AddProductForm() {
     {
       title: 'Trạng thái',
       dataIndex: 'status',
-      key: 'status'
+      key: 'status',
+      render: (data) => {
+        console.log(data);
+        return data == 1 ? 'Chờ duyệt' : 'Đã duyệt'
+      }
     },
     {
       title: 'Chủ homestay',
-      dataIndex: 'ownerHomestay',
-      key: 'ownerHomestay', 
-      render: (data) => {
-        return data.name; 
-      }
+      dataIndex: 'ownerHomestayName',
+      key: 'ownerHomestayName'
     },
     {
       title: 'Giá thuê 1 đêm',
@@ -118,7 +146,7 @@ function AddProductForm() {
       <Title level={2}>Quản trị homestay</Title>
       <Title level={4}>Danh mục</Title>
       <Row>
-        <Form.Item label="Lọc theo" style={{ float: 'left' }}>
+        <Form.Item label="Trạng thái" style={{ float: 'left' }}>
           <Select
             style={{ width: 143 }}
             onChange={handleChange}
@@ -149,8 +177,10 @@ function AddProductForm() {
       {error ? <p>Error: {error}</p> : null} */}
       <Table columns={columns} dataSource={products} />
       {/* popup form */}
-    
-      <Modal title={<div style={{ fontSize: '22px' }}>Xem thông tin chi tiết homstay</div>} open={isViewModal} onCancel={handleCancel}
+
+      <Modal title={<div style={{ fontSize: '22px' }}>Xem thông tin chi tiết homstay</div>} open={isViewModal} onCancel={(data) => handleCancel(data)}
+        onOk={(data) => handleOk(data)}
+        okText='Duyệt phòng' cancelText='Từ chối'
         width={1100} style={{ fontSize: '40px' }}>
         <div style={{ fontSize: 18, fontWeight: 600 }}>
           <table>
@@ -190,7 +220,7 @@ function AddProductForm() {
                 viewImage.map((img, index) => (
                   <Image
                     key={index}
-                    src={img.imgUrl}
+                    src={img}
                     alt={`Homestay Image ${index}`}
                     style={{
                       maxWidth: '200px', // Đảm bảo ảnh không vượt quá chiều rộng của phần tử cha
@@ -218,7 +248,17 @@ function AddProductForm() {
             </div>
           </div>
         </div>
-        </Modal>
+      </Modal>
+      <Modal
+        title="Xác nhận"
+        open={isModalOpen}s
+        onOk={showConfirmModal}
+        onCancel={cancelConfirmModal}
+        okText="Đồng ý"
+        cancelText="Từ chối"
+      >
+        <p>Bạn đồng ý duyệt homestay này</p>
+      </Modal>
     </div>
   )
 }
