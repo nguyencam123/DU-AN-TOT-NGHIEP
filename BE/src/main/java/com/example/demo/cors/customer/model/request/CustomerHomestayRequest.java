@@ -31,4 +31,8 @@ public class CustomerHomestayRequest extends PageableRequest {
 
     private Status status;
 
+    private Long dateFrom;
+
+    private Long dateTo;
+
 }

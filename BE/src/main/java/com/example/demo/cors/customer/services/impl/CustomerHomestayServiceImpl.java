@@ -25,9 +25,9 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
     }
 
     @Override
-    public PageableObject<Homestay> getHomestayByConvenientId(CustomerHomestayRequest request) {
+    public PageableObject<Homestay> searchHomestay(CustomerHomestayRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-        Page<Homestay> res = customerHomestayRepository.getHomestayByConvenientId(pageable, request);
+        Page<Homestay> res = customerHomestayRepository.searchHomestay(pageable, request);
         return new PageableObject<>(res);
     }
 

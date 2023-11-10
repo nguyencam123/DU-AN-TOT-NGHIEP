@@ -8,7 +8,7 @@ public interface CustomerHomestayService {
 
     PageableObject<Homestay> getListHomestay(CustomerHomestayRequest request);
 
-    PageableObject<Homestay> getHomestayByConvenientId(CustomerHomestayRequest request);
+    PageableObject<Homestay> searchHomestay(CustomerHomestayRequest request);
 
     Homestay getHomestayById(CustomerHomestayRequest request);
 

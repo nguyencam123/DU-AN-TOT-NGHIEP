@@ -22,9 +22,9 @@ public class CustomerHomestayController {
         return new ResponseObject(customerHomestayService.getListHomestay(request));
     }
 
-    @GetMapping("/getByConvenient")
-    public ResponseObject getHomestayByConvenientId(CustomerHomestayRequest request) {
-        return new ResponseObject(customerHomestayService.getHomestayByConvenientId(request));
+    @GetMapping("/search")
+    public ResponseObject searchHomestay(CustomerHomestayRequest request) {
+        return new ResponseObject(customerHomestayService.searchHomestay(request));
     }
 
     @GetMapping("/getOne")
