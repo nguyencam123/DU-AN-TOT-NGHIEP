@@ -1,5 +1,6 @@
 package com.example.demo.cors.admin.services.impl;
 
+import com.cloudinary.Cloudinary;
 import com.example.demo.cors.admin.model.request.AdminPassRequest;
 import com.example.demo.cors.admin.model.request.AdminRequest;
 import com.example.demo.cors.admin.model.request.AdminUserPasswordRequest;
@@ -8,6 +9,7 @@ import com.example.demo.cors.admin.model.response.AdminLoginResponse;
 import com.example.demo.cors.admin.model.request.AdminLoginRequest;
 import com.example.demo.cors.admin.repository.AdminLoginRepository;
 import com.example.demo.cors.admin.services.AdminLoginService;
+import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayOwnerOwnerHomestayRequest;
 import com.example.demo.entities.Admin;
 import com.example.demo.entities.User;
 import com.example.demo.infrastructure.contant.Status;
@@ -18,9 +20,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
+import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 @Service
 public class AdminLoginServiceImpl implements AdminLoginService {
@@ -36,6 +42,9 @@ public class AdminLoginServiceImpl implements AdminLoginService {
 
     @Autowired
     private AdminLoginRepository adminLoginRepository;
+
+    @Autowired
+    private Cloudinary cloudinary;
 
     @Override
     public AdminLoginResponse getAdLogin(AdminLoginRequest adminLoginRequest) {
@@ -148,6 +157,60 @@ public class AdminLoginServiceImpl implements AdminLoginService {
                 .email(admin.getEmail())
                 .username(admin.getUsername())
                 .status(admin.getStatus()).build();
+    }
+
+    @Override
+    public AdminAuthenticationReponse updateInformation(String idAmin, AdminLoginRequest request, MultipartFile multipartFile) throws IOException {
+        checkNull( isNullOrEmpty(request.getName()), request.getBirthday(), isNullOrEmpty(request.getAddress()), isNullOrEmpty(request.getPhoneNumber()), isNullOrEmpty(request.getEmail()), request);
+        Admin admin = adminLoginRepository.findById(idAmin).orElse(null);
+        admin.setName(request.getName());
+        admin.setBirthday(request.getBirthday());
+        admin.setGender(request.getGender());
+        admin.setAddress(request.getAddress());
+        admin.setPhoneNumber(request.getPhoneNumber());
+        admin.setEmail(request.getEmail());
+        if (multipartFile==null){
+            admin.setAvatarUrl(null);
+        }else {
+            admin.setAvatarUrl(cloudinary.uploader()
+                    .upload(multipartFile.getBytes(),
+                            Map.of("id", UUID.randomUUID().toString()))
+                    .get("url")
+                    .toString());
+        }
+        admin.setStatus(Status.HOAT_DONG);
+        adminLoginRepository.save(admin);
+        return AdminAuthenticationReponse.builder().
+                code(admin.getCode())
+                .id(admin.getId())
+                .name(admin.getName())
+                .birthday(admin.getBirthday())
+                .gender(admin.getGender())
+                .address(admin.getAddress())
+                .phoneNumber(admin.getPhoneNumber())
+                .email(admin.getEmail())
+                .avataUrl(admin.getAvatarUrl())
+                .username(admin.getUsername())
+                .status(admin.getStatus())
+                .build();
+    }
+
+    public void checkNull( boolean nullOrEmpty2, Long birthday, boolean nullOrEmpty3, boolean nullOrEmpty4, boolean nullOrEmpty5, AdminLoginRequest request) {
+        if (nullOrEmpty2) {
+            throw new RestApiException("Name cannot be empty");
+        }
+        if (birthday == null) {
+            throw new RestApiException("Birthday cannot be empty");
+        }
+        if (nullOrEmpty3) {
+            throw new RestApiException("Address cannot be empty");
+        }
+        if (nullOrEmpty4) {
+            throw new RestApiException("Phone number cannot be empty");
+        }
+        if (nullOrEmpty5) {
+            throw new RestApiException("Email cannot be empty");
+        }
     }
 
     public static boolean isNullOrEmpty(String str) {

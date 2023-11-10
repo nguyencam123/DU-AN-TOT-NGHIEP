@@ -8,5 +8,8 @@ import lombok.Setter;
 @Setter
 public class AdminHomestayRequest extends PageableRequest {
     String homestayId;
+
+    String findName;
+
 }
 

@@ -44,4 +44,14 @@ public class AdminHomestayController {
     public ResponseObject getAllById(@RequestBody AdminHomestayRequest adminHomestayRequest){
         return new ResponseObject(adminHomestayService.getAllById(adminHomestayRequest));
     }
+
+    @GetMapping("/bynamecho")
+    public ResponseObject findByNameChoDuyet(@RequestBody AdminHomestayRequest adminHomestayRequest){
+        return new ResponseObject(adminHomestayService.findByNameChoDuyet(adminHomestayRequest));
+    }
+
+    @GetMapping("/bynameda")
+    public ResponseObject findByNameDaDuyet(@RequestBody AdminHomestayRequest adminHomestayRequest){
+        return new ResponseObject(adminHomestayService.findByNameDaDuyet(adminHomestayRequest));
+    }
 }

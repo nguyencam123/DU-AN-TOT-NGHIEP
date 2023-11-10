@@ -14,4 +14,8 @@ public interface AdminHomestayService {
     PageableObject<AdminHomestayResponse> getAllDaDuyet(AdminHomestayRequest request);
 
     PageableObject<AdminHomestayResponse> getAllById(AdminHomestayRequest request);
+
+    PageableObject<AdminHomestayResponse> findByNameChoDuyet(AdminHomestayRequest request);
+
+    PageableObject<AdminHomestayResponse> findByNameDaDuyet(AdminHomestayRequest request);
 }

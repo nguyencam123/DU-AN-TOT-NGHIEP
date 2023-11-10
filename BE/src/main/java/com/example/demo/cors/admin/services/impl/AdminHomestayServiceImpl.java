@@ -45,5 +45,19 @@ public class AdminHomestayServiceImpl implements AdminHomestayService {
         return new PageableObject<>(getAllbyid);
     }
 
+    @Override
+    public PageableObject<AdminHomestayResponse> findByNameChoDuyet(AdminHomestayRequest request) {
+        Pageable pageable = PageRequest.of(request.getPage(),request.getSize());
+        Page<AdminHomestayResponse> findByNameChoDuyet= adminHomestayRepository.findByNameChoDuyet(pageable,request);
+        return new PageableObject<>(findByNameChoDuyet);
+    }
+
+    @Override
+    public PageableObject<AdminHomestayResponse> findByNameDaDuyet(AdminHomestayRequest request) {
+        Pageable pageable = PageRequest.of(request.getPage(),request.getSize());
+        Page<AdminHomestayResponse> findByNameDaDuyet= adminHomestayRepository.findByNameDaDuyet(pageable,request);
+        return new PageableObject<>(findByNameDaDuyet);
+    }
+
 
 }
