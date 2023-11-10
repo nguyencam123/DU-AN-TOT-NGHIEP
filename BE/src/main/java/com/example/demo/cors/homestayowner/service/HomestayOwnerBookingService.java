@@ -7,4 +7,5 @@ import com.example.demo.cors.homestayowner.model.request.HomestayOwnerBookingReq
 public interface HomestayOwnerBookingService {
 
     PageableObject<HomestayOwnerBookingReponse> getBookingByHomestay(String id,HomestayOwnerBookingRequest homestayOwnerBookingRequest);
+
 }

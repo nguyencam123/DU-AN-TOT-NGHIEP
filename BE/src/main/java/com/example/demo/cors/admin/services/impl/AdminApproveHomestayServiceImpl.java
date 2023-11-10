@@ -2,6 +2,7 @@ package com.example.demo.cors.admin.services.impl;
 
 import com.example.demo.cors.admin.repository.AdminHomestayRepository;
 import com.example.demo.cors.admin.services.AdminApproveHomestayService;
+import com.example.demo.entities.ApprovalHistory;
 import com.example.demo.entities.Homestay;
 import com.example.demo.infrastructure.configemail.Email;
 import com.example.demo.infrastructure.configemail.EmailSender;
@@ -23,11 +24,14 @@ public class AdminApproveHomestayServiceImpl implements AdminApproveHomestayServ
         homestay.setStatus(Status.HOAT_DONG);
         adminHomestayRepository.save(homestay);
 
+        ApprovalHistory approvalHistory = new ApprovalHistory();
+
+
         Email email = new Email();
         email.setToEmail(new String[]{homestay.getOwnerHomestay().getEmail()});
         email.setSubject("Yêu cầu phê duyệt đã được chấp nhận");
         email.setTitleEmail("Chúc mừng " + homestay.getOwnerHomestay().getName());
-        email.setBody("Phòng của bạn đã được phê duyệt");
+        email.setBody("Homestay " + homestay.getName() + " của bạn đã được phê duyệt");
         emailSender.sendEmail(email.getToEmail(), email.getSubject(), email.getTitleEmail(), email.getBody());
         return homestay;
     }

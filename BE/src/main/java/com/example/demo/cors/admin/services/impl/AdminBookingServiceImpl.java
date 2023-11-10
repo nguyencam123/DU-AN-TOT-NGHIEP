@@ -1,5 +1,6 @@
 package com.example.demo.cors.admin.services.impl;
 
+import com.example.demo.cors.admin.model.request.AdminBookingByHomestayRequest;
 import com.example.demo.cors.admin.model.request.AdminBookingRequest;
 import com.example.demo.cors.admin.model.response.AdminBookingResponse;
 import com.example.demo.cors.admin.repository.AdminBookingRepository;
@@ -22,6 +23,13 @@ public class AdminBookingServiceImpl implements AdminBookingService {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
         Page<AdminBookingResponse> getAllBooking = adminBookingRepository.getAllBooking(request, pageable);
         return new PageableObject<>(getAllBooking);
+    }
+
+    @Override
+    public PageableObject<AdminBookingResponse> getAllBookingByHomestay(AdminBookingByHomestayRequest request) {
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+        Page<AdminBookingResponse> getAllBookingByHomestay = adminBookingRepository.getAllBookingByHomestay(request, pageable);
+        return new PageableObject<>(getAllBookingByHomestay);
     }
 
 }
