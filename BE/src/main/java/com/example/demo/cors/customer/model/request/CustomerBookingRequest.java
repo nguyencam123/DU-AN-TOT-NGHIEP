@@ -10,4 +10,22 @@ public class CustomerBookingRequest extends PageableRequest {
 
     private String userId;
 
+    private String totalPrice;
+
+    private Long startDate;
+
+    private Long endDate;
+
+    private String name;
+
+    private String email;
+
+    private String phoneNumber;
+
+    private String homestayId;
+
+    private String idPromotion;
+
+    private String note;
+
 }

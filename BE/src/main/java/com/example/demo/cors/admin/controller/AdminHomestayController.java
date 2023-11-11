@@ -1,6 +1,7 @@
 package com.example.demo.cors.admin.controller;
 
 import com.example.demo.cors.admin.model.request.AdminHomestayRequest;
+import com.example.demo.cors.admin.model.request.AdminRequest;
 import com.example.demo.cors.admin.services.AdminApproveHomestayService;
 import com.example.demo.cors.admin.services.AdminHomestayService;
 import com.example.demo.cors.common.base.ResponseObject;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,8 +30,8 @@ public class AdminHomestayController {
     }
 
     @PutMapping("/approve/{id}")
-    public ResponseObject adminApproveHomestay(@PathVariable("id") String id) {
-        return new ResponseObject(adminApproveHomestayService.adminApproveHomestay(id));
+    public ResponseObject adminApproveHomestay(@PathVariable("id") String id, @RequestBody AdminRequest request) {
+        return new ResponseObject(adminApproveHomestayService.adminApproveHomestay(id, request));
     }
 
 }

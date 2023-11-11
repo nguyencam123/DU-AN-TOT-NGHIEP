@@ -15,12 +15,12 @@ import { useState } from 'react';
 const { Title } = Typography;
 const columns = [
   {
-    title: 'name',
+    title: 'Tên',
     dataIndex: 'name',
     key: 'name'
   },
   {
-    title: 'address',
+    title: 'Loại',
     dataIndex: 'address',
     key: 'address'
   },
@@ -64,7 +64,7 @@ const CategoryList = () => {
   return (
     <>
       <div style={{ marginTop: '30px' }}>
-        <Title level={2}>Quản trị loại sản phẩm</Title>
+        <Title level={2}>Quản trị tiện nghi homestay</Title>
         <Title level={4}>Danh mục</Title>
         <Button
           type='primary'

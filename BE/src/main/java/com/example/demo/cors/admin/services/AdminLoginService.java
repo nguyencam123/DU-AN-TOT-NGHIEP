@@ -6,7 +6,6 @@ import com.example.demo.cors.admin.model.request.AdminRequest;
 import com.example.demo.cors.admin.model.request.AdminUserPasswordRequest;
 import com.example.demo.cors.admin.model.response.AdminAuthenticationReponse;
 import com.example.demo.cors.admin.model.response.AdminLoginResponse;
-import com.example.demo.cors.customer.model.request.CustomerPasswordRequest;
 
 import java.security.Principal;
 
