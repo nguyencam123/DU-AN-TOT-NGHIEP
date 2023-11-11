@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Space,
   Typography,
@@ -10,26 +10,25 @@ import {
   Input
 } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { QuestionCircleOutlined } from '@ant-design/icons';
+import { CheckOutlined, DeleteOutlined, DeleteTwoTone, EditOutlined, EditTwoTone, QuestionCircleOutlined } from '@ant-design/icons';
 import { useState } from 'react';
+import { getConvenient } from '../../../features/admin/adminThunk';
 const { Title } = Typography;
 const columns = [
   {
     title: 'Tên',
-    dataIndex: 'name',
-    key: 'name'
+    dataIndex: 'convenient_Name',
   },
   {
     title: 'Loại',
-    dataIndex: 'address',
-    key: 'address'
+    dataIndex: 'convenient_Type_Name',
   },
   {
     title: 'Action',
     key: 'action',
     render: (_, record) => (
       <Space size='middle'>
-        <a>Sửa</a>
+        <a><EditTwoTone /></a>
         <Popconfirm
           title='Xóa mục này'
           description='Bạn chắc chắn muốn xóa mục này chứ?'
@@ -37,7 +36,7 @@ const columns = [
           cancelText='hủy'
           okText='xóa'
         >
-          <a>Delete</a>
+          <a><DeleteTwoTone /></a>
         </Popconfirm>
       </Space>
     )
@@ -50,7 +49,12 @@ const onFinishFailed = (errorInfo) => {
   console.log('Failed:', errorInfo);
 };
 const CategoryList = () => {
-  const categorylist = useSelector((state) => state.category.categorys);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getConvenient());
+  }, []); 
+  const categorylist = useSelector((state) => state.admin.category);
+  console.log(categorylist);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -81,7 +85,6 @@ const CategoryList = () => {
         onOk={handleOk}
         onCancel={handleCancel}
       >
-        <br />
         <Form
           name='basic'
           labelCol={{
