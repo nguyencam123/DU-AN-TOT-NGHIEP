@@ -35,4 +35,8 @@ public class CustomerHomestayRequest extends PageableRequest {
 
     private Long dateTo;
 
+    private String name;
+
+    private Integer roomNumber;
+
 }

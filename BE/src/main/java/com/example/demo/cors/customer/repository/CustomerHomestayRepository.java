@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface CustomerHomestayRepository extends HomestayRepository {
 
@@ -16,9 +18,10 @@ public interface CustomerHomestayRepository extends HomestayRepository {
             LEFT JOIN detail_homestay b ON b.homestay_id = a.id
             LEFT JOIN convenient_homestay c ON c.id = b.convenient_homestay_id
             WHERE a.status = 0
-            AND (a.number_person IS NULL OR a.number_person =:#{#customerHomestayRequest.numberPerson})
-            AND (b.convenient_homestay_id IS NULL OR b.convenient_homestay_id LIKE :#{#customerHomestayRequest.numberPerson})
-            AND (a.id NOT IN (SELECT b.homestay_id FROM booking b WHERE (start_date >=:#{#customerHomestayRequest.dateFrom} AND end_date <=:#{#customerHomestayRequest.dateTo})))
+            AND (:#{#customerHomestayRequest.address} IS NULL OR :#{#customerHomestayRequest.address} LIKE '' OR a.address LIKE %:#{#customerHomestayRequest.address}%)
+            AND (:#{#customerHomestayRequest.numberPerson} IS NULL OR :#{#customerHomestayRequest.numberPerson} LIKE '' OR a.number_person =:#{#customerHomestayRequest.numberPerson})
+            AND (:#{#customerHomestayRequest.convenientId} IS NULL OR :#{#customerHomestayRequest.convenientId} LIKE '' OR c.id LIKE %:#{#customerHomestayRequest.convenientId}%)
+            AND (a.id NOT IN (SELECT d.homestay_id FROM booking d WHERE (start_date >=:#{#customerHomestayRequest.dateFrom} AND end_date <=:#{#customerHomestayRequest.dateTo})))
             """, nativeQuery = true)
     Page<Homestay> searchHomestay(Pageable pageable, CustomerHomestayRequest customerHomestayRequest);
 
@@ -30,5 +33,10 @@ public interface CustomerHomestayRepository extends HomestayRepository {
             SELECT * FROM homestay a WHERE a.status = 0
             """, nativeQuery = true)
     Page<Homestay> getAllHomestay(Pageable pageable);
+
+    @Query(value = """
+            SELECT * FROM homestay a WHERE a.status = 0
+            """, nativeQuery = true)
+    List<Homestay> listHomestay();
 
 }

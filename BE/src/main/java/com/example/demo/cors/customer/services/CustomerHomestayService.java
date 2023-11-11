@@ -4,6 +4,8 @@ import com.example.demo.cors.common.base.PageableObject;
 import com.example.demo.cors.customer.model.request.CustomerHomestayRequest;
 import com.example.demo.entities.Homestay;
 
+import java.util.List;
+
 public interface CustomerHomestayService {
 
     PageableObject<Homestay> getListHomestay(CustomerHomestayRequest request);
@@ -13,5 +15,7 @@ public interface CustomerHomestayService {
     Homestay getHomestayById(CustomerHomestayRequest request);
 
     PageableObject<Homestay> getHomestayByAddress(CustomerHomestayRequest request);
+
+    List<Homestay> search(CustomerHomestayRequest request);
 
 }

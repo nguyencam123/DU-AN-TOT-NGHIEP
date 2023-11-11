@@ -37,4 +37,9 @@ public class CustomerHomestayController {
         return new ResponseObject(customerHomestayService.getHomestayByAddress(request));
     }
 
+    @GetMapping("/search123")
+    public ResponseObject search(CustomerHomestayRequest request) {
+        return new ResponseObject(customerHomestayService.search(request));
+    }
+
 }
