@@ -49,7 +49,7 @@ public class Booking extends PrimaryEntity {
     @Nationalized
     private String phoneNumber;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "homestay_id")
     private Homestay homestay;
 
