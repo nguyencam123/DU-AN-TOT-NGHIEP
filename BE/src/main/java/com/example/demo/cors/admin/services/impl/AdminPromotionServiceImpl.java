@@ -1,7 +1,6 @@
 package com.example.demo.cors.admin.services.impl;
 
 import com.example.demo.cors.admin.model.request.AdminPromotionRequest;
-import com.example.demo.cors.admin.model.response.AdminPromotionResponse;
 import com.example.demo.cors.admin.repository.AdminPromotionRepository;
 import com.example.demo.cors.admin.services.AdminPromotionService;
 import com.example.demo.cors.common.base.PageableObject;

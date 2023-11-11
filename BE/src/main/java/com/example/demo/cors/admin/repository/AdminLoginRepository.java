@@ -27,4 +27,5 @@ public interface AdminLoginRepository extends AdminRepository {
     boolean existsByUsername(String username);
 
     boolean existsByEmail(String email);
+
 }

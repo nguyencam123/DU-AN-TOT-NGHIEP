@@ -1,6 +1,7 @@
 package com.example.demo.entities;
 
 import com.example.demo.entities.base.PrimaryEntity;
+import com.example.demo.infrastructure.contant.StatusApproval;
 import com.example.demo.infrastructure.contant.EntityProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,5 +29,7 @@ public class ApprovalHistory extends PrimaryEntity {
     @Column(length = EntityProperties.LENGTH_NOTE, name = "[desc]")
     @Nationalized
     private String desc;
+
+    private StatusApproval status;
 
 }

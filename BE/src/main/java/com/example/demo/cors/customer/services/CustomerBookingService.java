@@ -8,4 +8,6 @@ public interface CustomerBookingService {
 
     PageableObject<Booking> getBookingByUser(CustomerBookingRequest request);
 
+    Booking createBooking(CustomerBookingRequest request);
+
 }
