@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   category: [],
+  categoryType: [],
   loading: false,
   error: null,
 };
@@ -16,10 +17,15 @@ const adminSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
+    fetchConvenientTypeSuccess: (state, action) => {
+      state.categoryType = action.payload;
+      state.loading = false;
+      state.error = null;
+    },
   },
 });
 
 export const {
-  fetchConvenientSuccess
+  fetchConvenientSuccess, fetchConvenientTypeSuccess
 } = adminSlice.actions;
 export default adminSlice.reducer;
