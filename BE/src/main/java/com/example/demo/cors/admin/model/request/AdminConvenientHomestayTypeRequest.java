@@ -8,14 +8,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class AdminConvenientHomestayRequest extends PageableRequest {
+@NoArgsConstructor
+public class AdminConvenientHomestayTypeRequest extends PageableRequest {
 
-    String idType;
+    String nameType;
 
-    String name;
-
-    String desc;
+    String descType;
 
 }
