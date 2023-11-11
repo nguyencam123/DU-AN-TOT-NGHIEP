@@ -49,7 +49,8 @@ const PartnerRegister = () => {
         email: email,
         username: username,
         password: password,
-        identificationNumber: identificationNumber
+        identificationNumber: identificationNumber,
+        point: 9
     }
     const handleSubmit = (e) => {
         e.preventDefault();

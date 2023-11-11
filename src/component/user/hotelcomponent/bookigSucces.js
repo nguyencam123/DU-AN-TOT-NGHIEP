@@ -1,8 +1,14 @@
 import { CheckCircleOutlined, CheckCircleTwoTone } from "@ant-design/icons"
 import { Breadcrumb, Button, Col, Row } from "antd"
 import { Content, Footer } from "antd/es/layout/layout"
+import { useNavigate } from "react-router-dom"
 
 export const BookingSuccess = () => {
+
+  const navigate = useNavigate();
+  const handleReturn = () => {
+    navigate('/')
+  }
 
   return (
     <>
@@ -29,7 +35,7 @@ export const BookingSuccess = () => {
               <div style={{fontSize:'20px'}}>Cảm ơn bản đã tin tưởng TraivelVivu</div>
           </Row>
           <Row style={{marginLeft:'185px'}}>
-              <Button style={{fontSize:'20px', width:'300px', height:'50px',fontWeight:'700', backgroundColor:'lightblue', color:'white'}}>Trở về trang chủ</Button>
+              <Button style={{fontSize:'20px', width:'300px', height:'50px',fontWeight:'700', backgroundColor:'lightblue', color:'white'}} onClick={() => handleReturn()}>Trở về trang chủ</Button>
             </Row>
           </div>
       </Content>

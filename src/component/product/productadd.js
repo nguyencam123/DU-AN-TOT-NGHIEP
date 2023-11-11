@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addProductAsync } from "../../features/product/createproductThunks";
-import { pendingProducts, fetchProducts, getProducts, agreeProducts } from "../../features/product/productThunk";
+import { pendingProducts, fetchProducts, getProducts, agreeProducts, denieProducts, allProducts } from "../../features/product/productThunk";
 import { fetchCategory } from "../../features/category/categoryThunk"
 import { useState } from "react";
 import { Space, Table, Typography, Modal, Spin, Popconfirm, Form, Input, Row, Col, Select, Button, Pagination, Image, message } from 'antd';
@@ -21,7 +21,7 @@ function AddProductForm() {
   const products = useSelector((state) => state.product.products)
   const [confirmModal, setConfirmModal] = useState(false);
   const [deniedModal, setDeniedModal] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState();
   //
 
   const listFilter = [
@@ -56,8 +56,11 @@ function AddProductForm() {
       dispatch(pendingProducts());
     } else if (value === 'aprove'){
       dispatch(agreeProducts());
+    } else if (value === 'denie') {
+      dispatch(denieProducts());
     } else {
-      console.log(value);
+      dispatch(allProducts());
+
     }
   }
   const handleCancel = () => {
@@ -73,7 +76,7 @@ function AddProductForm() {
   const showModal = (record) => {
     setIsViewModal(true);
     setViewHomestay(record);
-    setViewImage(record.imageUrls)
+    setViewImage(record.images)
     console.log(record);
   };
 
@@ -107,9 +110,8 @@ function AddProductForm() {
   };
   //
   useEffect(() => {
-    dispatch(agreeProducts());
+    dispatch(pendingProducts());
   }, []);
-
   const columns = [
     {
       title: 'Tên homestay',
@@ -126,14 +128,28 @@ function AddProductForm() {
       dataIndex: 'status',
       key: 'status',
       render: (data) => {
-        console.log(data);
-        return data == 1 ? 'Chờ duyệt' : (data ==0  ? 'Đã duyệt' : (data == 3 ? 'Từ chối' : 'Không hoạt động'))
+        if (data === 'HOAT_DONG') {
+          return 'Đã duyệt'
+        }
+        if (data === 'KHONG_HOAT_DONG') {
+          return 'Chờ duyệt'
+        }
+        if (data === 'XOA_PHONG') {
+          return 'Ngừng hoạt động'
+        }
+        if (data === 'KHONG_DUYET') {
+          return 'Từ chối duyệt'
+        }
       }
     },
     {
       title: 'Chủ homestay',
-      dataIndex: 'ownerHomestayName',
-      key: 'ownerHomestayName'
+      dataIndex: 'ownerHomestay',
+      key: 'ownerHomestay',
+      render: (data) => { 
+        console.log(data);
+        return data.name
+      }
     },
     {
       title: 'Giá thuê 1 đêm',
