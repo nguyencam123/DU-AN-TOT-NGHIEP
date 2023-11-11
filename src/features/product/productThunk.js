@@ -76,7 +76,7 @@ export const getPayment = (price) => async (dispatch) => {
 export const pendingProducts = () => async (dispatch) => {
   dispatch(fetchProductsStart());
   try {
-    const response = await axios.get('http://localhost:8080/api/v3/homestay/cho-duyet');
+    const response = await axios.get('http://localhost:8080/api/v3/homestay/cho-duyet?size=100');
     dispatch(fetchProductsSuccess(response.data.data.data)); // Lấy dữ liệu từ response.data.data
   } catch (error) {
     dispatch(fetchProductsFailure(error.message));
@@ -86,7 +86,37 @@ export const pendingProducts = () => async (dispatch) => {
 export const agreeProducts = () => async (dispatch) => {
   dispatch(fetchProductsStart());
   try {
-    const response = await axios.get('http://localhost:8080/api/v3/homestay/da-duyet');
+    const response = await axios.get('http://localhost:8080/api/v3/homestay/da-duyet?size=100');
+    dispatch(fetchProductsSuccess(response.data.data.data)); // Lấy dữ liệu từ response.data.data
+  } catch (error) {
+    dispatch(fetchProductsFailure(error.message));
+  }
+};
+
+export const allProducts = () => async (dispatch) => {
+  dispatch(fetchProductsStart());
+  try {
+    const response = await axios.get('http://localhost:8080/api/v3/homestay?size=100');
+    dispatch(fetchProductsSuccess(response.data.data.data)); // Lấy dữ liệu từ response.data.data
+  } catch (error) {
+    dispatch(fetchProductsFailure(error.message));
+  }
+};
+
+export const denieProducts = () => async (dispatch) => {
+  dispatch(fetchProductsStart());
+  try {
+    const response = await axios.get('http://localhost:8080/api/v3/homestay/khong-duyet?size=100');
+    dispatch(fetchProductsSuccess(response.data.data.data)); // Lấy dữ liệu từ response.data.data
+  } catch (error) {
+    dispatch(fetchProductsFailure(error.message));
+  }
+};
+
+export const notWorkProducts = () => async (dispatch) => {
+  dispatch(fetchProductsStart());
+  try {
+    const response = await axios.get('http://localhost:8080/api/v3/homestay/da-xoa?size=100');
     dispatch(fetchProductsSuccess(response.data.data.data)); // Lấy dữ liệu từ response.data.data
   } catch (error) {
     dispatch(fetchProductsFailure(error.message));
