@@ -25,37 +25,58 @@ public class AdminHomestayServiceImpl implements AdminHomestayService {
     private AdminHomestayRepository adminHomestayRepository;
 
     @Override
-    public PageableObject<AdminHomestayResponse> getAllChoDuyet(AdminHomestayRequest request) {
+    public PageableObject<Homestay> getAllChoDuyet(AdminHomestayRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(),request.getSize());
-        Page<AdminHomestayResponse> adminHomestayReponsis= adminHomestayRepository.getAllChoDuyet(pageable,request);
+        Page<Homestay> adminHomestayReponsis= adminHomestayRepository.getAllChoDuyet(pageable,request);
         return new PageableObject<>(adminHomestayReponsis);
     }
 
     @Override
-    public PageableObject<AdminHomestayResponse> getAllDaDuyet(AdminHomestayRequest request) {
+    public PageableObject<Homestay> getAllDaDuyet(AdminHomestayRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(),request.getSize());
-        Page<AdminHomestayResponse> adminHomestayReponsis= adminHomestayRepository.getAllDaDuyet(pageable,request);
+        Page<Homestay> adminHomestayReponsis= adminHomestayRepository.getAllDaDuyet(pageable,request);
         return new PageableObject<>(adminHomestayReponsis);
     }
 
     @Override
-    public PageableObject<AdminHomestayResponse> getAllById(AdminHomestayRequest adminHomestayRequest) {
+    public PageableObject<Homestay> getAllDaXoa(AdminHomestayRequest request) {
+        Pageable pageable = PageRequest.of(request.getPage(),request.getSize());
+        Page<Homestay> adminHomestayReponsis= adminHomestayRepository.getAllDaXoa(pageable,request);
+        return new PageableObject<>(adminHomestayReponsis);
+    }
+
+    @Override
+    public PageableObject<Homestay> getAllKhongDuyet(AdminHomestayRequest request) {
+        Pageable pageable = PageRequest.of(request.getPage(),request.getSize());
+        Page<Homestay> adminHomestayReponsis= adminHomestayRepository.getAllKhongDuyet(pageable,request);
+        return new PageableObject<>(adminHomestayReponsis);
+    }
+
+    @Override
+    public PageableObject<Homestay> getAllHomestay(AdminHomestayRequest request) {
+        Pageable pageable = PageRequest.of(request.getPage(),request.getSize());
+        Page<Homestay> adminHomestayReponsis= adminHomestayRepository.findAll(pageable);
+        return new PageableObject<>(adminHomestayReponsis);
+    }
+
+    @Override
+    public PageableObject<Homestay> getAllById(AdminHomestayRequest adminHomestayRequest) {
         Pageable pageable = PageRequest.of(adminHomestayRequest.getPage(),adminHomestayRequest.getSize());
-        Page<AdminHomestayResponse> getAllbyid= adminHomestayRepository.getAllByID(pageable,adminHomestayRequest);
+        Page<Homestay> getAllbyid= adminHomestayRepository.getAllByID(pageable,adminHomestayRequest);
         return new PageableObject<>(getAllbyid);
     }
 
     @Override
-    public PageableObject<AdminHomestayResponse> findByNameChoDuyet(AdminHomestayRequest request) {
+    public PageableObject<Homestay> findByNameChoDuyet(AdminHomestayRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(),request.getSize());
-        Page<AdminHomestayResponse> findByNameChoDuyet= adminHomestayRepository.findByNameChoDuyet(pageable,request);
+        Page<Homestay> findByNameChoDuyet= adminHomestayRepository.findByNameChoDuyet(pageable,request);
         return new PageableObject<>(findByNameChoDuyet);
     }
 
     @Override
-    public PageableObject<AdminHomestayResponse> findByNameDaDuyet(AdminHomestayRequest request) {
+    public PageableObject<Homestay> findByNameDaDuyet(AdminHomestayRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(),request.getSize());
-        Page<AdminHomestayResponse> findByNameDaDuyet= adminHomestayRepository.findByNameDaDuyet(pageable,request);
+        Page<Homestay> findByNameDaDuyet= adminHomestayRepository.findByNameDaDuyet(pageable,request);
         return new PageableObject<>(findByNameDaDuyet);
     }
 

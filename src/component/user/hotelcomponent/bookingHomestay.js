@@ -1,10 +1,10 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progress, Space } from 'antd';
 import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, InfoCircleTwoTone, StarTwoTone } from '@ant-design/icons'
 import { Form, Table } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getOneProduct } from '../../../features/product/productThunk';
+import { addInfoPayment, getOneProduct } from '../../../features/product/productThunk';
 import { useDispatch, useSelector } from 'react-redux';
 const { Header, Content, Footer } = Layout;
 
@@ -15,9 +15,21 @@ export const BookingHomestay = () => {
     dispatch(getOneProduct(params.id));
   }, []);
   const dispatch = useDispatch();
+  const [infoPayment, setInfoPayment] = useState({});
   const detailHomestay = useSelector((state) => state.product.productDetails);
+  console.log(detailHomestay);
   const navigate = useNavigate();
+  const onChangeName = (e) => {
+    setInfoPayment({...infoPayment, name: e.target.value});
+  }
+  const onChangeEmail = (e) => {
+    setInfoPayment({...infoPayment, email: e.target.value});
+  }
+  const onChangePhoneNumber = (e) => {
+    setInfoPayment({...infoPayment, phoneNumber: e.target.value});
+  }
   const handleReviewBookingHomestay = (id) => {
+    console.log(infoPayment);
     navigate(`/review/booking/${id}`)
   }
 
@@ -70,7 +82,7 @@ export const BookingHomestay = () => {
                 <Form style={{ padding: '20px' }}>
                   <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label style={{ fontWeight: '700' }}>Họ và tên</Form.Label>
-                    <Form.Control type="text" placeholder="Họ và tên" />
+                    <Form.Control type="text" placeholder="Họ và tên" onChange={(e) => onChangeName(e)}/>
                     <Form.Text className="text-muted">
                       *Nhập tên như trên CMND/ hộ chiếu
                     </Form.Text>
@@ -78,14 +90,14 @@ export const BookingHomestay = () => {
 
                   <Form.Group className="mb-3" controlId="formBasicPassword">
                     <Form.Label style={{ fontWeight: '700' }}>Số điện thoại</Form.Label>
-                    <Form.Control type="text" placeholder="Số điện thoại" />
+                    <Form.Control type="text" placeholder="Số điện thoại" onChange={(e) => onChangePhoneNumber(e)}/>
                     <Form.Text className="text-muted">
                       VD : 09683741834
                     </Form.Text>
                   </Form.Group>
                   <Form.Group className="mb-3" controlId="formBasicPassword">
                     <Form.Label style={{ fontWeight: '700' }}>Email</Form.Label>
-                    <Form.Control type="email" placeholder="Email" />
+                    <Form.Control type="email" placeholder="Email" onChange={(e) => onChangeEmail(e)}/>
                     <Form.Text className="text-muted">
                       VD: email@example.com
                     </Form.Text>
@@ -132,7 +144,7 @@ export const BookingHomestay = () => {
                       style={{ borderRadius: '10px', marginTop: '10px' }}
                       width={70}
                       height={70}
-                      src={detailHomestay.images[0].imgUrl}
+                      src={detailHomestay?.images?.[0]?.imgUrl}
                     />
                   </Col>
                   <Col span={8} push={1}>
