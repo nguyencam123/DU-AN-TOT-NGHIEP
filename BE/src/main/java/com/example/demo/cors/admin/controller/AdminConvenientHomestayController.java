@@ -22,6 +22,11 @@ public class AdminConvenientHomestayController {
         return new ResponseObject(adminConvenientHomestayService.getAllConvenient(adminConvenientHomestayRequest));
     }
 
+    @GetMapping("/type")
+    public ResponseObject getAllConvenientType(AdminConvenientHomestayTypeRequest adminConvenientHomestayTypeRequest){
+        return new ResponseObject(adminConvenientHomestayService.getAllConvenientType(adminConvenientHomestayTypeRequest));
+    }
+
     @PostMapping("/add-convenient-type")
     public ResponseObject addConvenientType(@RequestBody AdminConvenientHomestayTypeRequest adminConvenientHomestayTypeRequest) {
         return new ResponseObject(adminConvenientHomestayService.addConvenientHomestayType(adminConvenientHomestayTypeRequest));

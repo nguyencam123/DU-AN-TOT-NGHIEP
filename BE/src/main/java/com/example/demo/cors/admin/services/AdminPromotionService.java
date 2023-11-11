@@ -7,7 +7,7 @@ import com.example.demo.entities.Promotion;
 
 public interface AdminPromotionService {
 
-    PageableObject<AdminPromotionResponse> getAll(AdminPromotionRequest request);
+    PageableObject<Promotion> getAll(AdminPromotionRequest request);
 
     Promotion update();
 }

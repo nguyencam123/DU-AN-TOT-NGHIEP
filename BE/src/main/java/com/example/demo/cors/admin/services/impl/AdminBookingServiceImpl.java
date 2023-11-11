@@ -6,6 +6,7 @@ import com.example.demo.cors.admin.model.response.AdminBookingResponse;
 import com.example.demo.cors.admin.repository.AdminBookingRepository;
 import com.example.demo.cors.admin.services.AdminBookingService;
 import com.example.demo.cors.common.base.PageableObject;
+import com.example.demo.entities.Booking;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,9 +20,9 @@ public class AdminBookingServiceImpl implements AdminBookingService {
     private AdminBookingRepository adminBookingRepository;
 
     @Override
-    public PageableObject<AdminBookingResponse> getAllBooking(AdminBookingRequest request) {
+    public PageableObject<Booking> getAllBooking(AdminBookingRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-        Page<AdminBookingResponse> getAllBooking = adminBookingRepository.getAllBooking(request, pageable);
+        Page<Booking> getAllBooking = adminBookingRepository.getAllBooking(request, pageable);
         return new PageableObject<>(getAllBooking);
     }
 
