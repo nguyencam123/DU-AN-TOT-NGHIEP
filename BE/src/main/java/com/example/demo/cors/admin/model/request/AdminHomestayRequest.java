@@ -7,9 +7,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AdminHomestayRequest extends PageableRequest {
-    String homestayId;
 
-    String findName;
+    String nameHomestay;
+
+    String nameOwner;
+
+    Integer statusHomestay;
 
 }
 

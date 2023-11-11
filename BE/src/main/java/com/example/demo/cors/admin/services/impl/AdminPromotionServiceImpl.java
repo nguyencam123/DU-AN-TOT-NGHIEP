@@ -1,7 +1,6 @@
 package com.example.demo.cors.admin.services.impl;
 
 import com.example.demo.cors.admin.model.request.AdminPromotionRequest;
-import com.example.demo.cors.admin.model.response.AdminPromotionResponse;
 import com.example.demo.cors.admin.repository.AdminPromotionRepository;
 import com.example.demo.cors.admin.services.AdminPromotionService;
 import com.example.demo.cors.common.base.PageableObject;
@@ -22,9 +21,9 @@ public class AdminPromotionServiceImpl implements AdminPromotionService {
     private AdminPromotionRepository adminPromotionRepository;
 
     @Override
-    public PageableObject<AdminPromotionResponse> getAll(AdminPromotionRequest request) {
+    public PageableObject<Promotion> getAll(AdminPromotionRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(),request.getSize());
-        Page<AdminPromotionResponse> adminPromotionResponses= adminPromotionRepository.getAll(pageable,request);
+        Page<Promotion> adminPromotionResponses= adminPromotionRepository.findAll(pageable);
         return new PageableObject<>(adminPromotionResponses);
     }
 

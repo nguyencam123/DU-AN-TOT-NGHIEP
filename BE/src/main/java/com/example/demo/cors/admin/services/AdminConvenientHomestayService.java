@@ -11,7 +11,9 @@ import java.io.IOException;
 
 public interface AdminConvenientHomestayService {
 
-    PageableObject<AdminConvenientHomestayResponse> getAllConvenient(AdminConvenientHomestayRequest request);
+    PageableObject<ConvenientHomestay> getAllConvenient(AdminConvenientHomestayRequest request);
+
+    PageableObject<ConvenientHomestayType> getAllConvenientType(AdminConvenientHomestayTypeRequest request);
 
     ConvenientHomestay addConvenientHomestay( AdminConvenientHomestayRequest adminConvenientHomestayRequest);
 

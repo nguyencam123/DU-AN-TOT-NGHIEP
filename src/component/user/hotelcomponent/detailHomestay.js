@@ -20,7 +20,8 @@ export const DetailHomestay = () => {
   const detailHomestay = useSelector((state) => state.product.productDetails)
   const comment = useSelector((state) => state.product.commentProduct)
   const avgPoint = useSelector((state) => state.product.avgPoint)
-  console.log(avgPoint);
+  console.log(comment);
+
   const listComment = comment.map((value) =>
   <Row style={{ margin: '20px 10px 10px 10px', border: '2px solid rgba(242,243,243,1.00)', borderRadius: '5px', minHeight: '70px' }}>
   <Col span={5} >
@@ -34,12 +35,12 @@ export const DetailHomestay = () => {
     <div style={{ fontWeight: '500', marginTop: '10px' }}>
       {value.comment}
     </div>
-    <div style={{ margin: '15px 0' }}>
-      <Image
-        style={{ borderRadius: '10px' }}
-        width={85}
-        height={85}
-        src="http://res.cloudinary.com/dcwkiozwf/image/upload/v1698477662/homestay_images/naaveb7ytdgyolqe3n1e.jpg"
+        <div style={{ margin: '15px 0' }}>
+          <Image
+            style={{ borderRadius: '10px' }}
+            width={85}
+            height={85}
+            src={value.imgUrl}
       />
     </div>
   </Col>

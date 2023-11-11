@@ -4,7 +4,11 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.example.demo.cors.common.base.PageableObject;
 import com.example.demo.cors.homestayowner.model.request.HomestayownerHomestayRequest;
-import com.example.demo.cors.homestayowner.repository.*;
+import com.example.demo.cors.homestayowner.repository.HomestayOwnerConvenientHomestayRepository;
+import com.example.demo.cors.homestayowner.repository.HomestayOwnerDetailHomestayReposritory;
+import com.example.demo.cors.homestayowner.repository.HomestayOwnerHomestayRepository;
+import com.example.demo.cors.homestayowner.repository.HomestayOwnerImgHomestayRepo;
+import com.example.demo.cors.homestayowner.repository.HomestayOwnerOwnerHomestayRepository;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerHomestayService;
 import com.example.demo.entities.ConvenientHomestay;
 import com.example.demo.entities.DetailHomestay;
@@ -49,9 +53,9 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
 
     @Override
     public PageableObject<Homestay> getPageHomestay(String id, HomestayownerHomestayRequest request) {
-            Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-            Page<Homestay> res = homestayownerHomestayRepository.getHomestayByOwnerH(id, pageable);
-            return new PageableObject<>(res);
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+        Page<Homestay> res = homestayownerHomestayRepository.getHomestayByOwnerH(id, pageable);
+        return new PageableObject<>(res);
     }
 
     @Override
@@ -68,7 +72,7 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
     @Override
     public Homestay deleteHomestays(String id) {
         Homestay homestay = homestayownerHomestayRepository.findById(id).orElse(null);
-        homestay.setStatus(Status.XOA_PHONG);
+        homestay.setStatus(Status.KHONG_HOAT_DONG);
         Homestay homestay1 = homestayownerHomestayRepository.save(homestay);
         return homestay1;
     }
@@ -77,7 +81,7 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
     public Homestay addHomestay(HomestayownerHomestayRequest request, List<MultipartFile> multipartFiles, List<String> idConvenientHomestay) throws IOException {
         Homestay homestay = new Homestay();
         getHomestay(request, homestay);
-        homestay.setStatus(Status.KHONG_HOAT_DONG);
+        homestay.setStatus(Status.CHO_DUYET);
         Homestay homestay1 = homestayownerHomestayRepository.save(homestay);
         return getImgHomestayAndConvenientHomestay(multipartFiles, idConvenientHomestay, homestay1);
     }

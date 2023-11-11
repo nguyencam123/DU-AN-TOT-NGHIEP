@@ -2,11 +2,10 @@ import { fetchProductsStart, fetchProductsSuccess, fetchProductsFailure, addprod
 import axios from '../../app/axiosConfig';
 
 const BASE_URL = '/homestay';
-const userDetail = JSON.parse(localStorage.getItem('userDetail'));
-const id = userDetail?.data.id;
 export const fetchHomestay = () => async (dispatch) => {
   dispatch(fetchProductsStart());
   try {
+    const id = JSON.parse(localStorage.getItem('userDetail'))?.data.id;
     const response = await axios.get(BASE_URL + `/get-homestay-by-id?id=${id}&size=999`);
     dispatch(fetchProductsSuccess(response.data.data.data)); // Lấy dữ liệu từ response.data.data
   } catch (error) {
@@ -20,7 +19,7 @@ export const addHomestay = (homestay, imgUrl, convenient) => async (dispatch) =>
     formData.append('image', imageUrl);
   });
   formData.append('homestay', JSON.stringify(homestay));
-  formData.append('convenient', JSON.stringify(convenient));
+  formData.append('convenient', convenient);
   dispatch(fetchProductsStart());
   try {
     await axios.post(BASE_URL + "/add-homestay", formData);
@@ -34,7 +33,7 @@ export const EditHomestay = (homestay, imgUrl, id, convenient) => async (dispatc
     formData.append('image', imageUrl);
   });
   formData.append('homestay', JSON.stringify(homestay));
-  formData.append('convenient', JSON.stringify(convenient));
+  formData.append('convenient', convenient);
   dispatch(fetchProductsStart());
   try {
     await axios.put(BASE_URL + `/update-homestays?id=${id}`, formData);

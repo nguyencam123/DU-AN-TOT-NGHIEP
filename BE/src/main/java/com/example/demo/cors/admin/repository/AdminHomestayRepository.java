@@ -1,8 +1,9 @@
 package com.example.demo.cors.admin.repository;
 
-import com.example.demo.cors.admin.model.response.AdminHomestayResponse;
 import com.example.demo.cors.admin.model.request.AdminHomestayRequest;
+import com.example.demo.entities.Homestay;
 import com.example.demo.repositories.HomestayRepository;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -13,119 +14,12 @@ import org.springframework.stereotype.Repository;
 public interface AdminHomestayRepository extends HomestayRepository {
 
     @Query(value = """
-            SELECT  a.id,
-                    a.name,
-                    a.address,
-                    a.price,
-                    a.start_date AS startDate,
-                    a.number_person AS numberPerson,
-                    a.status,
-                    imageUrls.imgUrls AS imageUrls,
-                    b.name AS [name_homestay],
-                    b.phone_number as [phone_number],
-                    b.email as [email]
-                          FROM homestay a
-                          INNER JOIN dbo.owner_homestay b ON a.owner_id = b.id
-                          CROSS APPLY (
-                              SELECT STRING_AGG(img_url, ', ') AS imgUrls
-                              FROM img_homestay AS d
-                              WHERE d.homestay_id = a.id
-                          ) AS imageUrls
-                    WHERE a.status = 1
-            """,nativeQuery = true)
-    Page<AdminHomestayResponse> getAllChoDuyet(Pageable pageable, @Param("request") AdminHomestayRequest request);
+            SELECT ROW_NUMBER() OVER(ORDER BY h.created_date DESC) AS stt, h.* FROM homestay h 
+            JOIN owner_homestay oh ON h.owner_id = oh.id
+            WHERE ( ( :#{#request.statusHomestay} IS NULL OR h.status = :#{#request.statusHomestay} )
+            AND ( :#{#request.nameHomestay} IS NULL OR :#{#request.nameHomestay} LIKE '' OR h.name LIKE %:#{#request.nameHomestay}% )
+            AND ( :#{#request.nameOwner} IS NULL OR oh.name LIKE '' OR oh.name LIKE %:#{#request.nameOwner}% ) )
+            """, nativeQuery = true)
+    Page<Homestay> getAllHomestay(Pageable pageable, @Param("request") AdminHomestayRequest request);
 
-    @Query(value = """
-            SELECT  a.id,
-                    a.name,
-                    a.address,
-                    a.price,
-                    a.start_date AS startDate,
-                    a.number_person AS numberPerson,
-                    a.status,
-                    imageUrls.imgUrls AS imageUrls,
-                    b.name AS [name_homestay],
-                    b.phone_number as [phone_number],
-                    b.email as [email]
-                          FROM homestay a
-                          INNER JOIN dbo.owner_homestay b ON a.owner_id = b.id
-                          CROSS APPLY (
-                              SELECT STRING_AGG(img_url, ', ') AS imgUrls
-                              FROM img_homestay AS d
-                              WHERE d.homestay_id = a.id
-                          ) AS imageUrls
-                    WHERE a.status = 0
-            
-            """,nativeQuery = true)
-    Page<AdminHomestayResponse> getAllDaDuyet(Pageable pageable, @Param("request") AdminHomestayRequest request);
-
-    @Query(value = """
-            SELECT  a.id,
-                    a.name,
-                    a.address,
-                    a.price,
-                    a.start_date AS startDate,
-                    a.number_person AS numberPerson,
-                    a.status,
-                    imageUrls.imgUrls AS imageUrls,
-                    b.name AS [name_homestay],
-                    b.phone_number as [phone_number],
-                    b.email as [email]
-            FROM homestay a
-            INNER JOIN dbo.owner_homestay b ON a.owner_id = b.id 
-            CROSS APPLY (
-                SELECT STRING_AGG(img_url, ', ') AS imgUrls
-                FROM img_homestay AS d
-                WHERE d.homestay_id = a.id
-            ) AS imageUrls
-            WHERE (a.id = :#{#request.homestayId})
-            """,nativeQuery = true)
-    Page<AdminHomestayResponse> getAllByID(Pageable pageable, @Param("request") AdminHomestayRequest request);
-
-    @Query(value = """
-            SELECT  a.id,
-                    a.name,
-                    a.address,
-                    a.price,
-                    a.start_date AS startDate,
-                    a.number_person AS numberPerson,
-                    a.status,
-                    imageUrls.imgUrls AS imageUrls,
-                    b.name AS [name_homestay],
-                    b.phone_number as [phone_number],
-                    b.email as [email]
-            FROM homestay a
-            INNER JOIN dbo.owner_homestay b ON a.owner_id = b.id 
-            CROSS APPLY (
-                SELECT STRING_AGG(img_url, ', ') AS imgUrls
-                FROM img_homestay AS d
-                WHERE d.homestay_id = a.id
-            ) AS imageUrls
-            WHERE (a.name = :#{#request.findName} and a.status = 1)or (b.name = :#{#request.findName} and a.status = 1)
-            """,nativeQuery = true)
-    Page<AdminHomestayResponse> findByNameChoDuyet(Pageable pageable, @Param("request") AdminHomestayRequest request);
-
-
-    @Query(value = """
-            SELECT  a.id,
-                    a.name,
-                    a.address,
-                    a.price,
-                    a.start_date AS startDate,
-                    a.number_person AS numberPerson,
-                    a.status,
-                    imageUrls.imgUrls AS imageUrls,
-                    b.name AS [name_homestay],
-                    b.phone_number as [phone_number],
-                    b.email as [email]
-            FROM homestay a
-            INNER JOIN dbo.owner_homestay b ON a.owner_id = b.id 
-            CROSS APPLY (
-                SELECT STRING_AGG(img_url, ', ') AS imgUrls
-                FROM img_homestay AS d
-                WHERE d.homestay_id = a.id
-            ) AS imageUrls
-            WHERE (a.name = :#{#request.findName} and a.status = 0)or (b.name = :#{#request.findName} and a.status = 0)
-            """,nativeQuery = true)
-    Page<AdminHomestayResponse> findByNameDaDuyet(Pageable pageable, @Param("request") AdminHomestayRequest request);
 }
