@@ -1,6 +1,7 @@
 package com.example.demo.cors.admin.controller;
 
 import com.example.demo.cors.admin.model.request.AdminConvenientHomestayRequest;
+import com.example.demo.cors.admin.model.request.AdminConvenientHomestayTypeRequest;
 import com.example.demo.cors.admin.services.AdminConvenientHomestayService;
 import com.example.demo.cors.common.base.ResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,13 @@ public class AdminConvenientHomestayController {
         return new ResponseObject(adminConvenientHomestayService.getAllConvenient(adminConvenientHomestayRequest));
     }
 
-    @PostMapping("/add")
-    public ResponseObject addConvenient( AdminConvenientHomestayRequest adminConvenientHomestayRequest) {
+    @PostMapping("/add-convenient-type")
+    public ResponseObject addConvenientType(@RequestBody AdminConvenientHomestayTypeRequest adminConvenientHomestayTypeRequest) {
+        return new ResponseObject(adminConvenientHomestayService.addConvenientHomestayType(adminConvenientHomestayTypeRequest));
+    }
+
+    @PostMapping("/add-convenient")
+    public ResponseObject addConvenient( @RequestBody  AdminConvenientHomestayRequest adminConvenientHomestayRequest) {
         return new ResponseObject(adminConvenientHomestayService.addConvenientHomestay(adminConvenientHomestayRequest));
     }
 

@@ -18,4 +18,5 @@ public interface AdminConvenientHomestayRepository extends ConvenientHomestayRep
             """, nativeQuery = true)
     Page<AdminConvenientHomestayResponse> getAllConvenient(Pageable pageable);
 
+    boolean existsByName(String name);
 }
