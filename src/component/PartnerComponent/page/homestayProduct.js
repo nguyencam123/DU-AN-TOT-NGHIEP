@@ -61,6 +61,11 @@ const HomeStayProduct = () => {
   }, []);
   const dispatch = useDispatch();
   const products = useSelector((state) => state.ownerHomestay.homestays)
+  const convenients = useSelector((state) => state.convenient.convenients)
+  const onChangeConvenients = (checkedValues) => {
+    setconvenient(checkedValues.join(','))
+  };
+
   const [file, setFile] = useState([]);
 
   const handleFileChange = (e) => {
@@ -85,6 +90,9 @@ const HomeStayProduct = () => {
     setIamge(record.images)
     settimeCheckIn(record.timeCheckIn)
     settimeCheckOut(record.timeCheckOut)
+    setviewEditConvennient(record.detailHomestays)
+    setcancellationPolicy(record.cancellationPolicy)
+    setacreage(record.acreage)
   }
   const showModal = () => {
     setIsModalOpen(true);
@@ -135,11 +143,11 @@ const HomeStayProduct = () => {
           <a> <EyeOutlined onClick={() => showModalView(record)} /> </a>
           <a> <EditOutlined onClick={() => handleEditRow(record)} /> </a>
           <Popconfirm
-            title="Cập nhật mục này"
-            description="Bạn chắc chắn muốn cập nhật trạng thái homestay thành không hoạt động?"
+            title="Xóa mục này"
+            description="Bạn chắc chắn muốn xóa homestay này không?"
             icon={<ReloadOutlined />}
             cancelText="Hủy"
-            okText="Cập nhật"
+            okText="Xóa"
             onConfirm={() => handleSubmitStatus(record)}
           >
             <a><ReloadOutlined /></a>
@@ -151,13 +159,15 @@ const HomeStayProduct = () => {
   //
 
   //
-
+  const [viewEditConvennient, setviewEditConvennient] = useState([])
+  const [convenientvir, setconvenient] = useState('')
   const [name, setname] = useState("")
   const [formErrors, setFormErrors] = useState({});
   const [acreage, setacreage] = useState(0)
   const [roomNumber, setroomNumber] = useState(0)
   const [cancellationPolicy, setcancellationPolicy] = useState(0)
   const [timeCheckIn, settimeCheckIn] = useState(null)
+
   const handleTimeChangestart = (time, timeString) => {
     settimeCheckIn(timeString);
   };
@@ -215,7 +225,6 @@ const HomeStayProduct = () => {
     ownerHomestay: UserID,
     roomNumber: parseInt(roomNumber)
   };
-  const convenient = "48a5d30c-01fb-40ab-ad54-348314128968,8162b960-f3b8-4b69-aaf1-e2b7ba283be2"
   //validateform
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Vui lòng nhập tên sản phẩm'),
@@ -224,8 +233,9 @@ const HomeStayProduct = () => {
       .typeError('Vui lòng nhập giá sản phẩm')
       .positive('Giá phải là số dương'),
     file: Yup.array()
-      .min(5, 'Vui lòng tải lên ít nhất 5 ảnh')
-      .max(20, 'Vui lòng tải lên nhiều nhất 20 ảnh'),
+      .required('Vui lòng chọn ít nhất một hình ảnh')
+      .min(5, 'Ít nhất 5 hình ảnh phải được chọn')
+      .max(20, 'Không được chọn quá 20 hình ảnh'),
     numberPerson: Yup.number()
       .required('Vui lòng nhập số lượng người')
       .typeError('Vui lòng nhập số lượng người')
@@ -248,10 +258,15 @@ const HomeStayProduct = () => {
     // province: Yup.string().required('Vui lòng chọn thành phố homestay'),
     startDate: Yup.number().required('Vui lòng chọn ngày bắt đầu'),
     endDate: Yup.number().required('Vui lòng chọn ngày kết thúc'),
+    acreage: Yup.number()
+      .required('Vui lòng nhập diện tích')
+      .typeError('Vui lòng nhập diện tích')
+      .positive('diện tích phòng phải lớn hơn 0')
   })
   const handleSubmitStatus = async (record) => {
     await message.info('Đang tiến hành sửa trạng thái bạn vui lòng đợi một vài giây nhé!');
     await dispatch(UpdateStatus(record.id));
+    dispatch(fetchHomestay());
   }
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -260,7 +275,7 @@ const HomeStayProduct = () => {
       if (isAddFrom) {
         await setIsModalOpen(false);
         await message.info('Đang tiến hành thêm bạn vui lòng đợi một vài giây nhé!');
-        await dispatch(addHomestay(homestay, file, convenient));
+        await dispatch(addHomestay(homestay, file, convenientvir));
         message.info('Thêm thành công');
         setname('')
         setprice(0)
@@ -273,7 +288,7 @@ const HomeStayProduct = () => {
       } else {
         await setIsModalOpen(false);
         await message.info('Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!');
-        await dispatch(EditHomestay(homestay, file, recordid, convenient));
+        await dispatch(EditHomestay(homestay, file, recordid, convenientvir));
         message.info('Sửa thành công');
       }
       dispatch(fetchHomestay());
@@ -374,6 +389,7 @@ const HomeStayProduct = () => {
     }
   }, [selectedDistrict, districts]);
 
+
   return (
     <>
       <Title>Quản lý Homestay</Title>
@@ -448,7 +464,7 @@ const HomeStayProduct = () => {
                 <DatePicker
                   onChange={handleDateChangestart}
                   style={{ width: '100%' }}
-                  value={dayjs(startDate, 'YYYY-MM-DD')} // Remove the curly braces
+                  value={startDate ? dayjs(startDate, 'YYYY-MM-DD') : null}
                   disabledDate={isBeforeToday}
                 />
                 <div style={{ color: 'red' }}>{formErrors.startDate}</div>
@@ -459,7 +475,7 @@ const HomeStayProduct = () => {
                 <DatePicker
                   onChange={handleDateChangeend}
                   style={{ width: '100%' }}
-                  value={dayjs(endDate, 'YYYY-MM-DD')} // Remove the curly braces
+                  value={endDate ? dayjs(endDate, 'YYYY-MM-DD') : null}
                   disabledDate={isBeforeToday}
                 />
                 <div style={{ color: 'red' }}>{formErrors.endDate}</div>
@@ -473,7 +489,7 @@ const HomeStayProduct = () => {
               <Title level={5}>Thời gian nhận phòng:</Title>
               <TimePicker
                 onChange={handleTimeChangestart}
-                value={dayjs(timeCheckIn, 'HH:mm:ss')}
+                value={timeCheckIn && dayjs(timeCheckIn, 'HH:mm:ss')} // Fix here
                 style={{ width: '67%', float: 'right' }}
               />
               <div style={{ color: 'red' }}>{formErrors.timeCheckIn}</div>
@@ -482,7 +498,7 @@ const HomeStayProduct = () => {
               <Title level={5}>Thời gian trả phòng:</Title>
               <TimePicker
                 onChange={handleTimeChangeend}
-                value={dayjs(timeCheckOut, 'HH:mm:ss')}
+                value={timeCheckOut && dayjs(timeCheckOut, 'HH:mm:ss')} // Fix here
                 style={{ width: '67%', float: 'right' }}
               />
               <div style={{ color: 'red' }}>{formErrors.timeCheckOut}</div>
@@ -541,6 +557,12 @@ const HomeStayProduct = () => {
               </div>
             </div>
           </Row>
+          <Row gutter={24}>
+            <Col span={24}>
+              <Title level={5}>Tiện ích homestay</Title>
+              <Checkbox.Group options={convenients.map(item => ({ label: item.name, value: item.id }))} onChange={onChangeConvenients} />
+            </Col>
+          </Row>
           <Row gutter={24} >
             <Col span={24}>
               <Title level={5}>Mô tả homestay</Title>
@@ -556,6 +578,7 @@ const HomeStayProduct = () => {
           <div>
             <label htmlFor="image">Chọn ảnh</label>
             <input type="file" id="image" multiple accept="image/*" onChange={handleFileChange} />
+            {isAddFrom == true ? '' : <div style={{ color: 'red' }}>*(lưu ý khi chỉnh sửa chúng tôi sẽ chèn vào ảnh cũ của bạn)</div>}
           </div>
           <div style={{ color: 'red' }}>{formErrors.file}</div>
         </form>
@@ -620,6 +643,9 @@ const HomeStayProduct = () => {
               </div><br /></td>
             </tr>
           </table>
+          <div style={{ display: 'flex' }}><div style={{ width: 200 }}>Tiện ích        </div> : {viewEditConvennient.map((items) => (
+            <div>{items.convenientHomestay?.name},</div>
+          ))}</div><br />
           <div style={{ display: 'flex' }}><div style={{ width: 200 }}>Mô tả          </div> : {desc}</div><br />
           <div style={{ display: 'flex' }}><div style={{ width: 200 }}>Địa chỉ        </div> : {addressView}</div><br />
           <div>Ảnh homstay :<br />
