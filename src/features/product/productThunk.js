@@ -73,10 +73,20 @@ export const getPayment = (price) => async (dispatch) => {
   }
 };
 
-export const denineProducts = () => async (dispatch) => {
+export const pendingProducts = () => async (dispatch) => {
   dispatch(fetchProductsStart());
   try {
-    const response = await axios.get('http://localhost:8080/api/v3/homestay/cho-duyet?size=99');
+    const response = await axios.get('http://localhost:8080/api/v3/homestay/cho-duyet');
+    dispatch(fetchProductsSuccess(response.data.data.data)); // Lấy dữ liệu từ response.data.data
+  } catch (error) {
+    dispatch(fetchProductsFailure(error.message));
+  }
+};
+
+export const agreeProducts = () => async (dispatch) => {
+  dispatch(fetchProductsStart());
+  try {
+    const response = await axios.get('http://localhost:8080/api/v3/homestay/da-duyet');
     dispatch(fetchProductsSuccess(response.data.data.data)); // Lấy dữ liệu từ response.data.data
   } catch (error) {
     dispatch(fetchProductsFailure(error.message));

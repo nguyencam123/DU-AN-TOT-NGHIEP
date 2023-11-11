@@ -1,39 +1,27 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addProductAsync } from "../../features/product/createproductThunks";
-import { denineProducts, fetchProducts, getProducts } from "../../features/product/productThunk";
+import { pendingProducts, fetchProducts, getProducts, agreeProducts } from "../../features/product/productThunk";
 import { fetchCategory } from "../../features/category/categoryThunk"
 import { useState } from "react";
 import { Space, Table, Typography, Modal, Spin, Popconfirm, Form, Input, Row, Col, Select, Button, Pagination, Image, message } from 'antd';
-import { DeleteOutlined, EditOutlined, EyeOutlined, QuestionCircleOutlined, RotateLeftOutlined, RotateRightOutlined, SwapOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
+import { CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, EyeOutlined, QuestionCircleOutlined, RotateLeftOutlined, RotateRightOutlined, SwapOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
 import { removeProduct } from "../../features/product/deleteproductThunks";
 import * as Yup from 'yup'
 import { DetailHomestay } from "../user/hotelcomponent/detailHomestay";
 import moment from 'moment';
-import { aproveHomestay } from "../../features/admin/adminThunk";
+import { aproveHomestay, disAgreeHomestay } from "../../features/admin/adminThunk";
 
 
 const { Title } = Typography;
 
-const onFinish = (values) => {
-  console.log('Success:', values);
-};
-const onFinishFailed = (errorInfo) => {
-  console.log('Failed:', errorInfo);
-};
-const handleChange = (value) => {
-  console.log(`selected ${value}`);
-};
 function AddProductForm() {
-  const [name, setname] = useState("")
-  const [price, setprice] = useState("")
-  const [image, setimage] = useState("")
   const [viewImage, setViewImage] = useState([])
-  const [category, setcategory] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState("");
   const dispatch = useDispatch();
   const products = useSelector((state) => state.product.products)
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [confirmModal, setConfirmModal] = useState(false);
+  const [deniedModal, setDeniedModal] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState('');
   //
 
   const listFilter = [
@@ -63,15 +51,23 @@ function AddProductForm() {
 
   const onSearch = (value, _e, info) => console.log(info?.source, value);
 
-  const handleChange = (value) => {
-    console.log(value); // Giá trị ID của mục được chọn
-    setcategory(value);
+  const handleChangeStatus = (value) => {
+    if (value === 'wait') {
+      dispatch(pendingProducts());
+    } else if (value === 'aprove'){
+      dispatch(agreeProducts());
+    } else {
+      console.log(value);
+    }
   }
   const handleCancel = () => {
     setIsViewModal(false);
   }
-  const handleOk =  () => {
-    setIsModalOpen(true)
+  const handleOk = () => {
+    setConfirmModal(true)
+  }
+  const handleDenied = () => {
+    setDeniedModal(true)
   }
 
   const showModal = (record) => {
@@ -81,22 +77,37 @@ function AddProductForm() {
     console.log(record);
   };
 
-  const showConfirmModal = async () => {
+  const aproveModalHomestay = async () => {
     const data = {
       homestayId: viewHomestay.id,
       adminId: idAdmin
     }
     await dispatch(aproveHomestay(data))
-    await message.info('Sửa thành công');
+    await message.info('Duyệt thành công');
     setIsViewModal(false);
-    dispatch(denineProducts());
+    setConfirmModal(false)
+    dispatch(agreeProducts());
+  };
+  const deniedHomestay = async () => {
+    const data = {
+      homestayId: viewHomestay.id,
+      adminId: idAdmin
+    }
+    await dispatch(disAgreeHomestay(data))
+    await message.info('Từ chối thành công');
+    setIsViewModal(false);
+    setDeniedModal(false)
+    dispatch(pendingProducts());
   };
   const cancelConfirmModal = () => {
-    setIsModalOpen(false);
+    setConfirmModal(false);
+  };
+  const cancelDeniedModal = () => {
+    setDeniedModal(false);
   };
   //
   useEffect(() => {
-    dispatch(denineProducts());
+    dispatch(agreeProducts());
   }, []);
 
   const columns = [
@@ -116,7 +127,7 @@ function AddProductForm() {
       key: 'status',
       render: (data) => {
         console.log(data);
-        return data == 1 ? 'Chờ duyệt' : 'Đã duyệt'
+        return data == 1 ? 'Chờ duyệt' : (data ==0  ? 'Đã duyệt' : (data == 3 ? 'Từ chối' : 'Không hoạt động'))
       }
     },
     {
@@ -149,7 +160,7 @@ function AddProductForm() {
         <Form.Item label="Trạng thái" style={{ float: 'left' }}>
           <Select
             style={{ width: 143 }}
-            onChange={handleChange}
+            onChange={handleChangeStatus}
             options={listFilter.map(filter => ({ value: filter.value, label: filter.name }))}
             defaultValue={listFilter[1].name}
           />
@@ -178,10 +189,21 @@ function AddProductForm() {
       <Table columns={columns} dataSource={products} />
       {/* popup form */}
 
-      <Modal title={<div style={{ fontSize: '22px' }}>Xem thông tin chi tiết homstay</div>} open={isViewModal} onCancel={(data) => handleCancel(data)}
-        onOk={(data) => handleOk(data)}
-        okText='Duyệt phòng' cancelText='Từ chối'
-        width={1100} style={{ fontSize: '40px' }}>
+      <Modal title={<div style={{ fontSize: '22px' }}>Xem thông tin chi tiết homstay</div>} open={isViewModal}
+        onCancel={handleCancel}
+        footer={[
+          <Button key="back" onClick={handleCancel}>
+            Cancel
+          </Button>,
+          <Button key="submit" style={{ backgroundColor: 'red', color: 'white' }} disabled={viewHomestay.status === 3 ? true : false} onClick={handleDenied}>
+            Từ chối duyệt
+          </Button>,
+          <Button type="primary" onClick={handleOk}>
+            Đồng ý duyệt
+          </Button>
+        ]}
+        width={1100} style={{ fontSize: '40px' }}
+      >
         <div style={{ fontSize: 18, fontWeight: 600 }}>
           <table>
             <tr>
@@ -251,13 +273,23 @@ function AddProductForm() {
       </Modal>
       <Modal
         title="Xác nhận"
-        open={isModalOpen}s
-        onOk={showConfirmModal}
+        open={confirmModal}
+        onOk={aproveModalHomestay}
         onCancel={cancelConfirmModal}
         okText="Đồng ý"
         cancelText="Từ chối"
       >
         <p>Bạn đồng ý duyệt homestay này</p>
+      </Modal>
+      <Modal
+        title="Từ chối"
+        open={deniedModal}
+        onOk={deniedHomestay}
+        onCancel={cancelDeniedModal}
+        okText="Đồng ý"
+        cancelText="Từ chối"
+      >
+        <p>Bạn từ chối duyệt homestay này</p>
       </Modal>
     </div>
   )
