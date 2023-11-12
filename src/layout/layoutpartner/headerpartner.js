@@ -23,7 +23,7 @@ const Headerpartner = () => {
         navigate('/hop-tac/login')
     }
     const userDetail = JSON.parse(localStorage.getItem('userDetail'));
-    const nameUser = userDetail.data.name;
+    const nameUser = userDetail?.data.name;
     return (
         <Header style={{ display: 'flex', alignItems: 'center' }}>
             <div className="demo-logo" />

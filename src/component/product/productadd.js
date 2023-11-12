@@ -5,10 +5,7 @@ import { getAllHomestay, getAllHomestayByHomestayName, getAllHomestayByNameOwner
 import { fetchCategory } from "../../features/category/categoryThunk"
 import { useState } from "react";
 import { Space, Table, Typography, Modal, Spin, Popconfirm, Form, Input, Row, Col, Select, Button, Pagination, Image, message } from 'antd';
-import { CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, EyeOutlined, QuestionCircleOutlined, RotateLeftOutlined, RotateRightOutlined, SwapOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
-import { removeProduct } from "../../features/product/deleteproductThunks";
-import * as Yup from 'yup'
-import { DetailHomestay } from "../user/hotelcomponent/detailHomestay";
+import {   EyeOutlined,  RotateLeftOutlined, RotateRightOutlined, SwapOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { aproveHomestay, disAgreeHomestay } from "../../features/admin/adminThunk";
 
@@ -22,9 +19,9 @@ function AddProductForm() {
   const [confirmModal, setConfirmModal] = useState(false);
   const [deniedModal, setDeniedModal] = useState(false);
   const [refuse, setRefuse] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState({
-    name: 'Tất cả',
-    value: ''
+  const [selectedStatus, setSelectedStatus] = useState(    {
+    name: 'Chờ duyệt',
+    value: 1
   });
   //
 
@@ -52,32 +49,31 @@ function AddProductForm() {
   const [viewHomestay, setViewHomestay] = useState({});
   const idAdmin = useSelector((state) => state.user.adminData?.data.id)
 
-
   const handleChangeStatus = (value) => {
     if (value === 1) {
       setSelectedStatus({
-          name: 'Chờ duyệt',
-          value: 1
-        })
+        name: 'Chờ duyệt',
+        value: 1
+      })
       dispatch(getAllHomestayByStatus(1));
     } else if (value === 0) {
       setSelectedStatus({
-          name: 'Đã duyệt',
-          value: 0
-        })
+        name: 'Đã duyệt',
+        value: 0
+      })
       dispatch(getAllHomestayByStatus(0));
     } else if (value === 2) {
       setSelectedStatus({
-          name: 'Từ chối',
-          value: 2
-        })
+        name: 'Từ chối',
+        value: 2
+      })
       dispatch(getAllHomestayByStatus(2));
     } else {
       dispatch(getAllHomestay());
       setSelectedStatus({
-          name: 'Tất cả',
-          value: ''
-        })
+        name: 'Tất cả',
+        value: ''
+      })
     }
   }
   const handleCancel = () => {
@@ -144,11 +140,11 @@ function AddProductForm() {
     console.log(e.target.value);
   }
   const searchOwnerHomestayName = (value, _e, info) => {
-    dispatch(getAllHomestayByNameOwner(selectedStatus.value,value));
+    dispatch(getAllHomestayByNameOwner(selectedStatus.value, value));
   }
 
   const onSearchHomestayName = (value, _e, info) => {
-    dispatch(getAllHomestayByHomestayName(selectedStatus.value,value));
+    dispatch(getAllHomestayByHomestayName(selectedStatus.value, value));
   }
 
   //
@@ -297,7 +293,7 @@ function AddProductForm() {
                 viewImage.map((img, index) => (
                   <Image
                     key={index}
-                    src={img}
+                    src={img.imgUrl}
                     alt={`Homestay Image ${index}`}
                     style={{
                       maxWidth: '200px', // Đảm bảo ảnh không vượt quá chiều rộng của phần tử cha
