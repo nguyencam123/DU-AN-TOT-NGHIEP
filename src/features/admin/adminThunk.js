@@ -7,7 +7,7 @@ const BASE_URL = '/homestay/get-all?size=999';
 
 export const aproveHomestay = (data) => async (dispatch) => {
   try {
-    const response = await axios.post('http://localhost:8080/api/v3/homestay/agree', data);
+    const response = await axios.put('http://localhost:8080/api/v3/homestay/approve', data);
   } catch (error) {
     dispatch(fetchProductsFailure(error.message));
   }
@@ -15,7 +15,7 @@ export const aproveHomestay = (data) => async (dispatch) => {
 
 export const disAgreeHomestay = (data) => async (dispatch) => {
   try {
-    const response = await axios.post('http://localhost:8080/api/v3/homestay/disAgree', data);
+    const response = await axios.put('http://localhost:8080/api/v3/homestay/refuse', data);
   } catch (error) {
     dispatch(fetchProductsFailure(error.message));
   }
