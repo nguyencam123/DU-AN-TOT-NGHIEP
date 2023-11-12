@@ -234,7 +234,6 @@ const HomeStayProduct = () => {
       .typeError('Vui lòng nhập giá sản phẩm')
       .positive('Giá phải là số dương'),
     file: Yup.array()
-      .required('Vui lòng chọn ít nhất một hình ảnh')
       .min(5, 'Ít nhất 5 hình ảnh phải được chọn')
       .max(20, 'Không được chọn quá 20 hình ảnh'),
     numberPerson: Yup.number()
