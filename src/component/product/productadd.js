@@ -5,10 +5,7 @@ import { getAllHomestay, getAllHomestayByHomestayName, getAllHomestayByNameOwner
 import { fetchCategory } from "../../features/category/categoryThunk"
 import { useState } from "react";
 import { Space, Table, Typography, Modal, Spin, Popconfirm, Form, Input, Row, Col, Select, Button, Pagination, Image, message } from 'antd';
-import { CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, EyeOutlined, QuestionCircleOutlined, RotateLeftOutlined, RotateRightOutlined, SwapOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
-import { removeProduct } from "../../features/product/deleteproductThunks";
-import * as Yup from 'yup'
-import { DetailHomestay } from "../user/hotelcomponent/detailHomestay";
+import {   EyeOutlined,  RotateLeftOutlined, RotateRightOutlined, SwapOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { aproveHomestay, disAgreeHomestay } from "../../features/admin/adminThunk";
 
@@ -22,9 +19,9 @@ function AddProductForm() {
   const [confirmModal, setConfirmModal] = useState(false);
   const [deniedModal, setDeniedModal] = useState(false);
   const [refuse, setRefuse] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState({
-    name: 'Tất cả',
-    value: ''
+  const [selectedStatus, setSelectedStatus] = useState(    {
+    name: 'Chờ duyệt',
+    value: 1
   });
   //
 
