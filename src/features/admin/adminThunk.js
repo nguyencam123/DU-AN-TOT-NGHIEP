@@ -32,7 +32,7 @@ export const getConvenient = () => async (dispatch) => {
 
 export const getConvenientType = () => async (dispatch) => {
   try {
-    const response = await axios.get('http://localhost:8080/api/v3/convenient-homestay/type');
+    const response = await axios.get('http://localhost:8080/api/v3/convenient-homestay/type?size=99');
     dispatch(fetchConvenientTypeSuccess(response.data.data.data)); // Lấy dữ liệu từ response.data.data
   } catch (error) {
     dispatch(fetchProductsFailure(error.message));
@@ -61,6 +61,15 @@ export const getBooking = () => async (dispatch) => {
     const response = await axios.get('http://localhost:8080/api/v3/booking?size=99');
     dispatch(fetchBookingSuccess(response.data.data.data)); // Lấy dữ liệu từ response.data.data
 
+  } catch (error) {
+    dispatch(fetchProductsFailure(error.message));
+  }
+};
+
+export const updateConvenient = (data) => async (dispatch) => {
+  try {
+    console.log(1);
+    const response = await axios.put('http://localhost:8080/api/v3/convenient-homestay/update-convenient', data);
   } catch (error) {
     dispatch(fetchProductsFailure(error.message));
   }
