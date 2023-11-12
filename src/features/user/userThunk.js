@@ -2,6 +2,7 @@
 import { adminloginSuccess, loginSuccess, logout, partnerloginSuccess } from './userSlice';
 import axios from 'axios';
 import { notification } from 'antd';
+import { updateAxiosToken } from '../../app/axiosConfig';
 
 const openNotification = () => {
   notification.open({
@@ -62,7 +63,9 @@ export const loginAdmin = (username, password) => async (dispatch) => {
     if (accounts.success) {
       dispatch(adminloginSuccess({ admin: accounts }));
       localStorage.setItem('userDetail', JSON.stringify(accounts));
+      const token = JSON.parse(localStorage.getItem('userDetail')).data.token;
       dispatch(adminloginSuccess({ admin: accounts, adminData: accounts }))
+      updateAxiosToken(token);
     } else {
       openNotification()
     }
@@ -81,14 +84,15 @@ export const loginpartner = (username, password) => async (dispatch) => {
     if (accounts.success) {
       dispatch(partnerloginSuccess({ partner: accounts }));
       localStorage.setItem('userDetail', JSON.stringify(accounts));
+      const token = JSON.parse(localStorage.getItem('userDetail')).data.token;
       dispatch(partnerloginSuccess({ partner: accounts, partnerData: accounts.data }))
+      updateAxiosToken(token);
     } else {
       openNotification()
     }
   } catch (error) {
     console.error('Đăng nhập thất bại:', error);
     openNotification()
-
   }
 };
 export const logoutUser = () => (dispatch) => {

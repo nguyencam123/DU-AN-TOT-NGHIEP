@@ -52,32 +52,31 @@ function AddProductForm() {
   const [viewHomestay, setViewHomestay] = useState({});
   const idAdmin = useSelector((state) => state.user.adminData?.data.id)
 
-
   const handleChangeStatus = (value) => {
     if (value === 1) {
       setSelectedStatus({
-          name: 'Chờ duyệt',
-          value: 1
-        })
+        name: 'Chờ duyệt',
+        value: 1
+      })
       dispatch(getAllHomestayByStatus(1));
     } else if (value === 0) {
       setSelectedStatus({
-          name: 'Đã duyệt',
-          value: 0
-        })
+        name: 'Đã duyệt',
+        value: 0
+      })
       dispatch(getAllHomestayByStatus(0));
     } else if (value === 2) {
       setSelectedStatus({
-          name: 'Từ chối',
-          value: 2
-        })
+        name: 'Từ chối',
+        value: 2
+      })
       dispatch(getAllHomestayByStatus(2));
     } else {
       dispatch(getAllHomestay());
       setSelectedStatus({
-          name: 'Tất cả',
-          value: ''
-        })
+        name: 'Tất cả',
+        value: ''
+      })
     }
   }
   const handleCancel = () => {
@@ -144,11 +143,11 @@ function AddProductForm() {
     console.log(e.target.value);
   }
   const searchOwnerHomestayName = (value, _e, info) => {
-    dispatch(getAllHomestayByNameOwner(selectedStatus.value,value));
+    dispatch(getAllHomestayByNameOwner(selectedStatus.value, value));
   }
 
   const onSearchHomestayName = (value, _e, info) => {
-    dispatch(getAllHomestayByHomestayName(selectedStatus.value,value));
+    dispatch(getAllHomestayByHomestayName(selectedStatus.value, value));
   }
 
   //
@@ -297,7 +296,7 @@ function AddProductForm() {
                 viewImage.map((img, index) => (
                   <Image
                     key={index}
-                    src={img}
+                    src={img.imgUrl}
                     alt={`Homestay Image ${index}`}
                     style={{
                       maxWidth: '200px', // Đảm bảo ảnh không vượt quá chiều rộng của phần tử cha
