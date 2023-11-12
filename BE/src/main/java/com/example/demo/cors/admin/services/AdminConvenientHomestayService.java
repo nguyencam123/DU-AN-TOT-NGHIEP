@@ -18,4 +18,8 @@ public interface AdminConvenientHomestayService {
     ConvenientHomestay addConvenientHomestay( AdminConvenientHomestayRequest adminConvenientHomestayRequest);
 
     ConvenientHomestayType addConvenientHomestayType(AdminConvenientHomestayTypeRequest adminConvenientHomestayTypeRequest);
+
+    ConvenientHomestay updateConvenientHomestay( AdminConvenientHomestayRequest adminConvenientHomestayRequest);
+
+    ConvenientHomestayType updateConvenientHomestayType(AdminConvenientHomestayTypeRequest adminConvenientHomestayTypeRequest);
 }

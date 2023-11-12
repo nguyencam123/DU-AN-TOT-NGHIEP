@@ -75,6 +75,40 @@ public class AdminConvenientHomestayServiceImpl implements AdminConvenientHomest
         return convenientHomestayType1;
     }
 
+    @Override
+    public ConvenientHomestay updateConvenientHomestay(AdminConvenientHomestayRequest adminConvenientHomestayRequest) {
+        ConvenientHomestay convenientHomestay = adminConvenientHomestayRepository.findById(adminConvenientHomestayRequest.getId()).orElse(null);
+        if (isNullOrEmpty(adminConvenientHomestayRequest.getName())) {
+            throw new RestApiException("Name cannot be empty");
+        }
+        if (!adminConvenientHomestayRequest.getName().equals(convenientHomestay.getName()) &&
+                adminConvenientHomestayRepository.existsByName(adminConvenientHomestayRequest.getName())) {
+            throw new RestApiException("Name ConvenientType already exists");
+        }
+        ConvenientHomestayType convenientHomestayType = adminConvenientHomestayTypeRespository.findById(adminConvenientHomestayRequest.getIdType()).orElse(null);
+        convenientHomestay.setName(adminConvenientHomestayRequest.getName());
+        convenientHomestay.setDesc(adminConvenientHomestayRequest.getDesc());
+        convenientHomestay.setConvenientHomestayType(convenientHomestayType);
+        ConvenientHomestay convenientHomestay1 = adminConvenientHomestayRepository.save(convenientHomestay);
+        return convenientHomestay1;
+    }
+
+    @Override
+    public ConvenientHomestayType updateConvenientHomestayType(AdminConvenientHomestayTypeRequest adminConvenientHomestayTypeRequest) {
+        ConvenientHomestayType convenientHomestayType = adminConvenientHomestayTypeRespository.findById(adminConvenientHomestayTypeRequest.getId()).orElse(null);
+        if (isNullOrEmpty(adminConvenientHomestayTypeRequest.getNameType())) {
+            throw new RestApiException("Name cannot be empty");
+        }
+        if (!adminConvenientHomestayTypeRequest.getNameType().equals(convenientHomestayType.getName()) &&
+                adminConvenientHomestayTypeRespository.existsByName(adminConvenientHomestayTypeRequest.getNameType())) {
+            throw new RestApiException("Name ConvenientType already exists");
+        }
+        convenientHomestayType.setName(adminConvenientHomestayTypeRequest.getNameType());
+        convenientHomestayType.setDesc(adminConvenientHomestayTypeRequest.getDescType());
+        ConvenientHomestayType convenientHomestayType1 = adminConvenientHomestayTypeRespository.save(convenientHomestayType);
+        return convenientHomestayType1;
+    }
+
     public static boolean isNullOrEmpty(String str) {
         return str == null || str.trim().isEmpty();
     }
