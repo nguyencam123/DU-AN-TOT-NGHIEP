@@ -109,10 +109,12 @@ const CategoryList = () => {
     setModalType(false);
   };
   const updateData = (data) => {
+    console.log(data);
+    setTypeUpdate(data.convenientHomestayType.id)
     setNameupdate(data.name);
     setConvenientUpdate({ ...convenientUpdate, name: data.name })
+    setConvenientUpdate({ ...convenientUpdate, idType: data.convenientHomestayType.id })
     setConvenientUpdate({ ...convenientUpdate, id: data.id })
-    console.log(convenientUpdate);
      setIsUpdate(true)
   }
   const update = async () => {
