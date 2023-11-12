@@ -4,6 +4,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   category: [],
   categoryType: [],
+  booking: [],
   loading: false,
   error: null,
 };
@@ -22,10 +23,15 @@ const adminSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
+    fetchBookingSuccess: (state, action) => {
+      state.booking = action.payload;
+      state.loading = false;
+      state.error = null;
+    },
   },
 });
 
 export const {
-  fetchConvenientSuccess, fetchConvenientTypeSuccess
+  fetchConvenientSuccess, fetchConvenientTypeSuccess, fetchBookingSuccess
 } = adminSlice.actions;
 export default adminSlice.reducer;
