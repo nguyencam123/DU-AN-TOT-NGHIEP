@@ -30,8 +30,4 @@ public class ConvenientHomestayType extends PrimaryEntity {
     @Nationalized
     private String desc;
 
-    @OneToMany(mappedBy = "convenientHomestayType", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<ConvenientHomestay> convenientHomestayList;
-
 }
