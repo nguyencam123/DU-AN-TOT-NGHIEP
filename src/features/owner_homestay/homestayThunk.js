@@ -1,13 +1,13 @@
 import { fetchProductsStart, fetchProductsSuccess, fetchProductsFailure, addproduct, edithomestay } from '../owner_homestay/onwerHomestaySlice';
-import axios from '../../app/axiosConfig';
+import { instance } from '../../app/axiosConfig';
 
-const BASE_URL = '/homestay';
+const BASE_URL = '/api/v2/homestay';
 export const fetchHomestay = () => async (dispatch) => {
   dispatch(fetchProductsStart());
   try {
     const id = JSON.parse(localStorage.getItem('userDetail'))?.data.id;
-    const response = await axios.get(BASE_URL + `/get-homestay-by-id?id=${id}&size=999`);
-    dispatch(fetchProductsSuccess(response.data.data.data)); // Lấy dữ liệu từ response.data.data
+    const response = await instance.get(BASE_URL + `/get-homestay-by-id?id=${id}&size=999`);
+    dispatch(fetchProductsSuccess(response.data.data.data));
   } catch (error) {
     dispatch(fetchProductsFailure(error.message));
   }
@@ -22,7 +22,7 @@ export const addHomestay = (homestay, imgUrl, convenient) => async (dispatch) =>
   formData.append('convenient', convenient);
   dispatch(fetchProductsStart());
   try {
-    await axios.post(BASE_URL + "/add-homestay", formData);
+    await instance.post(BASE_URL + "/add-homestay", formData);
   } catch (error) {
     dispatch(fetchProductsFailure(error.message));
   }
@@ -36,7 +36,7 @@ export const EditHomestay = (homestay, imgUrl, id, convenient) => async (dispatc
   formData.append('convenient', convenient);
   dispatch(fetchProductsStart());
   try {
-    await axios.put(BASE_URL + `/update-homestays?id=${id}`, formData);
+    await instance.put(BASE_URL + `/update-homestays?id=${id}`, formData);
   } catch (error) {
     dispatch(fetchProductsFailure(error.message));
   }
@@ -44,7 +44,7 @@ export const EditHomestay = (homestay, imgUrl, id, convenient) => async (dispatc
 export const UpdateStatus = (id) => async (dispatch) => {
   dispatch(fetchProductsStart());
   try {
-    await axios.put(BASE_URL + `/delete-homestays?id=${id}`);
+    await instance.put(BASE_URL + `/delete-homestays?id=${id}`);
   } catch (error) {
     dispatch(fetchProductsFailure(error.message));
   }

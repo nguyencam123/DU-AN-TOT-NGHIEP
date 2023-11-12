@@ -93,6 +93,7 @@ const HomeStayProduct = () => {
     setviewEditConvennient(record.detailHomestays)
     setcancellationPolicy(record.cancellationPolicy)
     setacreage(record.acreage)
+    setroomNumber(record.roomNumber)
   }
   const showModal = () => {
     setIsModalOpen(true);
@@ -207,7 +208,7 @@ const HomeStayProduct = () => {
   const [image, setIamge] = useState([]);
   //getuserid
   const userDetail = JSON.parse(localStorage.getItem('userDetail'));
-  const UserID = userDetail.data.id;
+  const UserID = userDetail?.data.id;
   //
   const parsedAcreage = parseFloat(acreage).toFixed(2);
   const homestay = {
@@ -233,7 +234,6 @@ const HomeStayProduct = () => {
       .typeError('Vui lòng nhập giá sản phẩm')
       .positive('Giá phải là số dương'),
     file: Yup.array()
-      .required('Vui lòng chọn ít nhất một hình ảnh')
       .min(5, 'Ít nhất 5 hình ảnh phải được chọn')
       .max(20, 'Không được chọn quá 20 hình ảnh'),
     numberPerson: Yup.number()
@@ -325,6 +325,8 @@ const HomeStayProduct = () => {
     setacreage(record.acreage)
     settimeCheckIn(record.timeCheckIn)
     settimeCheckOut(record.timeCheckOut)
+    setconvenient(record.detailHomestays)
+    // 
     setFormErrors({});
 
     const addressParts = record.address.split(", ");
