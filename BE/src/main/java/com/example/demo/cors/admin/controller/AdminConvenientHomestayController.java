@@ -37,4 +37,13 @@ public class AdminConvenientHomestayController {
         return new ResponseObject(adminConvenientHomestayService.addConvenientHomestay(adminConvenientHomestayRequest));
     }
 
+    @PutMapping("/update-convenient-type")
+    public ResponseObject updateConvenientType(@RequestBody AdminConvenientHomestayTypeRequest adminConvenientHomestayTypeRequest) {
+        return new ResponseObject(adminConvenientHomestayService.updateConvenientHomestayType(adminConvenientHomestayTypeRequest));
+    }
+
+    @PutMapping("/update-convenient")
+    public ResponseObject updateConvenient( @RequestBody  AdminConvenientHomestayRequest adminConvenientHomestayRequest) {
+        return new ResponseObject(adminConvenientHomestayService.updateConvenientHomestay(adminConvenientHomestayRequest));
+    }
 }
