@@ -12,9 +12,10 @@ import {
     MDBRadio
 }
     from 'mdb-react-ui-kit';
-import { DatePicker } from 'antd';
+import { DatePicker, notification } from 'antd';
 import moment from 'moment';
 import * as Yup from 'yup';
+import { useNavigate } from 'react-router-dom';
 
 // const validationSchema = Yup.object().shape({
 //     name: Yup.string().required('Họ và tên không được để trống'),
@@ -39,6 +40,17 @@ const PartnerRegister = () => {
     const [identificationNumber, setidentificationNumber] = useState('')
     const handleDateChangestart = (dates) => {
         setbirthday(moment(dates).valueOf());
+    };
+    const navigate = useNavigate()
+    const openNotification = () => {
+        notification.open({
+            message: 'Thông báo',
+            description:
+                'Đăng ký thành công',
+            onClick: () => {
+                console.log('Notification Clicked!');
+            },
+        });
     };
     const formData = {
         name: name,
@@ -73,7 +85,8 @@ const PartnerRegister = () => {
                 .then(response => response.json())
                 .then(data => {
                     // Xử lý kết quả từ API (nếu cần)
-
+                    openNotification()
+                    navigate('/login')
                 })
                 .catch(error => {
                     console.error('Error:', error);

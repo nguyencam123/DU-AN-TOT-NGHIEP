@@ -1,13 +1,15 @@
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { Avatar, Tabs, Typography } from 'antd'
 import { UserOutlined, FileProtectOutlined, LogoutOutlined, BellOutlined } from '@ant-design/icons'
 import { useState } from "react";
 import { MDBBtn, MDBCol, MDBInput, MDBRow } from "mdb-react-ui-kit";
 import moment from 'moment';
-
+import { useNavigate } from "react-router-dom";
+import { logoutUser } from "../../features/user/userThunk";
 const { Title } = Typography;
 const { TabPane } = Tabs;
 const LoginDetail = () => {
+    const navigate = useNavigate()
     const userDetail = JSON.parse(localStorage.getItem('userDetail'));
     const namelocal = userDetail?.data.name;
     const [name, setname] = useState('')
@@ -30,6 +32,11 @@ const LoginDetail = () => {
         email: email,
         identificationNumber: identificationNumber,
         point: 9
+    }
+    const dispatch = useDispatch()
+    const logout = () => {
+        dispatch(logoutUser())
+        navigate('/login')
     }
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -165,7 +172,9 @@ const LoginDetail = () => {
         {
             key: '4',
             label: <div style={{ display: 'flex' }}><LogoutOutlined style={{ fontSize: 25 }} /><Title level={5} style={{ marginTop: 2 }}>Đăng xuất</Title></div>,
-            children: 'Content of Tab Pane 4',
+            children: <button type="button" className="btn btn-primary" style={{ color: 'black' }} onClick={logout}>
+                <UserOutlined /> Đăng xuất
+            </button>,
         }
     ];
     const handleTabChange = (key) => {

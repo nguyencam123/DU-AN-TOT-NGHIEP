@@ -1,5 +1,6 @@
 import { fetchProductsStart, fetchProductsSuccess, fetchProductsFailure, fetchProductsDetailSuccess, fetchCommentProductSuccess, fetchAvgPointSuccess, getPaymentSuccess, addInfoBooking } from './productSlide';
-import axios from '../../app/axiosConfig';
+import { instance } from '../../app/axiosConfig';
+import axios from 'axios';
 
 const BASE_URL = '/homestay/get-all?size=999';
 
@@ -73,52 +74,46 @@ export const getPayment = (price) => async (dispatch) => {
   }
 };
 
-export const pendingProducts = () => async (dispatch) => {
+export const getAllHomestay = () => async (dispatch) => {
   dispatch(fetchProductsStart());
   try {
-    const response = await axios.get('http://localhost:8080/api/v3/homestay/cho-duyet?size=100');
+    const response = await instance.get('/api/v3/homestay?size=99');
     dispatch(fetchProductsSuccess(response.data.data.data)); // Lấy dữ liệu từ response.data.data
   } catch (error) {
     dispatch(fetchProductsFailure(error.message));
   }
 };
 
-export const agreeProducts = () => async (dispatch) => {
+export const getAllHomestayByStatus = (status) => async (dispatch) => {
   dispatch(fetchProductsStart());
   try {
-    const response = await axios.get('http://localhost:8080/api/v3/homestay/da-duyet?size=100');
+    const response = await instance.get('/api/v3/homestay?size=99&statusHomestay=' + status);
     dispatch(fetchProductsSuccess(response.data.data.data)); // Lấy dữ liệu từ response.data.data
   } catch (error) {
     dispatch(fetchProductsFailure(error.message));
   }
 };
 
-export const allProducts = () => async (dispatch) => {
+export const getAllHomestayByNameOwner = (status, name) => async (dispatch) => {
   dispatch(fetchProductsStart());
+  console.log(1);
   try {
-    const response = await axios.get('http://localhost:8080/api/v3/homestay?size=100');
+    const response = await instance.get('/api/v3/homestay?size=99&statusHomestay=' + status + '&nameOwner=' + name);
     dispatch(fetchProductsSuccess(response.data.data.data)); // Lấy dữ liệu từ response.data.data
   } catch (error) {
     dispatch(fetchProductsFailure(error.message));
   }
 };
 
-export const denieProducts = () => async (dispatch) => {
+export const getAllHomestayByHomestayName = (status, name) => async (dispatch) => {
   dispatch(fetchProductsStart());
+  console.log(1);
   try {
-    const response = await axios.get('http://localhost:8080/api/v3/homestay/khong-duyet?size=100');
+    const response = await instance.get('/api/v3/homestay?size=99&statusHomestay=' + status + '&nameHomestay=' + name);
     dispatch(fetchProductsSuccess(response.data.data.data)); // Lấy dữ liệu từ response.data.data
   } catch (error) {
     dispatch(fetchProductsFailure(error.message));
   }
 };
 
-export const notWorkProducts = () => async (dispatch) => {
-  dispatch(fetchProductsStart());
-  try {
-    const response = await axios.get('http://localhost:8080/api/v3/homestay/da-xoa?size=100');
-    dispatch(fetchProductsSuccess(response.data.data.data)); // Lấy dữ liệu từ response.data.data
-  } catch (error) {
-    dispatch(fetchProductsFailure(error.message));
-  }
-};
+

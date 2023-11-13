@@ -12,6 +12,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AdminConvenientHomestayTypeRequest extends PageableRequest {
 
+    String id;
+
     String nameType;
 
     String descType;

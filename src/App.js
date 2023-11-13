@@ -62,7 +62,8 @@ function App() {
           </Route>
           <Route path="/*" element={<AdminLayout />}>
             <Route path="admin/*" element={<ProtectedRoute adminOnly />} />
-            <Route path="*" element={<Navigate to="/error-role" replace />} />
+            {/* <Route path="*" element={<Navigate to="/error-role" replace />} /> */}
+            <Route path="error-role" element={<ErrorLogin />} />
           </Route>
         </Routes>
       </Router>

@@ -1,14 +1,11 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addProductAsync } from "../../features/product/createproductThunks";
-import { pendingProducts, fetchProducts, getProducts, agreeProducts, denieProducts, allProducts } from "../../features/product/productThunk";
+import { getAllHomestay, getAllHomestayByHomestayName, getAllHomestayByNameOwner, getAllHomestayByStatus } from "../../features/product/productThunk";
 import { fetchCategory } from "../../features/category/categoryThunk"
 import { useState } from "react";
 import { Space, Table, Typography, Modal, Spin, Popconfirm, Form, Input, Row, Col, Select, Button, Pagination, Image, message } from 'antd';
-import { CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, EyeOutlined, QuestionCircleOutlined, RotateLeftOutlined, RotateRightOutlined, SwapOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
-import { removeProduct } from "../../features/product/deleteproductThunks";
-import * as Yup from 'yup'
-import { DetailHomestay } from "../user/hotelcomponent/detailHomestay";
+import {   EyeOutlined,  RotateLeftOutlined, RotateRightOutlined, SwapOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { aproveHomestay, disAgreeHomestay } from "../../features/admin/adminThunk";
 
@@ -21,25 +18,29 @@ function AddProductForm() {
   const products = useSelector((state) => state.product.products)
   const [confirmModal, setConfirmModal] = useState(false);
   const [deniedModal, setDeniedModal] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState();
+  const [refuse, setRefuse] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState(    {
+    name: 'Chờ duyệt',
+    value: 1
+  });
   //
 
   const listFilter = [
     {
       name: 'Tất cả',
-      value: 'all'
+      value: ''
     },
     {
       name: 'Chờ duyệt',
-      value: 'wait'
+      value: 1
     },
     {
       name: 'Đã duyệt',
-      value: 'aprove'
+      value: 0
     },
     {
       name: 'Từ chối',
-      value: 'denie'
+      value: 2
     }
   ]
 
@@ -47,20 +48,32 @@ function AddProductForm() {
   const [isViewModal, setIsViewModal] = useState(false);
   const [viewHomestay, setViewHomestay] = useState({});
   const idAdmin = useSelector((state) => state.user.adminData?.data.id)
-  console.log(idAdmin);
-
-  const onSearch = (value, _e, info) => console.log(info?.source, value);
 
   const handleChangeStatus = (value) => {
-    if (value === 'wait') {
-      dispatch(pendingProducts());
-    } else if (value === 'aprove'){
-      dispatch(agreeProducts());
-    } else if (value === 'denie') {
-      dispatch(denieProducts());
+    if (value === 1) {
+      setSelectedStatus({
+        name: 'Chờ duyệt',
+        value: 1
+      })
+      dispatch(getAllHomestayByStatus(1));
+    } else if (value === 0) {
+      setSelectedStatus({
+        name: 'Đã duyệt',
+        value: 0
+      })
+      dispatch(getAllHomestayByStatus(0));
+    } else if (value === 2) {
+      setSelectedStatus({
+        name: 'Từ chối',
+        value: 2
+      })
+      dispatch(getAllHomestayByStatus(2));
     } else {
-      dispatch(allProducts());
-
+      dispatch(getAllHomestay());
+      setSelectedStatus({
+        name: 'Tất cả',
+        value: ''
+      })
     }
   }
   const handleCancel = () => {
@@ -83,34 +96,60 @@ function AddProductForm() {
   const aproveModalHomestay = async () => {
     const data = {
       homestayId: viewHomestay.id,
-      adminId: idAdmin
+      adminId: idAdmin,
+      desc: ''
     }
     await dispatch(aproveHomestay(data))
     await message.info('Duyệt thành công');
     setIsViewModal(false);
     setConfirmModal(false)
-    dispatch(agreeProducts());
+    setSelectedStatus(
+      {
+        name: 'Đã duyệt',
+        value: 0
+      }
+    );
+    dispatch(getAllHomestayByStatus(0));
   };
   const deniedHomestay = async () => {
     const data = {
       homestayId: viewHomestay.id,
-      adminId: idAdmin
+      adminId: idAdmin,
+      desc: refuse
     }
     await dispatch(disAgreeHomestay(data))
     await message.info('Từ chối thành công');
     setIsViewModal(false);
     setDeniedModal(false)
-    dispatch(pendingProducts());
+    setSelectedStatus(
+      {
+        name: 'Từ chối',
+        value: 2
+      }
+    );
+    dispatch(getAllHomestayByStatus(2));
   };
   const cancelConfirmModal = () => {
     setConfirmModal(false);
   };
   const cancelDeniedModal = () => {
     setDeniedModal(false);
-  };
+  }
+  const handleChangeRefuse = (e) => {
+    setRefuse(e.target.value);
+    console.log(e.target.value);
+  }
+  const searchOwnerHomestayName = (value, _e, info) => {
+    dispatch(getAllHomestayByNameOwner(selectedStatus.value, value));
+  }
+
+  const onSearchHomestayName = (value, _e, info) => {
+    dispatch(getAllHomestayByHomestayName(selectedStatus.value, value));
+  }
+
   //
   useEffect(() => {
-    dispatch(pendingProducts());
+    dispatch(getAllHomestayByStatus(1));
   }, []);
   const columns = [
     {
@@ -129,16 +168,13 @@ function AddProductForm() {
       key: 'status',
       render: (data) => {
         if (data === 'HOAT_DONG') {
-          return 'Đã duyệt'
+          return 'Hoạt động'
         }
-        if (data === 'KHONG_HOAT_DONG') {
+        if (data === 'CHO_DUYET') {
           return 'Chờ duyệt'
         }
-        if (data === 'XOA_PHONG') {
+        if (data === 'KHONG_HOAT_DONG') {
           return 'Ngừng hoạt động'
-        }
-        if (data === 'KHONG_DUYET') {
-          return 'Từ chối duyệt'
         }
       }
     },
@@ -146,8 +182,7 @@ function AddProductForm() {
       title: 'Chủ homestay',
       dataIndex: 'ownerHomestay',
       key: 'ownerHomestay',
-      render: (data) => { 
-        console.log(data);
+      render: (data) => {
         return data.name
       }
     },
@@ -178,7 +213,7 @@ function AddProductForm() {
             style={{ width: 143 }}
             onChange={handleChangeStatus}
             options={listFilter.map(filter => ({ value: filter.value, label: filter.name }))}
-            defaultValue={listFilter[1].name}
+            value={selectedStatus}
           />
         </Form.Item>
         <Form.Item label="Tìm kiếm theo tên" style={{ float: 'left', marginLeft: ' 50px' }}>
@@ -187,7 +222,7 @@ function AddProductForm() {
             allowClear
             size="medium"
             enterButton="search"
-            onSearch={onSearch}
+            onSearch={onSearchHomestayName}
           />
         </Form.Item>
         <Form.Item label="Tìm kiếm theo tên chủ homestay" style={{ float: 'left', marginLeft: ' 50px' }}>
@@ -196,7 +231,7 @@ function AddProductForm() {
             allowClear
             size="medium"
             enterButton="search"
-            onSearch={onSearch}
+            onSearch={searchOwnerHomestayName}
           />
         </Form.Item>
       </Row>
@@ -258,7 +293,7 @@ function AddProductForm() {
                 viewImage.map((img, index) => (
                   <Image
                     key={index}
-                    src={img}
+                    src={img.imgUrl}
                     alt={`Homestay Image ${index}`}
                     style={{
                       maxWidth: '200px', // Đảm bảo ảnh không vượt quá chiều rộng của phần tử cha
@@ -305,7 +340,18 @@ function AddProductForm() {
         okText="Đồng ý"
         cancelText="Từ chối"
       >
-        <p>Bạn từ chối duyệt homestay này</p>
+        <Form.Item
+          label='Lý do từ chối'
+          name='name'
+          rules={[
+            {
+              required: true,
+              message: 'Vui lòng điền lý do từ chối'
+            }
+          ]}
+        >
+          <Input value={refuse} onChange={(e) => handleChangeRefuse(e)} />
+        </Form.Item>
       </Modal>
     </div>
   )
