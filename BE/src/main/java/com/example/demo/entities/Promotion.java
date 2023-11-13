@@ -5,8 +5,6 @@ import com.example.demo.infrastructure.contant.EntityProperties;
 import com.example.demo.infrastructure.contant.TypePromotion;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;

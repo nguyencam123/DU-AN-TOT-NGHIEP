@@ -3,7 +3,9 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   productDetails: [],
-  commentProduct:[],
+  commentProduct: [],
+  avgPoint: [],
+  payment: [],
   products: [],
   loading: false,
   error: null,
@@ -32,6 +34,11 @@ const productSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
+    fetchAvgPointSuccess: (state, action) => {
+      state.avgPoint = action.payload;
+      state.loading = false;
+      state.error = null;
+    },
     fetchProductsFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
@@ -42,9 +49,18 @@ const productSlice = createSlice({
     },
     addproduct: (state, action) => {
       state.products.push(action.payload)
-    }
+    },
+    getPaymentSuccess: (state, action) => {
+      state.payment = action.payload;
+      state.loading = false;
+      state.error = null;
+    },
   },
 });
 
-export const { fetchProductsStart, fetchProductsSuccess, fetchProductsFailure, deleteProduct, addproduct,fetchProductsDetailSuccess, fetchCommentProductSuccess } = productSlice.actions;
+export const {
+  fetchProductsStart, fetchProductsSuccess, fetchProductsFailure,
+  deleteProduct, addproduct, fetchProductsDetailSuccess, fetchCommentProductSuccess,
+  fetchAvgPointSuccess, getPaymentSuccess
+} = productSlice.actions;
 export default productSlice.reducer;

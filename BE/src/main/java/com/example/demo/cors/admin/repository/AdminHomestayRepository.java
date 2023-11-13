@@ -1,28 +1,25 @@
 package com.example.demo.cors.admin.repository;
 
 import com.example.demo.cors.admin.model.request.AdminHomestayRequest;
-import com.example.demo.cors.admin.model.response.AdminHomestayResponse;
 import com.example.demo.entities.Homestay;
 import com.example.demo.repositories.HomestayRepository;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 @Repository
 public interface AdminHomestayRepository extends HomestayRepository {
 
-    Optional<Homestay> findById(String id);
-
     @Query(value = """
-            SELECT dbo.homestay.name, dbo.address.name AS [address], dbo.owner_homestay.name AS [name_homestay], dbo.owner_homestay.phone_number as [phone_number], dbo.owner_homestay.email as [email]
-            FROM dbo.address 
-            INNER JOIN dbo.homestay ON dbo.address.id = dbo.homestay.address_id 
-            INNER JOIN dbo.owner_homestay ON dbo.homestay.owner_id = dbo.owner_homestay.id
+            SELECT ROW_NUMBER() OVER(ORDER BY h.created_date DESC) AS stt, h.* FROM homestay h 
+            JOIN owner_homestay oh ON h.owner_id = oh.id
+            WHERE ( ( :#{#request.statusHomestay} IS NULL OR h.status = :#{#request.statusHomestay} )
+            AND ( :#{#request.nameHomestay} IS NULL OR :#{#request.nameHomestay} LIKE '' OR h.name LIKE %:#{#request.nameHomestay}% )
+            AND ( :#{#request.nameOwner} IS NULL OR oh.name LIKE '' OR oh.name LIKE %:#{#request.nameOwner}% ) )
             """, nativeQuery = true)
-    Page<AdminHomestayResponse> getAll(Pageable pageable, @Param("request") AdminHomestayRequest request);
+    Page<Homestay> getAllHomestay(Pageable pageable, @Param("request") AdminHomestayRequest request);
 
 }

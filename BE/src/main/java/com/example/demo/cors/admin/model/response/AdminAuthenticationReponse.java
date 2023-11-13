@@ -30,6 +30,8 @@ public class AdminAuthenticationReponse {
 
     private String username;
 
+    private String avataUrl;
+
     private Status status;
 
 }

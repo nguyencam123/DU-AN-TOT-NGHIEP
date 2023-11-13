@@ -3,7 +3,13 @@ package com.example.demo.entities;
 import com.example.demo.entities.base.PrimaryEntity;
 import com.example.demo.infrastructure.contant.EntityProperties;
 import com.example.demo.infrastructure.contant.StatusBooking;
-import jakarta.persistence.*;
+import com.example.demo.infrastructure.contant.TypeBooking;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
@@ -43,8 +49,12 @@ public class Booking extends PrimaryEntity {
     @Nationalized
     private String phoneNumber;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "homestay_id")
     private Homestay homestay;
+
+    private TypeBooking typeBooking;
+
+    private String note;
 
 }

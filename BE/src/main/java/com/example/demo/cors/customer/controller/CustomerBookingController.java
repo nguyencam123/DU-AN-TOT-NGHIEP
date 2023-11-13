@@ -6,6 +6,8 @@ import com.example.demo.cors.customer.services.CustomerBookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,6 +22,11 @@ public class CustomerBookingController {
     @GetMapping()
     public ResponseObject getBookingByUser(CustomerBookingRequest customerBookingRequest) {
         return new ResponseObject(customerBookingService.getBookingByUser(customerBookingRequest));
+    }
+
+    @PostMapping("/create")
+    public ResponseObject createBooking(@RequestBody CustomerBookingRequest customerBookingRequest) {
+        return new ResponseObject(customerBookingService.createBooking(customerBookingRequest));
     }
 
 }

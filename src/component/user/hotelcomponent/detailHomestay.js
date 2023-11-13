@@ -5,7 +5,7 @@ import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, StarTwoTone }
 import { Table } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchProducts, getCommentProduct, getOneProduct } from '../../../features/product/productThunk';
+import { fetchProducts, getAvgPoint, getCommentProduct, getOneProduct } from '../../../features/product/productThunk';
 const { Header, Content, Footer } = Layout;
 
 export const DetailHomestay = () => {
@@ -13,13 +13,15 @@ export const DetailHomestay = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
+    dispatch(getAvgPoint(params.id));
     dispatch(getCommentProduct(params.id));
     dispatch(getOneProduct(params.id));
   }, []);
   const detailHomestay = useSelector((state) => state.product.productDetails)
-  console.log(detailHomestay);
   const comment = useSelector((state) => state.product.commentProduct)
+  const avgPoint = useSelector((state) => state.product.avgPoint)
   console.log(comment);
+
   const listComment = comment.map((value) =>
   <Row style={{ margin: '20px 10px 10px 10px', border: '2px solid rgba(242,243,243,1.00)', borderRadius: '5px', minHeight: '70px' }}>
   <Col span={5} >
@@ -33,12 +35,12 @@ export const DetailHomestay = () => {
     <div style={{ fontWeight: '500', marginTop: '10px' }}>
       {value.comment}
     </div>
-    <div style={{ margin: '15px 0' }}>
-      <Image
-        style={{ borderRadius: '10px' }}
-        width={85}
-        height={85}
-        src="http://res.cloudinary.com/dcwkiozwf/image/upload/v1698477662/homestay_images/naaveb7ytdgyolqe3n1e.jpg"
+        <div style={{ margin: '15px 0' }}>
+          <Image
+            style={{ borderRadius: '10px' }}
+            width={85}
+            height={85}
+            src={value.imgUrl}
       />
     </div>
   </Col>
@@ -274,7 +276,7 @@ export const DetailHomestay = () => {
           <Row style={{ backgroundColor: 'white', borderRadius: '5px', minHeight: '10px', marginTop: '15px' }}>
             <Col span={4} style={{ alignItems: 'center' }}>
               <Space wrap style={{ marginLeft: '40px', marginTop: '10px' }}>
-                <Progress type="dashboard" percent={80} gapDegree={30} />
+                <Progress type="dashboard" percent={3.5*100/5} gapDegree={30} />
               </Space>
             </Col>
             <Col span={14}>

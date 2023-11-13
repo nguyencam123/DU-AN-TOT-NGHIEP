@@ -4,7 +4,7 @@ import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progres
 import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, InfoCircleTwoTone, StarTwoTone } from '@ant-design/icons'
 import { Form, Table } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getOneProduct } from '../../../features/product/productThunk';
+import { getOneProduct, getPayment } from '../../../features/product/productThunk';
 import { useDispatch, useSelector } from 'react-redux';
 const { Header, Content, Footer } = Layout;
 
@@ -13,13 +13,12 @@ export const BookingReviewHomestay = () => {
   const params = useParams();
   useEffect(() => {
     dispatch(getOneProduct(params.id));
+    dispatch(getPayment({ vnp_Ammount: detailHomestay.price + detailHomestay.price * 11 / 100 }));
   }, []);
   const dispatch = useDispatch();
   const detailHomestay = useSelector((state) => state.product.productDetails);
-  const navigate = useNavigate();
-  const handleReviewBookingHomestay = (id) => {
-  }
-
+  const payment = useSelector((state) => state.product.payment)
+  console.log(payment);
   return (
     <>
       <Content
@@ -69,7 +68,7 @@ export const BookingReviewHomestay = () => {
                 <Row style={{ margin: '10px' }} style={{ borderBottom: '1px solid', padding: '0px 10px 10px 10px', }}>
                   <Col span={5}>
                     <Image
-                      src={detailHomestay.images[0].imgUrl}
+                      src={detailHomestay?.images?.[0]?.imgUrl}
                       style={{ marginTop: '10px' }}
                       width={128}
                       height={128}
@@ -95,7 +94,7 @@ export const BookingReviewHomestay = () => {
                       <Col span={8}>
                         <div style={{ color: 'rgb(104, 113, 118)', fontWeight: '600', lineHeight: '28px', fontSize: '16px' }}>  Ngày nhận phòng:</div>
                         <div style={{ color: 'black', fontWeight: '600', lineHeight: '28px', fontSize: '16px' }}> 9 Nov 2023 </div>
-                        <div style={{ color: 'rgb(104, 113, 118)', fontWeight: '600', lineHeight: '28px', fontSize: '16px' }}> Từ { detailHomestay.timeCheckIn}</div>
+                        <div style={{ color: 'rgb(104, 113, 118)', fontWeight: '600', lineHeight: '28px', fontSize: '16px' }}> Từ {detailHomestay.timeCheckIn}</div>
                       </Col>
                       <Col span={8}>
                         <div style={{ color: 'rgb(104, 113, 118)', fontWeight: '600', lineHeight: '28px', fontSize: '16px' }}>  Ngày trả phòng:</div>
@@ -139,22 +138,22 @@ export const BookingReviewHomestay = () => {
               <div style={{ backgroundColor: 'white', borderRadius: '10px' }}>
                 <Row style={{ marginTop: '25px' }}>
                   <Col span={22} push={1} style={{ borderBottom: '1px solid' }}>
-                    <div style={{ fontSize:'20px', fontWeight:'700'}}>
+                    <div style={{ fontSize: '20px', fontWeight: '700' }}>
                       Chi tiết người liên lạc
                     </div>
                   </Col>
                 </Row>
-                <Col span={22} push={1} style={{marginTop:'5px', paddingBottom:'10px'}}>
-                    <div style={{ fontSize:'16px', fontWeight:'600', lineHeight:'28px', color:'rgb(3, 18, 26)'}}>
-                      Chi tiết người liên lạc
+                <Col span={22} push={1} style={{ marginTop: '5px', paddingBottom: '10px' }}>
+                  <div style={{ fontSize: '16px', fontWeight: '600', lineHeight: '28px', color: 'rgb(3, 18, 26)' }}>
+                    Chi tiết người liên lạc
                   </div>
-                  <div style={{ fontSize:'16px', fontWeight:'600', lineHeight:'28px', color:'rgb(3, 18, 26)'}}>
-                  +84835120388
+                  <div style={{ fontSize: '16px', fontWeight: '600', lineHeight: '28px', color: 'rgb(3, 18, 26)' }}>
+                    +84835120388
                   </div>
-                  <div style={{ fontSize:'16px', fontWeight:'600', lineHeight:'28px', color:'rgb(3, 18, 26)'}}>
-                  tranquanghuy3103@gmail.com
+                  <div style={{ fontSize: '16px', fontWeight: '600', lineHeight: '28px', color: 'rgb(3, 18, 26)' }}>
+                    tranquanghuy3103@gmail.com
                   </div>
-                  </Col>
+                </Col>
               </div>
             </Col>
           </Row>
@@ -174,7 +173,7 @@ export const BookingReviewHomestay = () => {
                   <hr style={{ width: '96%', marginLeft: '2%' }} />
                   <div style={{ marginLeft: '10px', marginTop: '10px' }}>
                     <div style={{ lineHeight: '12px', marginTop: '3px' }}><ClockCircleTwoTone style={{ fontSize: '12px' }} /><b> Mô tả</b></div>
-                    <span style={{ lineHeight: '12px', marginLeft: '17px', }}>{ detailHomestay.desc }</span>
+                    <span style={{ lineHeight: '12px', marginLeft: '17px', }}>{detailHomestay.desc}</span>
                   </div>
                   <hr style={{ width: '96%', marginLeft: '2%' }} />
                   <div style={{ marginLeft: '10px', marginTop: '10px' }}>
@@ -189,7 +188,7 @@ export const BookingReviewHomestay = () => {
                       <tbody>
                         <tr>
                           <td>Thời gian nhận trả phòng</td>
-                          <td>Từ {detailHomestay.timeCheckIn} - trước { detailHomestay.timeCheckOut}</td>
+                          <td>Từ {detailHomestay.timeCheckIn} - trước {detailHomestay.timeCheckOut}</td>
                         </tr>
                         <tr>
                           <td>Diện tích</td>
@@ -201,7 +200,7 @@ export const BookingReviewHomestay = () => {
                         </tr>
                         <tr>
                           <td>Số người</td>
-                          <td>{ detailHomestay.numberPerson}</td>
+                          <td>{detailHomestay.numberPerson}</td>
                         </tr>
                       </tbody>
                     </Table>
@@ -221,7 +220,7 @@ export const BookingReviewHomestay = () => {
                   </Col>
                   <Col span={8} push={4}>
                     <div style={{ padding: '20px 0px 5px 20px', fontSize: '18px', fontWeight: '700', float: 'right' }}>
-                    {detailHomestay.price + detailHomestay.price*11/100} VND
+                      {detailHomestay.price + detailHomestay.price * 11 / 100} VND
                     </div>
                   </Col>
                 </Row>
@@ -245,7 +244,7 @@ export const BookingReviewHomestay = () => {
                   </Col>
                   <Col span={8} push={4}>
                     <div style={{ fontWeight: '600', fontSize: '18px', float: 'right' }}>
-                    {detailHomestay.price} VND
+                      {detailHomestay.price} VND
                     </div>
                   </Col>
                 </Row>
@@ -257,7 +256,7 @@ export const BookingReviewHomestay = () => {
                   </Col>
                   <Col span={8} push={4}>
                     <div style={{ fontWeight: '600', fontSize: '18px', float: 'right' }}>
-                      {detailHomestay.price*11/100} VND
+                      {detailHomestay.price * 11 / 100} VND
                     </div>
                   </Col>
                 </Row>
@@ -273,7 +272,7 @@ export const BookingReviewHomestay = () => {
                 </Col>
                 <Col span={16} >
                   <div style={{ float: 'right', marginTop: '5px' }}>
-                    <Button style={{ color: 'white', fontWeight: '500', fontSize: '14px', backgroundColor: 'rgb(255, 94, 31)', width: '85px', height: '40px' }}>Tiếp tục</Button>
+                    <Button style={{ color: 'white', fontWeight: '500', fontSize: '14px', backgroundColor: 'rgb(255, 94, 31)', width: '85px', height: '40px' }}><a href={payment}>Tiếp tục</a></Button>
                   </div>
                 </Col>
               </Row>

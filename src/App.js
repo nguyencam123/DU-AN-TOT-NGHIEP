@@ -19,6 +19,7 @@ import { DetailHomestay } from './component/user/hotelcomponent/detailHomestay';
 import { BookingHomestay } from './component/user/hotelcomponent/bookingHomestay';
 import { BookingReviewHomestay } from './component/user/hotelcomponent/bookingReview';
 import PartnerRegister from './component/PartnerComponent/login/partnerregister'
+import { BookingSuccess } from './component/user/hotelcomponent/bookigSucces';
 
 function App() {
   //map component user
@@ -38,7 +39,8 @@ function App() {
     { path: 'homestay/detail/:id', element: <DetailHomestay /> },
     { path: 'homestay/booking/:id', element: <BookingHomestay /> },
     { path: 'review/booking/:id', element: <BookingReviewHomestay /> },
-    { path: 'hop-tac/register', element: <PartnerRegister /> }
+    { path: 'hop-tac/register', element: <PartnerRegister /> },
+    { path: 'booking/success', element: <BookingSuccess /> }
   ];
   //
   return (
@@ -60,7 +62,8 @@ function App() {
           </Route>
           <Route path="/*" element={<AdminLayout />}>
             <Route path="admin/*" element={<ProtectedRoute adminOnly />} />
-            <Route path="*" element={<Navigate to="/error-role" replace />} />
+            {/* <Route path="*" element={<Navigate to="/error-role" replace />} /> */}
+            <Route path="error-role" element={<ErrorLogin />} />
           </Route>
         </Routes>
       </Router>

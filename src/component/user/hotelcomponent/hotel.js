@@ -20,7 +20,7 @@ import { useEffect, useState } from "react";
 import imgheadhotel from "../../../assets/img/imgheadhotel.png"
 import 'dayjs/locale/vi';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchProducts } from "../../../features/product/productThunk";
+import { fetchProducts, getProducts } from "../../../features/product/productThunk";
 import { useNavigate } from "react-router-dom";
 dayjs.locale('vi');
 const { Title } = Typography;
@@ -66,7 +66,7 @@ const Hotel = () => {
     navigate(`/homestay/detail/${id}`);
   }
   useEffect(() => {
-    dispatch(fetchProducts());
+    dispatch(getProducts());
   }, []);
   const onChange = (key) => {
     console.log(key);

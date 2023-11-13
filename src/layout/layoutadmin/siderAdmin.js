@@ -10,6 +10,8 @@ import {
 import { Link, Route, Routes } from 'react-router-dom'; // Import thư viện Link và Route
 import AddProductForm from '../../component/product/productadd';
 import CategoryList from '../../component/admin/category/categorylist';
+import BookingForm from '../../component/admin/booking/booking';
+import CategoryType from '../../component/admin/category/categoryType';
 const { Header, Content, Sider } = Layout;
 
 
@@ -23,10 +25,10 @@ function getItem(label, key, icon, route) {
 }
 
 const items = [
-    { label: 'Khách sạn', key: '1', icon: <PieChartOutlined />, route: 'admin/createform', component: <AddProductForm /> },
-    { label: 'Phòng khách sạn', key: '2', icon: <DesktopOutlined />, route: 'admin/category', component: <CategoryList /> },
-    { label: 'Thống kê', key: '3', icon: <DesktopOutlined />, route: 'admin/category', component: <CategoryList /> },
-    { label: 'Tiện nghi', key: '4', icon: <DesktopOutlined />, route: 'admin/category', component: <CategoryList /> },
+    { label: 'Homestay', key: '1', icon: <PieChartOutlined />, route: 'admin/createform', component: <AddProductForm /> },
+    { label: 'Booking', key: '2', icon: <DesktopOutlined />, route: 'admin/booking', component: <BookingForm /> },
+    { label: 'Tiện nghi', key: '3', icon: <DesktopOutlined />, route: 'admin/category', component: <CategoryList /> },
+    { label: 'Loại tiện nghi', key: '4', icon: <DesktopOutlined />, route: 'admin/category/type', component: <CategoryType /> },
 ];
 
 

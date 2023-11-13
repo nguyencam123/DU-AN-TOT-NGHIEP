@@ -74,15 +74,8 @@ public class JwtService {
             return Keys.hmacShaKeyFor(keyBytes);
         }
 
-        public void addToBlacklist(String token) {
-            blacklistedTokens.add(token);
-        }
-
         public boolean isTokenBlacklisted(String token) {
             return blacklistedTokens.contains(token);
         }
 
-        public void removeFromBlacklist(String token) {
-            blacklistedTokens.remove(token);
-        }
 }

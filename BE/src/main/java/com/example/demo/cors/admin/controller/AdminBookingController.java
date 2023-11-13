@@ -1,13 +1,11 @@
 package com.example.demo.cors.admin.controller;
 
+import com.example.demo.cors.admin.model.request.AdminBookingByHomestayRequest;
 import com.example.demo.cors.admin.model.request.AdminBookingRequest;
 import com.example.demo.cors.admin.services.AdminBookingService;
 import com.example.demo.cors.common.base.ResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -17,9 +15,14 @@ public class AdminBookingController {
     @Autowired
     private AdminBookingService adminBookingService;
 
-    @GetMapping("")
-    public ResponseObject getAll(AdminBookingRequest request) {
-        return new ResponseObject(adminBookingService.getAllBooking(request));
+    @GetMapping()
+    public ResponseObject getAll(final AdminBookingRequest adminBookingRequest) {
+        return new ResponseObject(adminBookingService.getAllBooking(adminBookingRequest));
+    }
+
+    @GetMapping("/byid")
+    public ResponseObject getAllBookingByHomestay( @RequestBody AdminBookingByHomestayRequest request) {
+        return new ResponseObject(adminBookingService.getAllBookingByHomestay(request));
     }
 
 }

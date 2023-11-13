@@ -12,10 +12,10 @@ import {
     MDBRadio
 }
     from 'mdb-react-ui-kit';
-import { DatePicker } from 'antd';
+import { DatePicker, notification } from 'antd';
 import moment from 'moment';
-import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { useNavigate } from 'react-router-dom';
 
 // const validationSchema = Yup.object().shape({
 //     name: Yup.string().required('Họ và tên không được để trống'),
@@ -37,9 +37,20 @@ const PartnerRegister = () => {
     const [email, setemail] = useState('')
     const [username, setusername] = useState('')
     const [password, setpassword] = useState('')
-
+    const [identificationNumber, setidentificationNumber] = useState('')
     const handleDateChangestart = (dates) => {
         setbirthday(moment(dates).valueOf());
+    };
+    const navigate = useNavigate()
+    const openNotification = () => {
+        notification.open({
+            message: 'Thông báo',
+            description:
+                'Đăng ký thành công',
+            onClick: () => {
+                console.log('Notification Clicked!');
+            },
+        });
     };
     const formData = {
         name: name,
@@ -49,7 +60,9 @@ const PartnerRegister = () => {
         phoneNumber: phoneNumber,
         email: email,
         username: username,
-        password: password
+        password: password,
+        identificationNumber: identificationNumber,
+        point: 9
     }
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -72,7 +85,8 @@ const PartnerRegister = () => {
                 .then(response => response.json())
                 .then(data => {
                     // Xử lý kết quả từ API (nếu cần)
-
+                    openNotification()
+                    navigate('/login')
                 })
                 .catch(error => {
                     console.error('Error:', error);
@@ -134,6 +148,8 @@ const PartnerRegister = () => {
                         </MDBRow>
                         <MDBInput wrapperClass='mb-4' required label='Email' id='email' type='email'
                             onChange={(e) => setemail(e.target.value)} />
+                        <MDBInput wrapperClass='mb-4' label='Số căn cước công dân' id='identificationNumber' type='number' required
+                            onChange={(e) => setidentificationNumber(e.target.value)} />
                         <MDBInput wrapperClass='mb-4' label='Số điện thoại' id='phoneNumber' type='phoneNumber' required
                             onChange={(e) => setphoneNumber(e.target.value)} />
                         <MDBRow>
