@@ -109,14 +109,14 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         ownerHomestay.setEmail(request.getEmail());
         ownerHomestay.setUsername(request.getUsername());
         ownerHomestay.setPassword(passwordEncoder.encode(request.getPassword()));
-        ownerHomestay.setStatus(Status.KHONG_HOAT_DONG);
+        ownerHomestay.setStatus(Status.CHO_DUYET);
         homestayownerOwnerHomestayRepository.save(ownerHomestay);
 
         Email email = new Email();
         email.setToEmail(new String[]{ownerHomestay.getEmail()});
         email.setSubject("Chào mừng đến với trang Web trvelViVu");
         email.setTitleEmail("Chúc mừng " + ownerHomestay.getUsername());
-        String confirmationLink = "http://localhost:3000/confirm-email" + ownerHomestay.getCode();
+        String confirmationLink = "http://localhost:8080/login/confirm-email?id=" + ownerHomestay.getId();
         String emailBody = "Bạn đã đăng ký thành công. Vui lòng xác nhận email bằng cách nhấp vào liên kết sau: " + confirmationLink;
         email.setBody(emailBody);
         emailSender.sendEmail(email.getToEmail(), email.getSubject(), email.getTitleEmail(), emailBody);
@@ -140,13 +140,19 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         if (isNullOrEmpty(request.getPassword())) {
             throw new RestApiException("Password number cannot be empty");
         }
+        if (homestayownerOwnerHomestayRepository.existsByUsername(request.getUsername())==false) {
+            throw new RestApiException("Username isn't exist");
+        }
+        var ownerHomestay = homestayownerOwnerHomestayRepository.findByUsername(request.getUsername()).orElseThrow();
+        if (!passwordEncoder.matches(request.getPassword(), ownerHomestay.getPassword())) {
+            throw new RestApiException("password isn't true");
+        }
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
                         request.getPassword()
                 )
         );
-        var ownerHomestay = homestayownerOwnerHomestayRepository.findByUsername(request.getUsername()).orElseThrow();
         var jwtToken = jwtService.generateToken(ownerHomestay);
         return HomestayOwnerAuthenticationReponse.builder().
                 token(jwtToken)
@@ -230,6 +236,9 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
     public void checkNull(boolean nullOrEmpty, boolean nullOrEmpty2, Long birthday, boolean nullOrEmpty3, boolean nullOrEmpty4, boolean nullOrEmpty5, HomestayOwnerOwnerHomestayRequest request) {
         if (nullOrEmpty) {
             throw new RestApiException("Username cannot be empty");
+        }
+        if (nullOrEmpty2) {
+            throw new RestApiException("Name cannot be empty");
         }
         if (nullOrEmpty4) {
             throw new RestApiException("Phone number cannot be empty");
