@@ -54,4 +54,5 @@ public class HomestayOwnerHomestayController {
     public ResponseObject updatehomestays(@RequestParam("id") String id){
         return new ResponseObject(homestayownerHomestayService.deleteHomestays(id));
     }
+
 }

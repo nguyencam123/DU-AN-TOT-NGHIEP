@@ -77,6 +77,8 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
         return homestay1;
     }
 
+
+
     @Override
     public Homestay addHomestay(HomestayownerHomestayRequest request, List<MultipartFile> multipartFiles, List<String> idConvenientHomestay) throws IOException {
         Homestay homestay = new Homestay();
