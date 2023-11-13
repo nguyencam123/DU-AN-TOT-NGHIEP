@@ -7,7 +7,6 @@ import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayOw
 import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayOwnerUsenamePasswordRequest;
 import com.example.demo.cors.homestayowner.repository.HomestayOwnerOwnerHomestayRepository;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerLoginService;
-import com.example.demo.entities.Homestay;
 import com.example.demo.entities.OwnerHomestay;
 import com.example.demo.infrastructure.configemail.Email;
 import com.example.demo.infrastructure.configemail.EmailSender;
@@ -16,6 +15,7 @@ import com.example.demo.infrastructure.exception.rest.RestApiException;
 import com.example.demo.infrastructure.security.token.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
+@Async
 @Service
 @RequiredArgsConstructor
 public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService {
@@ -51,7 +52,15 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
     private AuthenticationManager authenticationManager;
 
     @Override
+    public void confirmEmail(String id) {
+        OwnerHomestay ownerHomestay = homestayownerOwnerHomestayRepository.findById(id).orElseThrow(() -> new RestApiException("Mã xác nhận không hợp lệ"));
+        ownerHomestay.setStatus(Status.HOAT_DONG);
+        homestayownerOwnerHomestayRepository.save(ownerHomestay);
+    }
+
+    @Override
     public HomestayOwnerAuthenticationReponse register(HomestayOwnerOwnerHomestayRequest request) {
+
         if (isNullOrEmpty(request.getUsername())) {
             throw new RestApiException("Username cannot be empty");
         }
@@ -64,11 +73,19 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         if (isNullOrEmpty(request.getPassword())) {
             throw new RestApiException("Password cannot be empty");
         }
-        OwnerHomestay ownerHomestay=new OwnerHomestay();
+        if (isNullOrEmpty(request.getName())) {
+            throw new RestApiException("Name cannot be empty");
+        }
+
+        OwnerHomestay ownerHomestay = new OwnerHomestay();
         Random random = new Random();
         int number = random.nextInt(1000);
-        String code=String.format("G%04d",number);
+        String code = String.format("G%04d", number);
         ownerHomestay.setCode(code);
+
+        if (homestayownerOwnerHomestayRepository.existsByName(request.getName())) {
+            throw new RestApiException("Name is already in use");
+        }
         if (homestayownerOwnerHomestayRepository.existsByUsername(request.getUsername())) {
             throw new RestApiException("Username is already in use");
         }
@@ -82,20 +99,32 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         if (!isValidVietnamesePhoneNumber(phoneNumber)) {
             throw new RestApiException("Invalid Vietnamese phone number format");
         }
+        String emails=request.getEmail();
+        if (!isValidEmail(emails)){
+            throw new RestApiException("Invalid Email format");
+        }
+
+        ownerHomestay.setName(request.getName());
         ownerHomestay.setPhoneNumber(request.getPhoneNumber());
         ownerHomestay.setEmail(request.getEmail());
         ownerHomestay.setUsername(request.getUsername());
         ownerHomestay.setPassword(passwordEncoder.encode(request.getPassword()));
-        ownerHomestay.setStatus(Status.HOAT_DONG);
+        ownerHomestay.setStatus(Status.KHONG_HOAT_DONG);
         homestayownerOwnerHomestayRepository.save(ownerHomestay);
-        var jwtServices=jwtService.generateToken(ownerHomestay);
+
+        Email email = new Email();
+        email.setToEmail(new String[]{ownerHomestay.getEmail()});
+        email.setSubject("Chào mừng đến với trang Web trvelViVu");
+        email.setTitleEmail("Chúc mừng " + ownerHomestay.getUsername());
+        String confirmationLink = "http://localhost:3000/confirm-email" + ownerHomestay.getCode();
+        String emailBody = "Bạn đã đăng ký thành công. Vui lòng xác nhận email bằng cách nhấp vào liên kết sau: " + confirmationLink;
+        email.setBody(emailBody);
+        emailSender.sendEmail(email.getToEmail(), email.getSubject(), email.getTitleEmail(), emailBody);
+
         return HomestayOwnerAuthenticationReponse.builder()
                 .code(ownerHomestay.getCode())
                 .id(ownerHomestay.getId())
                 .name(ownerHomestay.getName())
-                .birthday(ownerHomestay.getBirthday())
-                .gender(ownerHomestay.getGender())
-                .address(ownerHomestay.getAddress())
                 .phoneNumber(ownerHomestay.getPhoneNumber())
                 .email(ownerHomestay.getEmail())
                 .username(ownerHomestay.getUsername())
@@ -105,14 +134,20 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
 
     @Override
     public HomestayOwnerAuthenticationReponse authenticate(HomestayOwnerUsenamePasswordRequest request) {
+        if (isNullOrEmpty(request.getUsername())) {
+            throw new RestApiException("Username cannot be empty");
+        }
+        if (isNullOrEmpty(request.getPassword())) {
+            throw new RestApiException("Password number cannot be empty");
+        }
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
                         request.getPassword()
                 )
         );
-        var ownerHomestay=homestayownerOwnerHomestayRepository.findByUsername(request.getUsername()).orElseThrow();
-        var jwtToken=jwtService.generateToken(ownerHomestay);
+        var ownerHomestay = homestayownerOwnerHomestayRepository.findByUsername(request.getUsername()).orElseThrow();
+        var jwtToken = jwtService.generateToken(ownerHomestay);
         return HomestayOwnerAuthenticationReponse.builder().
                 token(jwtToken)
                 .id(ownerHomestay.getId())
@@ -130,11 +165,12 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
 
     @Override
     public HomestayOwnerAuthenticationReponse changePassword(HomestayOwnerPasswordRequest request, Principal connecteUser) {
-        var ownerHomestay=(OwnerHomestay) ((UsernamePasswordAuthenticationToken) connecteUser).getPrincipal();
-        if(!passwordEncoder.matches(request.getCurrentPassword(), ownerHomestay.getPassword())){
+        var ownerHomestay = (OwnerHomestay) ((UsernamePasswordAuthenticationToken) connecteUser).getPrincipal();
+        if (!passwordEncoder.matches(request.getCurrentPassword(), ownerHomestay.getPassword())) {
             throw new IllegalStateException("Wrong password");
-        };
-        if(!request.getNewPassword().equals(request.getConfirmationPassword())){
+        }
+        ;
+        if (!request.getNewPassword().equals(request.getConfirmationPassword())) {
             throw new IllegalStateException("password aren't the same");
         }
         ownerHomestay.setPassword(passwordEncoder.encode(request.getNewPassword()));
@@ -156,7 +192,7 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
     @Override
     public HomestayOwnerAuthenticationReponse updateInformationOwner(String idOwner, HomestayOwnerOwnerHomestayRequest request, MultipartFile multipartFile) throws IOException {
         checkNull(isNullOrEmpty(request.getUsername()), isNullOrEmpty(request.getName()), request.getBirthday(), isNullOrEmpty(request.getAddress()), isNullOrEmpty(request.getPhoneNumber()), isNullOrEmpty(request.getEmail()), request);
-        OwnerHomestay ownerHomestay=homestayownerOwnerHomestayRepository.findById(idOwner).orElse(null);
+        OwnerHomestay ownerHomestay = homestayownerOwnerHomestayRepository.findById(idOwner).orElse(null);
         ownerHomestay.setName(request.getName());
         ownerHomestay.setBirthday(request.getBirthday());
         ownerHomestay.setGender(request.getGender());
@@ -164,9 +200,9 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         ownerHomestay.setPhoneNumber(request.getPhoneNumber());
         ownerHomestay.setEmail(request.getEmail());
         ownerHomestay.setUsername(request.getUsername());
-        if (multipartFile==null){
+        if (multipartFile == null) {
             ownerHomestay.setAvatarUrl(null);
-        }else {
+        } else {
             ownerHomestay.setAvatarUrl(cloudinary.uploader()
                     .upload(multipartFile.getBytes(),
                             Map.of("id", UUID.randomUUID().toString()))
@@ -175,7 +211,7 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         }
         ownerHomestay.setStatus(Status.HOAT_DONG);
         homestayownerOwnerHomestayRepository.save(ownerHomestay);
-        var jwtServices=jwtService.generateToken(ownerHomestay);
+        var jwtServices = jwtService.generateToken(ownerHomestay);
         return HomestayOwnerAuthenticationReponse.builder()
                 .code(ownerHomestay.getCode())
                 .id(ownerHomestay.getId())
@@ -195,15 +231,6 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         if (nullOrEmpty) {
             throw new RestApiException("Username cannot be empty");
         }
-        if (nullOrEmpty2) {
-            throw new RestApiException("Name cannot be empty");
-        }
-        if (birthday == null) {
-            throw new RestApiException("Birthday cannot be empty");
-        }
-        if (nullOrEmpty3) {
-            throw new RestApiException("Address cannot be empty");
-        }
         if (nullOrEmpty4) {
             throw new RestApiException("Phone number cannot be empty");
         }
@@ -211,40 +238,18 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
             throw new RestApiException("Email cannot be empty");
         }
     }
-    public String createResetPasswordToken(String username) {
-        OwnerHomestay ownerHomestay = homestayownerOwnerHomestayRepository.findByUsername(username).orElse(null);
-        if (ownerHomestay != null) {
-            String resetPasswordToken = generateResetPasswordToken();
-            ownerHomestay.setPassword(resetPasswordToken);
-            homestayownerOwnerHomestayRepository.save(ownerHomestay);
-            return resetPasswordToken;
-        }
-        return null;
-    }
 
-    private String generateResetPasswordToken() {
-        return UUID.randomUUID().toString();
-    }
-
-    public void sendResetPasswordEmail(String username, String resetPasswordToken) {
-        OwnerHomestay owner = homestayownerOwnerHomestayRepository.findByUsername(username).get();
-        String resetPasswordLink = "http://localhost:8080/api/v2/reset-password?token=" + resetPasswordToken;
-        String emailBody = "Bạn đã yêu cầu đặt lại mật khẩu. Vui lòng nhấp vào liên kết sau để thực hiện đặt lại mật khẩu: " + resetPasswordLink;
-
-        Email email = new Email();
-        email.setToEmail(new String[]{owner.getEmail()});
-        email.setSubject("Yêu cầu đặt lại mật khẩu");
-        email.setTitleEmail("Đặt lại mật khẩu");
-        email.setBody(emailBody);
-        emailSender.sendEmail(email.getToEmail(), email.getSubject(), email.getTitleEmail(), email.getBody());
+    private Boolean isValidEmail(String email){
+        String regex="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+        return email.matches(regex);
     }
 
     private boolean isValidVietnamesePhoneNumber(String phoneNumber) {
         String regex = "^(03|05|07|08|09)\\d{8}$";
         return phoneNumber.matches(regex);
     }
-
     public static boolean isNullOrEmpty(String str) {
         return str == null || str.trim().isEmpty();
     }
+
 }
