@@ -9,6 +9,7 @@ import com.example.demo.cors.admin.services.AdminConvenientHomestayService;
 import com.example.demo.cors.common.base.PageableObject;
 import com.example.demo.entities.ConvenientHomestay;
 import com.example.demo.entities.ConvenientHomestayType;
+import com.example.demo.infrastructure.contant.Message;
 import com.example.demo.infrastructure.exception.rest.RestApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -83,7 +84,7 @@ public class AdminConvenientHomestayServiceImpl implements AdminConvenientHomest
         }
         if (!adminConvenientHomestayRequest.getName().equals(convenientHomestay.getName()) &&
                 adminConvenientHomestayRepository.existsByName(adminConvenientHomestayRequest.getName())) {
-            throw new RestApiException("Name ConvenientType already exists");
+            throw new RestApiException("Name Convenient already exists");
         }
         ConvenientHomestayType convenientHomestayType = adminConvenientHomestayTypeRespository.findById(adminConvenientHomestayRequest.getIdType()).orElse(null);
         convenientHomestay.setName(adminConvenientHomestayRequest.getName());
