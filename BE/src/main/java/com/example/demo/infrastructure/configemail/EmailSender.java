@@ -46,7 +46,7 @@ public class EmailSender {
             mimeMessageHelper.addInline("logoImage", resource);
             javaMailSender.send(mimeMessage);
         } catch (Exception e) {
-            log.error("ERROR WHILE SENDING MAIL: {}", e.getMessage());
+            log.error("ERROR WHILE SENDING MAIL: {}", e.getMessage(), e);
         }
     }
 
