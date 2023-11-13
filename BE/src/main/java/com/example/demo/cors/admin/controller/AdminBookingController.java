@@ -15,9 +15,9 @@ public class AdminBookingController {
     @Autowired
     private AdminBookingService adminBookingService;
 
-    @GetMapping("")
-    public ResponseObject getAll(AdminBookingRequest request) {
-        return new ResponseObject(adminBookingService.getAllBooking(request));
+    @GetMapping()
+    public ResponseObject getAll(final AdminBookingRequest adminBookingRequest) {
+        return new ResponseObject(adminBookingService.getAllBooking(adminBookingRequest));
     }
 
     @GetMapping("/byid")

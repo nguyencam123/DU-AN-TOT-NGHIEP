@@ -15,13 +15,17 @@ import org.springframework.stereotype.Repository;
 public interface AdminBookingRepository extends BookingRepository {
 
     @Query(value = """
-                    SELECT b.*FROM booking b 
-                    JOIN [user] u ON b.user_id = u.id 
-                    JOIN homestay h ON b.homestay_id = h.id 
-                    WHERE (:#{#req.userName} IS NULL OR u.name = :#{#req.userName})
-                    AND (:#{#req.homestayName} IS NULL OR h.name = :#{#req.homestayName})
+                    SELECT ROW_NUMBER() OVER(ORDER BY b.created_date DESC) AS stt, b.* 
+                    FROM booking b
+                    JOIN dbo.homestay h ON b.homestay_id = h.id 
+                    JOIN dbo.[user] u ON b.user_id = u.id
+                    WHERE ( ( :#{#request.userName} IS NULL OR :#{#request.userName} LIKE '' OR u.name = :#{#request.userName})
+                    AND ( :#{#request.homestayName} IS NULL OR :#{#request.homestayName} LIKE '' OR h.name LIKE %:#{#request.homestayName}% )
+                    AND ( :#{#request.sdtUser} IS NULL OR :#{#request.sdtUser} LIKE '' OR u.phone_number = :#{#request.sdtUser})
+                    AND ( :#{#request.nameBooking} IS NULL OR :#{#request.nameBooking} LIKE '' OR b.name LIKE %:#{#request.nameBooking}%)
+                    AND (:#{#request.statusBooking} IS NULL OR b.status = :#{#request.statusBooking}) )
                     """, nativeQuery = true)
-    Page<Booking> getAllBooking(@Param("req") AdminBookingRequest req, Pageable pageable);
+    Page<Booking> getAllBooking(@Param("request") AdminBookingRequest request, Pageable pageable);
 
     @Query(value = """
                     SELECT ROW_NUMBER() OVER(ORDER BY b.created_date DESC) AS stt, u.name AS user_name, b.id, b.status, b.created_date, b.start_date, b.end_date,b.total_price, h.name AS homestay_name
