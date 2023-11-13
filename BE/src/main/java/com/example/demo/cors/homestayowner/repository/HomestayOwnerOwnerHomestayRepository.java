@@ -14,7 +14,7 @@ public interface HomestayOwnerOwnerHomestayRepository extends OwnerHomestayRepos
        @Override
        Optional<OwnerHomestay> findByUsername(String username);
 
-       Optional<OwnerHomestay> findByResetPasswordToken(String resetPassToken);
+       Optional<OwnerHomestay> findById(String resetPassToken);
 
        boolean existsByUsername(String username);
 

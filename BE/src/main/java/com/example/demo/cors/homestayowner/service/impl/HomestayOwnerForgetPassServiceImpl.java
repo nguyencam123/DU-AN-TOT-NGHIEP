@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 @Service
 public class HomestayOwnerForgetPassServiceImpl implements HomestayOwnerForgetPassService {
 
@@ -24,45 +22,19 @@ public class HomestayOwnerForgetPassServiceImpl implements HomestayOwnerForgetPa
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public String createResetPasswordToken(String username) {
-        OwnerHomestay ownerHomestay = homestayownerOwnerHomestayRepository.findByUsername(username).orElse(null);
-        if (ownerHomestay != null) {
-            String resetPasswordToken = generateResetPasswordToken();
-            ownerHomestay.setResetPasswordToken(resetPasswordToken);
-            homestayownerOwnerHomestayRepository.save(ownerHomestay);
-            return resetPasswordToken;
-        }
-        return null;
-    }
-
-    private String generateResetPasswordToken() {
-        return UUID.randomUUID().toString();
-    }
-
-    @Override
-    public boolean isResetPasswordTokenValid(String resetPasswordToken) {
-        OwnerHomestay ownerHomestay = homestayownerOwnerHomestayRepository.findByResetPasswordToken(resetPasswordToken).orElse(null);
-        if (ownerHomestay != null) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public void resetPasswordWithToken(String resetPasswordToken, String newPassword) {
-        OwnerHomestay ownerHomestay = homestayownerOwnerHomestayRepository.findByResetPasswordToken(resetPasswordToken).orElse(null);
+    public void resetPasswordWithToken(String id, String newPassword) {
+        OwnerHomestay ownerHomestay = homestayownerOwnerHomestayRepository.findById(id).orElse(null);
         if (ownerHomestay != null) {
             ownerHomestay.setPassword(passwordEncoder.encode(newPassword));
-            ownerHomestay.setResetPasswordToken(null);
             homestayownerOwnerHomestayRepository.save(ownerHomestay);
         }
     }
 
     @Override
-    public void sendResetPasswordEmail(String username, String resetPasswordToken) {
+    public void sendResetPasswordEmail(String username) {
         OwnerHomestay owner = homestayownerOwnerHomestayRepository.findByUsername(username).orElse(null);
         if (owner != null) {
-            String resetPasswordLink = "http://localhost:3000/api/v2/login/reset-password/" + resetPasswordToken;
+            String resetPasswordLink = "http://localhost:3000/api/v2/login/reset-password/" + owner.getId();
             String emailBody = "Bạn đã yêu cầu đặt lại mật khẩu. Vui lòng nhấp vào liên kết sau để thực hiện đặt lại mật khẩu: " + resetPasswordLink;
 
             Email email = new Email();

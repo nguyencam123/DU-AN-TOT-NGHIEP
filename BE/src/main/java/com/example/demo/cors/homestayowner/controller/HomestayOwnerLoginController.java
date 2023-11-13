@@ -1,12 +1,14 @@
 package com.example.demo.cors.homestayowner.controller;
 
 import com.example.demo.cors.common.base.ResponseObject;
+import com.example.demo.cors.homestayowner.model.reponse.loginreponse.HomestayOwnerAuthenticationReponse;
 import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayOwnerOwnerHomestayRequest;
 import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayOwnerUsenamePasswordRequest;
 import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayownerLoginRequest;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerForgetPassService;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerLoginService;
 import com.example.demo.entities.Homestay;
+import com.example.demo.infrastructure.exception.rest.RestApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,21 +25,28 @@ public class HomestayOwnerLoginController {
 
 
     @PostMapping("/authenticate")
-    public ResponseObject authenticate(@RequestBody HomestayOwnerUsenamePasswordRequest request){
-        return new ResponseObject(homestayownerLoginService.authenticate(request));
+    public ResponseObject authenticate(@RequestBody HomestayOwnerUsenamePasswordRequest request) {
+        try {
+            HomestayOwnerAuthenticationReponse authenticationResponse = homestayownerLoginService.authenticate(request);
+            ResponseObject responseObject = new ResponseObject(authenticationResponse);
+            responseObject.setMessage("Thành công");
+            return responseObject;
+        } catch (RestApiException ex) {
+            ResponseObject responseObject = new ResponseObject(null);
+            responseObject.setMessage("Không thành công: " + ex.getMessage());
+            return responseObject;
+        }
     }
 
     @PostMapping("/registers")
-    public ResponseObject registers(@RequestBody HomestayOwnerOwnerHomestayRequest request){
+    public ResponseObject registers(@RequestBody HomestayOwnerOwnerHomestayRequest request) {
         return new ResponseObject(homestayownerLoginService.register(request));
     }
 
     @PostMapping("/reset-password")
     public ResponseObject resetPassword(@RequestParam("username") String username) {
-        String resetPasswordToken = createResetPasswordToken.createResetPasswordToken(username);
-
-        if (resetPasswordToken != null) {
-            createResetPasswordToken.sendResetPasswordEmail(username, resetPasswordToken);
+        if (username != null) {
+            createResetPasswordToken.sendResetPasswordEmail(username);
             return new ResponseObject("Yêu cầu đặt lại mật khẩu đã được gửi đến địa chỉ email của bạn.");
         } else {
             return new ResponseObject("Không tìm thấy tài khoản với tên đăng nhập này.");
@@ -45,14 +54,12 @@ public class HomestayOwnerLoginController {
     }
 
     @PostMapping("/reset-passwords")
-    public ResponseObject resetPasswordWithToken(@RequestParam("token") String token, @RequestParam("newPass") String newPassword) {
-        boolean isTokenValid = createResetPasswordToken.isResetPasswordTokenValid(token);
-
-        if (isTokenValid) {
-            createResetPasswordToken.resetPasswordWithToken(token, newPassword);
+    public ResponseObject resetPasswordWithToken(@RequestParam("id") String id, @RequestParam("newPass") String newPassword) {
+        if (id != null) {
+            createResetPasswordToken.resetPasswordWithToken(id, newPassword);
             return new ResponseObject("Mật khẩu đã được đặt lại thành công.");
         } else {
-            return new ResponseObject("Token không hợp lệ hoặc đã hết hạn.");
+            return new ResponseObject("id không hợp lệ hoặc không có");
         }
     }
 

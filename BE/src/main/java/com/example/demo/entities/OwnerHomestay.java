@@ -54,9 +54,6 @@ public class OwnerHomestay extends PrimaryEntity implements UserDetails{
     private String password;
 
     @Nationalized
-    private String resetPasswordToken;
-
-    @Nationalized
     private String avatarUrl;
 
     private Status status;

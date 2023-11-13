@@ -55,4 +55,9 @@ public class HomestayOwnerHomestayController {
         return new ResponseObject(homestayownerHomestayService.deleteHomestays(id));
     }
 
+    @PutMapping("status-homestay")
+    public ResponseObject updateStatushomestays(@RequestParam("id") String id){
+        return new ResponseObject(homestayownerHomestayService.updateStatusHomestay(id));
+    }
+
 }

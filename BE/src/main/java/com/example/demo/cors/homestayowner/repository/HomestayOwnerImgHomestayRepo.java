@@ -1,6 +1,7 @@
 package com.example.demo.cors.homestayowner.repository;
 
 import com.example.demo.cors.homestayowner.model.reponse.HomestayOwnerImgHomestayReponse;
+import com.example.demo.entities.ImgHomestay;
 import com.example.demo.repositories.ImgHomestayRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +18,8 @@ public interface HomestayOwnerImgHomestayRepo extends ImgHomestayRepository {
     @Query(value = "Delete from img_homestay where homestay_id=:idHomestay",nativeQuery = true)
     @Modifying
     int deleteByHomestay(String idHomestay);
+
+    @Query(value = "select * from img_homestay where homestay_id=:id",nativeQuery = true)
+    List<ImgHomestay> getImgHomestayByHomestay(String id);
+
 }
