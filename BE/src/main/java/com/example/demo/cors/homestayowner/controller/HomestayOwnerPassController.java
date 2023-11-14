@@ -22,9 +22,4 @@ public class HomestayOwnerPassController {
         return new ResponseObject(homestayownerLoginService.changePassword(request,connecteUser));
     }
 
-    @PostMapping("/forgetPassword")
-    public ResponseObject forgetPass(@RequestBody ResetPasswordData data){
-        return null;
-    }
-
 }

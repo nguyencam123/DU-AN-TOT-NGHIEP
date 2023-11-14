@@ -16,8 +16,8 @@ public class HomestayOwnerBookingController {
     private HomestayOwnerBookingService homestayOwnerBookingService;
 
     @GetMapping("")
-    public ResponseObject getHomestayByConvenient(@RequestParam("id") String id, HomestayOwnerBookingRequest homestayOwnerBookingRequest){
-        return new ResponseObject(homestayOwnerBookingService.getBookingByHomestay(id,homestayOwnerBookingRequest));
+    public ResponseObject getHomestayByConvenient(@RequestParam("id") String id, HomestayOwnerBookingRequest homestayOwnerBookingRequest) {
+        return new ResponseObject(homestayOwnerBookingService.getBookingByHomestay(id, homestayOwnerBookingRequest));
     }
 
 }

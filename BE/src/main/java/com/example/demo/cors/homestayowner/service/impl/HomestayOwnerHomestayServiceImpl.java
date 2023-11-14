@@ -77,6 +77,7 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
         return homestay1;
     }
 
+
     @Override
     public Homestay addHomestay(HomestayownerHomestayRequest request, List<MultipartFile> multipartFiles, List<String> idConvenientHomestay) throws IOException {
         Homestay homestay = new Homestay();
@@ -84,6 +85,14 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
         homestay.setStatus(Status.CHO_DUYET);
         Homestay homestay1 = homestayownerHomestayRepository.save(homestay);
         return getImgHomestayAndConvenientHomestay(multipartFiles, idConvenientHomestay, homestay1);
+    }
+
+    @Override
+    public Homestay updateStatusHomestay(String id) {
+        Homestay homestay = homestayownerHomestayRepository.findById(id).orElse(null);
+        homestay.setStatus(Status.CHO_DUYET);
+        Homestay homestay1 = homestayownerHomestayRepository.save(homestay);
+        return homestay1;
     }
 
     private void getHomestay(HomestayownerHomestayRequest request, Homestay homestay) {

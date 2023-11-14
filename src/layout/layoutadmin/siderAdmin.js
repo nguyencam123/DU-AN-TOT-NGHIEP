@@ -7,11 +7,12 @@ import {
     TeamOutlined,
     UserOutlined,
 } from '@ant-design/icons';
-import { Link, Route, Routes } from 'react-router-dom'; // Import thư viện Link và Route
+import { Link, Route, Routes, useNavigate } from 'react-router-dom'; // Import thư viện Link và Route
 import AddProductForm from '../../component/product/productadd';
 import CategoryList from '../../component/admin/category/categorylist';
 import BookingForm from '../../component/admin/booking/booking';
 import CategoryType from '../../component/admin/category/categoryType';
+import { useSelector } from 'react-redux';
 const { Header, Content, Sider } = Layout;
 
 
@@ -33,6 +34,12 @@ const items = [
 
 
 const SiderAdmin = () => {
+    const Navigate = useNavigate()
+    const isPartner = useSelector((state) => state.user.isPartner);
+
+    if (!isPartner) {
+        return <Navigate to="/error-role" replace />;
+    }
     return (
         <Content
             style={{
