@@ -244,19 +244,7 @@ export const BookingReviewHomestay = () => {
                   </Col>
                   <Col span={8} push={4}>
                     <div style={{ fontWeight: '600', fontSize: '18px', float: 'right' }}>
-                      {detailHomestay.price} VND
-                    </div>
-                  </Col>
-                </Row>
-                <Row style={{ padding: '5px 0px 15px 20px' }}>
-                  <Col span={10}>
-                    <div style={{ fontWeight: '600', fontSize: '18px' }}>
-                      Thuế và phí
-                    </div>
-                  </Col>
-                  <Col span={8} push={4}>
-                    <div style={{ fontWeight: '600', fontSize: '18px', float: 'right' }}>
-                      {detailHomestay.price * 11 / 100} VND
+                    {detailHomestay.price + detailHomestay.price * 11 / 100} VND
                     </div>
                   </Col>
                 </Row>
