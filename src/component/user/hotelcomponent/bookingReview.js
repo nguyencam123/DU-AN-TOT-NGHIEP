@@ -10,6 +10,9 @@ const { Header, Content, Footer } = Layout;
 
 
 export const BookingReviewHomestay = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const params = useParams();
   useEffect(() => {
     dispatch(getOneProduct(params.id));

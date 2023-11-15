@@ -2,7 +2,7 @@ import './App.css';
 import ProductList from './component/product/ProductList';
 import LoginComponent from './component/login/Login';
 import LoginDetail from './component/login/LoginDetail';
-import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ProtectedRoute from './app/ProtectedRoute';
 import AdminLayout from './layout/layoutadmin/AdminLayout';
 import UserLayout from './layout/layoutuser/UserLayout';
@@ -20,6 +20,7 @@ import { BookingHomestay } from './component/user/hotelcomponent/bookingHomestay
 import { BookingReviewHomestay } from './component/user/hotelcomponent/bookingReview';
 import PartnerRegister from './component/PartnerComponent/login/partnerregister'
 import { BookingSuccess } from './component/user/hotelcomponent/bookigSucces';
+import { useEffect } from 'react';
 
 function App() {
   //map component user
@@ -42,6 +43,9 @@ function App() {
     { path: 'hop-tac/register', element: <PartnerRegister /> },
     { path: 'booking/success', element: <BookingSuccess /> }
   ];
+  useEffect(() => {
+    window.scrollTo(0, 0); // Cuộn lên đầu trang khi path thay đổi
+  }, [window.location.pathname]);
   //
   return (
     <>

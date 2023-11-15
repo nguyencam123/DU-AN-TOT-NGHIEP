@@ -23,7 +23,7 @@ public class Cart extends PrimaryEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany
-    @JoinColumn(name = "homestay_id")
-    private Homestay homestay;
+
+
+    String homestay;
 }
