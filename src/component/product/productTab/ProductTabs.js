@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import Fuse from 'fuse.js';
 import imgproduct from '../../../assets/svg/Rectangle 153.svg'
 import { EnvironmentOutlined } from "@ant-design/icons";
+import { Link } from 'react-router-dom';
 
 const { Title } = Typography
 const { Meta } = Card;
@@ -18,7 +19,7 @@ const ProductTabs = (props) => {
 
     useEffect(() => {
         const fuse = new Fuse(products, {
-            keys: ['province.name'],
+            keys: ['address'],
             includeScore: true,
             threshold: 0.4, // Điều chỉnh ngưỡng tìm kiếm tùy chọn
             ignoreLocation: true,
@@ -38,7 +39,7 @@ const ProductTabs = (props) => {
         const newProducts = [...productlist, ...products.slice(startIndex, endIndex)];
 
         const fuse = new Fuse(newProducts, {
-            keys: ['province.name'],
+            keys: ['address'],
             includeScore: true,
             threshold: 0.4,
             ignoreLocation: true,
@@ -51,7 +52,18 @@ const ProductTabs = (props) => {
 
         setProducts(filteredProducts);
     };
+    const formatPrice = (price) => {
+        // Format the price with commas
+        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    };
 
+    const truncateAddress = (address, maxLength) => {
+        // Truncate the address if it's longer than maxLength characters
+        if (address.length > maxLength) {
+            return address.substring(0, maxLength) + '...';
+        }
+        return address;
+    };
 
     return (
         <section style={{ padding: '0 200px 0 200px' }}>
@@ -75,24 +87,27 @@ const ProductTabs = (props) => {
                         style={{ marginTop: '50px' }}
                         key={product.id}
                     >
-                        <Card
-                            hoverable
-                            style={{
-                                width: 270
-                            }}
-                            cover={<img alt="example" src={product.images[0]?.imgUrl} />} // Dùng ?. để kiểm tra nếu imgUrl không tồn tại
-                        >
-                            <Meta title={product.name} />
-                            <div>
-                                <br />
-                                <div style={{ display: 'flex' }}>
-                                    <EnvironmentOutlined style={{ marginTop: 5 }} />&ensp;
-                                    {product.province.name}
+                        <Link to={`/homestay/detail/${product.id}`}>
+                            <Card
+                                hoverable
+                                style={{
+                                    width: 270,
+                                }}
+                                cover={<img alt="example" src={product.images[0]?.imgUrl} />}
+                            >
+                                <Meta title={product.name} />
+                                <div>
+                                    <br />
+                                    <div style={{ display: 'flex' }}>
+                                        <EnvironmentOutlined style={{ marginTop: 5 }} />&ensp;
+                                        {truncateAddress(product.address, 20)} {/* Thay đổi 20 bằng số ký tự tối đa bạn muốn hiển thị */}
+                                    </div>
+                                    <Title level={3} style={{ color: 'red' }}>
+                                        {formatPrice(product.price)} VNĐ
+                                    </Title>
                                 </div>
-                                <Title level={3} style={{ color: 'red' }}>{product.price}VNĐ</Title>
-                            </div>
-                        </Card>
-
+                            </Card>
+                        </Link>
                     </Col>
                 ))}
             </Row>

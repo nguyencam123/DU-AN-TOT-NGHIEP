@@ -117,24 +117,27 @@ const HomeStayProduct = () => {
   }
   const columns = [
     {
-      title: 'Name',
+      title: 'Tên homestay',
       dataIndex: 'name',
       key: 'name'
     },
     {
-      title: 'Address',
+      title: 'Địa chỉ homestay',
       dataIndex: 'address',
       key: 'address'
     },
     {
-      title: 'Price',
+      title: 'Giá homestay',
       dataIndex: 'price',
       key: 'price'
     },
     {
-      title: 'Status',
+      title: 'Trạng thái của homestay',
       dataIndex: 'status',
-      key: 'status'
+      key: 'status',
+      render(str) {
+        return str === 'CHO_DUYET' ? 'Chờ duyệt' : 'Ngừng hoạt động'
+      }
     },
     {
       title: 'Action',

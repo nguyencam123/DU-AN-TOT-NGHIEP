@@ -167,14 +167,14 @@ const ChangePassword = () => {
         {
             key: '2',
             label: 'Đặt lại mật khẩu',
-            children: <form onSubmit={handleSubmitchange}>
+            children: <form>
                 <MDBInput wrapperClass='mb-4' label='Mật khẩu cũ' id='password' type='password' required
                     onChange={(e) => setpassword(e.target.value)} />
                 <MDBInput wrapperClass='mb-4' label='Mật khẩu mới' id='newpassword' type='password' required
                     onChange={(e) => setnewpassword(e.target.value)} />
                 <MDBInput wrapperClass='mb-4' label='Xác nhận mật khẩu' id='confirmpassword' type='password' required
                     onChange={(e) => setconfirmpassword(e.target.value)} />
-                <MDBBtn type="submit" className='w-100 mb-4' size='md' style={{ marginTop: 10 }}>Đổi mật khẩu</MDBBtn>
+                <MDBBtn type="submit" className='w-100 mb-4' size='md' style={{ marginTop: 10 }} onClick={handleSubmitchange}>Đổi mật khẩu</MDBBtn>
             </form>,
         },
         {

@@ -13,6 +13,9 @@ export const DetailHomestay = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  useEffect(() => {
     dispatch(getAvgPoint(params.id));
     dispatch(getCommentProduct(params.id));
     dispatch(getOneProduct(params.id));
@@ -22,38 +25,13 @@ export const DetailHomestay = () => {
   const avgPoint = useSelector((state) => state.product.avgPoint)
   console.log(comment);
 
-  const listComment = comment.map((value) =>
-    <Row style={{ margin: '20px 10px 10px 10px', border: '2px solid rgba(242,243,243,1.00)', borderRadius: '5px', minHeight: '70px' }}>
-      <Col span={5} >
-        <h5 style={{ marginLeft: '15px', marginTop: '10px', textAlign: 'center' }}>{value.user.name}</h5>
-      </Col>
-      <Col span={18} push={1}>
-        <div style={{ backgroundColor: 'rgba(236,248,255,1.00)', width: '100px', marginTop: '15px', borderRadius: '10px' }}>
-          <StarTwoTone style={{ fontSize: '20px', paddingBottom: '5px', paddingLeft: '3px' }} />
-          <span style={{ paddingTop: '10px', fontSize: '16px', marginLeft: '10px' }}>{value.point}/5</span>
-        </div>
-        <div style={{ fontWeight: '500', marginTop: '10px' }}>
-          {value.comment}
-        </div>
-        <div style={{ margin: '15px 0' }}>
-          <Image
-            style={{ borderRadius: '10px' }}
-            width={85}
-            height={85}
-            src={value.imgUrl}
-          />
-        </div>
-      </Col>
-    </Row>
-  )
   // const imgHomestay = detailHomestay[0].images
   const handleBookingHomestay = (id) => {
     navigate(`/homestay/booking/${id}`)
   }
   return (
     <>
-      <Content
-        className="site-layout"
+      <div
         style={{
           padding: '0 100px',
           marginTop: '30px',
@@ -92,7 +70,7 @@ export const DetailHomestay = () => {
             <Col span={6} push={10} >
               <div>
                 <div style={{ fontSize: '12px', marginBottom: '0' }}>Giá mỗi phòng mỗi đêm từ</div>
-                <div style={{ fontSize: '24', color: 'rgb(255, 94, 31)', lineHeight: '28px', fontWeight: '700', marginTop: '-5px' }}> {detailHomestay.price + detailHomestay.price * 11 / 100} 
+                <div style={{ fontSize: '24', color: 'rgb(255, 94, 31)', lineHeight: '28px', fontWeight: '700', marginTop: '-5px' }}> {detailHomestay.price + detailHomestay.price * 11 / 100}
                   <span style={{ fontSize: '22' }}> VND</span> </div>
               </div>
               <Button onClick={() => handleBookingHomestay(params.id)} style={{ width: '100%', backgroundColor: 'rgb(255, 94, 31)' }}>Chọn phòng</Button>
@@ -188,10 +166,9 @@ export const DetailHomestay = () => {
 
           </Row>
         </div>
-      </Content>
+      </div>
 
-      <Content
-        className="site-layout"
+      <div
         style={{
           padding: '0 100px',
           color: 'black'
@@ -253,10 +230,9 @@ export const DetailHomestay = () => {
             </Col>
           </Row>
         </div>
-      </Content>
+      </div>
 
-      <Content
-        className="site-layout"
+      <div
         style={{
           padding: '0 100px',
           color: 'black'
@@ -295,16 +271,39 @@ export const DetailHomestay = () => {
               <Rate style={{ fontSize: '18px' }} defaultValue={1} disabled />
             </Col>
           </Row>
-          {listComment}
+          {comment.map((value) =>
+            <Row style={{ margin: '20px 10px 10px 10px', border: '2px solid rgba(242,243,243,1.00)', borderRadius: '5px', minHeight: '70px' }}>
+              <Col span={5} >
+                <h5 style={{ marginLeft: '15px', marginTop: '10px', textAlign: 'center' }}>{value.user.name}</h5>
+              </Col>
+              <Col span={18} push={1}>
+                <div style={{ backgroundColor: 'rgba(236,248,255,1.00)', width: '100px', marginTop: '15px', borderRadius: '10px' }}>
+                  <StarTwoTone style={{ fontSize: '20px', paddingBottom: '5px', paddingLeft: '3px' }} />
+                  <span style={{ paddingTop: '10px', fontSize: '16px', marginLeft: '10px' }}>{value.point}/5</span>
+                </div>
+                <div style={{ fontWeight: '500', marginTop: '10px' }}>
+                  {value.comment}
+                </div>
+                <div style={{ margin: '15px 0' }}>
+                  <Image
+                    style={{ borderRadius: '10px' }}
+                    width={85}
+                    height={85}
+                    src={value.imgUrl}
+                  />
+                </div>
+              </Col>
+            </Row>
+          )}
         </div>
-      </Content>
+      </div>
 
-      <Footer
+      <div
         style={{
-          textAlign: 'center',
+          textAlign: 'center', marginBottom: 20
         }}
       >
-      </Footer>
+      </div>
     </>
   )
 
