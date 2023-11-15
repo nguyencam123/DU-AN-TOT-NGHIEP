@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progress, Space } from 'antd';
 import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, InfoCircleTwoTone, StarTwoTone } from '@ant-design/icons'
 import { Form, Table } from 'react-bootstrap';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { getOneProduct, getPayment } from '../../../features/product/productThunk';
 import { useDispatch, useSelector } from 'react-redux';
 const { Header, Content, Footer } = Layout;
@@ -13,15 +13,21 @@ export const BookingReviewHomestay = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  const params = useParams();
+  const { id } = useParams();
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+
+  const name = params?.get('name') || '';
+  const email = params?.get('email') || '';
+  const phoneNumber = params?.get('phoneNumber') || '';
+
   useEffect(() => {
-    dispatch(getOneProduct(params.id));
+    dispatch(getOneProduct(id));
     dispatch(getPayment({ vnp_Ammount: detailHomestay.price + detailHomestay.price * 11 / 100 }));
   }, []);
   const dispatch = useDispatch();
   const detailHomestay = useSelector((state) => state.product.productDetails);
   const payment = useSelector((state) => state.product.payment)
-  console.log(payment);
   return (
     <>
       <Content
@@ -151,10 +157,13 @@ export const BookingReviewHomestay = () => {
                     Chi tiết người liên lạc
                   </div>
                   <div style={{ fontSize: '16px', fontWeight: '600', lineHeight: '28px', color: 'rgb(3, 18, 26)' }}>
-                    +84835120388
+                    Tên : {name}
                   </div>
                   <div style={{ fontSize: '16px', fontWeight: '600', lineHeight: '28px', color: 'rgb(3, 18, 26)' }}>
-                    tranquanghuy3103@gmail.com
+                    Sđt : {phoneNumber}
+                  </div>
+                  <div style={{ fontSize: '16px', fontWeight: '600', lineHeight: '28px', color: 'rgb(3, 18, 26)' }}>
+                    email : {email}
                   </div>
                 </Col>
               </div>
@@ -247,7 +256,7 @@ export const BookingReviewHomestay = () => {
                   </Col>
                   <Col span={8} push={4}>
                     <div style={{ fontWeight: '600', fontSize: '18px', float: 'right' }}>
-                    {detailHomestay.price + detailHomestay.price * 11 / 100} VND
+                      {detailHomestay.price + detailHomestay.price * 11 / 100} VND
                     </div>
                   </Col>
                 </Row>

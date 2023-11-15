@@ -17,7 +17,6 @@ export const BookingHomestay = () => {
   const dispatch = useDispatch();
   const [infoPayment, setInfoPayment] = useState({});
   const detailHomestay = useSelector((state) => state.product.productDetails);
-  console.log(detailHomestay);
   const navigate = useNavigate();
   const onChangeName = (e) => {
     setInfoPayment({ ...infoPayment, name: e.target.value });
@@ -29,9 +28,9 @@ export const BookingHomestay = () => {
     setInfoPayment({ ...infoPayment, phoneNumber: e.target.value });
   }
   const handleReviewBookingHomestay = (id) => {
-    console.log(infoPayment);
-    navigate(`/review/booking/${id}`)
-  }
+    // Chuyển đến trang review với dữ liệu infoPayment trên URL
+    navigate(`/review/booking/${id}?name=${infoPayment.name}&email=${infoPayment.email}&phoneNumber=${infoPayment.phoneNumber}`);
+  };
 
   return (
     <>
@@ -194,23 +193,7 @@ export const BookingHomestay = () => {
                   </Col>
                   <Col span={8} push={4}>
                     <div style={{ fontWeight: '600', fontSize: '18px', float: 'right' }}>
-<<<<<<< HEAD
-                      {detailHomestay.price} VND
-                    </div>
-                  </Col>
-                </Row>
-                <Row style={{ padding: '5px 0px 15px 20px' }}>
-                  <Col span={10}>
-                    <div style={{ fontWeight: '600', fontSize: '18px' }}>
-                      Thuế và phí
-                    </div>
-                  </Col>
-                  <Col span={8} push={4}>
-                    <div style={{ fontWeight: '600', fontSize: '18px', float: 'right' }}>
-                      {detailHomestay.price * 11 / 100} VND
-=======
-                    {detailHomestay.price + detailHomestay.price*11/100} VND
->>>>>>> b70db5571a861b2037b86f880b1eb5c2dce6b060
+                      {detailHomestay.price + detailHomestay.price * 11 / 100} VND
                     </div>
                   </Col>
                 </Row>
