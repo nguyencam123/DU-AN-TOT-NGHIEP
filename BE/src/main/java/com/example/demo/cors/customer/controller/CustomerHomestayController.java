@@ -6,6 +6,7 @@ import com.example.demo.cors.customer.services.CustomerHomestayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,19 +23,14 @@ public class CustomerHomestayController {
         return new ResponseObject(customerHomestayService.getListHomestay(request));
     }
 
-    @GetMapping("/getByConvenient")
-    public ResponseObject getHomestayByConvenientId(CustomerHomestayRequest request) {
-        return new ResponseObject(customerHomestayService.getHomestayByConvenientId(request));
-    }
-
     @GetMapping("/getOne")
     public ResponseObject getHomestayById(CustomerHomestayRequest request) {
         return new ResponseObject(customerHomestayService.getHomestayById(request));
     }
 
-    @GetMapping("/getByAddress")
-    public ResponseObject getHomestayByAddress(CustomerHomestayRequest request) {
-        return new ResponseObject(customerHomestayService.getHomestayByAddress(request));
+    @PostMapping("/search")
+    public ResponseObject search(CustomerHomestayRequest request) {
+        return new ResponseObject(customerHomestayService.findAllBetweenDate(request));
     }
 
 }

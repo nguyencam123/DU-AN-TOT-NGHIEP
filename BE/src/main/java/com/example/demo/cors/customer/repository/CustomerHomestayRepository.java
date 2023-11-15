@@ -2,32 +2,30 @@ package com.example.demo.cors.customer.repository;
 
 import com.example.demo.cors.customer.model.request.CustomerHomestayRequest;
 import com.example.demo.entities.Homestay;
-import com.example.demo.infrastructure.contant.Status;
 import com.example.demo.repositories.HomestayRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface CustomerHomestayRepository extends HomestayRepository {
 
-    @Query(value = """
-            SELECT * FROM homestay a
-            INNER JOIN detail_homestay d ON d.homestay_id = a.id
-            INNER JOIN convenient_homestay e ON e.id = d.convenient_homestay_id
-            INNER JOIN img_homestay f ON f.homestay_id = a.id
-            WHERE e.id =:#{#customerHomestayRequest.convenientId}
-            """, nativeQuery = true)
-    Page<Homestay> getHomestayByConvenientId(Pageable pageable, CustomerHomestayRequest customerHomestayRequest);
-
     Homestay findHomestayById(String id);
-
-    Page<Homestay> findByAddressContains(Pageable pageable, String address);
 
     @Query(value = """
             SELECT * FROM homestay a WHERE a.status = 0
             """, nativeQuery = true)
     Page<Homestay> getAllHomestay(Pageable pageable);
+
+    @Query(value = """
+            SELECT a.* FROM homestay a
+            WHERE a.status = 0
+            AND a.id
+            NOT IN (SELECT d.homestay_id FROM booking d WHERE (start_date >=:#{#customerHomestayRequest.dateFrom}) OR (end_date <=:#{#customerHomestayRequest.dateTo} ) AND d.status = 1)
+            """, nativeQuery = true)
+    List<Homestay> findAllBetweenDate(CustomerHomestayRequest customerHomestayRequest);
 
 }

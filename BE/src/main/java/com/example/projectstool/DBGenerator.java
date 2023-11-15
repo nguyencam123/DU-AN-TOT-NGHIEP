@@ -425,21 +425,17 @@ public class DBGenerator implements CommandLineRunner {
         //cart
         Cart cart1 = new Cart();
         cart1.setUser(user1);
-        cart1.setPromotion(promotion1);
         cart1.setHomestay(homestay3);
-        cart1.setTotalPrice(new BigDecimal(1200000));
         cartRepository.save(cart1);
 
         Cart cart2 = new Cart();
         cart2.setUser(user1);
         cart2.setHomestay(homestay1);
-        cart2.setTotalPrice(new BigDecimal(1000000));
         cartRepository.save(cart2);
 
         Cart cart3 = new Cart();
         cart3.setUser(user2);
         cart3.setHomestay(homestay5);
-        cart3.setTotalPrice(new BigDecimal(1500000));
         cartRepository.save(cart3);
 
         // approval history

@@ -7,9 +7,10 @@ import {
   TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Link, Route, Routes } from 'react-router-dom'; // Import thư viện Link và Route
+import { Link, Route, Routes, useNavigate } from 'react-router-dom'; // Import thư viện Link và Route
 import HomeStayProduct from '../../component/PartnerComponent/page/homestayProduct';
 import HomeStayAdd from '../../component/PartnerComponent/page/homestayAdd';
+import { useSelector } from 'react-redux';
 const { Header, Content, Sider } = Layout;
 
 
@@ -24,13 +25,17 @@ function getItem(label, key, icon, route) {
 
 const items = [
   { label: 'Homestay', key: '1', icon: <PieChartOutlined />, route: 'partner/homestay', component: <HomeStayProduct /> },
-  { label: 'Đặt phòng', key: '2', icon: <DesktopOutlined />, route: 'partner/statistical', component: <HomeStayProduct /> },
+  { label: 'Đặt phòng', key: '2', icon: <DesktopOutlined />, route: 'partner/booking', component: <HomeStayProduct /> },
   { label: 'Thống kê', key: '4', icon: <DesktopOutlined />, route: 'partner/categor', component: <HomeStayProduct /> }
-
 ];
 
-
 const Siderpartner = () => {
+  const Navigate = useNavigate()
+  const isPartner = useSelector((state) => state.user.isPartner);
+
+  if (!isPartner) {
+    return <Navigate to="/error-role" replace />;
+  }
   return (
     <Content
       style={{

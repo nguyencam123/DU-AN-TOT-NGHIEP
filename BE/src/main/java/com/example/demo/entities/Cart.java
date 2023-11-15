@@ -5,6 +5,7 @@ import com.example.demo.infrastructure.contant.Status;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -18,19 +19,11 @@ import java.math.BigDecimal;
 @Setter
 public class Cart extends PrimaryEntity {
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    private Status status;
-
-    private BigDecimal totalPrice;
-
-    @ManyToOne
-    @JoinColumn(name = "promotion_id")
-    private Promotion promotion;
-
-    @OneToOne
+    @OneToMany
     @JoinColumn(name = "homestay_id")
     private Homestay homestay;
 }

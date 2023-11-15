@@ -8,10 +8,8 @@ public interface CustomerHomestayService {
 
     PageableObject<Homestay> getListHomestay(CustomerHomestayRequest request);
 
-    PageableObject<Homestay> getHomestayByConvenientId(CustomerHomestayRequest request);
-
     Homestay getHomestayById(CustomerHomestayRequest request);
 
-    PageableObject<Homestay> getHomestayByAddress(CustomerHomestayRequest request);
+    PageableObject<Homestay> findAllBetweenDate(CustomerHomestayRequest request);
 
 }
