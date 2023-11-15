@@ -21,7 +21,7 @@ public interface AdminBookingRepository extends BookingRepository {
                     JOIN dbo.[user] u ON b.user_id = u.id
                     WHERE ( ( :#{#request.userName} IS NULL OR :#{#request.userName} LIKE '' OR u.name = :#{#request.userName})
                     AND ( :#{#request.homestayName} IS NULL OR :#{#request.homestayName} LIKE '' OR h.name LIKE %:#{#request.homestayName}% )
-                    AND ( :#{#request.sdtUser} IS NULL OR :#{#request.sdtUser} LIKE '' OR u.phone_number = :#{#request.sdtUser})
+                    AND ( :#{#request.sdtUser} IS NULL OR :#{#request.sdtUser} LIKE '' OR u.phone_number = :#{#request.sdtUser} OR b.phone_number = :#{#request.sdtUser})
                     AND ( :#{#request.nameBooking} IS NULL OR :#{#request.nameBooking} LIKE '' OR b.name LIKE %:#{#request.nameBooking}%)
                     AND (:#{#request.statusBooking} IS NULL OR b.status = :#{#request.statusBooking}) )
                     """, nativeQuery = true)

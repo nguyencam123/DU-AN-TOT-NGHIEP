@@ -31,9 +31,7 @@ public class CustomerAuthenticationReponse {
 
     private String username;
 
-    private String identificationNumber;
-
-    private Integer point;
+    private String avataUrl;
 
     private Status status;
 

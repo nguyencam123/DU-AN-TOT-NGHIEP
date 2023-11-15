@@ -60,4 +60,9 @@ public class HomestayOwnerHomestayController {
         return new ResponseObject(homestayownerHomestayService.updateStatusHomestay(id));
     }
 
+    @PutMapping("update-promotion-homestay")
+    public ResponseObject updatePromotionhomestays(@RequestParam("id") String id,@RequestBody HomestayownerHomestayRequest request){
+        return new ResponseObject(homestayownerHomestayService.updateHomestayPromition(id,request));
+    }
+
 }

@@ -1,7 +1,6 @@
 package com.example.demo.cors.customer.controller;
 
 import com.example.demo.cors.common.base.ResponseObject;
-import com.example.demo.cors.customer.model.request.CustomerPromotionRequest;
 import com.example.demo.cors.customer.services.CustomerPromotionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,8 +17,8 @@ public class CustomerPromotionController {
     private CustomerPromotionService customerPromotionService;
 
     @GetMapping()
-    public ResponseObject getAllPromotion(CustomerPromotionRequest request) {
-        return new ResponseObject(customerPromotionService.getAllPromotion(request));
+    public ResponseObject getAllPromotion() {
+        return new ResponseObject(customerPromotionService.getAll());
     }
 
 }
