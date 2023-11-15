@@ -25,7 +25,6 @@ export const DetailHomestay = () => {
   const avgPoint = useSelector((state) => state.product.avgPoint)
   console.log(comment);
 
-
   // const imgHomestay = detailHomestay[0].images
   const handleBookingHomestay = (id) => {
     navigate(`/homestay/booking/${id}`)
@@ -71,7 +70,8 @@ export const DetailHomestay = () => {
             <Col span={6} push={10} >
               <div>
                 <div style={{ fontSize: '12px', marginBottom: '0' }}>Giá mỗi phòng mỗi đêm từ</div>
-                <div style={{ fontSize: '24', color: 'rgb(255, 94, 31)', lineHeight: '28px', fontWeight: '700', marginTop: '-5px' }}>{detailHomestay.price} <span style={{ fontSize: '22' }}>VND</span> </div>
+                <div style={{ fontSize: '24', color: 'rgb(255, 94, 31)', lineHeight: '28px', fontWeight: '700', marginTop: '-5px' }}> {detailHomestay.price + detailHomestay.price * 11 / 100}
+                  <span style={{ fontSize: '22' }}> VND</span> </div>
               </div>
               <Button onClick={() => handleBookingHomestay(params.id)} style={{ width: '100%', backgroundColor: 'rgb(255, 94, 31)' }}>Chọn phòng</Button>
             </Col>

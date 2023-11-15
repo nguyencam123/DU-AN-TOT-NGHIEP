@@ -48,16 +48,15 @@ const CategoryList = () => {
   }, []);
   const categorylist = useSelector((state) => state.admin.category);
   const listType = useSelector((state) => state.admin.categoryType)
+  const err = useSelector((state) => state.admin.error)
   console.log(listType);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [nameUpdate, setNameupdate] = useState('');
   const [typeUpdate, setTypeUpdate] = useState('');
+  const [idUpdate, setIdUpdate] = useState('');
   const [isUpdate, setIsUpdate] = useState(false);
   const [modalType, setModalType] = useState(false);
   const [convenient, setConvenient] = useState({
-    desc: 'mo ta'
-  });
-  const [convenientUpdate, setConvenientUpdate] = useState({
     desc: 'mo ta'
   });
   const [convenientType, setConvenientType] = useState({});
@@ -72,11 +71,9 @@ const CategoryList = () => {
   }
   const handleChangeTypeUpdate = (data) => {
     setTypeUpdate(data)
-    setConvenientUpdate({ ...convenientUpdate, idType: data })
   }
   const handleChangeNameUpdate = (data) => {
     setNameupdate(data.target.value)
-    setConvenientUpdate({ ...convenientUpdate, name: data.target.value })
   }
   const handleChangeName = (data) => {
     setConvenient({ ...convenient, name: data.target.value })
@@ -87,10 +84,9 @@ const CategoryList = () => {
   const showTypeModal = () => {
     setModalType(true);
   };
-  const handleOk = async () => {
+  const convenientAdd = async () => {
     await dispatch(addConvenient(convenient));
     await dispatch(getConvenient());
-    message.info('Thêm thành công');
     setIsModalOpen(false)
   };
   const addConvenientType = async () => {
@@ -109,17 +105,13 @@ const CategoryList = () => {
     setModalType(false);
   };
   const updateData = (data) => {
-    console.log(data);
-    setTypeUpdate(data.convenientHomestayType.id)
+    setTypeUpdate(data.convenientHomestayType?.id)
     setNameupdate(data.name);
-    setConvenientUpdate({ ...convenientUpdate, name: data.name })
-    setConvenientUpdate({ ...convenientUpdate, idType: data.convenientHomestayType.id })
-    setConvenientUpdate({ ...convenientUpdate, id: data.id })
-     setIsUpdate(true)
+    setIdUpdate(data.id)
+    setIsUpdate(true)
   }
   const update = async () => {
-    await dispatch(updateConvenient(convenientUpdate))
-    console.log(convenientUpdate);
+    await dispatch(updateConvenient({ idType: typeUpdate, name: nameUpdate, id: idUpdate}))
     await dispatch(getConvenient())
     message.info('Sửa thành công');
     setIsUpdate(false)
@@ -148,7 +140,7 @@ const CategoryList = () => {
       <Modal
         title='Thêm tiện nghi'
         open={isModalOpen}
-        onOk={handleOk}
+        onOk={convenientAdd}
         onCancel={handleCancel}
       >
         <Form>
@@ -212,15 +204,28 @@ const CategoryList = () => {
         onCancel={handleCancelUpdate}
       >
         <Form>
-          <label>Tên tiện nghi:</label>
+        <Form.Item
+            label='Tên tiện nghi'
+            name='nameUpdate'
+            rules={[
+              {
+                required: true,
+                message: 'Vui lòng điền tên'
+              }
+            ]}
+          >
             <Input value={nameUpdate} onChange={(data) => handleChangeNameUpdate(data)} /> <br />
-            <label>Loại:</label> <br />
+          </Form.Item>
+          <Form.Item
+            label='Loại tiện nghi'
+          >
             <Select
               style={{ width: 143 }}
               onChange={(data) => handleChangeTypeUpdate(data)}
               options={listType.map((filter) => ({ value: filter.id, label: filter.name }))}
               value={typeUpdate}
             />
+            </Form.Item>
         </Form>
       </Modal>
     </>

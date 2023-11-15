@@ -28,10 +28,14 @@ const adminSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
+    addConvenientFailed: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
   },
 });
 
 export const {
-  fetchConvenientSuccess, fetchConvenientTypeSuccess, fetchBookingSuccess
+  fetchConvenientSuccess, fetchConvenientTypeSuccess, fetchBookingSuccess,addConvenientFailed
 } = adminSlice.actions;
 export default adminSlice.reducer;

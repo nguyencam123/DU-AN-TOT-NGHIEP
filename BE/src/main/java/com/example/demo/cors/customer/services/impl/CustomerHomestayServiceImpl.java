@@ -69,25 +69,27 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
         List<Homestay> lists = customerHomestayRepository.findAllBetweenDate(request);
         if (getHomestayByConvenient(request.getConvenientHomestayList(), lists) == null) {
             for (Homestay homestay : lists) {
-                if (homestay.getName().contains(request.getNameOrAddress()) || homestay.getAddress().contains(request.getNameOrAddress())
-                        && homestay.getNumberPerson() == request.getNumberPerson()
-                        && homestay.getRoomNumber() == request.getRoomNumber()
-                        && homestay.getPrice().compareTo(request.getPriceMin()) > 0
-                        && homestay.getPrice().compareTo(request.getPriceMax()) < 0
+                if ((homestay.getName().contains(request.getNameOrAddress()) || homestay.getAddress().contains(request.getNameOrAddress()))
+                        && (homestay.getNumberPerson() == request.getNumberPerson())
+                        && (homestay.getRoomNumber() == request.getRoomNumber())
+                        && (homestay.getPrice().compareTo(request.getPriceMin()) > 0)
+                        && (homestay.getPrice().compareTo(request.getPriceMax()) < 0)
                 ) {
+                    res = new ArrayList<>();
                     res.add(homestay);
                 }
             }
         } else {
             for (Homestay homestay : lists) {
                 for (String homestayIdByConvenient : getHomestayByConvenient(request.getConvenientHomestayList(), lists))
-                    if (homestay.getName().contains(request.getNameOrAddress()) || homestay.getAddress().contains(request.getNameOrAddress())
-                            && homestay.getNumberPerson() == request.getNumberPerson()
-                            && homestay.getRoomNumber() == request.getRoomNumber()
-                            && homestay.getId().equals(homestayIdByConvenient)
-                            && homestay.getPrice().compareTo(request.getPriceMin()) > 0
-                            && homestay.getPrice().compareTo(request.getPriceMax()) < 0
+                    if ((homestay.getName().contains(request.getNameOrAddress()) || homestay.getAddress().contains(request.getNameOrAddress()))
+                            && (homestay.getNumberPerson() == request.getNumberPerson())
+                            && (homestay.getRoomNumber() == request.getRoomNumber())
+                            && (homestay.getId().equals(homestayIdByConvenient))
+                            && (homestay.getPrice().compareTo(request.getPriceMin()) > 0)
+                            && (homestay.getPrice().compareTo(request.getPriceMax()) < 0)
                     ) {
+                        res = new ArrayList<>();
                         res.add(homestay);
                     }
             }

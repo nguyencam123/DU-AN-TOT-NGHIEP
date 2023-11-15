@@ -43,7 +43,7 @@ public class AdminConvenientHomestayController {
     }
 
     @PutMapping("/update-convenient")
-    public ResponseObject updateConvenient( @RequestBody  AdminConvenientHomestayRequest adminConvenientHomestayRequest) {
+    public ResponseObject updateConvenient(@RequestBody  AdminConvenientHomestayRequest adminConvenientHomestayRequest) {
         return new ResponseObject(adminConvenientHomestayService.updateConvenientHomestay(adminConvenientHomestayRequest));
     }
 }
