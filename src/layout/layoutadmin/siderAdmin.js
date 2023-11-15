@@ -35,7 +35,7 @@ const items = [
 
 const SiderAdmin = () => {
     const Navigate = useNavigate()
-    const isPartner = useSelector((state) => state.user.isPartner);
+    const isPartner = useSelector((state) => state.user.isAdmin);
 
     if (!isPartner) {
         return <Navigate to="/error-role" replace />;

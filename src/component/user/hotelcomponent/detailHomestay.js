@@ -23,28 +23,28 @@ export const DetailHomestay = () => {
   console.log(comment);
 
   const listComment = comment.map((value) =>
-  <Row style={{ margin: '20px 10px 10px 10px', border: '2px solid rgba(242,243,243,1.00)', borderRadius: '5px', minHeight: '70px' }}>
-  <Col span={5} >
-    <h5 style={{ marginLeft: '15px', marginTop: '10px', textAlign: 'center' }}>{value.user.name}</h5>
-  </Col>
-  <Col span={18} push={1}>
-    <div style={{ backgroundColor: 'rgba(236,248,255,1.00)', width: '100px', marginTop: '15px', borderRadius: '10px' }}>
-      <StarTwoTone style={{ fontSize: '20px', paddingBottom: '5px', paddingLeft: '3px' }} />
+    <Row style={{ margin: '20px 10px 10px 10px', border: '2px solid rgba(242,243,243,1.00)', borderRadius: '5px', minHeight: '70px' }}>
+      <Col span={5} >
+        <h5 style={{ marginLeft: '15px', marginTop: '10px', textAlign: 'center' }}>{value.user.name}</h5>
+      </Col>
+      <Col span={18} push={1}>
+        <div style={{ backgroundColor: 'rgba(236,248,255,1.00)', width: '100px', marginTop: '15px', borderRadius: '10px' }}>
+          <StarTwoTone style={{ fontSize: '20px', paddingBottom: '5px', paddingLeft: '3px' }} />
           <span style={{ paddingTop: '10px', fontSize: '16px', marginLeft: '10px' }}>{value.point}/5</span>
-    </div>
-    <div style={{ fontWeight: '500', marginTop: '10px' }}>
-      {value.comment}
-    </div>
+        </div>
+        <div style={{ fontWeight: '500', marginTop: '10px' }}>
+          {value.comment}
+        </div>
         <div style={{ margin: '15px 0' }}>
           <Image
             style={{ borderRadius: '10px' }}
             width={85}
             height={85}
             src={value.imgUrl}
-      />
-    </div>
-  </Col>
-</Row>
+          />
+        </div>
+      </Col>
+    </Row>
   )
   // const imgHomestay = detailHomestay[0].images
   const handleBookingHomestay = (id) => {
@@ -92,7 +92,8 @@ export const DetailHomestay = () => {
             <Col span={6} push={10} >
               <div>
                 <div style={{ fontSize: '12px', marginBottom: '0' }}>Giá mỗi phòng mỗi đêm từ</div>
-                <div style={{ fontSize: '24', color: 'rgb(255, 94, 31)', lineHeight: '28px', fontWeight: '700', marginTop: '-5px' }}>{detailHomestay.price} <span style={{ fontSize: '22' }}>VND</span> </div>
+                <div style={{ fontSize: '24', color: 'rgb(255, 94, 31)', lineHeight: '28px', fontWeight: '700', marginTop: '-5px' }}> {detailHomestay.price + detailHomestay.price * 11 / 100} 
+                  <span style={{ fontSize: '22' }}> VND</span> </div>
               </div>
               <Button onClick={() => handleBookingHomestay(params.id)} style={{ width: '100%', backgroundColor: 'rgb(255, 94, 31)' }}>Chọn phòng</Button>
             </Col>
@@ -243,7 +244,7 @@ export const DetailHomestay = () => {
                     </tr>
                     <tr>
                       <td>Số người</td>
-                      <td>{ detailHomestay?.numberPerson}</td>
+                      <td>{detailHomestay?.numberPerson}</td>
                     </tr>
                   </tbody>
                 </Table>
@@ -276,7 +277,7 @@ export const DetailHomestay = () => {
           <Row style={{ backgroundColor: 'white', borderRadius: '5px', minHeight: '10px', marginTop: '15px' }}>
             <Col span={4} style={{ alignItems: 'center' }}>
               <Space wrap style={{ marginLeft: '40px', marginTop: '10px' }}>
-                <Progress type="dashboard" percent={3.5*100/5} gapDegree={30} />
+                <Progress type="dashboard" percent={3.5 * 100 / 5} gapDegree={30} />
               </Space>
             </Col>
             <Col span={14}>

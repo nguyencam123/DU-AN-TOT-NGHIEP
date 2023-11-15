@@ -17,8 +17,10 @@ public interface HomestayOwnerLoginService {
 
     HomestayOwnerAuthenticationReponse changePassword(HomestayOwnerPasswordRequest request, Principal connecteUser);
 
-    HomestayOwnerAuthenticationReponse updateInformationOwner(String idOwner, HomestayOwnerOwnerHomestayRequest request, MultipartFile multipartFile) throws IOException;
+    HomestayOwnerAuthenticationReponse updateInformationOwner(String idOwner, HomestayOwnerOwnerHomestayRequest request);
 
     void confirmEmail(String code);
+
+    HomestayOwnerAuthenticationReponse updateInformationImgOwner(String idOwner,MultipartFile multipartFile) throws IOException;
 
 }

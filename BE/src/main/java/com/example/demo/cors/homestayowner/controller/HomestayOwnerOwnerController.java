@@ -24,9 +24,14 @@ public class HomestayOwnerOwnerController {
 
 
     @PutMapping("/update-information-owner")
-    public ResponseObject updateInformationOwners(@RequestParam("owner") String homestayOwnerOwnerHomestayRequest, @RequestParam("id") String idOwner, @RequestParam("avataUrl")MultipartFile multipartFile) throws IOException {
+    public ResponseObject updateInformationOwners(@RequestParam("owner") String homestayOwnerOwnerHomestayRequest, @RequestParam("id") String idOwner){
         HomestayOwnerOwnerHomestayRequest request=conventer.convert(homestayOwnerOwnerHomestayRequest);
-        return new ResponseObject(homestayownerLoginService.updateInformationOwner(idOwner,request,multipartFile));
+        return new ResponseObject(homestayownerLoginService.updateInformationOwner(idOwner,request));
+    }
+
+    @PutMapping("/update-information-imgowner")
+    public ResponseObject updateInformationImgOwners(@RequestParam("id") String idOwner, @RequestParam("avataUrl")MultipartFile multipartFile) throws IOException {
+        return new ResponseObject(homestayownerLoginService.updateInformationImgOwner(idOwner,multipartFile));
     }
 
 }

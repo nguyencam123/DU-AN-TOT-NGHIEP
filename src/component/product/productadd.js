@@ -8,6 +8,7 @@ import { Space, Table, Typography, Modal, Spin, Popconfirm, Form, Input, Row, Co
 import {   EyeOutlined,  RotateLeftOutlined, RotateRightOutlined, SwapOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { aproveHomestay, disAgreeHomestay } from "../../features/admin/adminThunk";
+import TextArea from "antd/es/input/TextArea";
 
 
 const { Title } = Typography;
@@ -225,7 +226,7 @@ function AddProductForm() {
             onSearch={onSearchHomestayName}
           />
         </Form.Item>
-        <Form.Item label="Tìm kiếm theo tên chủ homestay" style={{ float: 'left', marginLeft: ' 50px' }}>
+        <Form.Item label="Tìm kiếm theo tên chủ homestay" style={{ float: 'left', marginLeft: ' 20px' }}>
           <Search
             placeholder="Tên chủ homestay"
             allowClear
@@ -350,7 +351,7 @@ function AddProductForm() {
             }
           ]}
         >
-          <Input value={refuse} onChange={(e) => handleChangeRefuse(e)} />
+          <TextArea style={{height:'50px'}} value={refuse} onChange={(e) => handleChangeRefuse(e)} />
         </Form.Item>
       </Modal>
     </div>

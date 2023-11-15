@@ -52,12 +52,7 @@ public class User extends PrimaryEntity implements UserDetails {
     private String password;
 
     @Nationalized
-    private String identificationNumber;
-
-    @Nationalized
     private String avatarUrl;
-
-    private Integer point;
 
     private Status status;
 
