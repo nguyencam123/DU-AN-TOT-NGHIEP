@@ -180,7 +180,7 @@ export const BookingHomestay = () => {
                   </Col>
                   <Col span={20} push={1} >
                     <div style={{ paddingTop: '15px', fontWeight: '700', fontSize: '16px', color: 'rgb(1, 148, 243)' }}>
-                      Thuế và phí là các khoản được TravelVIVU chuyển trả cho khách sạn. Mọi thắc mắc về thuế và hóa đơn,
+                      Mọi thắc mắc về hóa đơn,
                       vui lòng tham khảo Điều khoản và Điều kiện của TravelVIVU để được giải đáp
                     </div>
                     <hr />
@@ -194,19 +194,7 @@ export const BookingHomestay = () => {
                   </Col>
                   <Col span={8} push={4}>
                     <div style={{ fontWeight: '600', fontSize: '18px', float: 'right' }}>
-                      {detailHomestay.price} VND
-                    </div>
-                  </Col>
-                </Row>
-                <Row style={{ padding: '5px 0px 15px 20px' }}>
-                  <Col span={10}>
-                    <div style={{ fontWeight: '600', fontSize: '18px' }}>
-                      Thuế và phí
-                    </div>
-                  </Col>
-                  <Col span={8} push={4}>
-                    <div style={{ fontWeight: '600', fontSize: '18px', float: 'right' }}>
-                      {detailHomestay.price*11/100} VND
+                    {detailHomestay.price + detailHomestay.price*11/100} VND
                     </div>
                   </Col>
                 </Row>
