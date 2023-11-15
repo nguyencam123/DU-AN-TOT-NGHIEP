@@ -2,10 +2,8 @@ package com.example.demo.cors.homestayowner.model.request;
 
 import com.example.demo.cors.common.base.PageableRequest;
 import lombok.*;
-import org.hibernate.annotations.Nationalized;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Getter
 @Setter
@@ -39,6 +37,8 @@ public class HomestayownerHomestayRequest extends PageableRequest{
       private Double CancellationPolicy;
 
       private String ownerHomestay;
+
+      private String promotion;
 
       private String status;
 

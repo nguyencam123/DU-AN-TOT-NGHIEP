@@ -28,4 +28,8 @@ public interface CustomerLoginRepository extends UserRepository {
 
     boolean existsByEmail(String email);
 
+    boolean existsByPhoneNumber(String phonenumber);
+
+    boolean existsByName(String name);
+
 }

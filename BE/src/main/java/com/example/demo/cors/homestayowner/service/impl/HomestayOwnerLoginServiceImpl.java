@@ -147,7 +147,9 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         if (!passwordEncoder.matches(request.getPassword(), ownerHomestay.getPassword())) {
             throw new RestApiException("password isn't true");
         }
-        authenticationManager.authenticate(
+        if(ownerHomestay.getStatus().equals(Status.KHONG_HOAT_DONG)){
+            throw new RestApiException("user isn't work");
+        }        authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
                         request.getPassword()
@@ -175,7 +177,6 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         if (!passwordEncoder.matches(request.getCurrentPassword(), ownerHomestay.getPassword())) {
             throw new IllegalStateException("Wrong password");
         }
-        ;
         if (!request.getNewPassword().equals(request.getConfirmationPassword())) {
             throw new IllegalStateException("password aren't the same");
         }
@@ -196,9 +197,29 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
     }
 
     @Override
-    public HomestayOwnerAuthenticationReponse updateInformationOwner(String idOwner, HomestayOwnerOwnerHomestayRequest request, MultipartFile multipartFile) throws IOException {
+    public HomestayOwnerAuthenticationReponse updateInformationOwner(String idOwner, HomestayOwnerOwnerHomestayRequest request){
         checkNull(isNullOrEmpty(request.getUsername()), isNullOrEmpty(request.getName()), request.getBirthday(), isNullOrEmpty(request.getAddress()), isNullOrEmpty(request.getPhoneNumber()), isNullOrEmpty(request.getEmail()), request);
         OwnerHomestay ownerHomestay = homestayownerOwnerHomestayRepository.findById(idOwner).orElse(null);
+        String phoneNumber = request.getPhoneNumber();
+        if (!isValidVietnamesePhoneNumber(phoneNumber)) {
+            throw new RestApiException("Invalid Vietnamese phone number format");
+        }
+        String emails=request.getEmail();
+        if (!isValidEmail(emails)){
+            throw new RestApiException("Invalid Email format");
+        }
+        if (homestayownerOwnerHomestayRepository.existsByName(request.getName()) && !ownerHomestay.getName().equals(request.getName())) {
+            throw new RestApiException("Name is already in use");
+        }
+        if (homestayownerOwnerHomestayRepository.existsByUsername(request.getUsername()) && !ownerHomestay.getUsername().equals(request.getUsername())) {
+            throw new RestApiException("Username is already in use");
+        }
+        if (homestayownerOwnerHomestayRepository.existsByEmail(request.getEmail()) && !ownerHomestay.getEmail().equals(request.getEmail())) {
+            throw new RestApiException("Email is already in use");
+        }
+        if (homestayownerOwnerHomestayRepository.existsByPhoneNumber(request.getPhoneNumber()) && !ownerHomestay.getPhoneNumber().equals(request.getPhoneNumber())) {
+            throw new RestApiException("PhoneNumber is already in use");
+        }
         ownerHomestay.setName(request.getName());
         ownerHomestay.setBirthday(request.getBirthday());
         ownerHomestay.setGender(request.getGender());
@@ -206,15 +227,6 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         ownerHomestay.setPhoneNumber(request.getPhoneNumber());
         ownerHomestay.setEmail(request.getEmail());
         ownerHomestay.setUsername(request.getUsername());
-        if (multipartFile == null) {
-            ownerHomestay.setAvatarUrl(null);
-        } else {
-            ownerHomestay.setAvatarUrl(cloudinary.uploader()
-                    .upload(multipartFile.getBytes(),
-                            Map.of("id", UUID.randomUUID().toString()))
-                    .get("url")
-                    .toString());
-        }
         ownerHomestay.setStatus(Status.HOAT_DONG);
         homestayownerOwnerHomestayRepository.save(ownerHomestay);
         var jwtServices = jwtService.generateToken(ownerHomestay);
@@ -227,8 +239,31 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                 .address(ownerHomestay.getAddress())
                 .phoneNumber(ownerHomestay.getPhoneNumber())
                 .email(ownerHomestay.getEmail())
-                .avataUrl(ownerHomestay.getAvatarUrl())
                 .username(ownerHomestay.getUsername())
+                .status(ownerHomestay.getStatus())
+                .build();
+    }
+
+    @Override
+    public HomestayOwnerAuthenticationReponse updateInformationImgOwner(String idOwner, MultipartFile multipartFile) throws IOException{
+        OwnerHomestay ownerHomestay = homestayownerOwnerHomestayRepository.findById(idOwner).orElse(null);
+        ownerHomestay.setAvatarUrl(cloudinary.uploader()
+                .upload(multipartFile.getBytes(),
+                        Map.of("id", UUID.randomUUID().toString()))
+                .get("url")
+                .toString());
+        homestayownerOwnerHomestayRepository.save(ownerHomestay);
+        return HomestayOwnerAuthenticationReponse.builder()
+                .code(ownerHomestay.getCode())
+                .id(ownerHomestay.getId())
+                .name(ownerHomestay.getName())
+                .birthday(ownerHomestay.getBirthday())
+                .gender(ownerHomestay.getGender())
+                .address(ownerHomestay.getAddress())
+                .phoneNumber(ownerHomestay.getPhoneNumber())
+                .email(ownerHomestay.getEmail())
+                .username(ownerHomestay.getUsername())
+                .avataUrl(ownerHomestay.getAvatarUrl())
                 .status(ownerHomestay.getStatus())
                 .build();
     }
@@ -257,6 +292,7 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         String regex = "^(03|05|07|08|09)\\d{8}$";
         return phoneNumber.matches(regex);
     }
+
     public static boolean isNullOrEmpty(String str) {
         return str == null || str.trim().isEmpty();
     }

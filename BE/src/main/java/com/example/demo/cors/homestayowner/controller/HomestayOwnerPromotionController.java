@@ -1,12 +1,14 @@
 package com.example.demo.cors.homestayowner.controller;
 
 import com.example.demo.cors.common.base.ResponseObject;
+import com.example.demo.cors.homestayowner.model.request.HomestayOwnerPromotionRequest;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerPromotionService;
+import com.example.demo.entities.Promotion;
+import com.example.demo.infrastructure.exception.rest.RestApiException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -20,4 +22,35 @@ public class HomestayOwnerPromotionController {
     public ResponseObject getPromotion() {
         return new ResponseObject(homestayOwnerPromotionService.getPromotion());
     }
+
+    @PostMapping("/add-promotion")
+    public ResponseObject addPromotion(@RequestBody HomestayOwnerPromotionRequest request) throws IOException {
+    try{
+        Promotion promotion=homestayOwnerPromotionService.addPromotion(request);
+        ResponseObject responseObject = new ResponseObject(promotion);
+        responseObject.setMessage("Thành công");
+        return responseObject;
+    } catch (
+    RestApiException ex) {
+        ResponseObject responseObject = new ResponseObject(null);
+        responseObject.setMessage("Không thành công: " + ex.getMessage());
+        return responseObject;
+    }
+    }
+
+    @PutMapping("/update-promotion")
+    public ResponseObject updatePromotion(@RequestParam("idPromotion") String id,@RequestBody HomestayOwnerPromotionRequest request) throws IOException {
+        try{
+            Promotion promotion=homestayOwnerPromotionService.updatePromotion(id,request);
+            ResponseObject responseObject = new ResponseObject(promotion);
+            responseObject.setMessage("Thành công");
+            return responseObject;
+        } catch (
+                RestApiException ex) {
+            ResponseObject responseObject = new ResponseObject(null);
+            responseObject.setMessage("Không thành công: " + ex.getMessage());
+            return responseObject;
+        }
+    }
+
 }
