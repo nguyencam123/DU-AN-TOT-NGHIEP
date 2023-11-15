@@ -20,4 +20,6 @@ public interface HomestayOwnerHomestayService {
 
     Homestay updateStatusHomestay(String id);
 
+    Homestay updateHomestayPromition(String id, HomestayownerHomestayRequest request);
+
 }

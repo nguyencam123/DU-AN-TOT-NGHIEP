@@ -7,7 +7,10 @@ import com.example.demo.cors.customer.model.request.CustomerPasswordRequest;
 import com.example.demo.cors.customer.model.response.CustomerAuthenticationReponse;
 import com.example.demo.cors.customer.model.response.CustomerLoginResponse;
 import com.example.demo.cors.homestayowner.model.reponse.loginreponse.HomestayOwnerAuthenticationReponse;
+import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayOwnerOwnerHomestayRequest;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
 
 public interface CustomerLoginService {
@@ -19,5 +22,7 @@ public interface CustomerLoginService {
     CustomerAuthenticationReponse CustomerAuthenticate(CustomerUserPasswordRequest request);
 
     CustomerAuthenticationReponse changePassword(CustomerPasswordRequest request, Principal connecteUser);
+
+    CustomerAuthenticationReponse updateInformationCusmoter(String idCustomer, CustomerRequest request, MultipartFile multipartFile) throws IOException;
 
 }

@@ -4,17 +4,11 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.example.demo.cors.common.base.PageableObject;
 import com.example.demo.cors.homestayowner.model.request.HomestayownerHomestayRequest;
-import com.example.demo.cors.homestayowner.repository.HomestayOwnerConvenientHomestayRepository;
-import com.example.demo.cors.homestayowner.repository.HomestayOwnerDetailHomestayReposritory;
-import com.example.demo.cors.homestayowner.repository.HomestayOwnerHomestayRepository;
-import com.example.demo.cors.homestayowner.repository.HomestayOwnerImgHomestayRepo;
-import com.example.demo.cors.homestayowner.repository.HomestayOwnerOwnerHomestayRepository;
+import com.example.demo.cors.homestayowner.repository.*;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerHomestayService;
-import com.example.demo.entities.ConvenientHomestay;
-import com.example.demo.entities.DetailHomestay;
-import com.example.demo.entities.Homestay;
-import com.example.demo.entities.ImgHomestay;
+import com.example.demo.entities.*;
 import com.example.demo.infrastructure.contant.Status;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +42,9 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
 
     @Autowired
     private HomestayOwnerConvenientHomestayRepository homestayOwnerConvenientHomestayRepository;
+
+    @Autowired
+    private HomestayOwnerPromotionRepository homestayOwnerPromotionRepository;
 
     @Autowired
     private Cloudinary cloudinary;
@@ -95,6 +93,20 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
         return homestay1;
     }
 
+    @Override
+    public Homestay updateHomestayPromition(String id, HomestayownerHomestayRequest request){
+        Homestay homestay = homestayownerHomestayRepository.findById(id).get();
+        Promotion newPromotion = homestayOwnerPromotionRepository.findById(request.getPromotion()).orElseThrow(EntityNotFoundException::new);
+        if (isEndDateToday(newPromotion.getEndDate())) {
+            homestay.setPromotion(null);
+        } else {
+            homestay.setPromotion(newPromotion);
+        }
+        Homestay homestay1=homestayownerHomestayRepository.save(homestay);
+        return homestay1;
+    }
+
+
     private void getHomestay(HomestayownerHomestayRequest request, Homestay homestay) {
         homestay.setName(request.getName());
         homestay.setDesc(request.getDesc());
@@ -136,4 +148,10 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
 
         return homestay1;
     }
+
+    private boolean isEndDateToday(Long endDate) {
+        LocalDate endLocalDate = LocalDate.ofEpochDay(endDate / (24 * 60 * 60 * 1000));
+        return endLocalDate.isEqual(LocalDate.now());
+    }
+
 }
