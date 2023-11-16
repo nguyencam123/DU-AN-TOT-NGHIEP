@@ -16,10 +16,6 @@ public class CustomerLoginController {
     @Autowired
     private CustomerLoginService customerLoginService;
 
-    @PostMapping()
-    public ResponseObject getCustomerLogin(@RequestBody CustomerLoginRequest customerLoginRequest) {
-        return new ResponseObject(customerLoginService.getCustomerLogin(customerLoginRequest));
-    }
     @PostMapping("/authenticate")
     public ResponseObject authenticate(@RequestBody CustomerUserPasswordRequest request){
         return new ResponseObject(customerLoginService.CustomerAuthenticate(request));

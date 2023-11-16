@@ -14,9 +14,14 @@ public class HomestayOwnerBookingController {
     @Autowired
     private HomestayOwnerBookingService homestayOwnerBookingService;
 
-    @GetMapping("")
+    @GetMapping("/byid")
     public ResponseObject getHomestayByConvenient(@RequestParam("id") String id, HomestayOwnerBookingRequest homestayOwnerBookingRequest) {
         return new ResponseObject(homestayOwnerBookingService.getBookingByHomestay(id, homestayOwnerBookingRequest));
+    }
+
+    @GetMapping()
+    public ResponseObject getAll(final HomestayOwnerBookingRequest request) {
+        return new ResponseObject(homestayOwnerBookingService.getAllBooking(request));
     }
 
 }

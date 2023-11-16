@@ -149,7 +149,8 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         }
         if(ownerHomestay.getStatus().equals(Status.KHONG_HOAT_DONG)){
             throw new RestApiException("user isn't work");
-        }        authenticationManager.authenticate(
+        }
+        authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
                         request.getPassword()
