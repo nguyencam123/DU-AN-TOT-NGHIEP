@@ -1,17 +1,12 @@
 package com.example.demo.entities;
 
 import com.example.demo.entities.base.PrimaryEntity;
-import com.example.demo.infrastructure.contant.Status;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.math.BigDecimal;
 
 @Entity
 @Table(name = "cart")
@@ -23,7 +18,12 @@ public class Cart extends PrimaryEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany
-    @JoinColumn(name = "homestay_id")
-    private Homestay homestay;
+<<<<<<< HEAD
+
+
+    String homestay;
+=======
+    private String homestayId;
+
+>>>>>>> b70db5571a861b2037b86f880b1eb5c2dce6b060
 }

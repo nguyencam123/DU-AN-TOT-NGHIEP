@@ -137,7 +137,7 @@ const Hotel = () => {
   const handleresetinput = () => {
     setRangeValue(initialValue);
   }
-
+  console.log(products)
   return (
     <>
       <section style={{
@@ -207,7 +207,7 @@ const Hotel = () => {
           </div>
         </div>
       </section>
-      
+
       <section style={{ padding: '20px 200px 400px 200px' }} >
         <Layout >
           <Sider style={{ marginRight: 40, backgroundColor: '#f5f5f5' }}>
@@ -278,8 +278,10 @@ const Hotel = () => {
                     <div style={{ width: '50%', marginRight: 50 }}>
                       <h1 style={{ fontSize: 18, marginTop: 10, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: 250 }}>{items?.name}</h1>
                       <Rate allowHalf disabled defaultValue={items.star} size='sm' /><br />
-                      <div style={{ display: 'flex', marginTop: 10 }}><CompassOutlined style={{ marginTop: 3 }} />&ensp; <Title style={{ fontSize: 16 }}>{items.province?.name}</Title></div>
-                      <h1 style={{ width: '100%', height: 20, backgroundColor: 'rgb(242, 243, 243)', borderRadius: 8, fontSize: 14, padding: '0 2px 0 2px' }}>Thanh toán khi nhận phòng</h1>
+                      <div style={{ display: 'flex', marginTop: 10 }}>
+                        <CompassOutlined style={{}} />&ensp;
+                        <Title style={{ fontSize: 16, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, marginTop: 3 }}>{items.address}</Title></div>
+                      <h1 style={{ width: '100%', height: 20, backgroundColor: 'rgb(242, 243, 243)', borderRadius: 8, fontSize: 14, padding: '0 2px 0 2px' }}>Thanh toán trực tuyến</h1>
                     </div>
                     <div style={{ marginLeft: 10, borderLeft: '1px solid #ACAEB1', padding: '8px 8px 2px 2px', width: '40%' }}>
                       <div style={{ display: 'flex', color: 'rgb(5, 165, 105)' }}><ShopOutlined style={{ marginTop: 3, fontSize: 14 }} /> Ưu đãi dành riêng cho bạn...</div>

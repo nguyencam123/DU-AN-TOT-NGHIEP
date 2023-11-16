@@ -1,8 +1,8 @@
 import { EyeOutlined } from "@ant-design/icons";
 import { Input, Row, Select, Table, Typography, Form, Space } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { getBooking } from "../../../features/admin/adminThunk";
-import { useEffect } from "react";
+import { getBooking, getBookingByName, getBookingByNameHomestay, getBookingByPhoneNumber } from "../../../features/admin/adminThunk";
+import { useEffect, useState } from "react";
 import moment from 'moment';
 
 
@@ -20,6 +20,11 @@ function BookingForm() {
       render: (data) => {
         return data.name
       }
+    },
+    {
+      title: 'Số điện thoại',
+      dataIndex: 'phoneNumber',
+      key: 'phoneNumber'
     },
     {
       title: 'Tên Homestay',
@@ -54,34 +59,28 @@ function BookingForm() {
       }
     },
     {
-      title: 'Email người đặt',
+      title: 'Email liên lạc',
       dataIndex: 'email',
       key: 'email'
     },
     {
-      title: 'Tên người đặt',
+      title: 'Tên người liên lạc',
       dataIndex: 'name',
       key: 'name'
     },
     {
-      title: 'Số điện thoại người đặt',
-      dataIndex: 'phoneNumber',
-      key: 'createdDate'
+      title: 'Số điện thoại liên lạc',
+      dataIndex: 'user',
+      key: 'userPhoneNumber',
+        render: (data) => {
+        return data.phoneNumber
+      }
     },
     {
       title: 'Tổng tiền',
       dataIndex: 'totalPrice',
       key: 'totalPrice'
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (_, record) => (
-        <Space size="middle">
-          <a style={{ color: '#1677ff' }}><EyeOutlined /></a>
-        </Space>
-      ),
-    },
+    }
   ];
   const listFilter = [
     {
@@ -101,8 +100,48 @@ function BookingForm() {
       value: 2
     }
   ]
+  const [selectedStatus, setSelectedStatus] = useState({
+      name: 'Tất cả',
+      value: ''
+  })
+  const handleChangeStatus = (value) => {
+    if (value === 1) {
+      setSelectedStatus({
+        name: 'Thành công',
+        value: 1
+      })
+      dispatch(getBooking(1));
+    } else if (value === 0) {
+      setSelectedStatus({
+        name: 'Hủy',
+        value: 0
+      })
+      dispatch(getBooking(0));
+    } else if (value === 2) {
+      setSelectedStatus({
+        name: 'Không thành công',
+        value: 2
+      })
+      dispatch(getBooking(2));
+    } else {
+      dispatch(getBooking());
+      setSelectedStatus({
+        name: 'Tất cả',
+        value: ''
+      })
+    }
+  }
+  const searchByNameHomestay = (value, _e, info) => {
+    dispatch(getBookingByNameHomestay(value));
+  }
+  const searchByNameBooking = (value, _e, info) => {
+    dispatch(getBookingByName(value));
+  }
+  const searchByPhoneNumber = (value, _e, info) => {
+    dispatch(getBookingByPhoneNumber(value));
+  }
   useEffect(() => {
-    dispatch(getBooking());
+    dispatch(getBooking(1));
   }, []);
   const booking = useSelector((state) => state.admin.booking)
     return(
@@ -114,7 +153,8 @@ function BookingForm() {
           <Select
             style={{ width: 143 }}
               options={listFilter.map(filter => ({ value: filter.value, label: filter.name }))}
-              defaultValue={listFilter[0].value}
+              defaultValue={selectedStatus.value}
+              onChange={handleChangeStatus}
           />
         </Form.Item>
         <Form.Item label="Tìm kiếm theo tên" style={{ float: 'left', marginLeft: ' 50px' }}>
@@ -122,15 +162,26 @@ function BookingForm() {
             placeholder="Tên homestay"
             allowClear
             size="medium"
-            enterButton="search"
+              enterButton="search"
+              onSearch={searchByNameHomestay}
           />
-        </Form.Item>
-        <Form.Item label="Tìm kiếm theo tên chủ homestay" style={{ float: 'left', marginLeft: ' 50px' }}>
+          </Form.Item>
+          <Form.Item label="Tìm kiếm theo số điện thoại liên lạc" style={{ float: 'left', marginLeft: ' 20px' }}>
           <Search
-            placeholder="Tên chủ homestay"
+            placeholder="Số điện thoại"
             allowClear
             size="medium"
-            enterButton="search"
+              enterButton="search"
+              onSearch={searchByPhoneNumber}
+          />
+        </Form.Item>
+        <Form.Item label="Tìm kiếm theo tên người liên lạc" style={{ float: 'left', marginLeft: ' 0px' }}>
+          <Search
+            placeholder="Tên người liên lạc"
+            allowClear
+            size="medium"
+              enterButton="search"
+              onSearch={searchByNameBooking}
           />
         </Form.Item>
       </Row>

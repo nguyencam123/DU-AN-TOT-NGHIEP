@@ -17,21 +17,20 @@ export const BookingHomestay = () => {
   const dispatch = useDispatch();
   const [infoPayment, setInfoPayment] = useState({});
   const detailHomestay = useSelector((state) => state.product.productDetails);
-  console.log(detailHomestay);
   const navigate = useNavigate();
   const onChangeName = (e) => {
-    setInfoPayment({...infoPayment, name: e.target.value});
+    setInfoPayment({ ...infoPayment, name: e.target.value });
   }
   const onChangeEmail = (e) => {
-    setInfoPayment({...infoPayment, email: e.target.value});
+    setInfoPayment({ ...infoPayment, email: e.target.value });
   }
   const onChangePhoneNumber = (e) => {
-    setInfoPayment({...infoPayment, phoneNumber: e.target.value});
+    setInfoPayment({ ...infoPayment, phoneNumber: e.target.value });
   }
   const handleReviewBookingHomestay = (id) => {
-    console.log(infoPayment);
-    navigate(`/review/booking/${id}`)
-  }
+    // Chuyển đến trang review với dữ liệu infoPayment trên URL
+    navigate(`/review/booking/${id}?name=${infoPayment.name}&email=${infoPayment.email}&phoneNumber=${infoPayment.phoneNumber}`);
+  };
 
   return (
     <>
@@ -82,7 +81,7 @@ export const BookingHomestay = () => {
                 <Form style={{ padding: '20px' }}>
                   <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label style={{ fontWeight: '700' }}>Họ và tên</Form.Label>
-                    <Form.Control type="text" placeholder="Họ và tên" onChange={(e) => onChangeName(e)}/>
+                    <Form.Control type="text" placeholder="Họ và tên" onChange={(e) => onChangeName(e)} />
                     <Form.Text className="text-muted">
                       *Nhập tên như trên CMND/ hộ chiếu
                     </Form.Text>
@@ -90,14 +89,14 @@ export const BookingHomestay = () => {
 
                   <Form.Group className="mb-3" controlId="formBasicPassword">
                     <Form.Label style={{ fontWeight: '700' }}>Số điện thoại</Form.Label>
-                    <Form.Control type="text" placeholder="Số điện thoại" onChange={(e) => onChangePhoneNumber(e)}/>
+                    <Form.Control type="text" placeholder="Số điện thoại" onChange={(e) => onChangePhoneNumber(e)} />
                     <Form.Text className="text-muted">
                       VD : 09683741834
                     </Form.Text>
                   </Form.Group>
                   <Form.Group className="mb-3" controlId="formBasicPassword">
                     <Form.Label style={{ fontWeight: '700' }}>Email</Form.Label>
-                    <Form.Control type="email" placeholder="Email" onChange={(e) => onChangeEmail(e)}/>
+                    <Form.Control type="email" placeholder="Email" onChange={(e) => onChangeEmail(e)} />
                     <Form.Text className="text-muted">
                       VD: email@example.com
                     </Form.Text>
@@ -135,7 +134,7 @@ export const BookingHomestay = () => {
                     <div style={{ fontWeight: '500' }}>Fri, 10 Nov 2023, Trước 12:00 </div>
                   </Col>
                 </Row>
-                <Row style={{ margin: '25px 0px 0px 15px', paddingBottom:'20px' }}>
+                <Row style={{ margin: '25px 0px 0px 15px', paddingBottom: '20px' }}>
                   <Col span={10}>
                     <div >
                       Số phòng :
@@ -149,7 +148,7 @@ export const BookingHomestay = () => {
                   </Col>
                   <Col span={8} push={1}>
                     <div style={{ fontWeight: '500' }}>
-                    {detailHomestay.numberPerson} phòng
+                      {detailHomestay.numberPerson} phòng
                     </div>
                   </Col>
                 </Row>
@@ -170,7 +169,7 @@ export const BookingHomestay = () => {
                   </Col>
                   <Col span={8} push={4}>
                     <div style={{ padding: '20px 0px 5px 20px', fontSize: '18px', fontWeight: '700', float: 'right' }}>
-                      {detailHomestay.price + detailHomestay.price*11/100} VND
+                      {detailHomestay.price + detailHomestay.price * 11 / 100} VND
                     </div>
                   </Col>
                 </Row>
@@ -180,7 +179,7 @@ export const BookingHomestay = () => {
                   </Col>
                   <Col span={20} push={1} >
                     <div style={{ paddingTop: '15px', fontWeight: '700', fontSize: '16px', color: 'rgb(1, 148, 243)' }}>
-                      Thuế và phí là các khoản được TravelVIVU chuyển trả cho khách sạn. Mọi thắc mắc về thuế và hóa đơn,
+                      Mọi thắc mắc về hóa đơn,
                       vui lòng tham khảo Điều khoản và Điều kiện của TravelVIVU để được giải đáp
                     </div>
                     <hr />
@@ -194,19 +193,7 @@ export const BookingHomestay = () => {
                   </Col>
                   <Col span={8} push={4}>
                     <div style={{ fontWeight: '600', fontSize: '18px', float: 'right' }}>
-                      {detailHomestay.price} VND
-                    </div>
-                  </Col>
-                </Row>
-                <Row style={{ padding: '5px 0px 15px 20px' }}>
-                  <Col span={10}>
-                    <div style={{ fontWeight: '600', fontSize: '18px' }}>
-                      Thuế và phí
-                    </div>
-                  </Col>
-                  <Col span={8} push={4}>
-                    <div style={{ fontWeight: '600', fontSize: '18px', float: 'right' }}>
-                      {detailHomestay.price*11/100} VND
+                      {detailHomestay.price + detailHomestay.price * 11 / 100} VND
                     </div>
                   </Col>
                 </Row>
