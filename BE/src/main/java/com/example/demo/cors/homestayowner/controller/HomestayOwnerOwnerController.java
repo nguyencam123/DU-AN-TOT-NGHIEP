@@ -2,7 +2,6 @@ package com.example.demo.cors.homestayowner.controller;
 
 import com.example.demo.cors.common.base.ResponseObject;
 import com.example.demo.cors.homestayowner.model.conventer.HomestayOwnerOwnerConventer;
-import com.example.demo.cors.homestayowner.model.request.HomestayownerHomestayRequest;
 import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayOwnerOwnerHomestayRequest;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerLoginService;
 import org.springframework.beans.factory.annotation.Autowired;

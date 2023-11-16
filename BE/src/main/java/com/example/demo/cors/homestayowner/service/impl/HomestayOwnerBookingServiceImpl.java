@@ -1,10 +1,10 @@
 package com.example.demo.cors.homestayowner.service.impl;
 
 import com.example.demo.cors.common.base.PageableObject;
-import com.example.demo.cors.homestayowner.model.reponse.HomestayOwnerBookingReponse;
 import com.example.demo.cors.homestayowner.model.request.HomestayOwnerBookingRequest;
 import com.example.demo.cors.homestayowner.repository.HomestayOwnerBookingRepository;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerBookingService;
+import com.example.demo.entities.Booking;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,9 +18,17 @@ public class HomestayOwnerBookingServiceImpl implements HomestayOwnerBookingServ
     private HomestayOwnerBookingRepository homestayOwnerBookingRepository;
 
     @Override
-    public PageableObject<HomestayOwnerBookingReponse> getBookingByHomestay(String id,HomestayOwnerBookingRequest request) {
-        Pageable pageable = PageRequest.of(request.getPage(),request.getSize());
-        Page<HomestayOwnerBookingReponse> res=homestayOwnerBookingRepository.getBookingByHomestay(id,pageable);
+    public PageableObject<Booking> getBookingByHomestay(String id, HomestayOwnerBookingRequest request) {
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+        Page<Booking> res = homestayOwnerBookingRepository.getBookingByHomestay(id, pageable);
         return new PageableObject<>(res);
     }
+
+    @Override
+    public PageableObject<Booking> getAllBooking(HomestayOwnerBookingRequest request) {
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+        Page<Booking> getAllBooking = homestayOwnerBookingRepository.getAllBooking(request, pageable);
+        return new PageableObject<>(getAllBooking);
+    }
+
 }
