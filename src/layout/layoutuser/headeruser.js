@@ -76,7 +76,10 @@ const HeaderUser = () => {
     const logout = () => {
         dispatch(logoutUser())
         navigate('/login')
-    }
+  }
+  const cart = () => {
+    navigate('/shopingcart')
+}
     return (
         <header>
             <Navbar collapseOnSelect expand="lg" >
@@ -152,7 +155,7 @@ const HeaderUser = () => {
                                         <button type="button" className="btn btn-primary" style={{ color: 'black' }} onClick={logout}>
                                             <FileDoneOutlined /> Đơn đặt hàng
                                         </button>
-                                        <button type="button" className="btn btn-primary" style={{ color: 'black' }} onClick={logout}>
+                                        <button type="button" className="btn btn-primary" style={{ color: 'black' }} onClick={cart}>
                                             <HeartOutlined /> Danh sách yêu thích
                                         </button>
                                         <button type="button" className="btn btn-primary" style={{ color: 'black' }} onClick={logout}>
