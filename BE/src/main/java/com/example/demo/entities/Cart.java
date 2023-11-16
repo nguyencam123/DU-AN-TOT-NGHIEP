@@ -18,12 +18,5 @@ public class Cart extends PrimaryEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-<<<<<<< HEAD
-
-
-    String homestay;
-=======
     private String homestayId;
-
->>>>>>> b70db5571a861b2037b86f880b1eb5c2dce6b060
 }
