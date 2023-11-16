@@ -2,13 +2,9 @@ import { instance } from "../../../app/axiosConfig";
 
 export const ChangePasswordSlice = async (data, imgUrl, id) => {
     const formData = new FormData();
-    formData.append('homestay', JSON.stringify(data));
-    imgUrl.forEach((imageUrl) => {
-        formData.append('avataUrl', imageUrl);
-    });
+    formData.append('owner', JSON.stringify(data));
     try {
-        const response = await instance.put(`/api/v2/owner/update-information-owner?id=${id}`, formData);
-        return response.data;
+        await instance.put(`/api/v2/owner/update-information-owner?id=${id}`, formData);
     } catch (error) {
         console.log(error.message);
         throw error;

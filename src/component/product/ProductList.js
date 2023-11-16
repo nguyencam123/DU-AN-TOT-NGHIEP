@@ -29,7 +29,7 @@ const contentStyle = {
     display: 'flex'
 };
 const sectionStyle = {
-    marginTop: '250px',
+    marginTop: '50px',
     height: "323px",
     width: "100%",
 
@@ -122,53 +122,7 @@ function ProductList() {
                 <h3 style={contentStyle}>
                     <div style={{ position: 'relative' }}>
                         <img src={slideform} style={{ width: '100%', backgroundSize: 'auto' }} />
-                        <div style={{
-                            position: 'absolute',
-                            left: '50%',
-                            bottom: -300,
-                            transform: 'translate(-50%, -50%)',
-                            alignItems: 'center',
-                            width: '60%',
-                            height: '246px',
-                            borderRadius: '8px',
-                            backgroundColor: 'white',
-                            minHeight: '150px',
-                            minWidth: '180px',
-                            display: 'flex', /* Thêm thuộc tính display: flex để căn giữa nội dung bên trong */
-                            flexDirection: 'column', /* Dọc xuống */
-                            alignItems: 'center', /* Căn giữa theo chiều ngang */
-                            justifyContent: 'space-between',
-                            boxShadow: '0 0 3px 3px #ACAEB1'
-                        }}>          <Search placeholder="input search text" size="large" onSearch={onSearch} enterButton style={{ width: '80%', marginTop: '45px', fontSize: '20px' }} />
-                            <div style={{ position: 'absolute', top: 60 }}>
 
-                                <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-                                    <Col className="gutter-row" span={12}>
-                                        <RangePicker size='large'
-                                            defaultValue={[dayjs('2023/09/01', dateFormat), dayjs('2023/10/01', dateFormat)]}
-                                            format={dateFormat} style={{ width: '340px', minWidth: '50px' }}
-                                        />&emsp;
-                                    </Col>
-                                    <Col className="gutter-row" span={12}>
-                                        <Select
-                                            defaultValue="lucy"
-                                            style={{ width: '340px', minWidth: '50px' }} // Thêm maxWidth ở đây
-                                            size='large'
-                                            options={[
-                                                { value: 'jack', label: '2 người lớn một phòng' },
-                                                { value: 'lucy', label: 'Lucy' },
-                                                { value: 'Yiminghe', label: 'yiminghe' },
-                                                { value: 'disabled', label: 'Disabled', disabled: true },
-                                            ]}
-                                            suffixIcon={<TeamOutlined style={{ fontSize: 18 }} />}
-                                        />
-                                    </Col>
-                                </Row>
-                            </div>
-                            <div>
-                                <Button style={{ width: 430, height: 64, borderRadius: 16, backgroundColor: 'rgb(83, 146, 249)', fontSize: '20', color: '#FFFFFF', top: 80 }}>Tìm kiếm</Button>
-                            </div>
-                        </div>
                     </div>
                 </h3>
             </div>
@@ -176,7 +130,7 @@ function ProductList() {
                 <div className='texthead' style={{ textAlign: 'center' }}>
                     Các Điểm Đến Thu Hút Nhất Việt Nam
                 </div>
-                <div className='allItem' style={{ alignItems: 'center', display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                <div className='allItem' style={{ alignItems: 'center', display: 'flex', justifyContent: 'center' }}>
                     {currentPage > 0 && <div onClick={handlePrevPage}><LeftOutlined style={{ fontSize: '22px' }} /></div>}
                     {itemsToShow.map((item, index) => (
                         <div className='picturetrval' style={{ textAlign: 'center', width: '10%' }} key={index}>
