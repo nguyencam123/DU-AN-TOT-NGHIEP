@@ -23,12 +23,24 @@ export const DetailHomestay = () => {
   const detailHomestay = useSelector((state) => state.product.productDetails)
   const comment = useSelector((state) => state.product.commentProduct)
   const avgPoint = useSelector((state) => state.product.avgPoint)
-  console.log(comment);
 
   // const imgHomestay = detailHomestay[0].images
   const handleBookingHomestay = (id) => {
     navigate(`/homestay/booking/${id}`)
   }
+  const listComment = comment.map((comment, index) => {
+    if (index === 2) {
+      return false;
+    }
+    return (
+      <Col span={6} style={{ marginRight: '70px' }}>
+        <div style={{  minHeight:'80px', width: '270px', marginLeft: '15px', marginBottom:'15px' ,paddingLeft: '5px', fontSize: '12px', fontWeight: '500', boxShadow: '0px 2px 5px rgba(3,18,26,0.15)', borderRadius: '5px' }}>
+          <div style={{ marginBottom: '5px', paddingTop: '5px' }}>{comment?.user.name}</div>
+          <div style={{ width: '250px', wordWrap:'break-word' }}>{comment?.comment}</div>
+        </div>
+      </Col>
+    )
+  });
   return (
     <>
       <div
@@ -142,24 +154,7 @@ export const DetailHomestay = () => {
               <div style={{ margin: '10px 0px' }}>
                 <h4 style={{ margin: '10px 0px 15px 15px', fontSize: '16px' }}>Cảm nghĩ của du khách</h4>
                 <Row>
-                  <Col span={6}>
-                    <div style={{ width: '270px', height: '80px', marginLeft: '15px', paddingLeft: '5px', fontSize: '12px', fontWeight: '500', boxShadow: '0px 2px 5px rgba(3,18,26,0.15)', borderRadius: '5px' }}>
-                      <div style={{ marginBottom: '5px', paddingTop: '5px' }}>{comment?.[0]?.user.name}</div>
-                      <span>{comment?.[0]?.comment}</span>
-                    </div>
-                  </Col>
-                  <Col span={6} push={2}>
-                    <div style={{ width: '270px', height: '80px', marginLeft: '15px', fontSize: '12px', paddingLeft: '5px', fontWeight: '500', boxShadow: '0px 2px 5px rgba(3,18,26,0.15)', borderRadius: '5px' }}>
-                      <div style={{ marginBottom: '5px', paddingTop: '5px' }}>{comment?.[1]?.user.name}</div>
-                      <span>{comment?.[1]?.comment}</span>
-                    </div>
-                  </Col>
-                  <Col span={6} push={4}>
-                    <div style={{ width: '270px', height: '80px', marginLeft: '15px', fontSize: '12px', paddingLeft: '5px', fontWeight: '500', boxShadow: '0px 2px 5px rgba(3,18,26,0.15)', borderRadius: '5px' }}>
-                      <div style={{ marginBottom: '5px', paddingTop: '5px' }}>{comment?.[2]?.user.name}</div>
-                      <span>{comment?.[2]?.comment}</span>
-                    </div>
-                  </Col>
+                  {listComment}
                 </Row>
               </div>
             </Col>
@@ -253,7 +248,7 @@ export const DetailHomestay = () => {
           <Row style={{ backgroundColor: 'white', borderRadius: '5px', minHeight: '10px', marginTop: '15px' }}>
             <Col span={4} style={{ alignItems: 'center' }}>
               <Space wrap style={{ marginLeft: '40px', marginTop: '10px' }}>
-                <Progress type="dashboard" percent={3.5 * 100 / 5} gapDegree={30} />
+                <Progress type="dashboard" percent={avgPoint * 100 / 5} gapDegree={30} />
               </Space>
             </Col>
             <Col span={14}>
@@ -285,12 +280,14 @@ export const DetailHomestay = () => {
                   {value.comment}
                 </div>
                 <div style={{ margin: '15px 0' }}>
-                  <Image
-                    style={{ borderRadius: '10px' }}
-                    width={85}
-                    height={85}
-                    src={value.imgUrl}
-                  />
+                  {value.images.map((img) => {
+                    <Image
+                      style={{ borderRadius: '10px' }}
+                      width={85}
+                      height={85}
+                      src={img}
+                    />
+                  })}
                 </div>
               </Col>
             </Row>
