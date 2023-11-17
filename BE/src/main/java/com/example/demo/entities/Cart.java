@@ -19,5 +19,4 @@ public class Cart extends PrimaryEntity {
     private User user;
 
     private String homestayId;
-
 }

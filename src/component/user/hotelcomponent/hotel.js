@@ -9,7 +9,8 @@ import {
   UsergroupAddOutlined,
   PayCircleOutlined,
   CompassOutlined,
-  ShopOutlined
+  ShopOutlined,
+  InsertRowRightOutlined
 } from "@ant-design/icons";
 import {
   MDBInputGroup,
@@ -22,46 +23,22 @@ import 'dayjs/locale/vi';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProducts, getProducts } from "../../../features/product/productThunk";
 import { useNavigate } from "react-router-dom";
+import { fetchSearchProducts } from "../../../features/product/searchProductThunk";
+import moment from 'moment';
 dayjs.locale('vi');
 const { Title } = Typography;
 const { Header, Footer, Sider, Content } = Layout;
 
 
 
-const text = <section>
-  <div style={{ justifyContent: 'space-between', display: 'flex', fontSize: 18 }}>
-    <div style={{ display: 'flex' }}><UserOutlined style={{ marginTop: 4 }} />&ensp;số lượng người</div><div><Input style={{ width: 40, height: 40 }} defaultValue={1} /></div>
-  </div>
-</section>;
-const utilities = <div style={{ width: '100%', height: '30%', backgroundColor: 'white', borderRadius: 10, padding: '5px 5px 5px' }}>
-  <div>
-    <Checkbox>Wifi</Checkbox><br />
-    <Checkbox>Hồ bơi</Checkbox><br />
-    <Checkbox>Chỗ để xe</Checkbox><br />
-    <Checkbox>Lễ tân 24/24</Checkbox><br />
-    <Checkbox>Thang máy</Checkbox><br />
-    <Checkbox>Phòng họp</Checkbox>
-  </div>
-</div>
-const items = [
-  {
-    key: '1',
-    label: 'Bạn hãy chọn số lượng người',
-    children: <p>{text}</p>,
-  }
-];
-const itemsutilities = [
-  {
-    key: '2',
-    label: 'Tiện nghi',
-    children: <p>{utilities}</p>,
-  }
-]
+
+
 
 const Hotel = () => {
   const products = useSelector((state) => state.product.products);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  let checkOutDate
   const handleDetailHomestay = (id) => {
     navigate(`/homestay/detail/${id}`);
   }
@@ -69,11 +46,11 @@ const Hotel = () => {
     dispatch(getProducts());
   }, []);
   const onChange = (key) => {
-    console.log(key);
-  };
-  const [checkInDate, setCheckInDate] = useState(null);
-  const [numNights, setNumNights] = useState(1);
 
+  };
+  const today = dayjs();
+  const [checkInDate, setCheckInDate] = useState(today);
+  const [numNights, setNumNights] = useState(1);
   const handleCheckInChange = (date) => {
     setCheckInDate(date);
   };
@@ -109,7 +86,7 @@ const Hotel = () => {
   }
   const calculateCheckOutDate = () => {
     if (checkInDate) {
-      const checkOutDate = dayjs(checkInDate).add(numNights, 'day');
+      checkOutDate = dayjs(checkInDate).add(numNights, 'day');
       return checkOutDate.format('dddd, DD [tháng] MM [năm] YYYY');
     }
     return '';
@@ -137,7 +114,47 @@ const Hotel = () => {
   const handleresetinput = () => {
     setRangeValue(initialValue);
   }
-
+  const [nameOrAddress, setNameOrAddress] = useState('')
+  const [numberPerson, setNumberPerson] = useState(0)
+  const [startDate, setStartDate] = useState(1414231414)
+  const [enDate, setEnDate] = useState(181245435)
+  const [priceMin, setPriceMin] = useState(0)
+  const [roomNumber, setRoomNumber] = useState(0)
+  const [priceMax, setPriceMax] = useState(0)
+  const [convenientHomestayList, setConvenientHomestayList] = useState('')
+  const handleSearch = () => {
+    dispatch(fetchSearchProducts(moment(checkInDate).valueOf(), moment(checkOutDate).valueOf(), nameOrAddress, numberPerson, roomNumber, rangeValue[0], rangeValue[1], convenientHomestayList))
+  }
+  const text = <section>
+    <div style={{ justifyContent: 'space-between', display: 'flex', fontSize: 18 }}>
+      <div style={{ display: 'flex' }}><UserOutlined style={{ marginBottom: 10 }} />&ensp;số lượng người</div><div><Input style={{ width: 100, height: 40 }} defaultValue={1} onChange={(e) => setNumberPerson(e.target.value)} /></div>
+      <div style={{ display: 'flex' }}><InsertRowRightOutlined style={{ marginBottom: 10 }} />&ensp;số lượng phòng</div><div><Input style={{ width: 100, height: 40 }} defaultValue={1} onChange={(e) => setRoomNumber(e.target.value)} /></div>
+    </div>
+  </section>;
+  const utilities = <div style={{ width: '100%', height: '30%', backgroundColor: 'white', borderRadius: 10, padding: '5px 5px 5px' }}>
+    <div>
+      <Checkbox>Wifi</Checkbox><br />
+      <Checkbox>Hồ bơi</Checkbox><br />
+      <Checkbox>Chỗ để xe</Checkbox><br />
+      <Checkbox>Lễ tân 24/24</Checkbox><br />
+      <Checkbox>Thang máy</Checkbox><br />
+      <Checkbox>Phòng họp</Checkbox>
+    </div>
+  </div>
+  const items = [
+    {
+      key: '1',
+      label: 'Bạn hãy chọn số lượng người',
+      children: <p>{text}</p>,
+    }
+  ];
+  const itemsutilities = [
+    {
+      key: '2',
+      label: 'Tiện nghi',
+      children: <p>{utilities}</p>,
+    }
+  ]
   return (
     <>
       <section style={{
@@ -163,7 +180,7 @@ const Hotel = () => {
             <hr />
             <div><h5 style={{ fontSize: 16 }}>Thành phố đia điểm hoặc tên khách sạn</h5>
               <MDBInputGroup className='mb-3' size='lg' noBorder textBefore={<MDBIcon fas icon='search' />}>
-                <input className='form-control' type='text' placeholder='Search' />
+                <input className='form-control' type='text' placeholder='Search' defaultValue={'Hà Nội'} onChange={(e) => setNameOrAddress(e.target.value)} />
               </MDBInputGroup>
               <div>
                 <div style={{ display: 'flex' }}>
@@ -176,6 +193,7 @@ const Hotel = () => {
                     format="YYYY-MM-DD"
                     disabledDate={disabledDate}
                     disabledTime={disabledDateTime}
+                    defaultValue={today}
                     size="lg"
                     style={{ width: 300, height: 40 }}
                     onChange={handleCheckInChange}
@@ -197,7 +215,7 @@ const Hotel = () => {
                 <h5 style={{ fontSize: 16 }}>Khách vào phòng</h5>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Collapse items={items} onChange={onChange} style={{ width: '70%', height: 40 }} />
-                  <Button style={{ height: 40, width: '25%', fontSize: 18 }}><SearchOutlined />Tìm khách sạn</Button>
+                  <Button style={{ height: 40, width: '25%', fontSize: 18 }} onClick={handleSearch}><SearchOutlined />Tìm khách sạn</Button>
                 </div>
               </div><br />
               <div style={{ color: '#0194f3', fontSize: 18, display: 'flex', float: 'right' }}>
@@ -207,7 +225,7 @@ const Hotel = () => {
           </div>
         </div>
       </section>
-      
+
       <section style={{ padding: '20px 200px 400px 200px' }} >
         <Layout >
           <Sider style={{ marginRight: 40, backgroundColor: '#f5f5f5' }}>
@@ -235,16 +253,6 @@ const Hotel = () => {
                   step={20000}
                   onChange={handleSliderChange}
                 />
-              </div>
-            </div><br />
-            <div style={{ width: '100%', height: '200px', backgroundColor: 'white', borderRadius: 10, padding: '5px 5px 5px' }}>
-              <div>
-                <Title level={2} style={{ fontSize: 16 }}>Hạng sao</Title>
-                <Checkbox><Rate allowHalf disabled defaultValue={1} /></Checkbox>
-                <Checkbox><Rate allowHalf disabled defaultValue={2} /></Checkbox>
-                <Checkbox><Rate allowHalf disabled defaultValue={3} /></Checkbox>
-                <Checkbox><Rate allowHalf disabled defaultValue={4} /></Checkbox>
-                <Checkbox><Rate allowHalf disabled defaultValue={5} /></Checkbox>
               </div>
             </div><br />
             <Collapse items={itemsutilities} size="small" defaultActiveKey={['2']} onChange={onChange} />
@@ -278,8 +286,10 @@ const Hotel = () => {
                     <div style={{ width: '50%', marginRight: 50 }}>
                       <h1 style={{ fontSize: 18, marginTop: 10, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: 250 }}>{items?.name}</h1>
                       <Rate allowHalf disabled defaultValue={items.star} size='sm' /><br />
-                      <div style={{ display: 'flex', marginTop: 10 }}><CompassOutlined style={{ marginTop: 3 }} />&ensp; <Title style={{ fontSize: 16 }}>{items.province?.name}</Title></div>
-                      <h1 style={{ width: '100%', height: 20, backgroundColor: 'rgb(242, 243, 243)', borderRadius: 8, fontSize: 14, padding: '0 2px 0 2px' }}>Thanh toán khi nhận phòng</h1>
+                      <div style={{ display: 'flex', marginTop: 10 }}>
+                        <CompassOutlined style={{}} />&ensp;
+                        <Title style={{ fontSize: 16, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, marginTop: 3 }}>{items.address}</Title></div>
+                      <h1 style={{ width: '100%', height: 20, backgroundColor: 'rgb(242, 243, 243)', borderRadius: 8, fontSize: 14, padding: '0 2px 0 2px' }}>Thanh toán trực tuyến</h1>
                     </div>
                     <div style={{ marginLeft: 10, borderLeft: '1px solid #ACAEB1', padding: '8px 8px 2px 2px', width: '40%' }}>
                       <div style={{ display: 'flex', color: 'rgb(5, 165, 105)' }}><ShopOutlined style={{ marginTop: 3, fontSize: 14 }} /> Ưu đãi dành riêng cho bạn...</div>

@@ -9,7 +9,10 @@ import com.example.demo.cors.customer.model.response.CustomerAuthenticationRepon
 import com.example.demo.cors.customer.model.response.CustomerLoginResponse;
 import com.example.demo.cors.customer.repository.CustomerLoginRepository;
 import com.example.demo.cors.customer.services.CustomerLoginService;
+import com.example.demo.entities.OwnerHomestay;
 import com.example.demo.entities.User;
+import com.example.demo.infrastructure.configemail.Email;
+import com.example.demo.infrastructure.configemail.EmailSender;
 import com.example.demo.infrastructure.contant.Status;
 import com.example.demo.infrastructure.exception.rest.RestApiException;
 import com.example.demo.infrastructure.security.token.JwtService;
@@ -33,6 +36,9 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
     private CustomerLoginRepository customerLoginRepository;
 
     @Autowired
+    private EmailSender emailSender;
+
+    @Autowired
     private Cloudinary cloudinary;
 
     @Autowired
@@ -45,8 +51,10 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
     private AuthenticationManager authenticationManager;
 
     @Override
-    public CustomerLoginResponse getCustomerLogin(CustomerLoginRequest customerLoginRequest) {
-        return customerLoginRepository.getCustomerLogin(customerLoginRequest);
+    public void confirmEmail(String id) {
+        User user = customerLoginRepository.findById(id).orElseThrow(() -> new RestApiException("Mã xác nhận không hợp lệ"));
+        user.setStatus(Status.HOAT_DONG);
+        customerLoginRepository.save(user);
     }
 
     @Override
@@ -56,12 +64,6 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         }
         if (isNullOrEmpty(request.getName())) {
             throw new RestApiException("Name cannot be empty");
-        }
-        if (request.getBirthday() == null) {
-            throw new RestApiException("Birthday cannot be empty");
-        }
-        if (isNullOrEmpty(request.getAddress())) {
-            throw new RestApiException("Address cannot be empty");
         }
         if (isNullOrEmpty(request.getPhoneNumber())) {
             throw new RestApiException("Phone number cannot be empty");
@@ -78,21 +80,42 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         if (customerLoginRepository.existsByEmail(request.getEmail())) {
             throw new RestApiException("Email is already in use");
         }
+        if (customerLoginRepository.existsByPhoneNumber(request.getPhoneNumber())) {
+            throw new RestApiException("PhoneNumber is already in use");
+        }
+        if (customerLoginRepository.existsByName(request.getName())) {
+            throw new RestApiException("Name is already in use");
+        }
+        String phoneNumber = request.getPhoneNumber();
+        if (!isValidVietnamesePhoneNumber(phoneNumber)) {
+            throw new RestApiException("Invalid Vietnamese phone number format");
+        }
+        String emails=request.getEmail();
+        if (!isValidEmail(emails)){
+            throw new RestApiException("Invalid Email format");
+        }
         User user = new User();
         Random random = new Random();
         int number = random.nextInt(1000);
         String code = String.format("G%04d", number);
         user.setCode(code);
         user.setName(request.getName());
-        user.setBirthday(request.getBirthday());
-        user.setGender(request.getGender());
-        user.setAddress(request.getAddress());
         user.setPhoneNumber(request.getPhoneNumber());
         user.setEmail(request.getEmail());
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setStatus(Status.HOAT_DONG);
+        user.setStatus(Status.KHONG_HOAT_DONG);
         customerLoginRepository.save(user);
+
+        Email email = new Email();
+        email.setToEmail(new String[]{user.getEmail()});
+        email.setSubject("Chào mừng đến với trang Web trvelViVu");
+        email.setTitleEmail("Chúc mừng " + user.getUsername());
+        String confirmationLink = "http://localhost:8080/login/confirm-email?id=" + user.getId();
+        String emailBody = "Bạn đã đăng ký thành công. Vui lòng xác nhận email bằng cách nhấp vào liên kết sau: " + confirmationLink;
+        email.setBody(emailBody);
+        emailSender.sendEmail(email.getToEmail(), email.getSubject(), email.getTitleEmail(), emailBody);
+
         var jwtServices = jwtService.generateToken(user);
         return CustomerAuthenticationReponse.builder()
                 .token(jwtServices)
@@ -111,13 +134,28 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
 
     @Override
     public CustomerAuthenticationReponse CustomerAuthenticate(CustomerUserPasswordRequest request) {
+        if (isNullOrEmpty(request.getUsername())) {
+            throw new RestApiException("Username cannot be empty");
+        }
+        if (isNullOrEmpty(request.getPassword())) {
+            throw new RestApiException("Password number cannot be empty");
+        }
+        if (customerLoginRepository.existsByUsername(request.getUsername())==false) {
+            throw new RestApiException("Username isn't exist");
+        }
+        var user = customerLoginRepository.findByUsername(request.getUsername()).orElseThrow();
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new RestApiException("password isn't true");
+        }
+        if(user.getStatus().equals(Status.KHONG_HOAT_DONG)){
+            throw new RestApiException("user isn't work");
+        }
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
                         request.getPassword()
                 )
         );
-        var user = customerLoginRepository.findByUsername(request.getUsername()).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
         return CustomerAuthenticationReponse.builder()
                 .token(jwtToken)
@@ -162,6 +200,7 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
 
     @Override
     public CustomerAuthenticationReponse updateInformationCusmoter(String idCustomer, CustomerRequest request, MultipartFile multipartFile) throws IOException {
+        User customer = customerLoginRepository.findById(idCustomer).get();
         if (isNullOrEmpty(request.getName())) {
             throw new IOException("Name cannot be empty");
         }
@@ -178,7 +217,19 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
             throw new IOException("Birthday cannot be empty");
         }
         if (request.getGender() == null && request.getGender().booleanValue()) {
-            throw new IOException("Birthday cannot be empty");
+            throw new IOException("Gender cannot be empty");
+        }
+        if (customerLoginRepository.existsByUsername(request.getUsername()) && !customer.getUsername().equals(request.getUsername())) {
+            throw new RestApiException("Username is already in use");
+        }
+        if (customerLoginRepository.existsByEmail(request.getEmail()) && !customer.getEmail().equals(request.getEmail())) {
+            throw new RestApiException("Email is already in use");
+        }
+        if (customerLoginRepository.existsByPhoneNumber(request.getPhoneNumber()) && !customer.getPhoneNumber().equals(request.getPhoneNumber())) {
+            throw new RestApiException("PhoneNumber is already in use");
+        }
+        if (customerLoginRepository.existsByName(request.getName()) && !customer.getName().equals(request.getName())) {
+            throw new RestApiException("Name is already in use");
         }
         String phoneNumber = request.getPhoneNumber();
         if (!isValidVietnamesePhoneNumber(phoneNumber)) {
@@ -188,7 +239,6 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         if (!isValidEmail(emails)) {
             throw new RestApiException("Invalid Email format");
         }
-        User customer = customerLoginRepository.findById(idCustomer).get();
         customer.setName(request.getName());
         customer.setBirthday(request.getBirthday());
         customer.setGender(request.getGender());

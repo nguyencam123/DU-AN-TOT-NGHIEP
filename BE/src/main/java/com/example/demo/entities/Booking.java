@@ -55,6 +55,7 @@ public class Booking extends PrimaryEntity {
 
     private TypeBooking typeBooking;
 
+    @Nationalized
     private String note;
 
 }

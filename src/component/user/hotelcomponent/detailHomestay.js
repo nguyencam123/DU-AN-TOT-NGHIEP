@@ -13,6 +13,9 @@ export const DetailHomestay = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  useEffect(() => {
     dispatch(getAvgPoint(params.id));
     dispatch(getCommentProduct(params.id));
     dispatch(getOneProduct(params.id));
@@ -20,40 +23,27 @@ export const DetailHomestay = () => {
   const detailHomestay = useSelector((state) => state.product.productDetails)
   const comment = useSelector((state) => state.product.commentProduct)
   const avgPoint = useSelector((state) => state.product.avgPoint)
-  console.log(comment);
 
-  const listComment = comment.map((value) =>
-    <Row style={{ margin: '20px 10px 10px 10px', border: '2px solid rgba(242,243,243,1.00)', borderRadius: '5px', minHeight: '70px' }}>
-      <Col span={5} >
-        <h5 style={{ marginLeft: '15px', marginTop: '10px', textAlign: 'center' }}>{value.user.name}</h5>
-      </Col>
-      <Col span={18} push={1}>
-        <div style={{ backgroundColor: 'rgba(236,248,255,1.00)', width: '100px', marginTop: '15px', borderRadius: '10px' }}>
-          <StarTwoTone style={{ fontSize: '20px', paddingBottom: '5px', paddingLeft: '3px' }} />
-          <span style={{ paddingTop: '10px', fontSize: '16px', marginLeft: '10px' }}>{value.point}/5</span>
-        </div>
-        <div style={{ fontWeight: '500', marginTop: '10px' }}>
-          {value.comment}
-        </div>
-        <div style={{ margin: '15px 0' }}>
-          <Image
-            style={{ borderRadius: '10px' }}
-            width={85}
-            height={85}
-            src={value.imgUrl}
-          />
-        </div>
-      </Col>
-    </Row>
-  )
   // const imgHomestay = detailHomestay[0].images
   const handleBookingHomestay = (id) => {
     navigate(`/homestay/booking/${id}`)
   }
+  const listComment = comment.map((comment, index) => {
+    if (index === 2) {
+      return false;
+    }
+    return (
+      <Col span={6} style={{ marginRight: '70px' }}>
+        <div style={{  minHeight:'80px', width: '270px', marginLeft: '15px', marginBottom:'15px' ,paddingLeft: '5px', fontSize: '12px', fontWeight: '500', boxShadow: '0px 2px 5px rgba(3,18,26,0.15)', borderRadius: '5px' }}>
+          <div style={{ marginBottom: '5px', paddingTop: '5px' }}>{comment?.user.name}</div>
+          <div style={{ width: '250px', wordWrap:'break-word' }}>{comment?.comment}</div>
+        </div>
+      </Col>
+    )
+  });
   return (
     <>
-      <Content
-        className="site-layout"
+      <div
         style={{
           padding: '0 100px',
           marginTop: '30px',
@@ -92,7 +82,7 @@ export const DetailHomestay = () => {
             <Col span={6} push={10} >
               <div>
                 <div style={{ fontSize: '12px', marginBottom: '0' }}>Giá mỗi phòng mỗi đêm từ</div>
-                <div style={{ fontSize: '24', color: 'rgb(255, 94, 31)', lineHeight: '28px', fontWeight: '700', marginTop: '-5px' }}> {detailHomestay.price + detailHomestay.price * 11 / 100} 
+                <div style={{ fontSize: '24', color: 'rgb(255, 94, 31)', lineHeight: '28px', fontWeight: '700', marginTop: '-5px' }}> {detailHomestay.price + detailHomestay.price * 11 / 100}
                   <span style={{ fontSize: '22' }}> VND</span> </div>
               </div>
               <Button onClick={() => handleBookingHomestay(params.id)} style={{ width: '100%', backgroundColor: 'rgb(255, 94, 31)' }}>Chọn phòng</Button>
@@ -164,34 +154,16 @@ export const DetailHomestay = () => {
               <div style={{ margin: '10px 0px' }}>
                 <h4 style={{ margin: '10px 0px 15px 15px', fontSize: '16px' }}>Cảm nghĩ của du khách</h4>
                 <Row>
-                  <Col span={6}>
-                    <div style={{ width: '270px', height: '80px', marginLeft: '15px', paddingLeft: '5px', fontSize: '12px', fontWeight: '500', boxShadow: '0px 2px 5px rgba(3,18,26,0.15)', borderRadius: '5px' }}>
-                      <div style={{ marginBottom: '5px', paddingTop: '5px' }}>{comment?.[0]?.user.name}</div>
-                      <span>{comment?.[0]?.comment}</span>
-                    </div>
-                  </Col>
-                  <Col span={6} push={2}>
-                    <div style={{ width: '270px', height: '80px', marginLeft: '15px', fontSize: '12px', paddingLeft: '5px', fontWeight: '500', boxShadow: '0px 2px 5px rgba(3,18,26,0.15)', borderRadius: '5px' }}>
-                      <div style={{ marginBottom: '5px', paddingTop: '5px' }}>{comment?.[1]?.user.name}</div>
-                      <span>{comment?.[1]?.comment}</span>
-                    </div>
-                  </Col>
-                  <Col span={6} push={4}>
-                    <div style={{ width: '270px', height: '80px', marginLeft: '15px', fontSize: '12px', paddingLeft: '5px', fontWeight: '500', boxShadow: '0px 2px 5px rgba(3,18,26,0.15)', borderRadius: '5px' }}>
-                      <div style={{ marginBottom: '5px', paddingTop: '5px' }}>{comment?.[2]?.user.name}</div>
-                      <span>{comment?.[2]?.comment}</span>
-                    </div>
-                  </Col>
+                  {listComment}
                 </Row>
               </div>
             </Col>
 
           </Row>
         </div>
-      </Content>
+      </div>
 
-      <Content
-        className="site-layout"
+      <div
         style={{
           padding: '0 100px',
           color: 'black'
@@ -253,10 +225,9 @@ export const DetailHomestay = () => {
             </Col>
           </Row>
         </div>
-      </Content>
+      </div>
 
-      <Content
-        className="site-layout"
+      <div
         style={{
           padding: '0 100px',
           color: 'black'
@@ -277,7 +248,7 @@ export const DetailHomestay = () => {
           <Row style={{ backgroundColor: 'white', borderRadius: '5px', minHeight: '10px', marginTop: '15px' }}>
             <Col span={4} style={{ alignItems: 'center' }}>
               <Space wrap style={{ marginLeft: '40px', marginTop: '10px' }}>
-                <Progress type="dashboard" percent={3.5 * 100 / 5} gapDegree={30} />
+                <Progress type="dashboard" percent={avgPoint * 100 / 5} gapDegree={30} />
               </Space>
             </Col>
             <Col span={14}>
@@ -295,16 +266,41 @@ export const DetailHomestay = () => {
               <Rate style={{ fontSize: '18px' }} defaultValue={1} disabled />
             </Col>
           </Row>
-          {listComment}
+          {comment.map((value) =>
+            <Row style={{ margin: '20px 10px 10px 10px', border: '2px solid rgba(242,243,243,1.00)', borderRadius: '5px', minHeight: '70px' }}>
+              <Col span={5} >
+                <h5 style={{ marginLeft: '15px', marginTop: '10px', textAlign: 'center' }}>{value.user.name}</h5>
+              </Col>
+              <Col span={18} push={1}>
+                <div style={{ backgroundColor: 'rgba(236,248,255,1.00)', width: '100px', marginTop: '15px', borderRadius: '10px' }}>
+                  <StarTwoTone style={{ fontSize: '20px', paddingBottom: '5px', paddingLeft: '3px' }} />
+                  <span style={{ paddingTop: '10px', fontSize: '16px', marginLeft: '10px' }}>{value.point}/5</span>
+                </div>
+                <div style={{ fontWeight: '500', marginTop: '10px' }}>
+                  {value.comment}
+                </div>
+                <div style={{ margin: '15px 0' }}>
+                  {value.images.map((img) => {
+                    <Image
+                      style={{ borderRadius: '10px' }}
+                      width={85}
+                      height={85}
+                      src={img}
+                    />
+                  })}
+                </div>
+              </Col>
+            </Row>
+          )}
         </div>
-      </Content>
+      </div>
 
-      <Footer
+      <div
         style={{
-          textAlign: 'center',
+          textAlign: 'center', marginBottom: 20
         }}
       >
-      </Footer>
+      </div>
     </>
   )
 
