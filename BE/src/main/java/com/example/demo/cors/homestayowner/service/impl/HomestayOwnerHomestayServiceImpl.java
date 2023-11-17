@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@RequiredArgsConstructor
 public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestayService {
 
     @Autowired
