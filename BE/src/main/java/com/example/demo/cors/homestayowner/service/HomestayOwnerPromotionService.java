@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface HomestayOwnerPromotionService {
 
-       List<Promotion> getPromotion();
+       List<Promotion> getPromotion(String idOwner);
 
        Promotion addPromotion(HomestayOwnerPromotionRequest request) throws IOException;
 

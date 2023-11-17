@@ -3,9 +3,7 @@ package com.example.demo.entities;
 import com.example.demo.entities.base.PrimaryEntity;
 import com.example.demo.infrastructure.contant.EntityProperties;
 import com.example.demo.infrastructure.contant.TypePromotion;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
@@ -28,4 +26,7 @@ public class Promotion extends PrimaryEntity {
 
     private Double value;
 
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private OwnerHomestay idOwnerHomestay;
 }

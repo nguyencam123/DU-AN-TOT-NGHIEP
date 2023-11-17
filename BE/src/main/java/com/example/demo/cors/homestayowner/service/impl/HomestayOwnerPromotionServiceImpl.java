@@ -1,6 +1,7 @@
 package com.example.demo.cors.homestayowner.service.impl;
 
 import com.example.demo.cors.homestayowner.model.request.HomestayOwnerPromotionRequest;
+import com.example.demo.cors.homestayowner.repository.HomestayOwnerOwnerHomestayRepository;
 import com.example.demo.cors.homestayowner.repository.HomestayOwnerPromotionRepository;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerPromotionService;
 import com.example.demo.entities.Promotion;
@@ -17,9 +18,12 @@ public class HomestayOwnerPromotionServiceImpl implements HomestayOwnerPromotion
     @Autowired
     private HomestayOwnerPromotionRepository homestayOwnerPromotionRepository;
 
+    @Autowired
+    private HomestayOwnerOwnerHomestayRepository homestayOwnerOwnerHomestayRepository;
+
     @Override
-    public List<Promotion> getPromotion() {
-        return homestayOwnerPromotionRepository.findAll();
+    public List<Promotion> getPromotion(String idOwner) {
+        return homestayOwnerPromotionRepository.getAllPromotion(idOwner);
     }
 
     @Override
@@ -50,6 +54,7 @@ public class HomestayOwnerPromotionServiceImpl implements HomestayOwnerPromotion
         promotion.setEndDate(request.getEndDate());
         promotion.setType(request.getType());
         promotion.setValue(request.getValue());
+        promotion.setIdOwnerHomestay(homestayOwnerOwnerHomestayRepository.findById(request.getOwner()).get());
         Promotion promotion1=homestayOwnerPromotionRepository.save(promotion);
         return promotion1;
     }
