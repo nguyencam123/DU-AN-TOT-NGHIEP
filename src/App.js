@@ -21,6 +21,7 @@ import { BookingReviewHomestay } from './component/user/hotelcomponent/bookingRe
 import PartnerRegister from './component/PartnerComponent/login/partnerregister'
 import { BookingSuccess } from './component/user/hotelcomponent/bookigSucces';
 import { useEffect } from 'react';
+import { CartUser } from './component/user/cart/cart';
 
 function App() {
   //map component user
@@ -41,7 +42,8 @@ function App() {
     { path: 'homestay/booking/:id', element: <BookingHomestay /> },
     { path: 'review/booking/:id', element: <BookingReviewHomestay /> },
     { path: 'hop-tac/register', element: <PartnerRegister /> },
-    { path: 'booking/success', element: <BookingSuccess /> }
+    { path: 'booking/success', element: <BookingSuccess /> },
+    { path: 'shopingcart', element: <CartUser /> }
   ];
   useEffect(() => {
     window.scrollTo(0, 0); // Cuộn lên đầu trang khi path thay đổi
