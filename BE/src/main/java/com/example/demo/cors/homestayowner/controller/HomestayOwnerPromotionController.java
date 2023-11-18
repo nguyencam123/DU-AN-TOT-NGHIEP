@@ -18,35 +18,33 @@ public class HomestayOwnerPromotionController {
     @Autowired
     private HomestayOwnerPromotionService homestayOwnerPromotionService;
 
-    @GetMapping("")
-    public ResponseObject getPromotion() {
-        return new ResponseObject(homestayOwnerPromotionService.getPromotion());
+    @GetMapping()
+    public ResponseObject getPromotion(@RequestParam("idOwner") String idOwner) {
+        return new ResponseObject(homestayOwnerPromotionService.getPromotion(idOwner));
     }
 
     @PostMapping("/add-promotion")
     public ResponseObject addPromotion(@RequestBody HomestayOwnerPromotionRequest request) throws IOException {
-    try{
-        Promotion promotion=homestayOwnerPromotionService.addPromotion(request);
-        ResponseObject responseObject = new ResponseObject(promotion);
-        responseObject.setMessage("Thành công");
-        return responseObject;
-    } catch (
-    RestApiException ex) {
-        ResponseObject responseObject = new ResponseObject(null);
-        responseObject.setMessage("Không thành công: " + ex.getMessage());
-        return responseObject;
-    }
-    }
-
-    @PutMapping("/update-promotion")
-    public ResponseObject updatePromotion(@RequestParam("idPromotion") String id,@RequestBody HomestayOwnerPromotionRequest request) throws IOException {
-        try{
-            Promotion promotion=homestayOwnerPromotionService.updatePromotion(id,request);
+        try {
+            Promotion promotion = homestayOwnerPromotionService.addPromotion(request);
             ResponseObject responseObject = new ResponseObject(promotion);
             responseObject.setMessage("Thành công");
             return responseObject;
-        } catch (
-                RestApiException ex) {
+        } catch (RestApiException ex) {
+            ResponseObject responseObject = new ResponseObject(null);
+            responseObject.setMessage("Không thành công: " + ex.getMessage());
+            return responseObject;
+        }
+    }
+
+    @PutMapping("/update-promotion")
+    public ResponseObject updatePromotion(@RequestParam("idPromotion") String id, @RequestBody HomestayOwnerPromotionRequest request) throws IOException {
+        try {
+            Promotion promotion = homestayOwnerPromotionService.updatePromotion(id, request);
+            ResponseObject responseObject = new ResponseObject(promotion);
+            responseObject.setMessage("Thành công");
+            return responseObject;
+        } catch (RestApiException ex) {
             ResponseObject responseObject = new ResponseObject(null);
             responseObject.setMessage("Không thành công: " + ex.getMessage());
             return responseObject;
