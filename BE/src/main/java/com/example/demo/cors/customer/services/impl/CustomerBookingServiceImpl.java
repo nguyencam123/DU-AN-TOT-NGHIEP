@@ -61,7 +61,6 @@ public class CustomerBookingServiceImpl implements CustomerBookingService {
         booking.setEmail(request.getEmail());
         booking.setPhoneNumber(request.getPhoneNumber());
         booking.setHomestay(homestay);
-        booking.setPromotion(promotionRepository.findById(request.getIdPromotion()).get());
         booking.setNote(request.getNote());
         booking.setStatus(StatusBooking.THANH_CONG);
         customerBookingRepository.save(booking);
