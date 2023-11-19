@@ -13,7 +13,7 @@ public class CustomerVNPayRequest {
 
     public String vnp_Ammount;
 
-    public String vnp_OrderInfo = "Thanh toan hoa don";
+    public String vnp_OrderInfo;
 
     public String vnp_OrderType = "Thanh toan hoa don";
     
