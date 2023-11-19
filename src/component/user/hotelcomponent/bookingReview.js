@@ -20,13 +20,19 @@ export const BookingReviewHomestay = () => {
   const name = params?.get('name') || '';
   const email = params?.get('email') || '';
   const phoneNumber = params?.get('phoneNumber') || '';
+  const startDate = 1700057733825;
+  const endDate = 1700057733825;
 
   useEffect(() => {
     dispatch(getOneProduct(id));
-    dispatch(getPayment({ vnp_Ammount: detailHomestay.price + detailHomestay.price * 11 / 100 }));
+    dispatch(getPayment(booking));
   }, []);
   const dispatch = useDispatch();
   const detailHomestay = useSelector((state) => state.product.productDetails);
+  const booking = {
+    vnp_Ammount: detailHomestay.price + detailHomestay.price * 11 / 100,
+    vnp_OrderInfo: String(name + '+' + phoneNumber + ',' + email + '+' + startDate + ',' + endDate + '=' + id)
+  }
   const payment = useSelector((state) => state.product.payment)
   return (
     <>

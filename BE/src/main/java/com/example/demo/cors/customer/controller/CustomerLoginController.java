@@ -17,12 +17,12 @@ public class CustomerLoginController {
     private CustomerLoginService customerLoginService;
 
     @PostMapping("/authenticate")
-    public ResponseObject authenticate(@RequestBody CustomerUserPasswordRequest request){
+    public ResponseObject authenticate(@RequestBody CustomerUserPasswordRequest request) {
         return new ResponseObject(customerLoginService.CustomerAuthenticate(request));
     }
 
     @PostMapping("/registers")
-    public ResponseObject registers(@RequestBody CustomerRequest request){
+    public ResponseObject registers(@RequestBody CustomerRequest request) {
         return new ResponseObject(customerLoginService.CustomerRegister(request));
     }
 
