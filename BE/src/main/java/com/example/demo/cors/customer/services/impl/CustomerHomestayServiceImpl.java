@@ -42,7 +42,7 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
         List<DetailHomestay> lists = new ArrayList<>();
         List<String> homestayIdList = new ArrayList<>();
         List<DetailHomestay> detailHomestayList = customerDetailHomestayRepository.findAll();
-        if (convenientHomestayList == null) {
+        if (convenientHomestayList == null || convenientHomestayList.isEmpty()) {
             return null;
         } else {
             for (DetailHomestay detailHomestay : detailHomestayList) {
