@@ -99,3 +99,4 @@ export const logoutUser = () => (dispatch) => {
   dispatch(logout());
   localStorage.removeItem('userDetail');
 };
+

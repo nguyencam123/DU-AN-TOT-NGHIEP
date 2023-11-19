@@ -32,7 +32,8 @@ const HeaderUser = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
     const navigate = useNavigate()
-    const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const idUser = useSelector((state) => state.user?.userData?.data.id);
     const dispatch = useDispatch()
 
     const [searchVisible, setSearchVisible] = useState(false);
@@ -72,10 +73,13 @@ const HeaderUser = () => {
         } else {
             setShowDropdown(!showDropdown); // Toggle the dropdown if logged in
         }
-    };
-    const logout = () => {
-        dispatch(logoutUser())
-        navigate('/login')
+  };
+  const logout = () => {
+    dispatch(logoutUser())
+    navigate('/login')
+}
+    const booking = () => {
+        navigate(`/booking/${idUser}`)
   }
   const cart = () => {
     navigate('/shopingcart')
@@ -107,9 +111,6 @@ const HeaderUser = () => {
                             </Link>
                             <Link to={"/hop-tac"} className="textnabar">
                                 <strong>Hợp tác với chúng tôi</strong>
-                            </Link>
-                            <Link to={"/booking/success"} className="textnabar">
-                                <strong>bookigSucces</strong>
                             </Link>
                         </Nav>
                         <div className="headercart">
@@ -155,7 +156,7 @@ const HeaderUser = () => {
                                         <button type="button" className="btn btn-primary" style={{ color: 'black' }} onClick={logout}>
                                             <UserOutlined /> Đăng xuất
                                         </button>
-                                        <button type="button" className="btn btn-primary" style={{ color: 'black' }} onClick={logout}>
+                                        <button type="button" className="btn btn-primary" style={{ color: 'black' }} onClick={booking}>
                                             <FileDoneOutlined /> Đơn đặt hàng
                                         </button>
                                         <button type="button" className="btn btn-primary" style={{ color: 'black' }} onClick={cart}>

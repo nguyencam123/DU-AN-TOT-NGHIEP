@@ -13,6 +13,7 @@ export const BookingSuccess = () => {
   const handleReturn = () => {
     navigate('/')
   }
+
   const info = urlParams.get('vnp_OrderInfo');
   const name = info?.substring(0, info.indexOf('+'));
   const phoneNumber = info?.substring(info.indexOf('+') + 1, info.indexOf(','));
@@ -32,10 +33,12 @@ export const BookingSuccess = () => {
     phoneNumber: phoneNumber,
     homestayId: homestayId
   }
-
   useEffect(() => {
     dispatch(addBooking(booking));
   }, []);
+  const handleBooking = () => {
+    navigate(`/booking/${userId}}`)
+  }
   return (
     <>
       <Content
@@ -54,7 +57,7 @@ export const BookingSuccess = () => {
           </Row>
             <Row style={{marginLeft:'100px',marginBottom:'20px'}}>
               <div style={{fontSize:'20px'}}>
-                Bạn có thể xem chi tiết booking trong <a style={{color:'blue'}}>đơn hàng của tôi</a>
+                Bạn có thể xem chi tiết booking trong <a style={{color:'blue'}} onClick={handleBooking}>đơn hàng của tôi</a>
               </div>
             </Row>
             <Row style={{marginLeft:'180px', marginBottom:'30px'}}>

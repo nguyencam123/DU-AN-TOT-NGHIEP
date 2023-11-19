@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { instance } from '../../app/axiosConfig';
 import { fetchProductsFailure } from '../product/productSlide';
 import { denineProducts } from '../product/productThunk';
@@ -70,6 +71,14 @@ export const getBookingByNameHomestay = (name) => async (dispatch) => {
     const response = await instance.get('http://localhost:8080/api/v3/booking?size=99&homestayName=' + name);
     dispatch(fetchBookingSuccess(response.data.data.data)); // Lấy dữ liệu từ response.data.data
 
+  } catch (error) {
+    dispatch(addConvenientFailed(error.message));
+  }
+};
+export const fetchBookingUserId = (id) => async (dispatch) => {
+  try {
+    const response = await axios.get(`http://localhost:8080/api/v1/booking?userId=${id}`);
+    dispatch(fetchBookingSuccess(response.data.data.data)); // Lấy dữ liệu từ response.data.data
   } catch (error) {
     dispatch(addConvenientFailed(error.message));
   }

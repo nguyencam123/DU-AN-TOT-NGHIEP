@@ -1,5 +1,6 @@
 import { fetchBookingsStart, fetchBookingsSuccess, fetchBookingsFailure } from './bookingSlice';
 import { instance } from '../../../app/axiosConfig';
+import axios from 'axios';
 
 const BASE_URL = '/api/v2/booking';
 
