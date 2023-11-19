@@ -20,4 +20,6 @@ public class HomestayOwnerPromotionRequest {
 
     private Double value;
 
+    private String owner;
+
 }
