@@ -36,7 +36,7 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
     @Query(value = """
             SELECT\s
             COUNT(a.id) AS 'DoanhSo',\s
-            SUM(a.total_price) AS 'TongSoTien'\s
+            ((SUM(a.total_price))-((Sum(a.total_price)) * 11/100)) AS 'TongSoTien'\s
             FROM\s
             booking a\s
             inner join homestay b on a.homestay_id=b.id

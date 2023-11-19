@@ -10,4 +10,6 @@ public interface CustomerBookingService {
 
     Booking createBooking(CustomerBookingRequest request);
 
+    Booking cancel(String id, CustomerBookingRequest request);
+
 }

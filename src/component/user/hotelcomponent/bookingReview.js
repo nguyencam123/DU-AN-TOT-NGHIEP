@@ -29,9 +29,10 @@ export const BookingReviewHomestay = () => {
   }, []);
   const dispatch = useDispatch();
   const detailHomestay = useSelector((state) => state.product.productDetails);
+  const user = useSelector((state) => state.user.userData)
   const booking = {
     vnp_Ammount: detailHomestay.price + detailHomestay.price * 11 / 100,
-    vnp_OrderInfo: String(name + '+' + phoneNumber + ',' + email + '+' + startDate + ',' + endDate + '=' + id)
+    vnp_OrderInfo: String(name + '+' + phoneNumber + ',' + email + '+' + startDate + ',' + endDate + '=' + id + '=' + user?.data.id)
   }
   const payment = useSelector((state) => state.product.payment)
   return (

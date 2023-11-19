@@ -13,16 +13,17 @@ export const BookingSuccess = () => {
   const handleReturn = () => {
     navigate('/')
   }
-  const user = useSelector(state => state.user.user);
   const info = urlParams.get('vnp_OrderInfo');
   const name = info?.substring(0, info.indexOf('+'));
   const phoneNumber = info?.substring(info.indexOf('+') + 1, info.indexOf(','));
   const email = info?.substring(info.indexOf(',') + 1, info.lastIndexOf('+'));
   const startDate = info?.substring(info.lastIndexOf('+') + 1, info.lastIndexOf(','));
   const endDate = info?.substring(info.lastIndexOf(',') + 1, info.indexOf('='));
-  const homestayId = info?.substring(info.lastIndexOf('=') + 1);
+  const homestayId = info?.substring(info.indexOf('=') + 1, info.lastIndexOf('='));
+  const userId = info?.substring(info.lastIndexOf('=') + 1);
+  console.log(info);
   const booking = {
-    userId: '74ff3314-91bf-49c5-961a-644e83beb359',
+    userId: userId,
     totalPrice: urlParams.get('vnp_Amount'),
     startDate: startDate,
     endDate: endDate,
