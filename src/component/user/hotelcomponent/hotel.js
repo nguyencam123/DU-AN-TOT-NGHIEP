@@ -9,7 +9,8 @@ import {
   UsergroupAddOutlined,
   PayCircleOutlined,
   CompassOutlined,
-  ShopOutlined
+  ShopOutlined,
+  InsertRowRightOutlined
 } from "@ant-design/icons";
 import {
   MDBInputGroup,
@@ -22,58 +23,37 @@ import 'dayjs/locale/vi';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProducts, getProducts } from "../../../features/product/productThunk";
 import { useNavigate } from "react-router-dom";
+import { fetchSearchProducts, getAllConvinentHomestay } from "../../../features/product/searchProductThunk";
+import moment from 'moment';
+import { fetchConvenientsSuccess } from "../../../features/product/productSlide";
 dayjs.locale('vi');
 const { Title } = Typography;
 const { Header, Footer, Sider, Content } = Layout;
 
 
 
-const text = <section>
-  <div style={{ justifyContent: 'space-between', display: 'flex', fontSize: 18 }}>
-    <div style={{ display: 'flex' }}><UserOutlined style={{ marginTop: 4 }} />&ensp;số lượng người</div><div><Input style={{ width: 40, height: 40 }} defaultValue={1} /></div>
-  </div>
-</section>;
-const utilities = <div style={{ width: '100%', height: '30%', backgroundColor: 'white', borderRadius: 10, padding: '5px 5px 5px' }}>
-  <div>
-    <Checkbox>Wifi</Checkbox><br />
-    <Checkbox>Hồ bơi</Checkbox><br />
-    <Checkbox>Chỗ để xe</Checkbox><br />
-    <Checkbox>Lễ tân 24/24</Checkbox><br />
-    <Checkbox>Thang máy</Checkbox><br />
-    <Checkbox>Phòng họp</Checkbox>
-  </div>
-</div>
-const items = [
-  {
-    key: '1',
-    label: 'Bạn hãy chọn số lượng người',
-    children: <p>{text}</p>,
-  }
-];
-const itemsutilities = [
-  {
-    key: '2',
-    label: 'Tiện nghi',
-    children: <p>{utilities}</p>,
-  }
-]
+
+
 
 const Hotel = () => {
   const products = useSelector((state) => state.product.products);
+  const convenient = useSelector((state) => state.product.convenient);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  let checkOutDate
   const handleDetailHomestay = (id) => {
     navigate(`/homestay/detail/${id}`);
   }
   useEffect(() => {
     dispatch(getProducts());
+    dispatch(getAllConvinentHomestay());
   }, []);
   const onChange = (key) => {
-    console.log(key);
-  };
-  const [checkInDate, setCheckInDate] = useState(null);
-  const [numNights, setNumNights] = useState(1);
 
+  };
+  const today = dayjs();
+  const [checkInDate, setCheckInDate] = useState(today);
+  const [numNights, setNumNights] = useState(1);
   const handleCheckInChange = (date) => {
     setCheckInDate(date);
   };
@@ -109,7 +89,7 @@ const Hotel = () => {
   }
   const calculateCheckOutDate = () => {
     if (checkInDate) {
-      const checkOutDate = dayjs(checkInDate).add(numNights, 'day');
+      checkOutDate = dayjs(checkInDate).add(numNights, 'day');
       return checkOutDate.format('dddd, DD [tháng] MM [năm] YYYY');
     }
     return '';
@@ -137,7 +117,48 @@ const Hotel = () => {
   const handleresetinput = () => {
     setRangeValue(initialValue);
   }
-  console.log(products)
+  const [nameOrAddress, setNameOrAddress] = useState('')
+  const [numberPerson, setNumberPerson] = useState(0)
+  const [startDate, setStartDate] = useState(1414231414)
+  const [enDate, setEnDate] = useState(181245435)
+  const [priceMin, setPriceMin] = useState(0)
+  const [roomNumber, setRoomNumber] = useState(0)
+  const [convenientvir, setconvenient] = useState('')
+  const [convenientHomestayList, setConvenientHomestayList] = useState('')
+  const onChangeConvenients = (checkedValues) => {
+    setconvenient(checkedValues.join(','))
+  };
+  const handleSearch = () => {
+    dispatch(fetchSearchProducts(moment(checkInDate).valueOf(), moment(checkOutDate).valueOf(), nameOrAddress, numberPerson, roomNumber, rangeValue[0], rangeValue[1], convenientvir))
+  }
+
+  const text = <section>
+    <div style={{ justifyContent: 'space-between', display: 'flex', fontSize: 18 }}>
+      <div style={{ display: 'flex' }}><UserOutlined style={{ marginBottom: 10 }} />&ensp;số lượng người</div><div><Input style={{ width: 100, height: 40 }} defaultValue={1} onChange={(e) => setNumberPerson(e.target.value)} /></div>
+      <div style={{ display: 'flex' }}><InsertRowRightOutlined style={{ marginBottom: 10 }} />&ensp;số lượng phòng</div><div><Input style={{ width: 100, height: 40 }} defaultValue={1} onChange={(e) => setRoomNumber(e.target.value)} /></div>
+    </div>
+  </section>;
+  const utilities = <div style={{ width: '100%', height: '30%', backgroundColor: 'white', borderRadius: 10, padding: '5px 5px 5px' }}>
+    <div>
+      <div>
+        <Checkbox.Group options={convenient.map(item => ({ label: item.name, value: item.id }))} onChange={onChangeConvenients} />
+      </div>
+    </div>
+  </div>
+  const items = [
+    {
+      key: '1',
+      label: 'Bạn hãy chọn số lượng người',
+      children: <p>{text}</p>,
+    }
+  ];
+  const itemsutilities = [
+    {
+      key: '2',
+      label: 'Tiện nghi',
+      children: <p>{utilities}</p>,
+    }
+  ]
   return (
     <>
       <section style={{
@@ -163,7 +184,7 @@ const Hotel = () => {
             <hr />
             <div><h5 style={{ fontSize: 16 }}>Thành phố đia điểm hoặc tên khách sạn</h5>
               <MDBInputGroup className='mb-3' size='lg' noBorder textBefore={<MDBIcon fas icon='search' />}>
-                <input className='form-control' type='text' placeholder='Search' />
+                <input className='form-control' type='text' placeholder='Search' defaultValue={'Hà Nội'} onChange={(e) => setNameOrAddress(e.target.value)} />
               </MDBInputGroup>
               <div>
                 <div style={{ display: 'flex' }}>
@@ -176,6 +197,7 @@ const Hotel = () => {
                     format="YYYY-MM-DD"
                     disabledDate={disabledDate}
                     disabledTime={disabledDateTime}
+                    defaultValue={today}
                     size="lg"
                     style={{ width: 300, height: 40 }}
                     onChange={handleCheckInChange}
@@ -197,7 +219,7 @@ const Hotel = () => {
                 <h5 style={{ fontSize: 16 }}>Khách vào phòng</h5>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Collapse items={items} onChange={onChange} style={{ width: '70%', height: 40 }} />
-                  <Button style={{ height: 40, width: '25%', fontSize: 18 }}><SearchOutlined />Tìm khách sạn</Button>
+                  <Button style={{ height: 40, width: '25%', fontSize: 18 }} onClick={handleSearch}><SearchOutlined />Tìm khách sạn</Button>
                 </div>
               </div><br />
               <div style={{ color: '#0194f3', fontSize: 18, display: 'flex', float: 'right' }}>
@@ -235,16 +257,6 @@ const Hotel = () => {
                   step={20000}
                   onChange={handleSliderChange}
                 />
-              </div>
-            </div><br />
-            <div style={{ width: '100%', height: '200px', backgroundColor: 'white', borderRadius: 10, padding: '5px 5px 5px' }}>
-              <div>
-                <Title level={2} style={{ fontSize: 16 }}>Hạng sao</Title>
-                <Checkbox><Rate allowHalf disabled defaultValue={1} /></Checkbox>
-                <Checkbox><Rate allowHalf disabled defaultValue={2} /></Checkbox>
-                <Checkbox><Rate allowHalf disabled defaultValue={3} /></Checkbox>
-                <Checkbox><Rate allowHalf disabled defaultValue={4} /></Checkbox>
-                <Checkbox><Rate allowHalf disabled defaultValue={5} /></Checkbox>
               </div>
             </div><br />
             <Collapse items={itemsutilities} size="small" defaultActiveKey={['2']} onChange={onChange} />

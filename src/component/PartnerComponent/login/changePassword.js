@@ -64,13 +64,11 @@ const ChangePassword = () => {
     const formData = {
         username: userDetail?.data.username,
         birthday: 1234567890,
-        name: name,
-        gender: gender,
-        address: address,
-        phoneNumber: phoneNumber,
-        email: email,
-        identificationNumber: identificationNumber,
-        point: 9
+        name: userDetail?.data.name,
+        gender: userDetail?.data.gender,
+        address: userDetail?.data.address,
+        phoneNumber: userDetail?.data.phoneNumber,
+        email: userDetail?.data.email
     }
     const handleSubmitchange = async (e) => {
         console.log(formChangePass)
@@ -130,37 +128,11 @@ const ChangePassword = () => {
                             />
                         </MDBCol>
                     </MDBRow>
-                    <MDBInput wrapperClass='mb-4' required label='Email' id='email' type='email' defaultValue={userDetail?.data.email}
-                        onChange={(e) => setemail(e.target.value)} />
-                    <MDBInput wrapperClass='mb-4' label='Số điện thoại' id='phoneNumber' type='number' required defaultValue={userDetail?.data.phoneNumber}
-                        onChange={(e) => setphoneNumber(e.target.value)} />
-                    <MDBInput wrapperClass='mb-4' label='Số căn cước công dân' id='identificationNumber' type='number' required defaultValue={userDetail?.data.identificationNumber}
-                        onChange={(e) => setidentificationNumber(e.target.value)} />
-                    <MDBRow>
-                        <MDBCol col='6'>
-                            Giới tính &emsp;&emsp;
-                            <label>
-                                <input
-                                    type="radio"
-                                    name="gender"
-                                    value={true}
-                                    defaultChecked={true}
-                                />
-                                Nam
-                            </label>
-                            &emsp;
-                            <label>
-                                <input
-                                    type="radio"
-                                    name="gender"
-                                    value={false}
-                                />
-                                Nữ
-                            </label>
-                        </MDBCol>
-                    </MDBRow>
-                    <input type='file' accept="image/*" onChange={handleFileChange} />
-                    <MDBBtn type="submit" className='w-100 mb-4' size='md' style={{ marginTop: 10 }}>Lưu</MDBBtn>
+                    <div style={{ width: '100%' }}><span style={{ width: 150 }}>Email:</span><span>{userDetail?.data.email}</span></div><br />
+                    <div style={{ width: '100%' }}><span style={{ width: 150 }}>Số điện thoại :</span><span>{userDetail?.data.phoneNumber}</span></div><br />
+                    <div style={{ width: '100%' }}><span style={{ width: 150 }}>GIới tính :</span><span>{userDetail?.data.gender == true ? 'nam' : 'nữ'}</span></div><br />
+                    {/* <input type='file' accept="image/*" onChange={handleFileChange} /> */}
+                    <MDBBtn type="submit" className='w-100 mb-4' size='md' style={{ marginTop: 10 }} onClick={handleSubmit}>Lưu</MDBBtn>
                 </form>
             </div>,
         },
@@ -174,7 +146,7 @@ const ChangePassword = () => {
                     onChange={(e) => setnewpassword(e.target.value)} />
                 <MDBInput wrapperClass='mb-4' label='Xác nhận mật khẩu' id='confirmpassword' type='password' required
                     onChange={(e) => setconfirmpassword(e.target.value)} />
-                <MDBBtn type="submit" className='w-100 mb-4' size='md' style={{ marginTop: 10 }} onClick={handleSubmitchange}>Đổi mật khẩu</MDBBtn>
+                <MDBBtn className='w-100 mb-4' size='md' style={{ marginTop: 10 }} onClick={handleSubmitchange}>Đổi mật khẩu</MDBBtn>
             </form>,
         },
         {
