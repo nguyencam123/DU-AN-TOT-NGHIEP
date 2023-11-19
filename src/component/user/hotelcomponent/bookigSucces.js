@@ -1,15 +1,40 @@
 import { CheckCircleOutlined, CheckCircleTwoTone } from "@ant-design/icons"
 import { Breadcrumb, Button, Col, Row } from "antd"
 import { Content, Footer } from "antd/es/layout/layout"
-import { useNavigate } from "react-router-dom"
+import { useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { useNavigate, useParams } from "react-router-dom"
+import { addBooking } from "../../../features/product/productThunk"
 
 export const BookingSuccess = () => {
-
+  const dispatch = useDispatch();
+  const urlParams = new URLSearchParams(window.location.search)
   const navigate = useNavigate();
   const handleReturn = () => {
     navigate('/')
   }
+  const user = useSelector(state => state.user.user);
+  const info = urlParams.get('vnp_OrderInfo');
+  const name = info?.substring(0, info.indexOf('+'));
+  const phoneNumber = info?.substring(info.indexOf('+') + 1, info.indexOf(','));
+  const email = info?.substring(info.indexOf(',') + 1, info.lastIndexOf('+'));
+  const startDate = info?.substring(info.lastIndexOf('+') + 1, info.lastIndexOf(','));
+  const endDate = info?.substring(info.lastIndexOf(',') + 1, info.indexOf('='));
+  const homestayId = info?.substring(info.lastIndexOf('=') + 1);
+  const booking = {
+    userId: '74ff3314-91bf-49c5-961a-644e83beb359',
+    totalPrice: urlParams.get('vnp_Amount'),
+    startDate: startDate,
+    endDate: endDate,
+    name: name,
+    email: email,
+    phoneNumber: phoneNumber,
+    homestayId: homestayId
+  }
 
+  useEffect(() => {
+    dispatch(addBooking(booking));
+  }, []);
   return (
     <>
       <Content

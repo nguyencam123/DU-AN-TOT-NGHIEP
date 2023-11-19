@@ -74,6 +74,16 @@ export const getPayment = (price) => async (dispatch) => {
   }
 };
 
+export const addBooking = (booking) => async (dispatch) => {
+  try {
+    const response = await axios.post('http://localhost:8080/api/v1/booking/create', booking);
+    dispatch(getPaymentSuccess(response.data.data)); // Lấy dữ liệu từ response.data.data
+    // console.log(response.data.data);
+  } catch (error) {
+    dispatch(fetchProductsFailure(error.message));
+  }
+};
+
 export const getAllHomestay = () => async (dispatch) => {
   dispatch(fetchProductsStart());
   try {

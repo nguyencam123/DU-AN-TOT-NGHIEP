@@ -96,7 +96,7 @@ export const BookingHomestay = () => {
                   </Form.Group>
                   <Form.Group className="mb-3" controlId="formBasicPassword">
                     <Form.Label style={{ fontWeight: '700' }}>Email</Form.Label>
-                    <Form.Control type="email" placeholder="Email" onChange={(e) => onChangeEmail(e)} />
+                    <Form.Control type="text" placeholder="Email" onChange={(e) => onChangeEmail(e)} />
                     <Form.Text className="text-muted">
                       VD: email@example.com
                     </Form.Text>

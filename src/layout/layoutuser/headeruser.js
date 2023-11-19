@@ -108,6 +108,9 @@ const HeaderUser = () => {
                             <Link to={"/hop-tac"} className="textnabar">
                                 <strong>Hợp tác với chúng tôi</strong>
                             </Link>
+                            <Link to={"/booking/success"} className="textnabar">
+                                <strong>bookigSucces</strong>
+                            </Link>
                         </Nav>
                         <div className="headercart">
                             <div className="cartAndPerson" style={{ display: "flex" }}>
