@@ -129,14 +129,21 @@ const HomeStayProduct = () => {
     {
       title: 'Giá homestay',
       dataIndex: 'price',
-      key: 'price'
+      key: 'price',
     },
     {
       title: 'Trạng thái của homestay',
       dataIndex: 'status',
       key: 'status',
       render(str) {
-        return str === 'CHO_DUYET' ? 'Chờ duyệt' : 'Ngừng hoạt động'
+        if (str === 'CHO_DUYET') {
+          return 'Chờ duyệt'
+        }
+        else if (str === 'HOAT_DONG') {
+          return 'Hoạt động'
+        } else {
+          return 'Ngừng hoạt động'
+        }
       }
     },
     {
@@ -397,7 +404,7 @@ const HomeStayProduct = () => {
 
   return (
     <>
-      <Title>Quản lý Homestay</Title>
+      <Title style={{ marginTop: '20px' }}>Quản lý Homestay</Title>
       <div style={{ marginBottom: 20, float: 'right' }}>
         <Button type="primary" onClick={showModal}>
           Thêm mới HomeStay

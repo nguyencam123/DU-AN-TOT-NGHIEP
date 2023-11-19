@@ -123,7 +123,7 @@ const Booking = () => {
         }
     ]
     return (
-        <div style={{ marginTop: '30px' }}>
+        <div style={{ marginTop: '20px' }}>
             <Title level={2}>Quản trị booking</Title>
             <Title level={4}>Danh mục</Title>
             <Row>
