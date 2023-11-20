@@ -1,15 +1,44 @@
 import { CheckCircleOutlined, CheckCircleTwoTone } from "@ant-design/icons"
 import { Breadcrumb, Button, Col, Row } from "antd"
 import { Content, Footer } from "antd/es/layout/layout"
-import { useNavigate } from "react-router-dom"
+import { useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { useNavigate, useParams } from "react-router-dom"
+import { addBooking } from "../../../features/product/productThunk"
 
 export const BookingSuccess = () => {
-
+  const dispatch = useDispatch();
+  const urlParams = new URLSearchParams(window.location.search)
   const navigate = useNavigate();
   const handleReturn = () => {
     navigate('/')
   }
 
+  const info = urlParams.get('vnp_OrderInfo');
+  const name = info?.substring(0, info.indexOf('+'));
+  const phoneNumber = info?.substring(info.indexOf('+') + 1, info.indexOf(','));
+  const email = info?.substring(info.indexOf(',') + 1, info.lastIndexOf('+'));
+  const startDate = info?.substring(info.lastIndexOf('+') + 1, info.lastIndexOf(','));
+  const endDate = info?.substring(info.lastIndexOf(',') + 1, info.indexOf('='));
+  const homestayId = info?.substring(info.indexOf('=') + 1, info.lastIndexOf('='));
+  const userId = info?.substring(info.lastIndexOf('=') + 1);
+  console.log(info);
+  const booking = {
+    userId: userId,
+    totalPrice: urlParams.get('vnp_Amount'),
+    startDate: startDate,
+    endDate: endDate,
+    name: name,
+    email: email,
+    phoneNumber: phoneNumber,
+    homestayId: homestayId
+  }
+  useEffect(() => {
+    dispatch(addBooking(booking));
+  }, []);
+  const handleBooking = () => {
+    navigate(`/booking/${userId}}`)
+  }
   return (
     <>
       <Content
@@ -28,7 +57,7 @@ export const BookingSuccess = () => {
           </Row>
             <Row style={{marginLeft:'100px',marginBottom:'20px'}}>
               <div style={{fontSize:'20px'}}>
-                Bạn có thể xem chi tiết booking trong <a style={{color:'blue'}}>đơn hàng của tôi</a>
+                Bạn có thể xem chi tiết booking trong <a style={{color:'blue'}} onClick={handleBooking}>đơn hàng của tôi</a>
               </div>
             </Row>
             <Row style={{marginLeft:'180px', marginBottom:'30px'}}>

@@ -4,12 +4,16 @@ import {
   DesktopOutlined,
   FileOutlined,
   PieChartOutlined,
-  TeamOutlined,
+  PayCircleOutlined,
   UserOutlined,
+  AreaChartOutlined
 } from '@ant-design/icons';
-import { Link, Route, Routes } from 'react-router-dom'; // Import thư viện Link và Route
+import { Link, Route, Routes, useNavigate } from 'react-router-dom'; // Import thư viện Link và Route
 import HomeStayProduct from '../../component/PartnerComponent/page/homestayProduct';
 import HomeStayAdd from '../../component/PartnerComponent/page/homestayAdd';
+import ChangePassword from '../../component/PartnerComponent/login/changePassword';
+import Booking from '../../component/PartnerComponent/booking/booking'
+import StatisticalHomestay from '../../component/PartnerComponent/page/statisticalHomestay'
 const { Header, Content, Sider } = Layout;
 
 
@@ -23,14 +27,15 @@ function getItem(label, key, icon, route) {
 }
 
 const items = [
-  { label: 'Homestay', key: '1', icon: <PieChartOutlined />, route: 'partner/homestay', component: <HomeStayProduct /> },
-  { label: 'Đặt phòng', key: '2', icon: <DesktopOutlined />, route: 'partner/statistical', component: <HomeStayProduct /> },
-  { label: 'Thống kê', key: '4', icon: <DesktopOutlined />, route: 'partner/categor', component: <HomeStayProduct /> }
-
+  { label: 'Quản lý Homestay', key: '1', icon: <PieChartOutlined />, route: 'partner/homestay', component: <HomeStayProduct /> },
+  { label: 'Quản lý đặt phòng', key: '2', icon: <PayCircleOutlined />, route: 'partner/booking', component: <Booking /> },
+  { label: 'Quản lý thống kê', key: '3', icon: <AreaChartOutlined />, route: 'partner/statistical', component: <StatisticalHomestay /> },
+  { label: 'Quản lý khuyến mại', key: '4', icon: <DesktopOutlined />, route: 'partner/categor', component: <HomeStayProduct /> },
+  { label: 'Quản lý tài khoản', key: '5', icon: <UserOutlined />, route: 'partner/managementAccount', component: <ChangePassword /> }
 ];
 
-
 const Siderpartner = () => {
+
   return (
     <Content
       style={{

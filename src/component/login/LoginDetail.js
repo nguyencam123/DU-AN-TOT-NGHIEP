@@ -1,13 +1,15 @@
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { Avatar, Tabs, Typography } from 'antd'
 import { UserOutlined, FileProtectOutlined, LogoutOutlined, BellOutlined } from '@ant-design/icons'
 import { useState } from "react";
 import { MDBBtn, MDBCol, MDBInput, MDBRow } from "mdb-react-ui-kit";
 import moment from 'moment';
-
+import { useNavigate } from "react-router-dom";
+import { logoutUser } from "../../features/user/userThunk";
 const { Title } = Typography;
 const { TabPane } = Tabs;
 const LoginDetail = () => {
+    const navigate = useNavigate()
     const userDetail = JSON.parse(localStorage.getItem('userDetail'));
     const namelocal = userDetail?.data.name;
     const [name, setname] = useState('')
@@ -30,6 +32,11 @@ const LoginDetail = () => {
         email: email,
         identificationNumber: identificationNumber,
         point: 9
+    }
+    const dispatch = useDispatch()
+    const logout = () => {
+        dispatch(logoutUser())
+        navigate('/login')
     }
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -83,7 +90,7 @@ const LoginDetail = () => {
                                     id='name'
                                     type='text'
                                     onChange={(e) => setname(e.target.value)}
-                                    value={namelocal}
+                                    defaultValue={namelocal}
                                     required
                                 />
                             </MDBCol>
@@ -94,16 +101,16 @@ const LoginDetail = () => {
                                     id='address'
                                     type='text'
                                     required
-                                    value={userDetail?.data.address}
+                                    defaultValue={userDetail?.data.address}
                                     onChange={(e) => setaddress(e.target.value)}
                                 />
                             </MDBCol>
                         </MDBRow>
-                        <MDBInput wrapperClass='mb-4' required label='Email' id='email' type='email' value={userDetail?.data.email}
+                        <MDBInput wrapperClass='mb-4' required label='Email' id='email' type='email' defaultValue={userDetail?.data.email}
                             onChange={(e) => setemail(e.target.value)} />
-                        <MDBInput wrapperClass='mb-4' label='Số điện thoại' id='phoneNumber' type='number' required value={userDetail?.data.phoneNumber}
+                        <MDBInput wrapperClass='mb-4' label='Số điện thoại' id='phoneNumber' type='number' required defaultValue={userDetail?.data.phoneNumber}
                             onChange={(e) => setphoneNumber(e.target.value)} />
-                        <MDBInput wrapperClass='mb-4' label='Số căn cước công dân' id='identificationNumber' type='number' required value={userDetail?.data.identificationNumber}
+                        <MDBInput wrapperClass='mb-4' label='Số căn cước công dân' id='identificationNumber' type='number' required defaultValue={userDetail?.data.identificationNumber}
                             onChange={(e) => setidentificationNumber(e.target.value)} />
                         <MDBRow>
                             <MDBCol col='6'>
@@ -165,7 +172,9 @@ const LoginDetail = () => {
         {
             key: '4',
             label: <div style={{ display: 'flex' }}><LogoutOutlined style={{ fontSize: 25 }} /><Title level={5} style={{ marginTop: 2 }}>Đăng xuất</Title></div>,
-            children: 'Content of Tab Pane 4',
+            children: <button type="button" className="btn btn-primary" style={{ color: 'black' }} onClick={logout}>
+                <UserOutlined /> Đăng xuất
+            </button>,
         }
     ];
     const handleTabChange = (key) => {

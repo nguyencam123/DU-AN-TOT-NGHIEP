@@ -26,10 +26,6 @@ public class CustomerRequest {
 
     private String password;
 
-    private String identificationNumber;
-
-    private Integer point;
-
     private Status status;
 
 }

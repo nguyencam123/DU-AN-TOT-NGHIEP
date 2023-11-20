@@ -6,4 +6,15 @@ import lombok.*;
 @Getter
 @Setter
 public class HomestayOwnerBookingRequest extends PageableRequest {
+
+    String userName;
+
+    String homestayName;
+
+    String sdtUser;
+
+    String nameBooking;
+
+    Integer statusBooking;
+
 }

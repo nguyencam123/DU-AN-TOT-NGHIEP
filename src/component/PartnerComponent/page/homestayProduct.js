@@ -93,6 +93,7 @@ const HomeStayProduct = () => {
     setviewEditConvennient(record.detailHomestays)
     setcancellationPolicy(record.cancellationPolicy)
     setacreage(record.acreage)
+    setroomNumber(record.roomNumber)
   }
   const showModal = () => {
     setIsModalOpen(true);
@@ -116,24 +117,34 @@ const HomeStayProduct = () => {
   }
   const columns = [
     {
-      title: 'Name',
+      title: 'Tên homestay',
       dataIndex: 'name',
       key: 'name'
     },
     {
-      title: 'Address',
+      title: 'Địa chỉ homestay',
       dataIndex: 'address',
       key: 'address'
     },
     {
-      title: 'Price',
+      title: 'Giá homestay',
       dataIndex: 'price',
-      key: 'price'
+      key: 'price',
     },
     {
-      title: 'Status',
+      title: 'Trạng thái của homestay',
       dataIndex: 'status',
-      key: 'status'
+      key: 'status',
+      render(str) {
+        if (str === 'CHO_DUYET') {
+          return 'Chờ duyệt'
+        }
+        else if (str === 'HOAT_DONG') {
+          return 'Hoạt động'
+        } else {
+          return 'Ngừng hoạt động'
+        }
+      }
     },
     {
       title: 'Action',
@@ -207,7 +218,7 @@ const HomeStayProduct = () => {
   const [image, setIamge] = useState([]);
   //getuserid
   const userDetail = JSON.parse(localStorage.getItem('userDetail'));
-  const UserID = userDetail.data.id;
+  const UserID = userDetail?.data.id;
   //
   const parsedAcreage = parseFloat(acreage).toFixed(2);
   const homestay = {
@@ -233,7 +244,6 @@ const HomeStayProduct = () => {
       .typeError('Vui lòng nhập giá sản phẩm')
       .positive('Giá phải là số dương'),
     file: Yup.array()
-      .required('Vui lòng chọn ít nhất một hình ảnh')
       .min(5, 'Ít nhất 5 hình ảnh phải được chọn')
       .max(20, 'Không được chọn quá 20 hình ảnh'),
     numberPerson: Yup.number()
@@ -325,6 +335,8 @@ const HomeStayProduct = () => {
     setacreage(record.acreage)
     settimeCheckIn(record.timeCheckIn)
     settimeCheckOut(record.timeCheckOut)
+    setconvenient(record.detailHomestays)
+    // 
     setFormErrors({});
 
     const addressParts = record.address.split(", ");
@@ -392,7 +404,7 @@ const HomeStayProduct = () => {
 
   return (
     <>
-      <Title>Quản lý Homestay</Title>
+      <Title style={{ marginTop: '20px' }}>Quản lý Homestay</Title>
       <div style={{ marginBottom: 20, float: 'right' }}>
         <Button type="primary" onClick={showModal}>
           Thêm mới HomeStay

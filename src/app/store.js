@@ -9,8 +9,8 @@ import { AuthMiddleware } from './authMiddleware';
 import categoryReducer from '../features/category/categorySlides'
 import provinceReducer from '../features/owner_homestay/region/provinceSlice'
 import adminReducer from '../features/admin/adminSlice'
-
-
+import bookingReducer from '../features/owner_homestay/getbooking/bookingSlice'
+import statisticalReducer from '../features/owner_homestay/statistical/statisticalSlice'
 
 export const store = configureStore({
   reducer: {
@@ -21,7 +21,9 @@ export const store = configureStore({
     ownerHomestay: ownerHomestayReducer,
     convenient: convenientReducer,
     province: provinceReducer,
-    admin: adminReducer
+    admin: adminReducer,
+    booking: bookingReducer,
+    statistical: statisticalReducer
   },
   middleware: (getDefaultMiddleware) => [...getDefaultMiddleware()],
 });

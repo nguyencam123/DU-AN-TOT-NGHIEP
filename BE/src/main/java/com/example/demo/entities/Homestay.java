@@ -5,13 +5,19 @@ import com.example.demo.infrastructure.contant.EntityProperties;
 import com.example.demo.infrastructure.contant.Status;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -63,11 +69,11 @@ public class Homestay extends PrimaryEntity {
 
     private Integer numberPerson;
 
-    @OneToMany(mappedBy = "homestay", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "homestay", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<ImgHomestay> images;
 
-    @OneToMany(mappedBy = "homestay", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "homestay", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<DetailHomestay> detailHomestays;
 

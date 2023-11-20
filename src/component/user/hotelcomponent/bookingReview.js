@@ -3,22 +3,38 @@ import React, { useEffect } from 'react';
 import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progress, Space } from 'antd';
 import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, InfoCircleTwoTone, StarTwoTone } from '@ant-design/icons'
 import { Form, Table } from 'react-bootstrap';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { getOneProduct, getPayment } from '../../../features/product/productThunk';
 import { useDispatch, useSelector } from 'react-redux';
 const { Header, Content, Footer } = Layout;
 
 
 export const BookingReviewHomestay = () => {
-  const params = useParams();
   useEffect(() => {
-    dispatch(getOneProduct(params.id));
-    dispatch(getPayment({ vnp_Ammount: detailHomestay.price + detailHomestay.price * 11 / 100 }));
+    window.scrollTo(0, 0);
+  }, []);
+  const { id } = useParams();
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+
+  const name = params?.get('name') || '';
+  const email = params?.get('email') || '';
+  const phoneNumber = params?.get('phoneNumber') || '';
+  const startDate = 1700057733825;
+  const endDate = 1700057733825;
+
+  useEffect(() => {
+    dispatch(getOneProduct(id));
+    dispatch(getPayment(booking));
   }, []);
   const dispatch = useDispatch();
   const detailHomestay = useSelector((state) => state.product.productDetails);
+  const user = useSelector((state) => state.user.userData)
+  const booking = {
+    vnp_Ammount: detailHomestay.price + detailHomestay.price * 11 / 100,
+    vnp_OrderInfo: String(name + '+' + phoneNumber + ',' + email + '+' + startDate + ',' + endDate + '=' + id + '=' + user?.data.id)
+  }
   const payment = useSelector((state) => state.product.payment)
-  console.log(payment);
   return (
     <>
       <Content
@@ -111,7 +127,7 @@ export const BookingReviewHomestay = () => {
                 <Row>
                   <div style={{ margin: '10px 0px 0px 15px' }}>
                     <div style={{ fontSize: '18px', fontWeight: '600', marginBottom: '10px' }}>
-                      Số phòng : 20
+                      Số phòng : {detailHomestay.numberRoom}
                     </div>
                     <div>
                       <Image
@@ -148,10 +164,13 @@ export const BookingReviewHomestay = () => {
                     Chi tiết người liên lạc
                   </div>
                   <div style={{ fontSize: '16px', fontWeight: '600', lineHeight: '28px', color: 'rgb(3, 18, 26)' }}>
-                    +84835120388
+                    Tên : {name}
                   </div>
                   <div style={{ fontSize: '16px', fontWeight: '600', lineHeight: '28px', color: 'rgb(3, 18, 26)' }}>
-                    tranquanghuy3103@gmail.com
+                    Sđt : {phoneNumber}
+                  </div>
+                  <div style={{ fontSize: '16px', fontWeight: '600', lineHeight: '28px', color: 'rgb(3, 18, 26)' }}>
+                    email : {email}
                   </div>
                 </Col>
               </div>
@@ -244,19 +263,7 @@ export const BookingReviewHomestay = () => {
                   </Col>
                   <Col span={8} push={4}>
                     <div style={{ fontWeight: '600', fontSize: '18px', float: 'right' }}>
-                      {detailHomestay.price} VND
-                    </div>
-                  </Col>
-                </Row>
-                <Row style={{ padding: '5px 0px 15px 20px' }}>
-                  <Col span={10}>
-                    <div style={{ fontWeight: '600', fontSize: '18px' }}>
-                      Thuế và phí
-                    </div>
-                  </Col>
-                  <Col span={8} push={4}>
-                    <div style={{ fontWeight: '600', fontSize: '18px', float: 'right' }}>
-                      {detailHomestay.price * 11 / 100} VND
+                      {detailHomestay.price + detailHomestay.price * 11 / 100} VND
                     </div>
                   </Col>
                 </Row>
