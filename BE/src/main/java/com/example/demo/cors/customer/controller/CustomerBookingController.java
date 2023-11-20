@@ -2,6 +2,7 @@ package com.example.demo.cors.customer.controller;
 
 import com.example.demo.cors.common.base.ResponseObject;
 import com.example.demo.cors.customer.model.request.CustomerBookingRequest;
+import com.example.demo.cors.customer.model.response.CustomerVNPayResponse;
 import com.example.demo.cors.customer.services.CustomerBookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,7 +27,7 @@ public class CustomerBookingController {
 
     @PostMapping("/create")
     public ResponseObject createBooking(@RequestBody CustomerBookingRequest customerBookingRequest) {
-        return new ResponseObject(customerBookingService.createBooking(customerBookingRequest));
+        return new ResponseObject(customerBookingService.saveBooking(customerBookingRequest));
     }
 
 }

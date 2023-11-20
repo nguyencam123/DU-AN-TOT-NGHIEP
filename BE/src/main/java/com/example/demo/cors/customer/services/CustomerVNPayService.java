@@ -9,4 +9,6 @@ public interface CustomerVNPayService {
 
     String customerVNPay(CustomerVNPayRequest customerVNPayRequest, HttpServletRequest request) throws UnsupportedEncodingException;
 
+    Integer orderReturn(HttpServletRequest request);
+
 }

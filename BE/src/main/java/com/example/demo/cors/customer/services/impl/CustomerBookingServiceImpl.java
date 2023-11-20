@@ -7,6 +7,7 @@ import com.example.demo.cors.customer.repository.CustomerHomestayRepository;
 import com.example.demo.cors.customer.services.CustomerBookingService;
 import com.example.demo.entities.Booking;
 import com.example.demo.entities.Homestay;
+import com.example.demo.entities.Promotion;
 import com.example.demo.infrastructure.contant.StatusBooking;
 import com.example.demo.infrastructure.contant.TypeBooking;
 import com.example.demo.repositories.PromotionRepository;
@@ -38,11 +39,11 @@ public class CustomerBookingServiceImpl implements CustomerBookingService {
         return new PageableObject<>(res);
     }
 
-
     @Override
-    public Booking createBooking(CustomerBookingRequest request) {
+    public Booking saveBooking(CustomerBookingRequest request) {
         Booking booking = new Booking();
         Homestay homestay = homestayRepository.findById(request.getHomestayId()).get();
+        Promotion promotion = promotionRepository.findById(request.getIdPromotion()).orElse(null);
         BigDecimal totalPrice = new BigDecimal(request.getTotalPrice());
         if (totalPrice != homestay.getPrice()) {
             booking.setTypeBooking(TypeBooking.DAT_COC);
@@ -56,7 +57,7 @@ public class CustomerBookingServiceImpl implements CustomerBookingService {
         booking.setEmail(request.getEmail());
         booking.setPhoneNumber(request.getPhoneNumber());
         booking.setHomestay(homestay);
-        booking.setPromotion(promotionRepository.findById(request.getIdPromotion()).get());
+        booking.setPromotion(promotion);
         booking.setNote(request.getNote());
         booking.setStatus(StatusBooking.THANH_CONG);
         customerBookingRepository.save(booking);

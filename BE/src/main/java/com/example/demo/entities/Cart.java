@@ -1,16 +1,19 @@
 package com.example.demo.entities;
 
 import com.example.demo.entities.base.PrimaryEntity;
-import com.example.demo.infrastructure.contant.Status;
+import com.example.demo.infrastructure.contant.StatusCart;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "cart")
@@ -18,19 +21,16 @@ import java.math.BigDecimal;
 @Setter
 public class Cart extends PrimaryEntity {
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private String userId;
 
-    private Status status;
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Homestay> homestay;
 
-    private BigDecimal totalPrice;
+    private StatusCart status;
 
-    @ManyToOne
-    @JoinColumn(name = "promotion_id")
-    private Promotion promotion;
+    private Long startDate;
 
-    @OneToOne
-    @JoinColumn(name = "homestay_id")
-    private Homestay homestay;
+    private Long endDate;
+
 }
