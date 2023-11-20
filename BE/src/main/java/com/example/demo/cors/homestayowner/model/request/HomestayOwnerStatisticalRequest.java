@@ -13,4 +13,6 @@ public class HomestayOwnerStatisticalRequest {
 
     private Integer year;
 
+    private Integer date;
+
 }
