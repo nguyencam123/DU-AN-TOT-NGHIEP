@@ -3,6 +3,7 @@ package com.example.demo.entities;
 import com.example.demo.entities.base.PrimaryEntity;
 import com.example.demo.infrastructure.contant.EntityProperties;
 import com.example.demo.infrastructure.contant.Status;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -75,5 +76,10 @@ public class Homestay extends PrimaryEntity {
     @OneToMany(mappedBy = "homestay", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<DetailHomestay> detailHomestays;
+
+    @ManyToOne
+    @JoinColumn(name = "cart_id")
+    @JsonBackReference
+    private Cart cart;
 
 }
