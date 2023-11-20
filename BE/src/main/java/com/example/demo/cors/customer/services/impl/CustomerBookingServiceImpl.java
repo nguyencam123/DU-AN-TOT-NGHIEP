@@ -7,8 +7,12 @@ import com.example.demo.cors.customer.repository.CustomerHomestayRepository;
 import com.example.demo.cors.customer.services.CustomerBookingService;
 import com.example.demo.entities.Booking;
 import com.example.demo.entities.Homestay;
+import com.example.demo.infrastructure.configemail.Email;
+import com.example.demo.infrastructure.configemail.EmailSender;
+import com.example.demo.infrastructure.contant.Message;
 import com.example.demo.infrastructure.contant.StatusBooking;
 import com.example.demo.infrastructure.contant.TypeBooking;
+import com.example.demo.infrastructure.exception.rest.RestApiException;
 import com.example.demo.repositories.PromotionRepository;
 import com.example.demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +34,8 @@ public class CustomerBookingServiceImpl implements CustomerBookingService {
     private CustomerHomestayRepository homestayRepository;
     @Autowired
     private PromotionRepository promotionRepository;
+    @Autowired
+    private EmailSender emailSender;
 
     @Override
     public PageableObject<Booking> getBookingByUser(CustomerBookingRequest request) {
@@ -37,7 +43,6 @@ public class CustomerBookingServiceImpl implements CustomerBookingService {
         Page<Booking> res = customerBookingRepository.findByUserId(pageable, request.getUserId());
         return new PageableObject<>(res);
     }
-
 
     @Override
     public Booking createBooking(CustomerBookingRequest request) {
@@ -56,10 +61,41 @@ public class CustomerBookingServiceImpl implements CustomerBookingService {
         booking.setEmail(request.getEmail());
         booking.setPhoneNumber(request.getPhoneNumber());
         booking.setHomestay(homestay);
-        booking.setPromotion(promotionRepository.findById(request.getIdPromotion()).get());
         booking.setNote(request.getNote());
         booking.setStatus(StatusBooking.THANH_CONG);
         customerBookingRepository.save(booking);
+        return booking;
+    }
+
+    private Booking findForUpdate(String id) {
+        return customerBookingRepository.findByIdAndCancel(id).orElseThrow(() ->
+                new RestApiException(Message.NOT_EXISTS));
+    }
+
+    @Override
+    public Booking cancel(String id ,CustomerBookingRequest request) {
+        Booking booking = findForUpdate(id);
+
+//        if (!request.getNote().trim().isBlank()) {
+//            throw new RestApiException("Bạn phải nhập lý do hủy phòng");
+//        } else if (request.getNote().length() >= 20) {
+//
+//
+//        } else {
+        booking.setNote(request.getNote());
+
+        booking.setStatus(StatusBooking.HUY);
+
+        Email email = new Email();
+        email.setToEmail(new String[]{booking.getHomestay().getOwnerHomestay().getEmail()});
+        email.setSubject("Thông báo hủy phòng");
+        email.setTitleEmail("Homestay " + booking.getHomestay().getName() + " đã bị hủy");
+        email.setBody("Lý do hủy: " + booking.getNote());
+        emailSender.sendEmail(email.getToEmail(), email.getSubject(), email.getTitleEmail(), email.getBody());
+
+        customerBookingRepository.save(booking);
+//        }
+
         return booking;
     }
 

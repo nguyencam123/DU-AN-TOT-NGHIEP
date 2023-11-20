@@ -9,6 +9,14 @@ import imgsection from "../../assets/svg/Ellipse 1.svg"
 import imgslide2 from "../../assets/svg/Ellipse 2.svg"
 import imgslide3 from "../../assets/svg/Ellipse 3.svg"
 import imgslide4 from "../../assets/svg/Ellipse 4.svg"
+import hoianImg from "../../assets/svg/hoian.svg"
+import danangImg from "../../assets/svg/danang.svg"
+import sapaImg from "../../assets/svg/sapa.svg"
+import dalatImg from "../../assets/svg/dalat.svg"
+import nhatrangImg from "../../assets/svg/danang (2).svg"
+import hueImg from "../../assets/svg/hue.svg"
+import canthoImg from "../../assets/svg/cantho.svg"
+import phuquocImg from "../../assets/svg/phuquoc.svg"
 import beach from "../../assets/svg/beach_access_FILL0_wght400_GRAD0_opsz24.svg"
 import kayaking from "../../assets/svg/kayaking_FILL0_wght400_GRAD0_opsz24.svg"
 import slideform from "../../assets/svg/Rectangle 7.svg"
@@ -69,16 +77,16 @@ function ProductList() {
         { img: imgsection, title: 'Hồ Chí Minh' },
         { img: imgslide2, title: 'Hà Nội' },
         { img: imgslide3, title: 'Hải Phòng' },
-        { img: imgslide4, title: 'Đà Lạt' },
-        { img: imgslide4, title: 'Nha Trang' },
-        { img: imgslide4, title: 'Hội An' },
-        { img: imgslide4, title: 'Hội An' },
-        { img: imgslide4, title: 'Hội An' },
-        { img: imgslide4, title: 'Đà Lạt' },
-        { img: imgsection, title: 'Hồ Chí Minh' },
-        { img: imgslide2, title: 'Hà Nội' },
-        { img: imgslide3, title: 'Hải Phòng' },
-        { img: imgslide4, title: 'Đà Lạt' },
+        { img: imgslide4, title: 'Ninh Bình' },
+        { img: danangImg, title: 'Nha Trang' },
+        { img: hoianImg, title: 'Hội An' },
+        { img: sapaImg, title: 'Sapa' },
+        { img: dalatImg, title: 'Đà Lạt' },
+        { img: nhatrangImg, title: 'Đà Nẵng' },
+        { img: hueImg, title: 'TP Huế' },
+        { img: canthoImg, title: 'TP Cần Thơ' },
+        { img: phuquocImg, title: 'Phú Quốc' },
+        { img: imgslide4, title: 'An Giang' },
         // Thêm các dữ liệu khác tương tự
     ];
     const itemsPerPage = 7;

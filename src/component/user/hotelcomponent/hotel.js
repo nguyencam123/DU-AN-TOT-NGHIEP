@@ -23,8 +23,9 @@ import 'dayjs/locale/vi';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProducts, getProducts } from "../../../features/product/productThunk";
 import { useNavigate } from "react-router-dom";
-import { fetchSearchProducts } from "../../../features/product/searchProductThunk";
+import { fetchSearchProducts, getAllConvinentHomestay } from "../../../features/product/searchProductThunk";
 import moment from 'moment';
+import { fetchConvenientsSuccess } from "../../../features/product/productSlide";
 dayjs.locale('vi');
 const { Title } = Typography;
 const { Header, Footer, Sider, Content } = Layout;
@@ -36,6 +37,7 @@ const { Header, Footer, Sider, Content } = Layout;
 
 const Hotel = () => {
   const products = useSelector((state) => state.product.products);
+  const convenient = useSelector((state) => state.product.convenient);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   let checkOutDate
@@ -44,6 +46,7 @@ const Hotel = () => {
   }
   useEffect(() => {
     dispatch(getProducts());
+    dispatch(getAllConvinentHomestay());
   }, []);
   const onChange = (key) => {
 
@@ -120,11 +123,15 @@ const Hotel = () => {
   const [enDate, setEnDate] = useState(181245435)
   const [priceMin, setPriceMin] = useState(0)
   const [roomNumber, setRoomNumber] = useState(0)
-  const [priceMax, setPriceMax] = useState(0)
+  const [convenientvir, setconvenient] = useState('')
   const [convenientHomestayList, setConvenientHomestayList] = useState('')
+  const onChangeConvenients = (checkedValues) => {
+    setconvenient(checkedValues.join(','))
+  };
   const handleSearch = () => {
-    dispatch(fetchSearchProducts(moment(checkInDate).valueOf(), moment(checkOutDate).valueOf(), nameOrAddress, numberPerson, roomNumber, rangeValue[0], rangeValue[1], convenientHomestayList))
+    dispatch(fetchSearchProducts(moment(checkInDate).valueOf(), moment(checkOutDate).valueOf(), nameOrAddress, numberPerson, roomNumber, rangeValue[0], rangeValue[1], convenientvir))
   }
+
   const text = <section>
     <div style={{ justifyContent: 'space-between', display: 'flex', fontSize: 18 }}>
       <div style={{ display: 'flex' }}><UserOutlined style={{ marginBottom: 10 }} />&ensp;số lượng người</div><div><Input style={{ width: 100, height: 40 }} defaultValue={1} onChange={(e) => setNumberPerson(e.target.value)} /></div>
@@ -133,12 +140,9 @@ const Hotel = () => {
   </section>;
   const utilities = <div style={{ width: '100%', height: '30%', backgroundColor: 'white', borderRadius: 10, padding: '5px 5px 5px' }}>
     <div>
-      <Checkbox>Wifi</Checkbox><br />
-      <Checkbox>Hồ bơi</Checkbox><br />
-      <Checkbox>Chỗ để xe</Checkbox><br />
-      <Checkbox>Lễ tân 24/24</Checkbox><br />
-      <Checkbox>Thang máy</Checkbox><br />
-      <Checkbox>Phòng họp</Checkbox>
+      <div>
+        <Checkbox.Group options={convenient.map(item => ({ label: item.name, value: item.id }))} onChange={onChangeConvenients} />
+      </div>
     </div>
   </div>
   const items = [

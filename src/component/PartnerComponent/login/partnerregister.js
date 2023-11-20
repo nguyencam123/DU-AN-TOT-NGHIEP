@@ -86,7 +86,7 @@ const PartnerRegister = () => {
                 .then(data => {
                     // Xử lý kết quả từ API (nếu cần)
                     openNotification()
-                    navigate('/login')
+                    navigate('/hop-tac/login')
                 })
                 .catch(error => {
                     console.error('Error:', error);
