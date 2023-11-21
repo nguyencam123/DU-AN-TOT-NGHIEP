@@ -15,7 +15,7 @@ const StatisticalHomestay = () => {
     const statistical = useSelector((state) => state.statistical.statisticalByYear)
     const statisticalByMonth = useSelector((state) => state.statistical.statisticalByMonth)
     const booking = useSelector((state) => state.booking.bookings)
-    const userDetail = JSON.parse(localStorage.getItem('userDetail'));
+    const userDetail = JSON.parse(localStorage.getItem('ownerDetail'));
     const UserID = userDetail?.data.id;
 
     const [year, setYear] = useState('2023')

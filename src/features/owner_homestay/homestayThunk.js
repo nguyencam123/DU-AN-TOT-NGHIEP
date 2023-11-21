@@ -5,7 +5,7 @@ const BASE_URL = '/api/v2/homestay';
 export const fetchHomestay = () => async (dispatch) => {
   dispatch(fetchProductsStart());
   try {
-    const id = JSON.parse(localStorage.getItem('userDetail'))?.data.id;
+    const id = JSON.parse(localStorage.getItem('ownerDetail'))?.data.id;
     const response = await instance.get(BASE_URL + `/get-homestay-by-id?id=${id}&size=999`);
     dispatch(fetchProductsSuccess(response.data.data.data));
   } catch (error) {
@@ -45,6 +45,14 @@ export const UpdateStatus = (id) => async (dispatch) => {
   dispatch(fetchProductsStart());
   try {
     await instance.put(BASE_URL + `/delete-homestays?id=${id}`);
+  } catch (error) {
+    dispatch(fetchProductsFailure(error.message));
+  }
+};
+export const UpdateStatusToUpdating = (id) => async (dispatch) => {
+  dispatch(fetchProductsStart());
+  try {
+    await instance.put(BASE_URL + `/status-homestay?id=${id}`);
   } catch (error) {
     dispatch(fetchProductsFailure(error.message));
   }

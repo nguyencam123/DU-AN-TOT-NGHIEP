@@ -27,7 +27,7 @@ const { Title } = Typography
 
 const Booking = () => {
     const dispatch = useDispatch();
-    const userDetail = JSON.parse(localStorage.getItem('userDetail'));
+    const userDetail = JSON.parse(localStorage.getItem('ownerDetail'));
     const UserID = userDetail?.data.id;
     useEffect(() => {
         dispatch(fetchBooking(UserID));
