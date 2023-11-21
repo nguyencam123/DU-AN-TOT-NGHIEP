@@ -34,31 +34,21 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
     HomestayOwnerStatisticalReponse getStatistical(String id);
 
     @Query(value = """
-            SELECT\s
-            COUNT(a.id) AS 'DoanhSo',\s
-            ((SUM(a.total_price))-((Sum(a.total_price)) * 11/100)) AS 'TongSoTien'\s
-            FROM\s
-            booking a\s
-            inner join homestay b on a.homestay_id=b.id
-            inner join owner_homestay c on b.owner_id=c.id
-            WHERE\s
-            c.id = :#{#request.idOwnerHomestay}
-            AND (
-                    (
-                        DATEPART(YEAR, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.year}
-                        AND DATEPART(MONTH, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.month}
-                    )
-                    OR (
-                        DATEPART(YEAR, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.year}
-                    )
-                    OR
-                    (
-                        DATEPART(YEAR, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.year}
-                        AND DATEPART(MONTH, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.month}
-                        AND DATEPART(DATE, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.date}
-                    )
-                )
-            AND a.status=0;                     
+            SELECT
+                COUNT(a.id) AS 'DoanhSo',
+                (SUM(a.total_price) - (SUM(a.total_price) * 11 / 100)) AS 'TongSoTien'
+            FROM
+                booking a
+                INNER JOIN homestay b ON a.homestay_id = b.id
+                INNER JOIN owner_homestay c ON b.owner_id = c.id
+            WHERE
+                c.id = :#{#request.idOwnerHomestay}
+                AND (
+                YEAR(DATEADD(SECOND, a.created_date / 1000, '1970-01-01')) = :#{#request.year}
+                AND (MONTH(DATEADD(SECOND, a.created_date / 1000, '1970-01-01')) = :#{#request.month} OR :#{#request.month} IS NULL OR :#{#request.month} LIKE '')
+                AND (DAY(DATEADD(SECOND, a.created_date / 1000, '1970-01-01')) = :#{#request.date} OR :#{#request.date} IS NULL OR :#{#request.date} LIKE '')
+				)
+                AND a.status = 0;                 
             """, nativeQuery = true)
     HomestayOwnerStatisticalReponse getAllStatistical(HomestayOwnerStatisticalRequest request);
 
@@ -72,6 +62,7 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
             inner join owner_homestay c on b.owner_id=c.id
             WHERE\s
             c.id = :#{#request.idOwnerHomestay}
+            AND MONTH(DATEADD(SECOND, a.created_date / 1000, '1970-01-01')) = :#{#request.month}
             AND DATEPART(YEAR, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.year}
             AND a.status=0;                     
             """, nativeQuery = true)
