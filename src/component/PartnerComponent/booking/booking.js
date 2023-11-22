@@ -27,7 +27,7 @@ const { Title } = Typography
 
 const Booking = () => {
     const dispatch = useDispatch();
-    const userDetail = JSON.parse(localStorage.getItem('userDetail'));
+    const userDetail = JSON.parse(localStorage.getItem('ownerDetail'));
     const UserID = userDetail?.data.id;
     useEffect(() => {
         dispatch(fetchBooking(UserID));
@@ -123,7 +123,7 @@ const Booking = () => {
         }
     ]
     return (
-        <div style={{ marginTop: '30px' }}>
+        <div style={{ marginTop: '20px' }}>
             <Title level={2}>Quản trị booking</Title>
             <Title level={4}>Danh mục</Title>
             <Row>

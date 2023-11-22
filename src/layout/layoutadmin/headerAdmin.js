@@ -20,7 +20,7 @@ const HeaderAdmin = () => {
         dispatch(logoutUser())
         navigate('/login-admin')
     }
-    const userDetail = JSON.parse(localStorage.getItem('userDetail'));
+    const userDetail = JSON.parse(localStorage.getItem('adminDetail'));
     const nameUser = userDetail?.data.name;
     return (
         <Header style={{ display: 'flex', alignItems: 'center' }}>

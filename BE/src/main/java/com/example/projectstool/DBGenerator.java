@@ -19,6 +19,7 @@ import com.example.demo.entities.ScenicSpotHomestay;
 import com.example.demo.entities.User;
 import com.example.demo.infrastructure.contant.Status;
 import com.example.demo.infrastructure.contant.StatusBooking;
+import com.example.demo.infrastructure.contant.StatusCart;
 import com.example.demo.infrastructure.contant.TypePromotion;
 import com.example.demo.repositories.AdminRepository;
 import com.example.demo.repositories.ApprovalHistoryRepository;
@@ -200,6 +201,21 @@ public class DBGenerator implements CommandLineRunner {
         promotion1.setValue(50000.0);
         promotionRepository.save(promotion1);
 
+        //cart
+        Cart cart1 = new Cart();
+        cart1.setStatus(StatusCart.HOAT_DONG);
+        cart1.setUserId(user1.getId());
+        cart1.setStartDate(1697987691L);
+        cart1.setEndDate(1698620161L);
+        cartRepository.save(cart1);
+
+        Cart cart2 = new Cart();
+        cart2.setUserId(user2.getId());
+        cart2.setStartDate(1697987691L);
+        cart2.setEndDate(1698620161L);
+        cart2.setStatus(StatusCart.HOAT_DONG);
+        cartRepository.save(cart2);
+
         //homestay
         Homestay homestay1 = new Homestay();
         homestay1.setName("Fpoly Homestay");
@@ -210,6 +226,7 @@ public class DBGenerator implements CommandLineRunner {
         homestay1.setPoint(5.0);
         homestay1.setPrice(new BigDecimal(1200000));
         homestay1.setNumberPerson(10);
+        homestay1.setCart(cart1);
         homestayRepository.save(homestay1);
 
         Homestay homestay2 = new Homestay();
@@ -221,6 +238,7 @@ public class DBGenerator implements CommandLineRunner {
         homestay2.setPrice(new BigDecimal(1500000));
         homestay2.setNumberPerson(12);
         homestay2.setStatus(Status.KHONG_HOAT_DONG);
+        homestay2.setCart(cart2);
         homestayRepository.save(homestay2);
 
         Homestay homestay3 = new Homestay();
@@ -423,20 +441,7 @@ public class DBGenerator implements CommandLineRunner {
         bookingRepository.save(booking2);
 
         //cart
-        Cart cart1 = new Cart();
-        cart1.setUser(user1);
-        cart1.setHomestayId(homestay3.getId());
-        cartRepository.save(cart1);
 
-        Cart cart2 = new Cart();
-        cart2.setUser(user1);
-        cart2.setHomestayId(homestay1.getId());
-        cartRepository.save(cart2);
-
-        Cart cart3 = new Cart();
-        cart3.setUser(user2);
-        cart3.setHomestayId(homestay5.getId());
-        cartRepository.save(cart3);
 
         // approval history
         ApprovalHistory approvalHistory1 = new ApprovalHistory();

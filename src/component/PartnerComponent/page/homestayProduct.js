@@ -3,23 +3,14 @@ import { Space, Typography, Button, Table, Popconfirm, Modal, Form, Input, Row, 
 import { useDispatch, useSelector } from 'react-redux'
 import { QuestionCircleOutlined, EditOutlined, DeleteOutlined, EyeOutlined, DownloadOutlined, SwapOutlined, RotateLeftOutlined, RotateRightOutlined, ZoomOutOutlined, ZoomInOutlined, ReloadOutlined } from '@ant-design/icons'
 import { useState } from 'react'
-import { EditHomestay, UpdateStatus, addHomestay, fetchHomestay } from '../../../features/owner_homestay/homestayThunk'
+import { EditHomestay, UpdateStatus, UpdateStatusToUpdating, addHomestay, fetchHomestay } from '../../../features/owner_homestay/homestayThunk'
 import { fetchConvenient } from '../../../features/owner_homestay/convenientThunk'
-import { PlusOutlined } from '@ant-design/icons';
 import {
-  Cascader,
   Checkbox,
   DatePicker,
-  InputNumber,
-  Radio,
   Select,
-  Divider,
-  Slider,
-  Switch,
-  TreeSelect,
-  Upload
+
 } from 'antd';
-import { province } from './province'
 import moment from 'moment';
 import 'moment/locale/vi';
 import { fetchProvince } from '../../../features/owner_homestay/region/provinceThunk'
@@ -119,47 +110,84 @@ const HomeStayProduct = () => {
     {
       title: 'Tên homestay',
       dataIndex: 'name',
-      key: 'name'
+      key: 'name',
     },
     {
       title: 'Địa chỉ homestay',
       dataIndex: 'address',
-      key: 'address'
+      key: 'address',
     },
     {
       title: 'Giá homestay',
       dataIndex: 'price',
-      key: 'price'
+      key: 'price',
+      align: 'center',
     },
     {
       title: 'Trạng thái của homestay',
       dataIndex: 'status',
       key: 'status',
+      align: 'center',
       render(str) {
-        return str === 'CHO_DUYET' ? 'Chờ duyệt' : 'Ngừng hoạt động'
-      }
+        if (str === 'CHO_DUYET') {
+          return 'Chờ duyệt';
+        } else if (str === 'HOAT_DONG') {
+          return 'Hoạt động';
+        } else {
+          return 'Ngừng hoạt động';
+        }
+      },
     },
     {
       title: 'Action',
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
-          <a> <EyeOutlined onClick={() => showModalView(record)} /> </a>
-          <a> <EditOutlined onClick={() => handleEditRow(record)} /> </a>
-          <Popconfirm
-            title="Xóa mục này"
-            description="Bạn chắc chắn muốn xóa homestay này không?"
-            icon={<ReloadOutlined />}
-            cancelText="Hủy"
-            okText="Xóa"
-            onConfirm={() => handleSubmitStatus(record)}
-          >
-            <a><ReloadOutlined /></a>
-          </Popconfirm>
+          <a onClick={() => showModalView(record)}>
+            <EyeOutlined />
+          </a>
+          {record.status !== 'HOAT_DONG' && (
+            <a onClick={() => handleEditRow(record)}>
+              <EditOutlined />
+            </a>
+          )}
+          {
+            record.status === 'HOAT_DONG' && (
+              <Popconfirm
+                title="Xóa mục này"
+                description="Bạn chắc chắn muốn cập nhật homestay thành không hoạt động không?"
+                icon={<ReloadOutlined />}
+                cancelText="Hủy"
+                okText="Cập nhật"
+                onConfirm={() => handleSubmitStatus(record)}
+              >
+                <a>
+                  <ReloadOutlined />
+                </a>
+              </Popconfirm>
+            )
+          }
+          {
+            record.status === 'KHONG_HOAT_DONG' && (
+              <Popconfirm
+                title="Xóa mục này"
+                description="Bạn chắc chắn muốn cập nhật homestay thành chờ duyệt không?"
+                icon={<ReloadOutlined />}
+                cancelText="Hủy"
+                okText="Cập nhật"
+                onConfirm={() => handleSubmitStatusToUpdating(record)}
+              >
+                <a>
+                  <ReloadOutlined />
+                </a>
+              </Popconfirm>
+            )
+          }
         </Space>
       ),
     },
   ];
+
   //
 
   //
@@ -210,7 +238,7 @@ const HomeStayProduct = () => {
   const [recordid, setRecordid] = useState("");
   const [image, setIamge] = useState([]);
   //getuserid
-  const userDetail = JSON.parse(localStorage.getItem('userDetail'));
+  const userDetail = JSON.parse(localStorage.getItem('ownerDetail'));
   const UserID = userDetail?.data.id;
   //
   const parsedAcreage = parseFloat(acreage).toFixed(2);
@@ -269,6 +297,11 @@ const HomeStayProduct = () => {
   const handleSubmitStatus = async (record) => {
     await message.info('Đang tiến hành sửa trạng thái bạn vui lòng đợi một vài giây nhé!');
     await dispatch(UpdateStatus(record.id));
+    dispatch(fetchHomestay());
+  }
+  const handleSubmitStatusToUpdating = async (record) => {
+    await message.info('Đang tiến hành sửa trạng thái bạn vui lòng đợi một vài giây nhé!');
+    await dispatch(UpdateStatusToUpdating(record.id));
     dispatch(fetchHomestay());
   }
   const handleSubmit = async (e) => {
@@ -397,7 +430,7 @@ const HomeStayProduct = () => {
 
   return (
     <>
-      <Title>Quản lý Homestay</Title>
+      <Title style={{ marginTop: '20px' }}>Quản lý Homestay</Title>
       <div style={{ marginBottom: 20, float: 'right' }}>
         <Button type="primary" onClick={showModal}>
           Thêm mới HomeStay

@@ -36,16 +36,28 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
     @Query(value = """
             SELECT\s
             COUNT(a.id) AS 'DoanhSo',\s
-            SUM(a.total_price) AS 'TongSoTien'\s
+            ((SUM(a.total_price))-((Sum(a.total_price)) * 11/100)) AS 'TongSoTien'\s
             FROM\s
             booking a\s
             inner join homestay b on a.homestay_id=b.id
             inner join owner_homestay c on b.owner_id=c.id
             WHERE\s
             c.id = :#{#request.idOwnerHomestay}
-            AND (DATEPART(YEAR, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.year}
-            or DATEPART(YEAR, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) LIKE '')
-            AND DATEPART(MONTH, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.month}
+            AND (
+                    (
+                        DATEPART(YEAR, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.year}
+                        AND DATEPART(MONTH, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.month}
+                    )
+                    OR (
+                        DATEPART(YEAR, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.year}
+                    )
+                    OR
+                    (
+                        DATEPART(YEAR, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.year}
+                        AND DATEPART(MONTH, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.month}
+                        AND DATEPART(DATE, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.date}
+                    )
+                )
             AND a.status=0;                     
             """, nativeQuery = true)
     HomestayOwnerStatisticalReponse getAllStatistical(HomestayOwnerStatisticalRequest request);
