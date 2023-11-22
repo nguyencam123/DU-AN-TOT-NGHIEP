@@ -1,6 +1,7 @@
 package com.example.demo.cors.admin.model.response;
 
 import com.example.demo.infrastructure.contant.Status;
+import com.example.demo.infrastructure.contant.role.RoleAdmin;
 import lombok.*;
 
 @Getter
@@ -33,5 +34,7 @@ public class AdminAuthenticationReponse {
     private String avataUrl;
 
     private Status status;
+
+    private RoleAdmin roleAdmin;
 
 }

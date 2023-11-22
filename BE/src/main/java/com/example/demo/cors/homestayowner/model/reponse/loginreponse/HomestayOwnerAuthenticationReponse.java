@@ -1,6 +1,7 @@
 package com.example.demo.cors.homestayowner.model.reponse.loginreponse;
 
 import com.example.demo.infrastructure.contant.Status;
+import com.example.demo.infrastructure.contant.role.RoleOwner;
 import lombok.*;
 
 @Getter
@@ -33,4 +34,6 @@ public class HomestayOwnerAuthenticationReponse {
     private String avataUrl;
 
     private Status status;
+
+    private RoleOwner roleOwner;
 }

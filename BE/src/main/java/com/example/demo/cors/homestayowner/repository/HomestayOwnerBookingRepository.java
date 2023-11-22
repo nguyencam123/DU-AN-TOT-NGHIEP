@@ -53,14 +53,14 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
     HomestayOwnerStatisticalReponse getAllStatistical(HomestayOwnerStatisticalRequest request);
 
     @Query(value = """
-            SELECT\s
-            COUNT(a.id) AS 'DoanhSo',\s
-            SUM(a.total_price) AS 'TongSoTien'\s
-            FROM\s
-            booking a\s
+            SELECT
+            COUNT(a.id) AS 'DoanhSo',
+            SUM(a.total_price) AS 'TongSoTien'
+            FROM
+            booking a
             inner join homestay b on a.homestay_id=b.id
             inner join owner_homestay c on b.owner_id=c.id
-            WHERE\s
+            WHERE
             c.id = :#{#request.idOwnerHomestay}
             AND MONTH(DATEADD(SECOND, a.created_date / 1000, '1970-01-01')) = :#{#request.month}
             AND DATEPART(YEAR, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.year}

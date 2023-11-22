@@ -95,12 +95,8 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
     @Override
     public Homestay updateHomestayPromition(String id, HomestayownerHomestayRequest request){
         Homestay homestay = homestayownerHomestayRepository.findById(id).get();
-        Promotion newPromotion = homestayOwnerPromotionRepository.findById(request.getPromotion()).orElseThrow(EntityNotFoundException::new);
-        if (isEndDateToday(newPromotion.getEndDate())) {
-            homestay.setPromotion(null);
-        } else {
-            homestay.setPromotion(newPromotion);
-        }
+        Promotion newPromotion = homestayOwnerPromotionRepository.findById(request.getPromotion()).orElse(null);
+        homestay.setPromotion(newPromotion);
         Homestay homestay1=homestayownerHomestayRepository.save(homestay);
         return homestay1;
     }
@@ -119,6 +115,7 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
         homestay.setTimeCheckIn(request.getTimeCheckIn());
         homestay.setTimeCheckOut(request.getTimeCheckOut());
         homestay.setCancellationPolicy(request.getCancellationPolicy());
+        homestay.setCart(null);
         homestay.setOwnerHomestay(homestayOwnerOwnerHomestayRepository.findById(request.getOwnerHomestay()).orElse(null));
     }
 
@@ -147,10 +144,4 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
 
         return homestay1;
     }
-
-    private boolean isEndDateToday(Long endDate) {
-        LocalDate endLocalDate = LocalDate.ofEpochDay(endDate / (24 * 60 * 60 * 1000));
-        return endLocalDate.isEqual(LocalDate.now());
-    }
-
 }
