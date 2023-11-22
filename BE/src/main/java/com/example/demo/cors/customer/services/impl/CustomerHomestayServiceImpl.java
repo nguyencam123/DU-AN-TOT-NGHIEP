@@ -70,12 +70,11 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
         if (getHomestayByConvenient(request.getConvenientHomestayList(), lists) == null) {
             for (Homestay homestay : lists) {
                 if ((homestay.getName().contains(request.getNameOrAddress()) || homestay.getAddress().contains(request.getNameOrAddress()))
-                        && (homestay.getNumberPerson() == request.getNumberPerson())
-                        && (homestay.getRoomNumber() == request.getRoomNumber())
+                        && (homestay.getNumberPerson() >= request.getNumberPerson())
+                        && (homestay.getRoomNumber() >= request.getRoomNumber())
                         && (homestay.getPrice().compareTo(request.getPriceMin()) > 0)
                         && (homestay.getPrice().compareTo(request.getPriceMax()) < 0)
                 ) {
-                    res = new ArrayList<>();
                     res.add(homestay);
                 }
             }
@@ -83,13 +82,12 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
             for (Homestay homestay : lists) {
                 for (String homestayIdByConvenient : getHomestayByConvenient(request.getConvenientHomestayList(), lists))
                     if ((homestay.getName().contains(request.getNameOrAddress()) || homestay.getAddress().contains(request.getNameOrAddress()))
-                            && (homestay.getNumberPerson() == request.getNumberPerson())
-                            && (homestay.getRoomNumber() == request.getRoomNumber())
+                            && (homestay.getNumberPerson() >= request.getNumberPerson())
+                            && (homestay.getRoomNumber() >= request.getRoomNumber())
                             && (homestay.getId().equals(homestayIdByConvenient))
                             && (homestay.getPrice().compareTo(request.getPriceMin()) > 0)
                             && (homestay.getPrice().compareTo(request.getPriceMax()) < 0)
                     ) {
-                        res = new ArrayList<>();
                         res.add(homestay);
                     }
             }
@@ -97,7 +95,6 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
         Page<Homestay> res1 = new PageImpl<>(res, pageable, res.size());
         return new PageableObject<>(res1);
-
     }
 
 }
