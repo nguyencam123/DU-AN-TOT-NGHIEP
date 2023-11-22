@@ -32,10 +32,11 @@ const HeaderUser = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
     const navigate = useNavigate()
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-  const idUser = useSelector((state) => state.user?.userData?.data.id);
+    const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+    const idUser = useSelector((state) => state.user?.userData?.data.id);
+    const statusUser = JSON.parse(localStorage.getItem('userDetail'))?.success;
     const dispatch = useDispatch()
-
+    console.log(statusUser)
     const [searchVisible, setSearchVisible] = useState(false);
     const [searchValue, setSearchValue] = useState('');
 
@@ -63,27 +64,27 @@ const HeaderUser = () => {
         setIsModalOpen(false);
     };
     useEffect(() => {
-        if (isLoggedIn) {
+        if (statusUser) {
             setIsModalOpen(false)
         }
-    }, [isLoggedIn])
+    }, [statusUser])
     const handleDropdownToggle = () => {
-        if (!isLoggedIn) {
+        if (!statusUser) {
             showModal(); // Redirect to /login if not logged in
         } else {
             setShowDropdown(!showDropdown); // Toggle the dropdown if logged in
         }
-  };
-  const logout = () => {
-    dispatch(logoutUser())
-    navigate('/login')
-}
+    };
+    const logout = () => {
+        dispatch(logoutUser())
+        navigate('/login')
+    }
     const booking = () => {
         navigate(`/booking/${idUser}`)
-  }
-  const cart = () => {
-    navigate('/shopingcart')
-}
+    }
+    const cart = () => {
+        navigate('/shopingcart')
+    }
     return (
         <header>
             <Navbar collapseOnSelect expand="lg" >
@@ -145,13 +146,12 @@ const HeaderUser = () => {
                                     </span>
                                 </Link>
                                 &emsp;
-                                {isLoggedIn ? (
+                                {statusUser ? (
                                     <span className="pictureperson" onClick={handleDropdownToggle}>
                                         <UserOutlined style={{ color: 'black', fontSize: '26px' }} />
                                     </span>
                                 ) : null}
-
-                                {isLoggedIn ? ( // Render dropdown only if the user is logged in
+                                {statusUser ? ( // Render dropdown only if the user is logged in
                                     <div className={`dropdown-menu ${showDropdown ? "show" : ""}`} style={{ backgroundColor: '#FFFFFF', width: 200, marginLeft: 'auto', marginRight: 80 }} >
                                         <button type="button" className="btn btn-primary" style={{ color: 'black' }} onClick={logout}>
                                             <UserOutlined /> Đăng xuất

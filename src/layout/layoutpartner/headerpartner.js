@@ -22,7 +22,7 @@ const Headerpartner = () => {
         dispatch(logoutUser())
         navigate('/hop-tac/login')
     }
-    const userDetail = JSON.parse(localStorage.getItem('userDetail'));
+    const userDetail = JSON.parse(localStorage.getItem('ownerDetail'));
     const nameUser = userDetail?.data.name;
     return (
         <Header style={{ display: 'flex', alignItems: 'center' }}>

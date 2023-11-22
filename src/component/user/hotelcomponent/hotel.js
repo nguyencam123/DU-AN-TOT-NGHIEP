@@ -90,10 +90,11 @@ const Hotel = () => {
   const calculateCheckOutDate = () => {
     if (checkInDate) {
       checkOutDate = dayjs(checkInDate).add(numNights, 'day');
-      return checkOutDate.format('dddd, DD [tháng] MM [năm] YYYY');
+      return checkOutDate;
     }
     return '';
   };
+  checkOutDate = dayjs(checkInDate).add(numNights, 'day');
   const [rangeValue, setRangeValue] = useState([0, 25000000]);
   const initialValue = [0, 25000000];
   const handleSliderChange = (value) => {
@@ -119,17 +120,20 @@ const Hotel = () => {
   }
   const [nameOrAddress, setNameOrAddress] = useState('')
   const [numberPerson, setNumberPerson] = useState(0)
-  const [startDate, setStartDate] = useState(1414231414)
-  const [enDate, setEnDate] = useState(181245435)
-  const [priceMin, setPriceMin] = useState(0)
   const [roomNumber, setRoomNumber] = useState(0)
   const [convenientvir, setconvenient] = useState('')
-  const [convenientHomestayList, setConvenientHomestayList] = useState('')
+  const [notification, setNotification] = useState('')
   const onChangeConvenients = (checkedValues) => {
     setconvenient(checkedValues.join(','))
   };
+
   const handleSearch = () => {
-    dispatch(fetchSearchProducts(moment(checkInDate).valueOf(), moment(checkOutDate).valueOf(), nameOrAddress, numberPerson, roomNumber, rangeValue[0], rangeValue[1], convenientvir))
+    if (nameOrAddress == '') {
+      setNotification("Vui lòng nhập tên hoặc địa chỉ")
+    } else {
+      setNotification('')
+      dispatch(fetchSearchProducts(moment(checkInDate).valueOf(), calculateCheckOutDate().valueOf(), nameOrAddress, numberPerson, roomNumber, rangeValue[0], rangeValue[1], convenientvir))
+    }
   }
 
   const text = <section>
@@ -184,8 +188,9 @@ const Hotel = () => {
             <hr />
             <div><h5 style={{ fontSize: 16 }}>Thành phố đia điểm hoặc tên khách sạn</h5>
               <MDBInputGroup className='mb-3' size='lg' noBorder textBefore={<MDBIcon fas icon='search' />}>
-                <input className='form-control' type='text' placeholder='Search' defaultValue={'Hà Nội'} onChange={(e) => setNameOrAddress(e.target.value)} />
+                <input className='form-control' type='text' placeholder='Search' defaultValue={'Hà Nội'} onChange={(e) => setNameOrAddress(e.target.value)} required />
               </MDBInputGroup>
+              <div style={{ color: 'red', marginLeft: 30 }}>{notification}</div>
               <div>
                 <div style={{ display: 'flex' }}>
                   <h5 style={{ fontSize: 16 }}>Nhận phòng:</h5>
@@ -211,7 +216,7 @@ const Hotel = () => {
                     onChange={handleNumNightsChange}
                   />
                   <div>
-                    <h5 style={{ fontSize: 18, marginLeft: 30, marginTop: 8 }}>{calculateCheckOutDate()}</h5>
+                    <h5 style={{ fontSize: 18, marginLeft: 30, marginTop: 8 }}>{calculateCheckOutDate().format('dddd, DD [tháng] MM [năm] YYYY')}</h5>
                   </div>
                 </div>
               </div>
@@ -223,7 +228,7 @@ const Hotel = () => {
                 </div>
               </div><br />
               <div style={{ color: '#0194f3', fontSize: 18, display: 'flex', float: 'right' }}>
-                <PayCircleOutlined style={{ marginTop: 5 }} /> &ensp;Thanh toán khi nhận phòng
+                <PayCircleOutlined style={{ marginTop: 5 }} /> &ensp;Thanh toán trực tuyến
               </div>
             </div>
           </div>

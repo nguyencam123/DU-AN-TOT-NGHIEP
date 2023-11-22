@@ -9,8 +9,11 @@ import { addBooking } from "../../../features/product/productThunk"
 export const BookingSuccess = () => {
   const dispatch = useDispatch();
   const urlParams = new URLSearchParams(window.location.search)
+  const userDetail = JSON.parse(localStorage.getItem('userDetail'));
+  const UserID = userDetail?.data.id;
   const navigate = useNavigate();
   const handleReturn = () => {
+    dispatch(addBooking(booking));
     navigate('/')
   }
 
@@ -21,8 +24,7 @@ export const BookingSuccess = () => {
   const startDate = info?.substring(info.lastIndexOf('+') + 1, info.lastIndexOf(','));
   const endDate = info?.substring(info.lastIndexOf(',') + 1, info.indexOf('='));
   const homestayId = info?.substring(info.indexOf('=') + 1, info.lastIndexOf('='));
-  const userId = info?.substring(info.lastIndexOf('=') + 1);
-  console.log(info);
+  const userId = UserID;
   const booking = {
     userId: userId,
     totalPrice: urlParams.get('vnp_Amount'),
@@ -31,13 +33,13 @@ export const BookingSuccess = () => {
     name: name,
     email: email,
     phoneNumber: phoneNumber,
-    homestayId: homestayId
+    homestayId: homestayId,
+    idPromotion: '908989'
   }
-  useEffect(() => {
-    dispatch(addBooking(booking));
-  }, []);
+
   const handleBooking = () => {
-    navigate(`/booking/${userId}}`)
+    dispatch(addBooking(booking));
+    navigate(`/booking/${userId}`)
   }
   return (
     <>
@@ -57,7 +59,7 @@ export const BookingSuccess = () => {
           </Row>
             <Row style={{marginLeft:'100px',marginBottom:'20px'}}>
               <div style={{fontSize:'20px'}}>
-                Bạn có thể xem chi tiết booking trong <a style={{color:'blue'}} onClick={handleBooking}>đơn hàng của tôi</a>
+                Bạn có thể xem chi tiết booking trong <a style={{color:'blue'}} onClick={() => handleBooking()}>đơn hàng của tôi</a>
               </div>
             </Row>
             <Row style={{marginLeft:'180px', marginBottom:'30px'}}>
