@@ -223,7 +223,7 @@ const Hotel = () => {
                 </div>
               </div><br />
               <div style={{ color: '#0194f3', fontSize: 18, display: 'flex', float: 'right' }}>
-                <PayCircleOutlined style={{ marginTop: 5 }} /> &ensp;Thanh toán khi nhận phòng
+                <PayCircleOutlined style={{ marginTop: 5 }} /> &ensp;Thanh toán trực tuyến
               </div>
             </div>
           </div>
