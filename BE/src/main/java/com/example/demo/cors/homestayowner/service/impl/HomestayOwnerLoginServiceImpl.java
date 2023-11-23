@@ -11,6 +11,7 @@ import com.example.demo.entities.OwnerHomestay;
 import com.example.demo.infrastructure.configemail.Email;
 import com.example.demo.infrastructure.configemail.EmailSender;
 import com.example.demo.infrastructure.contant.Status;
+import com.example.demo.infrastructure.contant.role.RoleOwner;
 import com.example.demo.infrastructure.exception.rest.RestApiException;
 import com.example.demo.infrastructure.security.token.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -110,13 +111,14 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         ownerHomestay.setUsername(request.getUsername());
         ownerHomestay.setPassword(passwordEncoder.encode(request.getPassword()));
         ownerHomestay.setStatus(Status.CHO_DUYET);
+        ownerHomestay.setRoleOwner(RoleOwner.OWNER);
         homestayownerOwnerHomestayRepository.save(ownerHomestay);
 
         Email email = new Email();
         email.setToEmail(new String[]{ownerHomestay.getEmail()});
         email.setSubject("Chào mừng đến với trang Web trvelViVu");
         email.setTitleEmail("Chúc mừng " + ownerHomestay.getUsername());
-        String confirmationLink = "http://localhost:8080/login/confirm-email?id=" + ownerHomestay.getId();
+        String confirmationLink = "http://localhost:3000/comfirmmail?id=" + ownerHomestay.getId();
         String emailBody = "Bạn đã đăng ký thành công. Vui lòng xác nhận email bằng cách nhấp vào liên kết sau: " + confirmationLink;
         email.setBody(emailBody);
         emailSender.sendEmail(email.getToEmail(), email.getSubject(), email.getTitleEmail(), emailBody);
@@ -129,6 +131,7 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                 .email(ownerHomestay.getEmail())
                 .username(ownerHomestay.getUsername())
                 .status(ownerHomestay.getStatus())
+                .roleOwner(ownerHomestay.getRoleOwner())
                 .build();
     }
 
@@ -169,6 +172,7 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                 .email(ownerHomestay.getEmail())
                 .username(ownerHomestay.getUsername())
                 .status(ownerHomestay.getStatus())
+                .roleOwner(ownerHomestay.getRoleOwner())
                 .build();
     }
 
@@ -194,6 +198,7 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                 .email(ownerHomestay.getEmail())
                 .username(ownerHomestay.getUsername())
                 .status(ownerHomestay.getStatus())
+                .roleOwner(ownerHomestay.getRoleOwner())
                 .build();
     }
 
@@ -242,6 +247,7 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                 .email(ownerHomestay.getEmail())
                 .username(ownerHomestay.getUsername())
                 .status(ownerHomestay.getStatus())
+                .roleOwner(ownerHomestay.getRoleOwner())
                 .build();
     }
 
@@ -266,6 +272,7 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                 .username(ownerHomestay.getUsername())
                 .avataUrl(ownerHomestay.getAvatarUrl())
                 .status(ownerHomestay.getStatus())
+                .roleOwner(ownerHomestay.getRoleOwner())
                 .build();
     }
 
