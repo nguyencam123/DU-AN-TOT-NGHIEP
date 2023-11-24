@@ -1,18 +1,17 @@
 package com.example.demo.cors.admin.services.impl;
 
 import com.cloudinary.Cloudinary;
+import com.example.demo.cors.admin.model.request.AdminLoginRequest;
 import com.example.demo.cors.admin.model.request.AdminPassRequest;
 import com.example.demo.cors.admin.model.request.AdminRequest;
 import com.example.demo.cors.admin.model.request.AdminUserPasswordRequest;
 import com.example.demo.cors.admin.model.response.AdminAuthenticationReponse;
 import com.example.demo.cors.admin.model.response.AdminLoginResponse;
-import com.example.demo.cors.admin.model.request.AdminLoginRequest;
 import com.example.demo.cors.admin.repository.AdminLoginRepository;
 import com.example.demo.cors.admin.services.AdminLoginService;
-import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayOwnerOwnerHomestayRequest;
 import com.example.demo.entities.Admin;
-import com.example.demo.entities.User;
 import com.example.demo.infrastructure.contant.Status;
+import com.example.demo.infrastructure.contant.role.RoleAdmin;
 import com.example.demo.infrastructure.exception.rest.RestApiException;
 import com.example.demo.infrastructure.security.token.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +93,7 @@ public class AdminLoginServiceImpl implements AdminLoginService {
         admin.setUsername(request.getUsername());
         admin.setPassword(passwordEncoder.encode(request.getPassword()));
         admin.setStatus(Status.HOAT_DONG);
+        admin.setRoleAdmin(RoleAdmin.ADMIN);
         adminLoginRepository.save(admin);
         var jwtServices = jwtService.generateToken(admin);
         return AdminAuthenticationReponse.builder().
@@ -107,7 +107,9 @@ public class AdminLoginServiceImpl implements AdminLoginService {
                 .phoneNumber(admin.getPhoneNumber())
                 .email(admin.getEmail())
                 .username(admin.getUsername())
-                .status(admin.getStatus()).build();
+                .status(admin.getStatus())
+                .roleAdmin(admin.getRoleAdmin())
+                .build();
     }
 
     @Override
@@ -132,6 +134,7 @@ public class AdminLoginServiceImpl implements AdminLoginService {
                 .phoneNumber(admin.getPhoneNumber())
                 .email(admin.getEmail())
                 .username(admin.getUsername())
+                .roleAdmin(admin.getRoleAdmin())
                 .status(admin.getStatus()).build();
     }
 
@@ -156,6 +159,7 @@ public class AdminLoginServiceImpl implements AdminLoginService {
                 .phoneNumber(admin.getPhoneNumber())
                 .email(admin.getEmail())
                 .username(admin.getUsername())
+                .roleAdmin(admin.getRoleAdmin())
                 .status(admin.getStatus()).build();
     }
 
@@ -192,6 +196,7 @@ public class AdminLoginServiceImpl implements AdminLoginService {
                 .avataUrl(admin.getAvatarUrl())
                 .username(admin.getUsername())
                 .status(admin.getStatus())
+                .roleAdmin(admin.getRoleAdmin())
                 .build();
     }
 

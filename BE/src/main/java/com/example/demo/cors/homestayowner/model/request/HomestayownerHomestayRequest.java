@@ -10,36 +10,36 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class HomestayownerHomestayRequest extends PageableRequest{
+public class HomestayownerHomestayRequest extends PageableRequest {
 
-      private String name;
+    private String name;
 
-      private Long startDate;
+    private Long startDate;
 
-      private Long endDate;
+    private Long endDate;
 
-      private String desc;
+    private String desc;
 
-      private Double acreage;
+    private Double acreage;
 
-      private String timeCheckIn;
+    private String timeCheckIn;
 
-      private String timeCheckOut;
+    private String timeCheckOut;
 
-      private Integer roomNumber;
+    private Integer roomNumber;
 
-      private BigDecimal price;
+    private BigDecimal price;
 
-      private Integer numberPerson;
+    private Integer numberPerson;
 
-      private String address;
+    private String address;
 
-      private Double CancellationPolicy;
+    private Double CancellationPolicy;
 
-      private String ownerHomestay;
+    private String ownerHomestay;
 
-      private String promotion;
+    private String promotion;
 
-      private String status;
+    private String status;
 
 }

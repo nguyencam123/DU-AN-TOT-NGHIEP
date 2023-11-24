@@ -3,7 +3,6 @@ package com.example.demo.infrastructure.security.token;
 import com.example.demo.entities.Admin;
 import com.example.demo.entities.OwnerHomestay;
 import com.example.demo.entities.User;
-import com.example.demo.infrastructure.security.auth.ApplicationAuditAware;
 import com.example.demo.repositories.AdminRepository;
 import com.example.demo.repositories.OwnerHomestayRepository;
 import com.example.demo.repositories.UserRepository;
@@ -50,11 +49,6 @@ public class ApplicationConfig1 {
 
             throw new UsernameNotFoundException("User not found");
         };
-    }
-
-    @Bean
-    public AuditorAware<String> auditorAware() {
-        return new ApplicationAuditAware();
     }
 
     @Bean

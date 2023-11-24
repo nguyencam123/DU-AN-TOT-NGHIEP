@@ -33,7 +33,7 @@ public class HomestayOwnerStatisticalServiceImpl implements HomestayOwnerStatist
             request.setYear(request.getYear());
             request.setMonth(i);
             request.setIdOwnerHomestay(request.getIdOwnerHomestay());
-            responseList.add(homestayOwnerBookingRepository.getAllStatistical(request));
+            responseList.add(homestayOwnerBookingRepository.getAllStatisticalYear(request));
         }
         return responseList;
     }
