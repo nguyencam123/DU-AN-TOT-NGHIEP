@@ -14,6 +14,7 @@ import com.example.demo.entities.User;
 import com.example.demo.infrastructure.configemail.Email;
 import com.example.demo.infrastructure.configemail.EmailSender;
 import com.example.demo.infrastructure.contant.Status;
+import com.example.demo.infrastructure.contant.role.RoleCustomer;
 import com.example.demo.infrastructure.exception.rest.RestApiException;
 import com.example.demo.infrastructure.security.token.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,13 +106,14 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setStatus(Status.KHONG_HOAT_DONG);
+        user.setRoleCustomer(RoleCustomer.CUSTOMER);
         customerLoginRepository.save(user);
 
         Email email = new Email();
         email.setToEmail(new String[]{user.getEmail()});
         email.setSubject("Chào mừng đến với trang Web trvelViVu");
         email.setTitleEmail("Chúc mừng " + user.getUsername());
-        String confirmationLink = "http://localhost:8080/login/confirm-email?id=" + user.getId();
+        String confirmationLink = "http://localhost:3000/user/comfirmmail?id=" + user.getId();
         String emailBody = "Bạn đã đăng ký thành công. Vui lòng xác nhận email bằng cách nhấp vào liên kết sau: " + confirmationLink;
         email.setBody(emailBody);
         emailSender.sendEmail(email.getToEmail(), email.getSubject(), email.getTitleEmail(), emailBody);
@@ -129,6 +131,7 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 .email(user.getEmail())
                 .username(user.getUsername())
                 .status(user.getStatus())
+                .roleCustomer(user.getRoleCustomer())
                 .build();
     }
 
@@ -169,6 +172,7 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 .email(user.getEmail())
                 .username(user.getUsername())
                 .status(user.getStatus())
+                .roleCustomer(user.getRoleCustomer())
                 .build();
     }
 
@@ -195,6 +199,7 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 .email(user.getEmail())
                 .username(user.getUsername())
                 .status(user.getStatus())
+                .roleCustomer(user.getRoleCustomer())
                 .build();
     }
 
@@ -264,6 +269,7 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 .avataUrl(customer.getAvatarUrl())
                 .username(customer.getUsername())
                 .status(customer.getStatus())
+                .roleCustomer(customer.getRoleCustomer())
                 .build();
     }
 
