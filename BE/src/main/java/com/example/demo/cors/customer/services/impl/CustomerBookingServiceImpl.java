@@ -79,12 +79,6 @@ public class CustomerBookingServiceImpl implements CustomerBookingService {
     public Booking cancel(String id, CustomerBookingRequest request) {
         Booking booking = findForUpdate(id);
 
-//        if (!request.getNote().trim().isBlank()) {
-//            throw new RestApiException("Bạn phải nhập lý do hủy phòng");
-//        } else if (request.getNote().length() >= 20) {
-//
-//
-//        } else {
         booking.setNote(request.getNote());
 
         booking.setStatus(StatusBooking.HUY);
@@ -97,7 +91,6 @@ public class CustomerBookingServiceImpl implements CustomerBookingService {
         emailSender.sendEmail(email.getToEmail(), email.getSubject(), email.getTitleEmail(), email.getBody());
 
         customerBookingRepository.save(booking);
-//        }
 
         return booking;
     }
