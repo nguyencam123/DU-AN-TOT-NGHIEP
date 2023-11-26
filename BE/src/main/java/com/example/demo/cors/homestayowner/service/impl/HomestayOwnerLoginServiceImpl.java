@@ -118,7 +118,7 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         email.setToEmail(new String[]{ownerHomestay.getEmail()});
         email.setSubject("Chào mừng đến với trang Web trvelViVu");
         email.setTitleEmail("Chúc mừng " + ownerHomestay.getUsername());
-        String confirmationLink = "http://localhost:3000/comfirmmail?id=" + ownerHomestay.getId();
+        String confirmationLink = "http://localhost:3000/owner/comfirmmail?id=" + ownerHomestay.getId();
         String emailBody = "Bạn đã đăng ký thành công. Vui lòng xác nhận email bằng cách nhấp vào liên kết sau: " + confirmationLink;
         email.setBody(emailBody);
         emailSender.sendEmail(email.getToEmail(), email.getSubject(), email.getTitleEmail(), emailBody);
@@ -150,7 +150,7 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         if (!passwordEncoder.matches(request.getPassword(), ownerHomestay.getPassword())) {
             throw new RestApiException("password isn't true");
         }
-        if(ownerHomestay.getStatus().equals(Status.KHONG_HOAT_DONG)){
+        if(ownerHomestay.getStatus().equals(Status.KHONG_HOAT_DONG) && ownerHomestay.getStatus().equals(Status.CHO_DUYET)){
             throw new RestApiException("user isn't work");
         }
         authenticationManager.authenticate(

@@ -19,8 +19,6 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v2/homestay/")
-@RequiredArgsConstructor
-@PreAuthorize("hasRole('OWNER')")
 public class HomestayOwnerHomestayController {
 
     @Autowired
@@ -39,7 +37,6 @@ public class HomestayOwnerHomestayController {
     }
 
     @GetMapping("get-imghomestay")
-    @PreAuthorize("hasAuthority('owner:read')")
     public ResponseObject getPageHomestayownerHomestay(@RequestParam("id") String id) {
         return new ResponseObject(homestayOwnerImgHomestayService.getImgHomestayByHomestayId(id));
     }
