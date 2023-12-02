@@ -23,6 +23,7 @@ import { BookingSuccess } from './component/user/hotelcomponent/bookigSucces';
 import { useEffect } from 'react';
 import { CartUser } from './component/user/cart/cart';
 import { BookingUser } from './component/user/booking';
+import ComfirmMail from './component/user/cofirmMail/confirm';
 
 function App() {
   //map component user
@@ -65,6 +66,8 @@ function App() {
             } */}
           </Route>
           {/* map quyen voi url admin */}
+          <Route path='/user/comfirmmail' element={<ComfirmMail />} />
+          <Route path='/owner/comfirmmail' element={<ComfirmMail />} />
           <Route path="/*" element={<PartnerLayout />}>
             <Route path="partner/*" element={<ProtectedRoute partnerOnly />} />
           </Route>

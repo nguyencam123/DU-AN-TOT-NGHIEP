@@ -61,7 +61,7 @@ const HomeStayProduct = () => {
 
   const handleFileChange = (e) => {
     let selectedFile = e.target.files;
-    let fileList = [...selectedFile]; // Chuyển đổi FileList thành mảng
+    let fileList = [...selectedFile];
     setFile(fileList);
   };
   //modal
@@ -154,7 +154,7 @@ const HomeStayProduct = () => {
           {
             record.status === 'HOAT_DONG' && (
               <Popconfirm
-                title="Xóa mục này"
+                title="Cập nhật mục này"
                 description="Bạn chắc chắn muốn cập nhật homestay thành không hoạt động không?"
                 icon={<ReloadOutlined />}
                 cancelText="Hủy"
@@ -170,12 +170,28 @@ const HomeStayProduct = () => {
           {
             record.status === 'KHONG_HOAT_DONG' && (
               <Popconfirm
-                title="Xóa mục này"
+                title="Cập nhật mục này"
                 description="Bạn chắc chắn muốn cập nhật homestay thành chờ duyệt không?"
                 icon={<ReloadOutlined />}
                 cancelText="Hủy"
                 okText="Cập nhật"
                 onConfirm={() => handleSubmitStatusToUpdating(record)}
+              >
+                <a>
+                  <ReloadOutlined />
+                </a>
+              </Popconfirm>
+            )
+          }
+          {
+            record.status === 'CHO_DUYET' && (
+              <Popconfirm
+                title="Cập nhật mục này"
+                description="Bạn chắc chắn muốn cập nhật homestay thành không hoạt động không?"
+                icon={<ReloadOutlined />}
+                cancelText="Hủy"
+                okText="Cập nhật"
+                onConfirm={() => handleSubmitStatus(record)}
               >
                 <a>
                   <ReloadOutlined />
@@ -258,6 +274,7 @@ const HomeStayProduct = () => {
     roomNumber: parseInt(roomNumber)
   };
   //validateform
+  const [errorFile, setErrorFile] = useState('')
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Vui lòng nhập tên sản phẩm'),
     price: Yup.number()
@@ -265,8 +282,13 @@ const HomeStayProduct = () => {
       .typeError('Vui lòng nhập giá sản phẩm')
       .positive('Giá phải là số dương'),
     file: Yup.array()
-      .min(5, 'Ít nhất 5 hình ảnh phải được chọn')
-      .max(20, 'Không được chọn quá 20 hình ảnh'),
+      .min(5, 'Vui lòng chọn ít nhất 5 file')
+      .max(20, 'Vui lòng chọn tối đa 20 file')
+      .test('fileSize', 'File phải nhỏ hơn hoặc bằng 5MB', (value) => {
+        if (!value) return true; // Allow empty array
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        return value.every(file => file.size <= maxSize);
+      }),
     numberPerson: Yup.number()
       .required('Vui lòng nhập số lượng người')
       .typeError('Vui lòng nhập số lượng người')
@@ -308,6 +330,19 @@ const HomeStayProduct = () => {
     e.preventDefault();
     try {
       await validationSchema.validate(homestay, { abortEarly: false });
+      if (file.length < 5) {
+        setErrorFile('Vui lòng chọn ít nhất 5 file')
+        throw new Yup.ValidationError('Vui lòng chọn ít nhất 5 file', file, 'file');
+      }
+      if (file.length >= 20) {
+        setErrorFile('Vui lòng chọn dưới 20 file')
+        throw new Yup.ValidationError('Vui lòng chọn ít nhất 5 file', file, 'file');
+      }
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (!file.every(file => file.size <= maxSize)) {
+        setErrorFile('File phải nhỏ hơn hoặc bằng 5MB')
+        throw new Yup.ValidationError('File phải nhỏ hơn hoặc bằng 5MB', file, 'file');
+      }
       if (isAddFrom) {
         await setIsModalOpen(false);
         await message.info('Đang tiến hành thêm bạn vui lòng đợi một vài giây nhé!');
@@ -329,6 +364,7 @@ const HomeStayProduct = () => {
       }
       dispatch(fetchHomestay());
       setFormErrors({});
+      setErrorFile('')
     } catch (errors) {
       const errorObject = {};
       errors.inner.forEach(error => {
@@ -364,7 +400,7 @@ const HomeStayProduct = () => {
     setconvenient(record.detailHomestays)
     // 
     setFormErrors({});
-
+    setErrorFile('')
     const addressParts = record.address.split(", ");
     const selectedWardName = addressParts[0]; // Lấy tên phường/xã từ địa chỉ
     const selectedDistrictName = addressParts[1]; // Lấy tên quận/huyện từ địa chỉ
@@ -617,8 +653,8 @@ const HomeStayProduct = () => {
             <label htmlFor="image">Chọn ảnh</label>
             <input type="file" id="image" multiple accept="image/*" onChange={handleFileChange} />
             {isAddFrom == true ? '' : <div style={{ color: 'red' }}>*(lưu ý khi chỉnh sửa chúng tôi sẽ chèn vào ảnh cũ của bạn)</div>}
+            <div style={{ color: 'red' }}>{errorFile}</div>
           </div>
-          <div style={{ color: 'red' }}>{formErrors.file}</div>
         </form>
         {isAddFrom == true ? '' : <div style={{ marginTop: 10 }}>
           {
@@ -653,7 +689,7 @@ const HomeStayProduct = () => {
         </div>
         }
       </Modal>
-      <Modal title={<div style={{ fontSize: '22px' }}>Xem thông tin chi tiết homstay</div>} open={isViewmodal} onCancel={handleCancel}
+      <Modal title={<div style={{ fontSize: '22px' }}>Xem thông tin chi tiết homstay</div>} open={isViewmodal} onCancel={handleCancel} onOk={handleCancel}
         width={1100} style={{ fontSize: '40px' }}>
         <div style={{ fontSize: 18, fontWeight: 600 }}>
           <table>
