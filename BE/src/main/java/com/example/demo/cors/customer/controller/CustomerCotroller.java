@@ -5,6 +5,7 @@ import com.example.demo.cors.customer.model.coventer.CustomerConventer;
 import com.example.demo.cors.customer.model.request.CustomerRequest;
 import com.example.demo.cors.customer.services.CustomerLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,8 +24,8 @@ public class CustomerCotroller {
 
     @PutMapping("/update-information-owner")
     public ResponseObject updateInformationOwners(@RequestParam("customer") String customerRequest, @RequestParam("id") String idCustomer, @RequestParam("avataUrl") MultipartFile multipartFile) throws IOException {
-        CustomerRequest request=conventer.convert(customerRequest);
-        return new ResponseObject(customerLoginService.updateInformationCusmoter(idCustomer,request,multipartFile));
+        CustomerRequest request = conventer.convert(customerRequest);
+        return new ResponseObject(customerLoginService.updateInformationCusmoter(idCustomer, request, multipartFile));
     }
 
 }
