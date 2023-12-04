@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -34,7 +33,8 @@ public class SecurityConfiguration {
             {
                     "/api/v2/login/**",
                     "/api/v1/login/**",
-                    "/api/v3/login/**"
+                    "/api/v3/login/**",
+                    "/api/v2/comment/**"
             };
     private static final String[] OWNER_ROLE =
             {

@@ -12,7 +12,7 @@ import com.example.demo.infrastructure.exception.rest.RestApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3002")
 @RestController
 @RequestMapping("/api/v2/login")
 public class HomestayOwnerLoginController {
