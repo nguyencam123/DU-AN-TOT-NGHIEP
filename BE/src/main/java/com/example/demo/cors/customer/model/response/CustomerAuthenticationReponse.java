@@ -2,6 +2,7 @@ package com.example.demo.cors.customer.model.response;
 
 
 import com.example.demo.infrastructure.contant.Status;
+import com.example.demo.infrastructure.contant.role.RoleCustomer;
 import lombok.*;
 
 @Getter
@@ -34,5 +35,7 @@ public class CustomerAuthenticationReponse {
     private String avataUrl;
 
     private Status status;
+
+    private RoleCustomer roleCustomer;
 
 }
