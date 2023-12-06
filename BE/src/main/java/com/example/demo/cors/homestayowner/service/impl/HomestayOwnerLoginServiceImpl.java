@@ -6,15 +6,22 @@ import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayOw
 import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayOwnerPasswordRequest;
 import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayOwnerUsenamePasswordRequest;
 import com.example.demo.cors.homestayowner.repository.HomestayOwnerOwnerHomestayRepository;
+import com.example.demo.cors.homestayowner.repository.HomestayOwnerTokenRepository;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerLoginService;
 import com.example.demo.entities.OwnerHomestay;
+import com.example.demo.entities.Token;
 import com.example.demo.infrastructure.configemail.Email;
 import com.example.demo.infrastructure.configemail.EmailSender;
 import com.example.demo.infrastructure.contant.Status;
+import com.example.demo.infrastructure.contant.TypeToken;
 import com.example.demo.infrastructure.contant.role.RoleOwner;
 import com.example.demo.infrastructure.exception.rest.RestApiException;
 import com.example.demo.infrastructure.security.token.JwtService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -36,6 +43,9 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
 
     @Autowired
     private HomestayOwnerOwnerHomestayRepository homestayownerOwnerHomestayRepository;
+
+    @Autowired
+    private HomestayOwnerTokenRepository tokenRepository;
 
     @Autowired
     private EmailSender emailSender;
@@ -111,8 +121,10 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         ownerHomestay.setUsername(request.getUsername());
         ownerHomestay.setPassword(passwordEncoder.encode(request.getPassword()));
         ownerHomestay.setStatus(Status.CHO_DUYET);
-        ownerHomestay.setRoleOwner(RoleOwner.OWNER);
-        homestayownerOwnerHomestayRepository.save(ownerHomestay);
+        ownerHomestay.setRole(RoleOwner.OWNER);
+        OwnerHomestay owner = homestayownerOwnerHomestayRepository.save(ownerHomestay);
+        var jwtToken = jwtService.generateToken(ownerHomestay);
+        saveUserToken(ownerHomestay, jwtToken);
 
         Email email = new Email();
         email.setToEmail(new String[]{ownerHomestay.getEmail()});
@@ -131,7 +143,7 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                 .email(ownerHomestay.getEmail())
                 .username(ownerHomestay.getUsername())
                 .status(ownerHomestay.getStatus())
-                .roleOwner(ownerHomestay.getRoleOwner())
+                .roleOwner(ownerHomestay.getRole())
                 .build();
     }
 
@@ -150,7 +162,7 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         if (!passwordEncoder.matches(request.getPassword(), ownerHomestay.getPassword())) {
             throw new RestApiException("password isn't true");
         }
-        if(ownerHomestay.getStatus().equals(Status.KHONG_HOAT_DONG) && ownerHomestay.getStatus().equals(Status.CHO_DUYET)){
+        if(ownerHomestay.getStatus().equals(Status.KHONG_HOAT_DONG) || ownerHomestay.getStatus().equals(Status.CHO_DUYET)){
             throw new RestApiException("user isn't work");
         }
         authenticationManager.authenticate(
@@ -159,7 +171,12 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                         request.getPassword()
                 )
         );
+
         var jwtToken = jwtService.generateToken(ownerHomestay);
+        var refreshToken = jwtService.generateRefreshToken(ownerHomestay);
+        revokeAllUserTokens(ownerHomestay);
+        saveUserToken(ownerHomestay, jwtToken);
+
         return HomestayOwnerAuthenticationReponse.builder().
                 token(jwtToken)
                 .id(ownerHomestay.getId())
@@ -172,7 +189,8 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                 .email(ownerHomestay.getEmail())
                 .username(ownerHomestay.getUsername())
                 .status(ownerHomestay.getStatus())
-                .roleOwner(ownerHomestay.getRoleOwner())
+                .roleOwner(ownerHomestay.getRole())
+                .refreshToken(refreshToken)
                 .build();
     }
 
@@ -185,8 +203,10 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         if (!request.getNewPassword().equals(request.getConfirmationPassword())) {
             throw new IllegalStateException("password aren't the same");
         }
+
         ownerHomestay.setPassword(passwordEncoder.encode(request.getNewPassword()));
         homestayownerOwnerHomestayRepository.save(ownerHomestay);
+
         return HomestayOwnerAuthenticationReponse.builder()
                 .id(ownerHomestay.getId())
                 .code(ownerHomestay.getCode())
@@ -198,15 +218,17 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                 .email(ownerHomestay.getEmail())
                 .username(ownerHomestay.getUsername())
                 .status(ownerHomestay.getStatus())
-                .roleOwner(ownerHomestay.getRoleOwner())
+                .roleOwner(ownerHomestay.getRole())
                 .build();
     }
 
     @Override
     public HomestayOwnerAuthenticationReponse updateInformationOwner(String idOwner, HomestayOwnerOwnerHomestayRequest request){
+
         checkNull(isNullOrEmpty(request.getUsername()), isNullOrEmpty(request.getName()), request.getBirthday(), isNullOrEmpty(request.getAddress()), isNullOrEmpty(request.getPhoneNumber()), isNullOrEmpty(request.getEmail()), request);
         OwnerHomestay ownerHomestay = homestayownerOwnerHomestayRepository.findById(idOwner).orElse(null);
         String phoneNumber = request.getPhoneNumber();
+
         if (!isValidVietnamesePhoneNumber(phoneNumber)) {
             throw new RestApiException("Invalid Vietnamese phone number format");
         }
@@ -226,6 +248,7 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         if (homestayownerOwnerHomestayRepository.existsByPhoneNumber(request.getPhoneNumber()) && !ownerHomestay.getPhoneNumber().equals(request.getPhoneNumber())) {
             throw new RestApiException("PhoneNumber is already in use");
         }
+
         ownerHomestay.setName(request.getName());
         ownerHomestay.setBirthday(request.getBirthday());
         ownerHomestay.setGender(request.getGender());
@@ -235,7 +258,9 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         ownerHomestay.setUsername(request.getUsername());
         ownerHomestay.setStatus(Status.HOAT_DONG);
         homestayownerOwnerHomestayRepository.save(ownerHomestay);
+
         var jwtServices = jwtService.generateToken(ownerHomestay);
+
         return HomestayOwnerAuthenticationReponse.builder()
                 .code(ownerHomestay.getCode())
                 .id(ownerHomestay.getId())
@@ -247,7 +272,7 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                 .email(ownerHomestay.getEmail())
                 .username(ownerHomestay.getUsername())
                 .status(ownerHomestay.getStatus())
-                .roleOwner(ownerHomestay.getRoleOwner())
+                .roleOwner(ownerHomestay.getRole())
                 .build();
     }
 
@@ -272,7 +297,7 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                 .username(ownerHomestay.getUsername())
                 .avataUrl(ownerHomestay.getAvatarUrl())
                 .status(ownerHomestay.getStatus())
-                .roleOwner(ownerHomestay.getRoleOwner())
+                .roleOwner(ownerHomestay.getRole())
                 .build();
     }
 
@@ -303,6 +328,28 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
 
     public static boolean isNullOrEmpty(String str) {
         return str == null || str.trim().isEmpty();
+    }
+
+    private void saveUserToken(OwnerHomestay ownerHomestay, String jwtToken) {
+        var token = Token.builder()
+                .ownerHomestay(ownerHomestay)
+                .token(jwtToken)
+                .tokenType(TypeToken.BEARER)
+                .expired(false)
+                .revoked(false)
+                .build();
+        tokenRepository.save(token);
+    }
+
+    private void revokeAllUserTokens(OwnerHomestay ownerHomestay) {
+        var validUserTokens = tokenRepository.findAllValidTokenByOwnerHomestay(ownerHomestay.getId());
+        if (validUserTokens.isEmpty())
+            return;
+        validUserTokens.forEach(token -> {
+            token.setExpired(true);
+            token.setRevoked(true);
+        });
+        tokenRepository.saveAll(validUserTokens);
     }
 
 }

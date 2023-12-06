@@ -1,19 +1,20 @@
 package com.example.demo.cors.customer.services.impl;
 
 import com.cloudinary.Cloudinary;
-import com.example.demo.cors.customer.model.request.CustomerLoginRequest;
 import com.example.demo.cors.customer.model.request.CustomerPasswordRequest;
 import com.example.demo.cors.customer.model.request.CustomerRequest;
-import com.example.demo.cors.customer.model.request.CustomerUserPasswordRequest;
+import com.example.demo.cors.customer.model.request.CustomerUserPassRequest;
 import com.example.demo.cors.customer.model.response.CustomerAuthenticationReponse;
-import com.example.demo.cors.customer.model.response.CustomerLoginResponse;
 import com.example.demo.cors.customer.repository.CustomerLoginRepository;
+import com.example.demo.cors.customer.repository.CustomerTokenRepository;
 import com.example.demo.cors.customer.services.CustomerLoginService;
 import com.example.demo.entities.OwnerHomestay;
+import com.example.demo.entities.Token;
 import com.example.demo.entities.User;
 import com.example.demo.infrastructure.configemail.Email;
 import com.example.demo.infrastructure.configemail.EmailSender;
 import com.example.demo.infrastructure.contant.Status;
+import com.example.demo.infrastructure.contant.TypeToken;
 import com.example.demo.infrastructure.contant.role.RoleCustomer;
 import com.example.demo.infrastructure.exception.rest.RestApiException;
 import com.example.demo.infrastructure.security.token.JwtService;
@@ -35,6 +36,9 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
 
     @Autowired
     private CustomerLoginRepository customerLoginRepository;
+
+    @Autowired
+    private CustomerTokenRepository customerTokenRepository;
 
     @Autowired
     private EmailSender emailSender;
@@ -105,16 +109,17 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         user.setEmail(request.getEmail());
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setStatus(Status.KHONG_HOAT_DONG);
-        user.setRoleCustomer(RoleCustomer.CUSTOMER);
-        customerLoginRepository.save(user);
+        user.setStatus(Status.HOAT_DONG);
+        user.setRole(RoleCustomer.CUSTOMER);
+        User user1=customerLoginRepository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+        saveUserToken(user1, jwtToken);
 
         Email email = new Email();
         email.setToEmail(new String[]{user.getEmail()});
         email.setSubject("Chào mừng đến với trang Web trvelViVu");
         email.setTitleEmail("Chúc mừng " + user.getUsername());
-        String confirmationLink = "http://localhost:3000/user/comfirmmail?id=" + user.getId();
-        String emailBody = "Bạn đã đăng ký thành công. Vui lòng xác nhận email bằng cách nhấp vào liên kết sau: " + confirmationLink;
+        String emailBody = "Bạn đã đăng ký thành công.";
         email.setBody(emailBody);
         emailSender.sendEmail(email.getToEmail(), email.getSubject(), email.getTitleEmail(), emailBody);
 
@@ -131,12 +136,12 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 .email(user.getEmail())
                 .username(user.getUsername())
                 .status(user.getStatus())
-                .roleCustomer(user.getRoleCustomer())
+                .roleCustomer(user.getRole())
                 .build();
     }
 
     @Override
-    public CustomerAuthenticationReponse CustomerAuthenticate(CustomerUserPasswordRequest request) {
+    public CustomerAuthenticationReponse CustomerAuthenticate(CustomerUserPassRequest request) {
         if (isNullOrEmpty(request.getUsername())) {
             throw new RestApiException("Username cannot be empty");
         }
@@ -160,6 +165,10 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 )
         );
         var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+        revokeAllUserTokens(user);
+        saveUserToken(user, jwtToken);
+
         return CustomerAuthenticationReponse.builder()
                 .token(jwtToken)
                 .id(user.getId())
@@ -172,7 +181,7 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 .email(user.getEmail())
                 .username(user.getUsername())
                 .status(user.getStatus())
-                .roleCustomer(user.getRoleCustomer())
+                .roleCustomer(user.getRole())
                 .build();
     }
 
@@ -199,7 +208,7 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 .email(user.getEmail())
                 .username(user.getUsername())
                 .status(user.getStatus())
-                .roleCustomer(user.getRoleCustomer())
+                .roleCustomer(user.getRole())
                 .build();
     }
 
@@ -269,7 +278,7 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 .avataUrl(customer.getAvatarUrl())
                 .username(customer.getUsername())
                 .status(customer.getStatus())
-                .roleCustomer(customer.getRoleCustomer())
+                .roleCustomer(customer.getRole())
                 .build();
     }
 
@@ -285,6 +294,28 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
 
     public static boolean isNullOrEmpty(String str) {
         return str == null || str.trim().isEmpty();
+    }
+
+    private void saveUserToken(User user, String jwtToken) {
+        var token = Token.builder()
+                .user(user)
+                .token(jwtToken)
+                .tokenType(TypeToken.BEARER)
+                .expired(false)
+                .revoked(false)
+                .build();
+        customerTokenRepository.save(token);
+    }
+
+    private void revokeAllUserTokens(User user) {
+        var validUserTokens = customerTokenRepository.findAllValidTokenByUser(user.getId());
+        if (validUserTokens.isEmpty())
+            return;
+        validUserTokens.forEach(token -> {
+            token.setExpired(true);
+            token.setRevoked(true);
+        });
+        customerTokenRepository.saveAll(validUserTokens);
     }
 
 }

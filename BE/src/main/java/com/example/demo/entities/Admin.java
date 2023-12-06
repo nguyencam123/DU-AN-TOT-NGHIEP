@@ -58,11 +58,11 @@ public class Admin extends PrimaryEntity implements UserDetails {
 
     private Status status;
 
-    private RoleAdmin roleAdmin;
+    private RoleAdmin role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roleAdmin.getAuthorities();
+        return role.getAuthorities();
     }
 
     @Override

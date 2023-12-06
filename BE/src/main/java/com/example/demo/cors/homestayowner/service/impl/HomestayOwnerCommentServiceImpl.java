@@ -56,17 +56,22 @@ public class HomestayOwnerCommentServiceImpl implements HomestayOwnerCommentServ
         comment.setComment(request.getComment());
         comment.setPoint(request.getPoint());
         comment.setUser(homestayOwnerUserRepository.findById(request.getUser()).get());
+        Comment savedComment = homestayOwnerCommentRepository.save(comment);
+
+        if(request.getMultipartFiles()!=null){
         List<ImgComment> newImages = new ArrayList<>();
         for (MultipartFile image : request.getMultipartFiles()) {
             ImgComment imgComment = new ImgComment();
-            imgComment.setComment(comment);
+            imgComment.setComment(savedComment);
             Map uploadResult = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.asMap("folder", "comment_images"));
             imgComment.setImgUrl(uploadResult.get("url").toString());
             homestayOwnerImgCommentRepository.save(imgComment);
             newImages.add(imgComment);
+            savedComment.setImages(newImages);
+        }}else{
+            comment.setImages(null);
         }
-        comment.setImages(newImages);
-        Comment add = homestayOwnerCommentRepository.save(comment);
+        Comment add = homestayOwnerCommentRepository.save(savedComment);
         return add;
     }
 

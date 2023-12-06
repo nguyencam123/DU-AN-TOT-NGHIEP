@@ -15,6 +15,8 @@ public class HomestayOwnerAuthenticationReponse {
 
     private String token;
 
+    private String refreshToken;
+
     private String code;
 
     private String name;
@@ -36,4 +38,7 @@ public class HomestayOwnerAuthenticationReponse {
     private Status status;
 
     private RoleOwner roleOwner;
+
+    private String accessToken;
+
 }

@@ -9,6 +9,7 @@ import java.util.Optional;
 
 @Primary
 @Repository
+
 public interface CustomerLoginRepository extends UserRepository {
 
     @Override
