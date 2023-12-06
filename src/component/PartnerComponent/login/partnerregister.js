@@ -12,7 +12,7 @@ import {
     MDBRadio
 }
     from 'mdb-react-ui-kit';
-import { DatePicker, notification } from 'antd';
+import { DatePicker, message, notification } from 'antd';
 import moment from 'moment';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
@@ -29,6 +29,7 @@ import { useNavigate } from 'react-router-dom';
 // });
 
 const PartnerRegister = () => {
+    const [messageApi, contextHolder] = message.useMessage();
     const [name, setname] = useState('')
     const [birthday, setbirthday] = useState(856345)
     const [gender, setgender] = useState(true)
@@ -46,7 +47,7 @@ const PartnerRegister = () => {
         notification.open({
             message: 'Thông báo',
             description:
-                'Đăng ký thành công',
+                'Đăng ký thành công chúng tôi vừa gửi đương link kích hoạt tài khoản vào mail của bạn',
             onClick: () => {
                 console.log('Notification Clicked!');
             },
@@ -89,7 +90,11 @@ const PartnerRegister = () => {
                     navigate('/hop-tac/login')
                 })
                 .catch(error => {
-                    console.error('Error:', error);
+                    // console.error('Error:', error);
+                    messageApi.open({
+                        type: 'error',
+                        content: { error },
+                    });
                 });
         }
     };
