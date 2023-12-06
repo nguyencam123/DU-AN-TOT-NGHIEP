@@ -11,8 +11,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -29,12 +31,13 @@ public class SecurityConfiguration {
 
     private final AuthenticationProvider authenticationProvider;
 
+    private final LogoutHandler logoutHandler;
+
     private static final String[] WHITE_LIST_URL =
             {
                     "/api/v2/login/**",
                     "/api/v1/login/**",
-                    "/api/v3/login/**",
-                    "/api/v2/comment/**"
+                    "/api/v3/login/**"
             };
     private static final String[] OWNER_ROLE =
             {
@@ -46,7 +49,8 @@ public class SecurityConfiguration {
                     "/api/v2/owner/**",
                     "/api/v2/change-pass/**",
                     "/api/v2/promotion/**",
-                    "/api/v2/statictical/**"
+                    "/api/v2/statictical/**",
+                    "/api/v2/comment/**"
             };
     private static final String[] ADMIN_ROLE =
             {
@@ -62,7 +66,6 @@ public class SecurityConfiguration {
             {
                     "/api/v1/booking/**",
                     "/api/v1/cart/**",
-                    "/api/v1/comment/**",
                     "/api/v1/convenient-homestay/**",
                     "/api/v1/customer/**",
                     "/api/v1/homestay/**",
@@ -71,7 +74,8 @@ public class SecurityConfiguration {
                     "/api/v1/img-comment/**",
                     "/api/v1/img-homestay/**",
                     "/api/v1/change-pass/**",
-                    "/api/v1/payment/**"
+                    "/api/v1/payment/**",
+                    "/api/v1/comment/**"
             };
 
     @Bean
@@ -81,7 +85,7 @@ public class SecurityConfiguration {
                 .cors()
                 .and()
                 .authorizeHttpRequests(res ->
-                res.requestMatchers(WHITE_LIST_URL).permitAll()
+                 res.requestMatchers(WHITE_LIST_URL).permitAll()
                 .requestMatchers(HttpMethod.GET, CUSTOMER_ROLE).permitAll()
                 .requestMatchers(CUSTOMER_ROLE).hasAnyRole(RoleCustomer.CUSTOMER.name())
                 .requestMatchers(HttpMethod.POST, CUSTOMER_ROLE).hasAnyAuthority(PermissionCustomer.CUSTOMER_CREATE.name())
@@ -98,7 +102,12 @@ public class SecurityConfiguration {
                 .authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .logout(logout ->
+                        logout.logoutUrl("/api/v1/auth/logout")
+                        .addLogoutHandler(logoutHandler)
+                        .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
+        );
         return http.build();
     }
 
