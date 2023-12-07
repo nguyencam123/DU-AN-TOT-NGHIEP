@@ -3,6 +3,8 @@ package com.example.demo.cors.homestayowner.model.request;
 import com.example.demo.infrastructure.contant.TypePromotion;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,5 +23,7 @@ public class HomestayOwnerPromotionRequest {
     private Double value;
 
     private String owner;
+
+    private List<String> homestay;
 
 }

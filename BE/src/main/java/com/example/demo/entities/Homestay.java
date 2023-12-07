@@ -4,6 +4,7 @@ import com.example.demo.entities.base.PrimaryEntity;
 import com.example.demo.infrastructure.contant.EntityProperties;
 import com.example.demo.infrastructure.contant.Status;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -28,6 +29,7 @@ public class Homestay extends PrimaryEntity {
 
     @ManyToOne
     @JoinColumn(name = "promotion_id")
+    @JsonManagedReference
     private Promotion promotion;
 
     @Nationalized
