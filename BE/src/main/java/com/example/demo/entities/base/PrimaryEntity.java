@@ -12,6 +12,7 @@ import lombok.Setter;
 @Setter
 @MappedSuperclass
 @EntityListeners(CreatePrimaryEntityListener.class)
+
 public abstract class PrimaryEntity extends AuditEntity implements IsIdentified {
 
     @Id

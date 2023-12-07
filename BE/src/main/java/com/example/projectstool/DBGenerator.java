@@ -139,7 +139,7 @@ public class DBGenerator implements CommandLineRunner {
         admin1.setUsername("huytq@gmail.com");
         admin1.setPassword("12345678");
         admin1.setAvatarUrl("avcqeqw");
-        admin1.setRoleAdmin(RoleAdmin.ADMIN);
+        admin1.setRole(RoleAdmin.ADMIN);
         adminRepository.save(admin1);
 
         Admin admin2 = new Admin();
@@ -152,7 +152,7 @@ public class DBGenerator implements CommandLineRunner {
         admin2.setUsername("cuongnq@gmail.com");
         admin2.setPassword("12345678");
         admin2.setAvatarUrl("xyzjkl");
-        admin2.setRoleAdmin(RoleAdmin.ADMIN);
+        admin2.setRole(RoleAdmin.ADMIN);
         adminRepository.save(admin2);
 
         //user
@@ -165,7 +165,7 @@ public class DBGenerator implements CommandLineRunner {
         user1.setEmail("sangvt@gmail.com");
         user1.setUsername("sangvt@gmail.com");
         user1.setPassword("12345678");
-        user1.setRoleCustomer(RoleCustomer.CUSTOMER);
+        user1.setRole(RoleCustomer.CUSTOMER);
         userRepository.save(user1);
 
         User user2 = new User();
@@ -177,7 +177,7 @@ public class DBGenerator implements CommandLineRunner {
         user2.setEmail("tuanvt@gmail.com");
         user2.setUsername("tuanvt@gmail.com");
         user2.setPassword("12345678");
-        user2.setRoleCustomer(RoleCustomer.CUSTOMER);
+        user2.setRole(RoleCustomer.CUSTOMER);
         userRepository.save(user2);
 
         //owner homestay
@@ -189,7 +189,7 @@ public class DBGenerator implements CommandLineRunner {
         ownerHomestay1.setUsername("cuongnguyen.nd2015@gmail.com");
         ownerHomestay1.setPassword("12345678");
         ownerHomestay1.setGender(true);
-        ownerHomestay1.setRoleOwner(RoleOwner.OWNER);
+        ownerHomestay1.setRole(RoleOwner.OWNER);
         ownerHomestayRepository.save(ownerHomestay1);
 
         OwnerHomestay ownerHomestay2 = new OwnerHomestay();
@@ -200,7 +200,7 @@ public class DBGenerator implements CommandLineRunner {
         ownerHomestay2.setUsername("lynv@gmail.com");
         ownerHomestay2.setPassword("12345678");
         ownerHomestay2.setGender(false);
-        ownerHomestay2.setRoleOwner(RoleOwner.OWNER);
+        ownerHomestay2.setRole(RoleOwner.OWNER);
         ownerHomestayRepository.save(ownerHomestay2);
 
         //promotion

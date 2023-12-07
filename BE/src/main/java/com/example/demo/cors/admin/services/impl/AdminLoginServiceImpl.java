@@ -8,9 +8,13 @@ import com.example.demo.cors.admin.model.request.AdminUserPasswordRequest;
 import com.example.demo.cors.admin.model.response.AdminAuthenticationReponse;
 import com.example.demo.cors.admin.model.response.AdminLoginResponse;
 import com.example.demo.cors.admin.repository.AdminLoginRepository;
+import com.example.demo.cors.admin.repository.AdminTokenRepository;
 import com.example.demo.cors.admin.services.AdminLoginService;
 import com.example.demo.entities.Admin;
+import com.example.demo.entities.Token;
+import com.example.demo.entities.User;
 import com.example.demo.infrastructure.contant.Status;
+import com.example.demo.infrastructure.contant.TypeToken;
 import com.example.demo.infrastructure.contant.role.RoleAdmin;
 import com.example.demo.infrastructure.exception.rest.RestApiException;
 import com.example.demo.infrastructure.security.token.JwtService;
@@ -35,6 +39,9 @@ public class AdminLoginServiceImpl implements AdminLoginService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AdminTokenRepository adminTokenRepository;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -93,9 +100,11 @@ public class AdminLoginServiceImpl implements AdminLoginService {
         admin.setUsername(request.getUsername());
         admin.setPassword(passwordEncoder.encode(request.getPassword()));
         admin.setStatus(Status.HOAT_DONG);
-        admin.setRoleAdmin(RoleAdmin.ADMIN);
-        adminLoginRepository.save(admin);
+        admin.setRole(RoleAdmin.ADMIN);
+        Admin admin1=adminLoginRepository.save(admin);
         var jwtServices = jwtService.generateToken(admin);
+        saveUserToken(admin1, jwtServices);
+
         return AdminAuthenticationReponse.builder().
                 token(jwtServices)
                 .id(admin.getId())
@@ -108,7 +117,7 @@ public class AdminLoginServiceImpl implements AdminLoginService {
                 .email(admin.getEmail())
                 .username(admin.getUsername())
                 .status(admin.getStatus())
-                .roleAdmin(admin.getRoleAdmin())
+                .roleAdmin(admin.getRole())
                 .build();
     }
 
@@ -122,6 +131,9 @@ public class AdminLoginServiceImpl implements AdminLoginService {
         );
         var admin = adminLoginRepository.findByUsername(request.getUsername()).orElseThrow();
         var jwtToken = jwtService.generateToken(admin);
+        var refreshToken = jwtService.generateRefreshToken(admin);
+        revokeAllUserTokens(admin);
+        saveUserToken(admin, jwtToken);
         System.err.println(jwtToken);
         return AdminAuthenticationReponse.builder().
                 token(jwtToken)
@@ -134,7 +146,7 @@ public class AdminLoginServiceImpl implements AdminLoginService {
                 .phoneNumber(admin.getPhoneNumber())
                 .email(admin.getEmail())
                 .username(admin.getUsername())
-                .roleAdmin(admin.getRoleAdmin())
+                .roleAdmin(admin.getRole())
                 .status(admin.getStatus()).build();
     }
 
@@ -159,7 +171,7 @@ public class AdminLoginServiceImpl implements AdminLoginService {
                 .phoneNumber(admin.getPhoneNumber())
                 .email(admin.getEmail())
                 .username(admin.getUsername())
-                .roleAdmin(admin.getRoleAdmin())
+                .roleAdmin(admin.getRole())
                 .status(admin.getStatus()).build();
     }
 
@@ -196,7 +208,7 @@ public class AdminLoginServiceImpl implements AdminLoginService {
                 .avataUrl(admin.getAvatarUrl())
                 .username(admin.getUsername())
                 .status(admin.getStatus())
-                .roleAdmin(admin.getRoleAdmin())
+                .roleAdmin(admin.getRole())
                 .build();
     }
 
@@ -220,6 +232,28 @@ public class AdminLoginServiceImpl implements AdminLoginService {
 
     public static boolean isNullOrEmpty(String str) {
         return str == null || str.trim().isEmpty();
+    }
+
+    private void saveUserToken(Admin admin, String jwtToken) {
+        var token = Token.builder()
+                .admin(admin)
+                .token(jwtToken)
+                .tokenType(TypeToken.BEARER)
+                .expired(false)
+                .revoked(false)
+                .build();
+        adminTokenRepository.save(token);
+    }
+
+    private void revokeAllUserTokens(Admin admin) {
+        var validUserTokens = adminTokenRepository.findAllValidTokenByUser(admin.getId());
+        if (validUserTokens.isEmpty())
+            return;
+        validUserTokens.forEach(token -> {
+            token.setExpired(true);
+            token.setRevoked(true);
+        });
+        adminTokenRepository.saveAll(validUserTokens);
     }
 
 }

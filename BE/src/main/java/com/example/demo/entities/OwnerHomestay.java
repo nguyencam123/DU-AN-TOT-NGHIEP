@@ -61,11 +61,11 @@ public class OwnerHomestay extends PrimaryEntity implements UserDetails{
 
     private Status status;
 
-    private RoleOwner roleOwner;
+    private RoleOwner role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roleOwner.getAuthorities();
+        return role.getAuthorities();
     }
 
     @Override

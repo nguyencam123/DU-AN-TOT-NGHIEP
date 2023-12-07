@@ -2,6 +2,7 @@ package com.example.demo.infrastructure.exception.rest;
 
 import com.example.demo.infrastructure.contant.Message;
 
+
 public class RestApiException extends RuntimeException{
 
     private static final long serialVersionUID = 1L;
