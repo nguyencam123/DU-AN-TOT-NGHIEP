@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface HomestayOwnerPromotionRepository extends PromotionRepository {
 
-    @Query(value = " select * from promotion where owner_id=:id",nativeQuery = true)
+    @Query(value = "select * from promotion where owner_id=:id",nativeQuery = true)
     List<Promotion> getAllPromotion(String id);
 
     Boolean existsByName(String name);

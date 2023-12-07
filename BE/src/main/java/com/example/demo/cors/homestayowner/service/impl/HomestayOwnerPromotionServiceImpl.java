@@ -1,15 +1,19 @@
 package com.example.demo.cors.homestayowner.service.impl;
 
 import com.example.demo.cors.homestayowner.model.request.HomestayOwnerPromotionRequest;
+import com.example.demo.cors.homestayowner.repository.HomestayOwnerHomestayRepository;
 import com.example.demo.cors.homestayowner.repository.HomestayOwnerOwnerHomestayRepository;
 import com.example.demo.cors.homestayowner.repository.HomestayOwnerPromotionRepository;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerPromotionService;
+import com.example.demo.entities.Homestay;
 import com.example.demo.entities.Promotion;
+import com.example.demo.infrastructure.contant.StatusPromotion;
 import com.example.demo.infrastructure.exception.rest.RestApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -17,6 +21,9 @@ public class HomestayOwnerPromotionServiceImpl implements HomestayOwnerPromotion
 
     @Autowired
     private HomestayOwnerPromotionRepository homestayOwnerPromotionRepository;
+
+    @Autowired
+    private HomestayOwnerHomestayRepository homestayOwnerHomestayRepository;
 
     @Autowired
     private HomestayOwnerOwnerHomestayRepository homestayOwnerOwnerHomestayRepository;
@@ -55,9 +62,17 @@ public class HomestayOwnerPromotionServiceImpl implements HomestayOwnerPromotion
         promotion.setType(request.getType());
         promotion.setValue(request.getValue());
         promotion.setIdOwnerHomestay(homestayOwnerOwnerHomestayRepository.findById(request.getOwner()).get());
+        promotion.setStatusPromotion(StatusPromotion.HOAT_DONG);
         Promotion promotion1=homestayOwnerPromotionRepository.save(promotion);
+        for (String homestay: request.getHomestay()){
+            Homestay homestay1=homestayOwnerHomestayRepository.findById(homestay).orElse(null);
+            homestay1.setPromotion(promotion1);
+            homestayOwnerHomestayRepository.save(homestay1);
+        }
         return promotion1;
     }
+
+
 
     @Override
     public Promotion updatePromotion(String idPromotion,HomestayOwnerPromotionRequest request) throws IOException{
@@ -89,9 +104,21 @@ public class HomestayOwnerPromotionServiceImpl implements HomestayOwnerPromotion
         promotion.setType(request.getType());
         promotion.setValue(request.getValue());
         Promotion promotion1=homestayOwnerPromotionRepository.save(promotion);
+        for (String homestay: request.getHomestay()){
+            Homestay homestay1=homestayOwnerHomestayRepository.findById(homestay).orElse(null);
+            homestay1.setPromotion(promotion1);
+            homestayOwnerHomestayRepository.save(homestay1);
+        }
         return promotion1;
     }
 
+    @Override
+    public Promotion updatePromotionStatus(String idPromotion) throws IOException {
+        Promotion promotion= homestayOwnerPromotionRepository.findById(idPromotion).orElseThrow();
+        promotion.setStatusPromotion(StatusPromotion.KET_THUC);
+        Promotion promotion1=homestayOwnerPromotionRepository.save(promotion);
+        return promotion1;
+    }
 
     public static boolean isNullOrEmpty(String str) {
         return str == null || str.trim().isEmpty();

@@ -50,7 +50,8 @@ public class SecurityConfiguration {
                     "/api/v2/change-pass/**",
                     "/api/v2/promotion/**",
                     "/api/v2/statictical/**",
-                    "/api/v2/comment/**"
+                    "/api/v2/comment/**",
+                    "/api/v2/promotion"
             };
     private static final String[] ADMIN_ROLE =
             {
