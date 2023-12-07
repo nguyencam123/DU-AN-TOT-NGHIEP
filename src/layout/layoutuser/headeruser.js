@@ -36,7 +36,6 @@ const HeaderUser = () => {
   const idUser = useSelector((state) => state.user?.userData?.data.id);
   const statusUser = JSON.parse(localStorage.getItem('userDetail'))?.success;
   const dispatch = useDispatch();
-  console.log(statusUser);
   const [searchVisible, setSearchVisible] = useState(false);
   const [searchValue, setSearchValue] = useState('');
 

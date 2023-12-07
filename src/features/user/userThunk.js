@@ -44,8 +44,10 @@ export const loginUser = (username, password) => async (dispatch) => {
     if (accounts.success) {
       dispatch(loginSuccess({ user: accounts }));
       localStorage.setItem('userDetail', JSON.stringify(accounts));
+      const token = JSON.parse(localStorage.getItem('userDetail')).data.token;
       openNotificationlogin()
       dispatch(loginSuccess({ user: accounts, userData: accounts }))
+      updateAxiosToken(token);
     } else {
       openNotification()
     }

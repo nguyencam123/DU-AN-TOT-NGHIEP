@@ -14,6 +14,7 @@ import HomeStayAdd from '../../component/PartnerComponent/page/homestayAdd';
 import ChangePassword from '../../component/PartnerComponent/login/changePassword';
 import Booking from '../../component/PartnerComponent/booking/booking'
 import StatisticalHomestay from '../../component/PartnerComponent/page/statisticalHomestay'
+import Promotion from '../../component/PartnerComponent/promotion/promotion';
 const { Header, Content, Sider } = Layout;
 
 
@@ -30,7 +31,7 @@ const items = [
   { label: 'Quản lý Homestay', key: '1', icon: <PieChartOutlined />, route: 'partner/homestay', component: <HomeStayProduct /> },
   { label: 'Quản lý đặt phòng', key: '2', icon: <PayCircleOutlined />, route: 'partner/booking', component: <Booking /> },
   { label: 'Quản lý thống kê', key: '3', icon: <AreaChartOutlined />, route: 'partner/statistical', component: <StatisticalHomestay /> },
-  { label: 'Quản lý khuyến mại', key: '4', icon: <DesktopOutlined />, route: 'partner/categor', component: <HomeStayProduct /> },
+  { label: 'Quản lý khuyến mại', key: '4', icon: <DesktopOutlined />, route: 'partner/promotion', component: <Promotion /> },
   { label: 'Quản lý tài khoản', key: '5', icon: <UserOutlined />, route: 'partner/managementAccount', component: <ChangePassword /> }
 ];
 
