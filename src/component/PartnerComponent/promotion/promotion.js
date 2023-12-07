@@ -6,7 +6,7 @@ import {
     Table,
     Row,
     Space,
-    Modal, Tooltip, Button, Input, Col, DatePicker, message
+    Modal, Tooltip, Button, Input, Col, DatePicker, message, Checkbox
 } from 'antd';
 import { useDispatch, useSelector } from 'react-redux'
 import { EyeOutlined, TeamOutlined } from '@ant-design/icons'
@@ -14,6 +14,7 @@ import moment from 'moment';
 import Search from 'antd/es/input/Search';
 import { addPromotion, fetchPromotion } from '../../../features/owner_homestay/getbooking/promotionThunk';
 import * as Yup from 'yup'
+import { fetchHomestay } from '../../../features/owner_homestay/homestayThunk';
 
 const { Title } = Typography
 
@@ -27,8 +28,45 @@ const Promotion = () => {
     const UserID = userDetail?.data.id;
     useEffect(() => {
         dispatch(fetchPromotion(UserID));
+        dispatch(fetchHomestay());
     }, []);
     const promotion = useSelector((state) => state.booking.promotions)
+    const products = useSelector((state) => state.ownerHomestay.homestays);
+    const [checkedValues, setCheckedValues] = useState([]);
+    const onChangePromotion = (checkedValues) => {
+        console.log(checkedValues)
+
+    };
+    /**
+     * @returns Table colums
+     */
+    const columnsData = [
+        {
+            title: 'Tên homestay',
+            dataIndex: 'name',
+            key: 'name'
+        },
+        {
+            title: 'Địa chỉ homestay',
+            dataIndex: 'address',
+            key: 'address'
+        },
+        {
+            title: 'Giá homestay',
+            dataIndex: 'price',
+            key: 'price',
+            align: 'center'
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            render: (_, record) => (
+                <Space size="middle">
+                    <Checkbox onChange={onChangePromotion(record)} />
+                </Space>
+            ),
+        },
+    ];
     /**
     * @access modal thêm 
     */
@@ -36,6 +74,7 @@ const Promotion = () => {
     const [namePromotion, setNamePromotion] = useState('');
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
+    const [homestay, setHomestay] = useState([])
     const [value, setValue] = useState(0);
     const [formErrors, setFormErrors] = useState({});
     const showModal = () => {
@@ -115,7 +154,9 @@ const Promotion = () => {
         startDate: startDate,
         endDate: endDate,
         type: 'TIEN',
-        value: value
+        value: value,
+        owner: UserID,
+        homestay: homestay
     }
     const validationSchema = Yup.object().shape({
         name: Yup.string().required('Vui lòng nhập tên sản phẩm'),
@@ -191,7 +232,7 @@ const Promotion = () => {
                 </Form.Item>
             </Row>
             <Table columns={columns} dataSource={promotion} />
-            <Modal title={isAddFrom == true ? 'Thêm khuyến mãi' : 'Sửa khuyến mãi'} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+            <Modal width={1200} title={isAddFrom == true ? 'Thêm khuyến mãi' : 'Sửa khuyến mãi'} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
                 <Form
                     name="basic"
                     labelCol={{
@@ -201,58 +242,64 @@ const Promotion = () => {
                         span: 24,
                     }}
                     style={{
-                        maxWidth: 800
+                        maxWidth: 1200
                     }}
                     initialValues={{
                         remember: true,
                     }}
                     autoComplete="off"
                 >
-                    <Row gutter={24} style={{ marginRight: 200 }}>
-                        {/* Trường thứ nhất */}
-                        <Col span={24}>
-                            <Form.Item
-                                label={<Title level={5} >Tên khuyến mãi</Title>}
+                    <div style={{ display: 'flex' }}>
+                        <div>
+                            <Row gutter={24} style={{ marginRight: 200 }}>
+                                {/* Trường thứ nhất */}
+                                <Col span={24}>
+                                    <Form.Item
+                                        label={<Title level={5} >Tên khuyến mãi</Title>}
 
-                            >
-                                <Input style={{ width: '300px' }} onChange={(e) => setNamePromotion(e.target.value)} />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={24} style={{ marginRight: 200 }}>
-                        {/* Trường thứ nhất */}
-                        <Col span={24}>
-                            <Form.Item
-                                label={<Title level={5} >Ngày bắt đầu</Title>}
+                                    >
+                                        <Input style={{ width: '300px' }} onChange={(e) => setNamePromotion(e.target.value)} />
+                                    </Form.Item>
+                                </Col>
+                            </Row>
+                            <Row gutter={24} style={{ marginRight: 200 }}>
+                                {/* Trường thứ nhất */}
+                                <Col span={24}>
+                                    <Form.Item
+                                        label={<Title level={5} >Ngày bắt đầu</Title>}
 
-                            >
-                                <DatePicker style={{ width: '300px' }} onChange={(dates) => setStartDate(dates)} />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={24} style={{ marginRight: 200 }}>
-                        {/* Trường thứ nhất */}
-                        <Col span={24}>
-                            <Form.Item
-                                label={<Title level={5}>Ngày kết thúc</Title>}
+                                    >
+                                        <DatePicker style={{ width: '300px' }} onChange={(dates) => setStartDate(dates)} />
+                                    </Form.Item>
+                                </Col>
+                            </Row>
+                            <Row gutter={24} style={{ marginRight: 200 }}>
+                                {/* Trường thứ nhất */}
+                                <Col span={24}>
+                                    <Form.Item
+                                        label={<Title level={5}>Ngày kết thúc</Title>}
 
-                            >
-                                <DatePicker style={{ width: '300px' }} onChange={(dates) => setEndDate(dates)} />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <div style={{ color: 'red' }}>*(lưu ý số tiền khi thêm sẽ được trừ thẳng vào giá homestay)</div>
-                    <Row gutter={24} style={{ marginRight: 200 }}>
-                        {/* Trường thứ nhất */}
-                        <Col span={24}>
-                            <Form.Item
-                                label={<Title level={5}>Số tiền giảm</Title>}
+                                    >
+                                        <DatePicker style={{ width: '300px' }} onChange={(dates) => setEndDate(dates)} />
+                                    </Form.Item>
+                                </Col>
+                            </Row>
 
-                            >
-                                <Input addonAfter="VNĐ" style={{ width: '300px' }} onChange={(e) => setValue(e.target.value)} />
-                            </Form.Item>
-                        </Col>
-                    </Row>
+                            <Row gutter={24} style={{ marginRight: 200 }}>
+                                {/* Trường thứ nhất */}
+                                <Col span={24}>
+                                    <Form.Item
+                                        label={<Title level={5}>Số tiền giảm</Title>}
+
+                                    >
+                                        <Input addonAfter="VNĐ" style={{ width: '300px' }} onChange={(e) => setValue(e.target.value)} />
+                                    </Form.Item>
+                                </Col>
+                            </Row>
+                            <div style={{ color: 'red', marginLeft: 30 }}>*(lưu ý số tiền khi thêm sẽ được trừ thẳng vào giá homestay)</div>
+                        </div>
+                        <Table columns={columnsData} dataSource={products} />
+                    </div>
                 </Form>
             </Modal>
         </div>

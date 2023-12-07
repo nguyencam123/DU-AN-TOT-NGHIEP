@@ -26,7 +26,8 @@ import {
   RotateRightOutlined,
   ZoomOutOutlined,
   ZoomInOutlined,
-  ReloadOutlined
+  ReloadOutlined,
+  LoadingOutlined
 } from '@ant-design/icons';
 import { useState } from 'react';
 import {
@@ -52,7 +53,16 @@ const { Option } = Select;
 const { Title } = Typography;
 
 const HomeStayProduct = () => {
-  const [messageApi, contextHolder] = message.useMessage();
+  const [checkedValues, setCheckedValues] = useState([]);
+
+
+  const handleButtonClick = () => {
+    setCheckedValues([]);
+  };
+
+  const handleChange = (values) => {
+    setCheckedValues(values);
+  };
   const [cities, setCities] = useState([]);
   const [selectedCity, setSelectedCity] = useState('');
   const [districts, setDistricts] = useState([]);
@@ -74,13 +84,14 @@ const HomeStayProduct = () => {
   useEffect(() => {
     dispatch(fetchHomestay());
     dispatch(fetchConvenient());
-    dispatch(fetchProvince());
+    // dispatch(fetchProvince());
   }, []);
   const dispatch = useDispatch();
   const products = useSelector((state) => state.ownerHomestay.homestays);
   const convenients = useSelector((state) => state.convenient.convenients);
   const onChangeConvenients = (checkedValues) => {
     setconvenient(checkedValues.join(','));
+    setCheckedValues(checkedValues);
   };
 
   const [file, setFile] = useState([]);
@@ -124,6 +135,14 @@ const HomeStayProduct = () => {
     setcancellationPolicy(0);
     setacreage(0);
     setroomNumber(0);
+    setstartDate(null);
+    setendDate(null);
+    settimeCheckIn(null);
+    settimeCheckOut(null);
+    setSelectedCity('');
+    setSelectedDistrict('');
+    setSelectedWard('');
+    setCheckedValues([]);
   };
   const handleOk = () => {
     setIsModalOpen(false);
@@ -261,6 +280,8 @@ const HomeStayProduct = () => {
     updateAddress();
   }, [selectedCity, selectedDistrict, selectedWard]);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const [recordid, setRecordid] = useState('');
   const [image, setIamge] = useState([]);
   //getuserid
@@ -341,6 +362,7 @@ const HomeStayProduct = () => {
     dispatch(fetchHomestay());
   };
   const handleSubmit = async (e) => {
+    setIsLoading(true);
     e.preventDefault();
     try {
       await validationSchema.validate(homestay, { abortEarly: false });
@@ -352,18 +374,19 @@ const HomeStayProduct = () => {
         setErrorFile('Vui lòng chọn dưới 20 file')
         throw new Yup.ValidationError('Vui lòng chọn ít nhất 5 file', file, 'file');
       }
-      const maxSize = 5 * 1024 * 1024; // 5MB
+      const maxSize = 10 * 1024 * 1024; // 5MB
       if (!file.every(file => file.size <= maxSize)) {
         setErrorFile('File phải nhỏ hơn hoặc bằng 5MB')
         throw new Yup.ValidationError('File phải nhỏ hơn hoặc bằng 5MB', file, 'file');
       }
       if (isAddFrom) {
-        await setIsModalOpen(false);
         await message.info(
-          'Đang tiến hành thêm bạn vui lòng đợi một vài giây nhé!'
+          'Đang tiến hành thêm bạn vui lòng đợi một vài giây nhé!', 5
         );
         await dispatch(addHomestay(homestay, file, convenientvir));
         message.info('Thêm thành công');
+        await setIsLoading(false);
+        await setIsModalOpen(false);
         setname('');
         setprice(0);
         setdesc('');
@@ -372,12 +395,20 @@ const HomeStayProduct = () => {
         setnumberPerson(0);
         setacreage(0);
         setFile([]);
+        setstartDate(null);
+        setendDate(null);
+        settimeCheckIn(null);
+        settimeCheckOut(null);
+        setSelectedCity('');
+        setSelectedDistrict('');
+        setSelectedWard('');
       } else {
-        await setIsModalOpen(false);
         await message.info(
-          'Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!'
+          'Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!', 5
         );
         await dispatch(EditHomestay(homestay, file, recordid, convenientvir));
+        await setIsLoading(false);
+        await setIsModalOpen(false);
         message.info('Sửa thành công');
       }
       dispatch(fetchHomestay());
@@ -388,7 +419,9 @@ const HomeStayProduct = () => {
       errors.inner.forEach((error) => {
         errorObject[error.path] = error.message;
       });
+
       setFormErrors(errorObject);
+      setIsLoading(false)
     }
   };
 
@@ -418,6 +451,7 @@ const HomeStayProduct = () => {
     settimeCheckIn(record.timeCheckIn);
     settimeCheckOut(record.timeCheckOut);
     setconvenient(record.detailHomestays);
+    console.log(record)
     //
     setFormErrors({});
 
@@ -516,6 +550,22 @@ const HomeStayProduct = () => {
         cancelText='Hủy'
         onOk={handleSubmit}
         maskClosable={false}
+        okButtonProps={
+          isLoading
+            ? {
+              disabled: true,
+              icon: <LoadingOutlined />,
+              loading: true,
+            }
+            : {}
+        }
+        cancelButtonProps={
+          isLoading
+            ? {
+              disabled: true,
+            }
+            : {}
+        }
       >
         <Form
           name='basic'
@@ -594,6 +644,7 @@ const HomeStayProduct = () => {
                   style={{ width: '100%' }}
                   value={startDate ? dayjs(startDate, 'YYYY-MM-DD') : null}
                   disabledDate={isBeforeToday}
+                  allowClear={true}
                 />
                 <div style={{ color: 'red' }}>{formErrors.startDate}</div>
               </Form.Item>
@@ -605,6 +656,7 @@ const HomeStayProduct = () => {
                   style={{ width: '100%' }}
                   value={endDate ? dayjs(endDate, 'YYYY-MM-DD') : null}
                   disabledDate={isBeforeToday}
+                  allowClear={true}
                 />
                 <div style={{ color: 'red' }}>{formErrors.endDate}</div>
               </Form.Item>
@@ -619,6 +671,7 @@ const HomeStayProduct = () => {
                 onChange={handleTimeChangestart}
                 value={timeCheckIn && dayjs(timeCheckIn, 'HH:mm:ss')} // Fix here
                 style={{ width: '67%', float: 'right' }}
+                allowClear={true}
               />
               <div style={{ color: 'red' }}>{formErrors.timeCheckIn}</div>
             </Col>
@@ -628,6 +681,7 @@ const HomeStayProduct = () => {
                 onChange={handleTimeChangeend}
                 value={timeCheckOut && dayjs(timeCheckOut, 'HH:mm:ss')} // Fix here
                 style={{ width: '67%', float: 'right' }}
+                allowClear={true}
               />
               <div style={{ color: 'red' }}>{formErrors.timeCheckOut}</div>
             </Col>
@@ -717,13 +771,16 @@ const HomeStayProduct = () => {
           <Row gutter={24}>
             <Col span={24}>
               <Title level={5}>Tiện ích homestay</Title>
-              <Checkbox.Group
-                options={convenients.map((item) => ({
-                  label: item.name,
-                  value: item.id
-                }))}
-                onChange={onChangeConvenients}
-              />
+              <div>
+                <Checkbox.Group
+                  options={convenients.map((item) => ({
+                    label: item.name,
+                    value: item.id,
+                  }))}
+                  value={checkedValues}
+                  onChange={onChangeConvenients}
+                />
+              </div>
             </Col>
           </Row>
           <Row gutter={24}>
@@ -743,7 +800,8 @@ const HomeStayProduct = () => {
         </Form>
         <form onSubmit={handleSubmit} style={{ marginTop: 20 }}>
           <div>
-            <label htmlFor='image'>Chọn ảnh</label>
+
+            <label htmlFor='image'>Chọn ảnh(Chọn ít nhất 5 ảnh và tối đa 20 ảnh)<br /></label>
             <input
               type='file'
               id='image'
@@ -759,6 +817,7 @@ const HomeStayProduct = () => {
               </div>
             )}
           </div>
+          <div style={{ color: 'red' }}>{errorFile}</div>
         </form>
         {isAddFrom == true ? (
           ''
@@ -901,7 +960,7 @@ const HomeStayProduct = () => {
           <div style={{ display: 'flex' }}>
             <div style={{ width: 200 }}>Tiện ích </div> :{' '}
             {viewEditConvennient.map((items) => (
-              <div>{items.convenientHomestay?.name},</div>
+              <div> {items.convenientHomestay?.name},</div>
             ))}
           </div>
           <br />

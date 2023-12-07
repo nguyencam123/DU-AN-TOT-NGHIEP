@@ -14,4 +14,6 @@ public interface HomestayOwnerPromotionService {
 
        Promotion updatePromotion(String idPromotion,HomestayOwnerPromotionRequest request) throws IOException;
 
+       Promotion updatePromotionStatus(String idPromotion) throws IOException;
+
 }

@@ -9,13 +9,15 @@ import {
     MDBInput,
     MDBCheckbox,
     MDBIcon,
-    MDBRadio
+    MDBRadio,
+    MDBSpinner
 }
     from 'mdb-react-ui-kit';
 import { DatePicker, message, notification } from 'antd';
 import moment from 'moment';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 // const validationSchema = Yup.object().shape({
 //     name: Yup.string().required('Họ và tên không được để trống'),
@@ -29,7 +31,7 @@ import { useNavigate } from 'react-router-dom';
 // });
 
 const PartnerRegister = () => {
-    const [messageApi, contextHolder] = message.useMessage();
+    const [isLoading, setIsLoading] = useState(false)
     const [name, setname] = useState('')
     const [birthday, setbirthday] = useState(856345)
     const [gender, setgender] = useState(true)
@@ -65,39 +67,44 @@ const PartnerRegister = () => {
         identificationNumber: identificationNumber,
         point: 9
     }
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
+        setIsLoading(true)
         e.preventDefault();
         if (password.length < 8 || username.length < 8) {
             alert('Mật khẩu và tài khoản phải có ít nhất 8 ký tự');
             return;
-        }
-        else if (phoneNumber.toString().length !== 10) {
+        } else if (phoneNumber.toString().length !== 10) {
             alert('Số điện thoại phải có đúng 10 số');
             return;
-        }
-        else {
-            fetch('http://localhost:8080/api/v2/login/registers', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            })
-                .then(response => response.json())
-                .then(data => {
-                    // Xử lý kết quả từ API (nếu cần)
-                    openNotification()
-                    navigate('/hop-tac/login')
-                })
-                .catch(error => {
-                    // console.error('Error:', error);
-                    messageApi.open({
-                        type: 'error',
-                        content: { error },
-                    });
-                });
+        } else {
+
+            try {
+                // Gửi POST request tới API
+                await message.info(
+                    'Đang tiến hành đăng ký bạn vui lòng đợi một vài giây nhé!', 2
+                );
+                const response = await axios.post('http://localhost:8080/api/v2/login/registers', formData);
+
+                // Kiểm tra trạng thái thành công từ API
+                if (response.status === 200) {
+                    setIsLoading(false)
+                    message.success('Đăng ký thành công bạn vui lòng check email để kích hoạt tài khoản');
+                    navigate('/hop-tac/login');
+                    // Thực hiện các bước tiếp theo sau khi đăng ký thành công
+                } else {
+                    // Xử lý các trường hợp lỗi khác nếu cần
+                    message.error(response.data.message || 'Đã có lỗi xảy ra');
+                }
+            } catch (error) {
+                // Xử lý lỗi từ request
+                setIsLoading(false)
+                console.error('Error during registration:', error);
+                message.error(error.response.data.message);
+            }
         }
     };
+
+
     return (
         <MDBContainer fluid style={{ width: '60%' }}>
             <MDBCard className='mx-5 mb-5 p-5 shadow-5' style={{ marginTop: '100px', background: 'hsla(0, 0%, 100%, 0.8)', backdropFilter: 'blur(30px)' }}>
@@ -190,7 +197,23 @@ const PartnerRegister = () => {
                                 </div>
                             </MDBCol>
                         </MDBRow>
-                        <MDBBtn type="submit" className='w-100 mb-4' size='md'>Đăng ký</MDBBtn>
+                        <MDBBtn
+                            type="submit"
+                            className='w-100 mb-4'
+                            size='md'
+                            disabled={isLoading}
+                        >
+                            {isLoading ? (
+                                <>
+                                    <MDBSpinner role='status' size='sm'>
+                                        <span className='visually-hidden'>Loading...</span>
+                                    </MDBSpinner>
+                                    {' Đang tiến hành đăng ký...'}
+                                </>
+                            ) : (
+                                'Đăng ký'
+                            )}
+                        </MDBBtn>
                     </form>
                 </MDBCardBody>
             </MDBCard>

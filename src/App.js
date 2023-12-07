@@ -24,6 +24,8 @@ import { useEffect } from 'react';
 import { CartUser } from './component/user/cart/cart';
 import { BookingUser } from './component/user/booking';
 import ComfirmMail from './component/user/cofirmMail/confirm';
+import ComfirmMailUser from './component/user/cofirmMail/confirmUser';
+import ResetPassWordOwner from './component/PartnerComponent/login/resetPassword';
 
 function App() {
   //map component user
@@ -46,7 +48,8 @@ function App() {
     { path: 'hop-tac/register', element: <PartnerRegister /> },
     { path: 'booking/success', element: <BookingSuccess /> },
     { path: 'booking/:id', element: <BookingUser /> },
-    { path: 'shopingcart/:id', element: <CartUser /> }
+    { path: 'shopingcart/:id', element: <CartUser /> },
+    { path: 'changePassword', element: <ResetPassWordOwner /> }
   ];
   useEffect(() => {
     window.scrollTo(0, 0); // Cuộn lên đầu trang khi path thay đổi
@@ -66,7 +69,7 @@ function App() {
             } */}
           </Route>
           {/* map quyen voi url admin */}
-          <Route path='/user/comfirmmail' element={<ComfirmMail />} />
+          <Route path='/user/comfirmmail' element={<ComfirmMailUser />} />
           <Route path='/owner/comfirmmail' element={<ComfirmMail />} />
           <Route path="/*" element={<PartnerLayout />}>
             <Route path="partner/*" element={<ProtectedRoute partnerOnly />} />

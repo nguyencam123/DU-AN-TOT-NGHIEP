@@ -14,20 +14,17 @@ import java.io.IOException;
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v2/promotion")
-@PreAuthorize("hasRole('OWNER')")
 public class HomestayOwnerPromotionController {
 
     @Autowired
     private HomestayOwnerPromotionService homestayOwnerPromotionService;
 
     @GetMapping()
-    @PreAuthorize("hasAuthority('owner:read')")
     public ResponseObject getPromotion(@RequestParam("idOwner") String idOwner) {
         return new ResponseObject(homestayOwnerPromotionService.getPromotion(idOwner));
     }
 
     @PostMapping("/add-promotion")
-    @PreAuthorize("hasAuthority('owner:create')")
     public ResponseObject addPromotion(@RequestBody HomestayOwnerPromotionRequest request) throws IOException {
         try {
             Promotion promotion = homestayOwnerPromotionService.addPromotion(request);
@@ -42,10 +39,23 @@ public class HomestayOwnerPromotionController {
     }
 
     @PutMapping("/update-promotion")
-    @PreAuthorize("hasAuthority('owner:update')")
     public ResponseObject updatePromotion(@RequestParam("idPromotion") String id, @RequestBody HomestayOwnerPromotionRequest request) throws IOException {
         try {
             Promotion promotion = homestayOwnerPromotionService.updatePromotion(id, request);
+            ResponseObject responseObject = new ResponseObject(promotion);
+            responseObject.setMessage("Thành công");
+            return responseObject;
+        } catch (RestApiException ex) {
+            ResponseObject responseObject = new ResponseObject(null);
+            responseObject.setMessage("Không thành công: " + ex.getMessage());
+            return responseObject;
+        }
+    }
+
+    @PutMapping("/update-status-promotion")
+    public ResponseObject deletePromotion(@RequestParam("idPromotion") String id) throws IOException {
+        try {
+            Promotion promotion = homestayOwnerPromotionService.updatePromotionStatus(id);
             ResponseObject responseObject = new ResponseObject(promotion);
             responseObject.setMessage("Thành công");
             return responseObject;

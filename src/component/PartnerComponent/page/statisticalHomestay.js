@@ -8,6 +8,7 @@ import imgchart from '../../../assets/img/Tochartstatical.png';
 import imgyellowchart from '../../../assets/img/yellowtoChart.png';
 import imgBluechart from '../../../assets/img/blueimg.png';
 import imgRedchart from '../../../assets/img/redimg.png';
+import dayjs from 'dayjs';
 import { fetchBooking } from "../../../features/owner_homestay/getbooking/bookingThunk";
 const { Title } = Typography
 const StatisticalHomestay = () => {
@@ -123,9 +124,7 @@ const StatisticalHomestay = () => {
         }
     ];
     const currentYear = new Date().getFullYear();
-    const disabledDate = (current) => {
-        return current && current.year() > currentYear;
-    };
+
     return (
         <div>
             <Title style={{ marginTop: '20px' }}>Thống kê doanh thu</Title>
@@ -157,8 +156,9 @@ const StatisticalHomestay = () => {
                 <Title level={5} style={{ marginTop: '20px' }} >Biểu đồ thống kê doanh thu theo năm</Title>
                 <DatePicker onChange={onChange} picker="year"
                     style={{ marginLeft: 'auto', width: 300, height: 40, marginTop: '20px' }}
-                    disabledDate={disabledDate}
-                    defaultValue={moment(currentYear, 'YYYY')}
+                    disabledDate={(current) => current && current.year() > currentYear}
+                    defaultValue={dayjs(`${currentYear}-01-01`)}
+
                 />
             </div>
             <Column {...config} />

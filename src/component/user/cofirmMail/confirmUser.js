@@ -3,18 +3,21 @@ import { Button, Row } from "antd"
 import { Content } from "antd/es/layout/layout"
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { useLocation } from "react-router-dom";
-import { comfirmMailActiveAcc } from "../../../features/user/confirmMailThunk";
+import { useLocation, useNavigate } from "react-router-dom";
+import { comfirmMailActiveUser } from "../../../features/user/confirmMailThunk";
 
 
-const ComfirmMail = () => {
+const ComfirmMailUser = () => {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const id = searchParams.get('id');
     const dispatch = useDispatch();
+    const navigate = useNavigate()
 
     const activeEmail = () => {
-        dispatch(comfirmMailActiveAcc(id));
+        dispatch(comfirmMailActiveUser(id));
+        navigate('/')
+
     }
     return (
         <>
@@ -48,4 +51,4 @@ const ComfirmMail = () => {
         </>
     )
 }
-export default ComfirmMail
+export default ComfirmMailUser
