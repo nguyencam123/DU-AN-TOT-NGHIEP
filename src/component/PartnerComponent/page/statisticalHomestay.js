@@ -58,20 +58,37 @@ const StatisticalHomestay = () => {
 
     const convertedData = convertDataForChart(statistical);
 
-
+    const formattedData = convertedData.map(item => ({
+        date: item.date,
+        tongSoTien: parseInt(item.tongSoTien),
+    }));
     const config = {
-        data: convertedData, // Truyền dữ liệu vào biểu đồ
-        isGroup: true,
+        data: formattedData,
         xField: 'date',
-        yField: ['doanhSo', 'tongSoTien'], // Hiển thị cả hai trường doanhSo và tongSoTien
-        seriesField: ['doanhSo', 'tongSoTien'],
+        yField: 'tongSoTien',
         label: {
+            // 可手动配置 label 数据标签位置
             position: 'middle',
-            layout: [
-                { type: 'interval-adjust-position' },
-                { type: 'interval-hide-overlap' },
-                { type: 'adjust-color' },
-            ],
+            // 'top', 'bottom', 'middle',
+            // 配置样式
+            style: {
+                fill: '#FFFFFF',
+                opacity: 0.6,
+            },
+        },
+        xAxis: {
+            label: {
+                autoHide: true,
+                autoRotate: false,
+            },
+        },
+        meta: {
+            type: {
+                alias: '类别',
+            },
+            sales: {
+                alias: '销售额',
+            },
         },
     };
 
@@ -158,7 +175,6 @@ const StatisticalHomestay = () => {
                     style={{ marginLeft: 'auto', width: 300, height: 40, marginTop: '20px' }}
                     disabledDate={(current) => current && current.year() > currentYear}
                     defaultValue={dayjs(`${currentYear}-01-01`)}
-
                 />
             </div>
             <Column {...config} />
