@@ -3,6 +3,7 @@ package com.example.demo.cors.homestayowner.repository;
 import com.example.demo.entities.OwnerHomestay;
 import com.example.demo.repositories.OwnerHomestayRepository;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -24,4 +25,8 @@ public interface HomestayOwnerOwnerHomestayRepository extends OwnerHomestayRepos
 
        boolean existsByName(String name);
 
+       @Query(value ="select b.* from token a\n" +
+               "right join owner_homestay b on a.owner_id=b.id \n" +
+               "where a.token=:token",nativeQuery = true)
+       OwnerHomestay findOwnerByToken(String token);
 }

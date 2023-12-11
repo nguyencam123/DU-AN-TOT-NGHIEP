@@ -40,6 +40,11 @@ public class HomestayOwnerHomestayController {
         return new ResponseObject(homestayOwnerImgHomestayService.getImgHomestayByHomestayId(id));
     }
 
+    @GetMapping("get-ownerhomestay-by-token")
+    public ResponseObject getOwnerByToken(@RequestParam("token") String token) {
+        return new ResponseObject(homestayownerHomestayService.getOwnerHomestayByToken(token));
+    }
+
     @PostMapping("add-homestay")
     @PreAuthorize("hasAuthority('owner:create')")
     public ResponseObject addHomestays(@RequestPart String homestay,

@@ -7,12 +7,7 @@ import com.example.demo.cors.admin.services.AdminHomestayService;
 import com.example.demo.cors.common.base.ResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -25,6 +20,11 @@ public class AdminHomestayController {
 
     @Autowired
     private AdminApprovalHomestayService adminApprovalHomestayService;
+
+    @GetMapping("get-admin-by-token")
+    public ResponseObject getOwnerByToken(@RequestParam("token") String token) {
+        return new ResponseObject(adminHomestayService.getAdminByToken(token));
+    }
 
     @GetMapping()
     @PreAuthorize("hasAuthority('admin:read')")
