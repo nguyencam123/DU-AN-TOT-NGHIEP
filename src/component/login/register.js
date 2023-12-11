@@ -8,14 +8,18 @@ import {
     MDBCardBody,
     MDBInput,
     MDBCheckbox,
-    MDBIcon
+    MDBIcon,
+    MDBSpinner
 }
     from 'mdb-react-ui-kit';
-import { Button, DatePicker, notification } from 'antd';
+import { Button, DatePicker, Spin, message, notification } from 'antd';
 import moment from 'moment';
 import "./Login.css";
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { LoadingOutlined } from '@ant-design/icons';
 const Register = () => {
+    const [isLoading, setIsLoading] = useState(false)
     const navigate = useNavigate()
     const [name, setname] = useState('')
     const [birthday, setbirthday] = useState(856345)
@@ -52,34 +56,43 @@ const Register = () => {
         identificationNumber: identificationNumber,
         point: 9
     }
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
+        setIsLoading(true)
         e.preventDefault();
         if (password.length < 8 || username.length < 8) {
             alert('Mật khẩu và tài khoản phải có ít nhất 8 ký tự');
             return;
-        }
-        else if (phoneNumber.toString().length !== 10) {
+        } else if (phoneNumber.toString().length !== 10) {
             alert('Số điện thoại phải có đúng 10 số');
             return;
-        }
-        else {
-            fetch('http://localhost:8080/api/v1/login/registers', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            })
-                .then(response => response.json())
-                .then(data => {
-                    openNotification()
-                    navigate('/login')
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+        } else {
+            try {
+                // Gửi POST request tới API
+                await message.info(
+                    'Đang tiến hành đăng ký bạn vui lòng đợi một vài giây nhé!', 2
+                );
+                const response = await axios.post('http://localhost:8080/api/v1/login/registers', formData);
+
+                // Kiểm tra trạng thái thành công từ API
+                if (response.status === 200) {
+                    setIsLoading(false)
+                    message.success('Đăng ký thành công');
+                    navigate('/login');
+                    // Thực hiện các bước tiếp theo sau khi đăng ký thành công
+                } else {
+                    // Xử lý các trường hợp lỗi khác nếu cần
+                    message.error(response.data.message || 'Đã có lỗi xảy ra');
+                }
+            } catch (error) {
+                // Xử lý lỗi từ request
+                setIsLoading(false)
+                console.error('Error during registration:', error);
+                message.error(error.response.data.message);
+            }
         }
     };
+
+
     return (
         <MDBContainer fluid className='p-4'>
 
@@ -187,7 +200,24 @@ const Register = () => {
                                         </div>
                                     </MDBCol>
                                 </MDBRow>
-                                <MDBBtn type="submit" className='w-100 mb-4' size='md'>Đăng ký</MDBBtn>
+                                <MDBBtn
+                                    type="submit"
+                                    className='w-100 mb-4'
+                                    size='md'
+                                    disabled={isLoading}
+                                >
+                                    {isLoading ? (
+                                        <>
+                                            <MDBSpinner role='status' size='sm'>
+                                                <span className='visually-hidden'>Loading...</span>
+                                            </MDBSpinner>
+                                            {' Đang tiến hành đăng ký...'}
+                                        </>
+                                    ) : (
+                                        'Đăng ký'
+                                    )}
+                                </MDBBtn>
+
                             </form>
 
                         </MDBCardBody>

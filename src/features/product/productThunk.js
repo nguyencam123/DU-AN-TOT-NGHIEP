@@ -66,7 +66,7 @@ export const getNumberPersonPoint = (id) => async (dispatch) => {
 
 export const getPayment = (price) => async (dispatch) => {
   try {
-    const response = await axios.post('http://localhost:8080/api/v1/payment/vnpay', price);
+    const response = await instance.post('http://localhost:8080/api/v1/payment/vnpay', price);
     dispatch(getPaymentSuccess(response.data.data)); // Lấy dữ liệu từ response.data.data
     // console.log(response.data.data);
   } catch (error) {
@@ -76,7 +76,7 @@ export const getPayment = (price) => async (dispatch) => {
 
 export const addBooking = (booking) => async (dispatch) => {
   try {
-   await axios.post('http://localhost:8080/api/v1/booking/create', booking);
+    await instance.post('http://localhost:8080/api/v1/booking/create', booking);
     // console.log(response.data.data);
   } catch (error) {
     dispatch(fetchProductsFailure(error.message));

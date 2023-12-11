@@ -20,8 +20,8 @@ import logotravel from '../../assets/svg/Rectangle 16.svg';
 import logovnpay from '../../assets/svg/Rectangle 20.svg';
 export default function FooterUser() {
   return (
-    <MDBFooter style={{ backgroundColor: 'white' }}>
-      <section className='d-flex justify-content-center justify-content-lg-between p-4 border-bottom'></section>
+    <MDBFooter style={{ backgroundColor: 'white', overflowX: 'hidden', width: '100%' }}>
+      <section className='d-flex justify-content-center justify-content-lg-between p-4 border-bottom' style={{ overflowY: 'hidden' }}></section>
       <div class='ff'>
         <br />
         <br />
@@ -208,13 +208,14 @@ export default function FooterUser() {
                 </p>
               </div>
             </div>
+            <div className='text-center p-4'>
+              Mọi nội dung được đảm bảo chính xác và bảo mật. Chịu trách nhiệm bởi
+              công ty TravelVivu
+            </div>
           </div>
         </div>
       </div>
-      <div className='text-center p-4'>
-        Mọi nội dung được đảm bảo chính xác và bảo mật. Chịu trách nhiệm bởi
-        công ty TravelVivu
-      </div>
+
       {/* <section className='d-flex justify-content-center justify-content-lg-between p-4 border-bottom'>
         <div className='me-5 d-none d-lg-block'>
           <span>Liên lạc với chúng tôi: 0865069125</span>
