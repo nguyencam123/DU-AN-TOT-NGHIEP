@@ -23,8 +23,8 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
     @Query(value = """
             SELECT ROW_NUMBER() OVER(ORDER BY b.created_date DESC) AS stt, b.* 
             FROM booking b
-            JOIN owner_homestay c ON b.owner_id=c.id
             JOIN dbo.homestay h ON b.homestay_id = h.id 
+            JOIN owner_homestay c ON h.owner_id=c.id
             JOIN dbo.[user] u ON b.user_id = u.id
             WHERE c.id=:#{#request.idOwner} AND
             ( ( :#{#request.userName} IS NULL OR :#{#request.userName} LIKE '' OR u.name = :#{#request.userName})
