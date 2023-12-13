@@ -21,7 +21,7 @@ public class AdminHomestayController {
     @Autowired
     private AdminApprovalHomestayService adminApprovalHomestayService;
 
-    @GetMapping("get-admin-by-token")
+    @GetMapping("/get-admin-by-token")
     public ResponseObject getOwnerByToken(@RequestParam("token") String token) {
         return new ResponseObject(adminHomestayService.getAdminByToken(token));
     }

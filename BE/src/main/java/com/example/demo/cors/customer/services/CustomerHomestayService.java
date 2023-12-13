@@ -3,6 +3,8 @@ package com.example.demo.cors.customer.services;
 import com.example.demo.cors.common.base.PageableObject;
 import com.example.demo.cors.customer.model.request.CustomerHomestayRequest;
 import com.example.demo.entities.Homestay;
+import com.example.demo.entities.OwnerHomestay;
+import com.example.demo.entities.User;
 
 public interface CustomerHomestayService {
 
@@ -12,4 +14,5 @@ public interface CustomerHomestayService {
 
     PageableObject<Homestay> findAllBetweenDate(CustomerHomestayRequest request);
 
+    User getCustomerByToken(String token);
 }

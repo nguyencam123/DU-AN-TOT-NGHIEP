@@ -88,9 +88,6 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         if (customerLoginRepository.existsByPhoneNumber(request.getPhoneNumber())) {
             throw new RestApiException("PhoneNumber is already in use");
         }
-        if (customerLoginRepository.existsByName(request.getName())) {
-            throw new RestApiException("Name is already in use");
-        }
         String phoneNumber = request.getPhoneNumber();
         if (!isValidVietnamesePhoneNumber(phoneNumber)) {
             throw new RestApiException("Invalid Vietnamese phone number format");
@@ -241,9 +238,6 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         }
         if (customerLoginRepository.existsByPhoneNumber(request.getPhoneNumber()) && !customer.getPhoneNumber().equals(request.getPhoneNumber())) {
             throw new RestApiException("PhoneNumber is already in use");
-        }
-        if (customerLoginRepository.existsByName(request.getName()) && !customer.getName().equals(request.getName())) {
-            throw new RestApiException("Name is already in use");
         }
         String phoneNumber = request.getPhoneNumber();
         if (!isValidVietnamesePhoneNumber(phoneNumber)) {
