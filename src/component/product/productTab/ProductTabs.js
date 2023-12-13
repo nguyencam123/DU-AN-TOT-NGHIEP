@@ -103,7 +103,7 @@ const ProductTabs = (props) => {
                                         {truncateAddress(product.address, 20)} {/* Thay đổi 20 bằng số ký tự tối đa bạn muốn hiển thị */}
                                     </div>
                                     <Title level={3} style={{ color: 'red' }}>
-                                        {formatPrice(product.price)} VNĐ
+                                        {formatPrice(product.price + product.price * 11 / 100)} VNĐ
                                     </Title>
                                 </div>
                             </Card>

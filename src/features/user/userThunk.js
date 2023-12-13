@@ -89,7 +89,6 @@ export const loginpartner = (username, password) => async (dispatch) => {
       localStorage.setItem('ownerDetail', JSON.stringify(accounts));
       const token = JSON.parse(localStorage.getItem('ownerDetail')).data.token;
       dispatch(partnerloginSuccess({ partner: accounts, partnerData: accounts.data }))
-      console.log(token)
       updateAxiosToken(token);
     } else {
       openNotification()
