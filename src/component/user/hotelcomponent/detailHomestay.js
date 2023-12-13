@@ -3,10 +3,13 @@ import React, { useEffect } from 'react';
 import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progress, Space } from 'antd';
 import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, StarTwoTone } from '@ant-design/icons'
 import { Table } from 'react-bootstrap';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProducts, getAvgPoint, getCommentProduct, getOneProduct } from '../../../features/product/productThunk';
+import moment from 'moment';
+
 const { Header, Content, Footer } = Layout;
+
 
 export const DetailHomestay = () => {
   const params = useParams();
@@ -20,13 +23,17 @@ export const DetailHomestay = () => {
     dispatch(getCommentProduct(params.id));
     dispatch(getOneProduct(params.id));
   }, []);
+  const location = useLocation();
+  const param = new URLSearchParams(location.search);
+  const startDate = param?.get('startDate') || '';
+  const endDate = param?.get('endDate') || '';
   const detailHomestay = useSelector((state) => state.product.productDetails)
   const comment = useSelector((state) => state.product.commentProduct)
   const avgPoint = useSelector((state) => state.product.avgPoint)
 
   // const imgHomestay = detailHomestay[0].images
   const handleBookingHomestay = (id) => {
-    navigate(`/homestay/booking/${id}`)
+    navigate(`/homestay/booking/${id}?startDate=${startDate}&endDate=${endDate}`)
   }
   const listComment = comment.map((comment, index) => {
     if (index === 2) {

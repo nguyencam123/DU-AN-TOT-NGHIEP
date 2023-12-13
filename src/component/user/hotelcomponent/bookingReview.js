@@ -1,15 +1,15 @@
-
 import React, { useEffect } from 'react';
 import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progress, Space } from 'antd';
 import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, InfoCircleTwoTone, StarTwoTone } from '@ant-design/icons'
 import { Form, Table } from 'react-bootstrap';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { getOneProduct, getPayment } from '../../../features/product/productThunk';
+import { addBooking, getOneProduct, getPayment } from '../../../features/product/productThunk';
 import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
 const { Header, Content, Footer } = Layout;
 
-
 export const BookingReviewHomestay = () => {
+  const navigate = useNavigate();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -20,21 +20,42 @@ export const BookingReviewHomestay = () => {
   const name = params?.get('name') || '';
   const email = params?.get('email') || '';
   const phoneNumber = params?.get('phoneNumber') || '';
-  const startDate = 1700057733825;
-  const endDate = 1700057733825;
+  const startDate = params?.get('startDate') || '';;
+  const endDate = params?.get('endDate') || '';;
 
   useEffect(() => {
     dispatch(getOneProduct(id));
-    dispatch(getPayment(booking));
+    handleBooking()
   }, []);
   const dispatch = useDispatch();
-  const detailHomestay = useSelector((state) => state.product.productDetails);
-  const user = useSelector((state) => state.user.userData)
-  const booking = {
-    vnp_Ammount: detailHomestay.price + detailHomestay.price * 11 / 100,
-    vnp_OrderInfo: String(name + '+' + phoneNumber + ',' + email + '+' + startDate + ',' + endDate + '=' + id + '=' + user?.data.id)
-  }
+  const detailHomestay = useSelector((state) => state.product.productDetails)
   const payment = useSelector((state) => state.product.payment)
+  const booking = useSelector((state) => state.booking.bookings);
+  console.log(startDate, endDate);
+
+  const handleBooking = async () => {
+    const userDetail = JSON.parse(localStorage.getItem('userDetail'));
+    const userID = userDetail?.data.id;
+    const bookingData = {
+      userId: userID,
+      totalPrice: detailHomestay.price + detailHomestay.price * 11 / 100,
+      startDate: startDate.valueOf(),
+      endDate: endDate.valueOf(),
+      name: name,
+      email: email,
+      phoneNumber: phoneNumber,
+      homestayId: detailHomestay.id,
+      idPromotion: '908989'
+    }
+    await dispatch(addBooking(bookingData));
+    const bookingDataGet = {
+      vnp_Ammount: detailHomestay.price + detailHomestay.price * 11 / 100,
+      vnp_OrderInfo: String('bookingId' + '=' + booking?.id)
+    }
+    console.log(bookingDataGet.vnp_OrderInfo);
+    await dispatch(getPayment(bookingDataGet));
+    console.log(payment);
+  }
   return (
     <>
       <Content
@@ -109,12 +130,12 @@ export const BookingReviewHomestay = () => {
                     <Row>
                       <Col span={8}>
                         <div style={{ color: 'rgb(104, 113, 118)', fontWeight: '600', lineHeight: '28px', fontSize: '16px' }}>  Ngày nhận phòng:</div>
-                        <div style={{ color: 'black', fontWeight: '600', lineHeight: '28px', fontSize: '16px' }}> 9 Nov 2023 </div>
+                        <div style={{ color: 'black', fontWeight: '600', lineHeight: '28px', fontSize: '16px' }}> {moment(startDate * 1).locale('vi').format('LL')} </div>
                         <div style={{ color: 'rgb(104, 113, 118)', fontWeight: '600', lineHeight: '28px', fontSize: '16px' }}> Từ {detailHomestay.timeCheckIn}</div>
                       </Col>
                       <Col span={8}>
                         <div style={{ color: 'rgb(104, 113, 118)', fontWeight: '600', lineHeight: '28px', fontSize: '16px' }}>  Ngày trả phòng:</div>
-                        <div style={{ color: 'black', fontWeight: '600', lineHeight: '28px', fontSize: '16px' }}> 10 Nov 2023 </div>
+                        <div style={{ color: 'black', fontWeight: '600', lineHeight: '28px', fontSize: '16px' }}> {moment(endDate * 1).locale('vi').format('LL')} </div>
                         <div style={{ color: 'rgb(104, 113, 118)', fontWeight: '600', lineHeight: '28px', fontSize: '16px' }}> Trước {detailHomestay.timeCheckOut}</div>
                       </Col>
                       <Col span={8}>
