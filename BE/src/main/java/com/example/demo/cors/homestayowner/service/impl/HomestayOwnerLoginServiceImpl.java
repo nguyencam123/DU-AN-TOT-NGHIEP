@@ -73,19 +73,19 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
     public HomestayOwnerAuthenticationReponse register(HomestayOwnerOwnerHomestayRequest request) {
 
         if (isNullOrEmpty(request.getUsername())) {
-            throw new RestApiException("Username cannot be empty");
+            throw new RestApiException("Username không được để trống");
         }
         if (isNullOrEmpty(request.getPhoneNumber())) {
-            throw new RestApiException("Phone number cannot be empty");
+            throw new RestApiException("số điện thoại không được để trống");
         }
         if (isNullOrEmpty(request.getEmail())) {
-            throw new RestApiException("Email cannot be empty");
+            throw new RestApiException("Email không được để trống");
         }
         if (isNullOrEmpty(request.getPassword())) {
-            throw new RestApiException("Password cannot be empty");
+            throw new RestApiException("Password không được để trống");
         }
         if (isNullOrEmpty(request.getName())) {
-            throw new RestApiException("Name cannot be empty");
+            throw new RestApiException("Tên không được để trống");
         }
 
         OwnerHomestay ownerHomestay = new OwnerHomestay();
@@ -94,25 +94,22 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         String code = String.format("G%04d", number);
         ownerHomestay.setCode(code);
 
-        if (homestayownerOwnerHomestayRepository.existsByName(request.getName())) {
-            throw new RestApiException("Name is already in use");
-        }
         if (homestayownerOwnerHomestayRepository.existsByUsername(request.getUsername())) {
-            throw new RestApiException("Username is already in use");
+            throw new RestApiException("Username đã được sử dụng");
         }
         if (homestayownerOwnerHomestayRepository.existsByEmail(request.getEmail())) {
-            throw new RestApiException("Email is already in use");
+            throw new RestApiException("Email đã được sử dụng");
         }
         if (homestayownerOwnerHomestayRepository.existsByPhoneNumber(request.getPhoneNumber())) {
-            throw new RestApiException("PhoneNumber is already in use");
+            throw new RestApiException("PhoneNumber đã được sử dụng");
         }
         String phoneNumber = request.getPhoneNumber();
         if (!isValidVietnamesePhoneNumber(phoneNumber)) {
-            throw new RestApiException("Invalid Vietnamese phone number format");
+            throw new RestApiException("Đúng định dạng số điện thoại việt nam");
         }
         String emails=request.getEmail();
         if (!isValidEmail(emails)){
-            throw new RestApiException("Invalid Email format");
+            throw new RestApiException("Đúng định dạng email");
         }
 
         ownerHomestay.setName(request.getName());
@@ -198,10 +195,10 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
     public HomestayOwnerAuthenticationReponse changePassword(HomestayOwnerPasswordRequest request, Principal connecteUser) {
         var ownerHomestay = (OwnerHomestay) ((UsernamePasswordAuthenticationToken) connecteUser).getPrincipal();
         if (!passwordEncoder.matches(request.getCurrentPassword(), ownerHomestay.getPassword())) {
-            throw new IllegalStateException("Wrong password");
+            throw new IllegalStateException("Sai mật khẩu");
         }
         if (!request.getNewPassword().equals(request.getConfirmationPassword())) {
-            throw new IllegalStateException("password aren't the same");
+            throw new IllegalStateException("Mật khẩu không giống nhau");
         }
 
         ownerHomestay.setPassword(passwordEncoder.encode(request.getNewPassword()));
@@ -230,23 +227,20 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         String phoneNumber = request.getPhoneNumber();
 
         if (!isValidVietnamesePhoneNumber(phoneNumber)) {
-            throw new RestApiException("Invalid Vietnamese phone number format");
+            throw new RestApiException("Đúng định dạng số điện thoại Việt Nam");
         }
         String emails=request.getEmail();
         if (!isValidEmail(emails)){
-            throw new RestApiException("Invalid Email format");
-        }
-        if (homestayownerOwnerHomestayRepository.existsByName(request.getName()) && !ownerHomestay.getName().equals(request.getName())) {
-            throw new RestApiException("Name is already in use");
+            throw new RestApiException("Đúng định dạng Email");
         }
         if (homestayownerOwnerHomestayRepository.existsByUsername(request.getUsername()) && !ownerHomestay.getUsername().equals(request.getUsername())) {
-            throw new RestApiException("Username is already in use");
+            throw new RestApiException("Username đã được sử dụng");
         }
         if (homestayownerOwnerHomestayRepository.existsByEmail(request.getEmail()) && !ownerHomestay.getEmail().equals(request.getEmail())) {
-            throw new RestApiException("Email is already in use");
+            throw new RestApiException("Email đã được sử dụng");
         }
         if (homestayownerOwnerHomestayRepository.existsByPhoneNumber(request.getPhoneNumber()) && !ownerHomestay.getPhoneNumber().equals(request.getPhoneNumber())) {
-            throw new RestApiException("PhoneNumber is already in use");
+            throw new RestApiException("PhoneNumber đã được sử dụng");
         }
 
         ownerHomestay.setName(request.getName());
@@ -303,16 +297,16 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
 
     public void checkNull(boolean nullOrEmpty, boolean nullOrEmpty2, Long birthday, boolean nullOrEmpty3, boolean nullOrEmpty4, boolean nullOrEmpty5, HomestayOwnerOwnerHomestayRequest request) {
         if (nullOrEmpty) {
-            throw new RestApiException("Username cannot be empty");
+            throw new RestApiException("Username không được để trống");
         }
         if (nullOrEmpty2) {
-            throw new RestApiException("Name cannot be empty");
+            throw new RestApiException("tên không được để trống");
         }
         if (nullOrEmpty4) {
-            throw new RestApiException("Phone number cannot be empty");
+            throw new RestApiException("Số điện thoại không được để trống");
         }
         if (nullOrEmpty5) {
-            throw new RestApiException("Email cannot be empty");
+            throw new RestApiException("Email không được để trống");
         }
     }
 

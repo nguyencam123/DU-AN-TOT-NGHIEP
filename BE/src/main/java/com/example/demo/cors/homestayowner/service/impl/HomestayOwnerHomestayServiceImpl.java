@@ -98,6 +98,11 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
         return homestay1;
     }
 
+    @Override
+    public OwnerHomestay getOwnerHomestayByToken(String token) {
+        return homestayOwnerOwnerHomestayRepository.findOwnerByToken(token);
+    }
+
 
     private void getHomestay(HomestayownerHomestayRequest request, Homestay homestay) {
         homestay.setName(request.getName());

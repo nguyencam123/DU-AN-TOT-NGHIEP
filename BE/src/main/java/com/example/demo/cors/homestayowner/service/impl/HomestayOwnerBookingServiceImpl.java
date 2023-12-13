@@ -20,7 +20,7 @@ public class HomestayOwnerBookingServiceImpl implements HomestayOwnerBookingServ
     @Override
     public PageableObject<Booking> getBookingByHomestay(String id, HomestayOwnerBookingRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-        Page<Booking> res = homestayOwnerBookingRepository.getBookingByHomestay(id, pageable);
+        Page<Booking> res = homestayOwnerBookingRepository.getBookingByOwnerHomestay(id, pageable);
         return new PageableObject<>(res);
     }
 

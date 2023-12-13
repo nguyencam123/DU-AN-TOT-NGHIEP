@@ -36,23 +36,23 @@ public class HomestayOwnerPromotionServiceImpl implements HomestayOwnerPromotion
     @Override
     public Promotion addPromotion(HomestayOwnerPromotionRequest request) throws IOException {
         if (isNullOrEmpty(request.getName())) {
-            throw new RestApiException("Name cannot be empty");
+            throw new RestApiException("Tên không được để trống");
         }
 
         if (request.getStartDate() <= 0 || request.getEndDate() <= 0) {
-            throw new RestApiException("Start and End Dates must be greater than 0");
+            throw new RestApiException("Ngày bắt đầu và nagyf kết thúc không được nhỏ hơn 0");
         }
 
         if (request.getEndDate() < request.getStartDate()) {
-            throw new RestApiException("End Date must be greater than Start Date");
+            throw new RestApiException("Ngày kết thúc không được nhỏ hơn ngày bắt đầu");
         }
 
         if (request.getValue() <= 0) {
-            throw new RestApiException("Value cannot be empty");
+            throw new RestApiException("Value không được để trống");
         }
 
         if (homestayOwnerPromotionRepository.existsByName(request.getName())) {
-            throw new RestApiException("Name is already in use");
+            throw new RestApiException("tên không được trùng");
         }
 
         Promotion promotion=new Promotion();
@@ -77,25 +77,25 @@ public class HomestayOwnerPromotionServiceImpl implements HomestayOwnerPromotion
     @Override
     public Promotion updatePromotion(String idPromotion,HomestayOwnerPromotionRequest request) throws IOException{
         if (isNullOrEmpty(request.getName())) {
-            throw new RestApiException("Name cannot be empty");
+            throw new RestApiException("Tên không được để trống");
         }
 
         if (request.getStartDate() <= 0 || request.getEndDate() <= 0) {
-            throw new RestApiException("Start and End Dates must be greater than 0");
+            throw new RestApiException("Ngày bắt đầu và nagyf kết thúc không được nhỏ hơn 0");
         }
 
         if (request.getEndDate() <= request.getStartDate()) {
-            throw new RestApiException("End Date must be greater than Start Date");
+            throw new RestApiException("Ngày kết thúc không được nhỏ hơn ngày bắt đầu");
         }
 
         if (request.getValue() <= 0) {
-            throw new RestApiException("Value cannot be empty");
+            throw new RestApiException("Value không được để trống");
         }
 
         Promotion promotion= homestayOwnerPromotionRepository.findById(idPromotion).orElseThrow();
 
         if (homestayOwnerPromotionRepository.existsByName(request.getName()) && !promotion.getName().equals(request.getName())) {
-            throw new RestApiException("Name is already in use");
+            throw new RestApiException("Tên đã được sử dụng");
         }
 
         promotion.setName(request.getName());

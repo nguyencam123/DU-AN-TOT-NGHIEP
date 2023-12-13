@@ -1,5 +1,6 @@
 package com.example.demo.cors.homestayowner.repository;
 
+import com.example.demo.entities.OwnerHomestay;
 import com.example.demo.entities.Token;
 import com.example.demo.repositories.TokenRepository;
 import org.springframework.context.annotation.Primary;

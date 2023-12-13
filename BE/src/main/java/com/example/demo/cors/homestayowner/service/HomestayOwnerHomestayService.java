@@ -3,6 +3,7 @@ package com.example.demo.cors.homestayowner.service;
 import com.example.demo.cors.common.base.PageableObject;
 import com.example.demo.cors.homestayowner.model.request.HomestayownerHomestayRequest;
 import com.example.demo.entities.Homestay;
+import com.example.demo.entities.OwnerHomestay;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -22,4 +23,5 @@ public interface HomestayOwnerHomestayService {
 
     Homestay updateHomestayPromition(String id, HomestayownerHomestayRequest request);
 
+    OwnerHomestay getOwnerHomestayByToken(String token);
 }

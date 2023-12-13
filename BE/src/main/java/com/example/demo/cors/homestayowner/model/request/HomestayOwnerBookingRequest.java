@@ -7,6 +7,8 @@ import lombok.*;
 @Setter
 public class HomestayOwnerBookingRequest extends PageableRequest {
 
+    String idOwner;
+
     String userName;
 
     String homestayName;
