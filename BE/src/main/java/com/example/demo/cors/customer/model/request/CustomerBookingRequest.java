@@ -33,4 +33,9 @@ public class CustomerBookingRequest extends PageableRequest {
     private String note;
 
     private String bookingId;
+
+    private String customerTransactionCode;
+
+    private String adminTransactionCode;
+
 }
