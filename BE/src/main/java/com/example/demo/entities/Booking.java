@@ -2,13 +2,13 @@ package com.example.demo.entities;
 
 import com.example.demo.entities.base.PrimaryEntity;
 import com.example.demo.infrastructure.contant.EntityProperties;
+import com.example.demo.infrastructure.contant.PaymentStatusBooking;
 import com.example.demo.infrastructure.contant.StatusBooking;
 import com.example.demo.infrastructure.contant.TypeBooking;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -57,5 +57,11 @@ public class Booking extends PrimaryEntity {
 
     @Nationalized
     private String note;
+
+    private String customerTransactionCode;
+
+    private String adminTransactionCode;
+
+    private PaymentStatusBooking paymentStatusBooking;
 
 }
