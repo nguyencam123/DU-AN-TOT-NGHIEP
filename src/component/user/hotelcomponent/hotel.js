@@ -41,8 +41,10 @@ const Hotel = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   let checkOutDate
-  const handleDetailHomestay = (id) => {
-    navigate(`/homestay/detail/${id}`);
+  const handleDetailHomestay = async (id) => {
+    navigate(
+      `/homestay/detail/${id}?startDate=${checkInDate.valueOf()}&endDate=${calculateCheckOutDate().valueOf()}`
+    )
   }
   useEffect(() => {
     dispatch(getProducts());
@@ -57,7 +59,6 @@ const Hotel = () => {
   const handleCheckInChange = (date) => {
     setCheckInDate(date);
   };
-
   const handleNumNightsChange = (value) => {
     setNumNights(value);
   };

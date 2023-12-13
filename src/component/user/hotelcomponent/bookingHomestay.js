@@ -3,9 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progress, Space } from 'antd';
 import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, InfoCircleTwoTone, StarTwoTone } from '@ant-design/icons'
 import { Form, Table } from 'react-bootstrap';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { addInfoPayment, getOneProduct } from '../../../features/product/productThunk';
 import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
+
 const { Header, Content, Footer } = Layout;
 
 
@@ -27,9 +29,13 @@ export const BookingHomestay = () => {
   const onChangePhoneNumber = (e) => {
     setInfoPayment({ ...infoPayment, phoneNumber: e.target.value });
   }
+  const location = useLocation();
+  const param = new URLSearchParams(location.search);
+  const startDate = param.get('startDate');
+  const endDate = param.get('endDate');
   const handleReviewBookingHomestay = (id) => {
     // Chuyển đến trang review với dữ liệu infoPayment trên URL
-    navigate(`/review/booking/${id}?name=${infoPayment.name}&email=${infoPayment.email}&phoneNumber=${infoPayment.phoneNumber}`);
+    navigate(`/review/booking/${id}?name=${infoPayment.name}&email=${infoPayment.email}&phoneNumber=${infoPayment.phoneNumber}&startDate=${startDate}&endDate=${endDate}`);
   };
 
   return (
@@ -79,7 +85,7 @@ export const BookingHomestay = () => {
               </h5>
               <div style={{ backgroundColor: 'white', borderRadius: '10px' }}>
                 <Form style={{ padding: '20px' }}>
-                  <Form.Group className="mb-3" controlId="formBasicEmail">
+                  <Form.Group className="mb-3" controlId="name">
                     <Form.Label style={{ fontWeight: '700' }}>Họ và tên</Form.Label>
                     <Form.Control type="text" placeholder="Họ và tên" onChange={(e) => onChangeName(e)} />
                     <Form.Text className="text-muted">
@@ -87,14 +93,14 @@ export const BookingHomestay = () => {
                     </Form.Text>
                   </Form.Group>
 
-                  <Form.Group className="mb-3" controlId="formBasicPassword">
+                  <Form.Group className="mb-3" controlId="phoneNumber">
                     <Form.Label style={{ fontWeight: '700' }}>Số điện thoại</Form.Label>
                     <Form.Control type="text" placeholder="Số điện thoại" onChange={(e) => onChangePhoneNumber(e)} />
                     <Form.Text className="text-muted">
                       VD : 09683741834
                     </Form.Text>
                   </Form.Group>
-                  <Form.Group className="mb-3" controlId="formBasicPassword">
+                  <Form.Group className="mb-3" controlId="Email">
                     <Form.Label style={{ fontWeight: '700' }}>Email</Form.Label>
                     <Form.Control type="text" placeholder="Email" onChange={(e) => onChangeEmail(e)} />
                     <Form.Text className="text-muted">
@@ -123,7 +129,7 @@ export const BookingHomestay = () => {
                     <div style={{ color: 'rgb(104, 113, 118)' }}>Ngày nhận phòng: </div>
                   </Col>
                   <Col span={11} push={1}>
-                    <div style={{ fontWeight: '500' }}>Thu, 9 Nov 2023, Từ 14:00</div>
+                    <div style={{ fontWeight: '500' }}>{moment(startDate*1).locale('vi').format('LL')}, Từ 14:00</div>
                   </Col>
                 </Row>
                 <Row style={{ backgroundColor: 'rgba(247,249,250,1.00)' }}>
@@ -131,7 +137,7 @@ export const BookingHomestay = () => {
                     <div style={{ color: 'rgb(104, 113, 118)' }}>Ngày trả phòng: </div>
                   </Col>
                   <Col span={11} push={1}>
-                    <div style={{ fontWeight: '500' }}>Fri, 10 Nov 2023, Trước 12:00 </div>
+                    <div style={{ fontWeight: '500' }}>{moment(endDate*1).locale('vi').format('LL')}, Trước 12:00 </div>
                   </Col>
                 </Row>
                 <Row style={{ margin: '25px 0px 0px 15px', paddingBottom: '20px' }}>
