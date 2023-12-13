@@ -53,7 +53,7 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
                 AND (MONTH(DATEADD(SECOND, a.created_date / 1000, '1970-01-01')) = :#{#request.month} OR :#{#request.month} IS NULL OR :#{#request.month} LIKE '')
                 AND (DAY(DATEADD(SECOND, a.created_date / 1000, '1970-01-01')) = :#{#request.date} OR :#{#request.date} IS NULL OR :#{#request.date} LIKE '')
 				)
-                AND a.status = 0;                 
+                AND a.status = 1;                 
             """, nativeQuery = true)
     HomestayOwnerStatisticalReponse getAllStatistical(HomestayOwnerStatisticalRequest request);
 
@@ -69,7 +69,7 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
             c.id = :#{#request.idOwnerHomestay}
             AND MONTH(DATEADD(SECOND, a.created_date / 1000, '1970-01-01')) = :#{#request.month}
             AND DATEPART(YEAR, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.year}
-            AND a.status=0;                     
+            AND a.status=1;                     
             """, nativeQuery = true)
     HomestayOwnerStatisticalReponse getAllStatisticalYear(HomestayOwnerStatisticalRequest request);
 }
