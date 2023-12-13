@@ -6,13 +6,13 @@ import {
     Table,
     Row,
     Space,
-    Modal, Tooltip, Button, Input, Col, DatePicker, message, Checkbox
+    Modal, Tooltip, Button, Input, Col, DatePicker, message, Checkbox, Popconfirm
 } from 'antd';
 import { useDispatch, useSelector } from 'react-redux'
 import { EditOutlined, EyeOutlined, LoadingOutlined, ReloadOutlined, TeamOutlined } from '@ant-design/icons'
 import moment from 'moment';
 import Search from 'antd/es/input/Search';
-import { addPromotion, fetchPromotion } from '../../../features/owner_homestay/getbooking/promotionThunk';
+import { UpdateStatusPromotion, addPromotion, fetchPromotion } from '../../../features/owner_homestay/getbooking/promotionThunk';
 import * as Yup from 'yup'
 import { fetchHomestay } from '../../../features/owner_homestay/homestayThunk';
 import dayjs from 'dayjs';
@@ -105,6 +105,17 @@ const Promotion = () => {
         setIsModalOpen(false);
     };
     /**
+     * update status promotion
+     */
+    const handleSubmitStatus = async (record) => {
+        await message.info(
+            'Đang tiến hành sửa trạng thái bạn vui lòng đợi một vài giây nhé!'
+        );
+        await dispatch(UpdateStatusPromotion(record.id));
+        dispatch(fetchPromotion(UserID));
+
+    };
+    /**
      * Table promotion
      */
     const mergedArrow = useMemo(() => {
@@ -152,6 +163,19 @@ const Promotion = () => {
             align: 'center',
         },
         {
+            title: 'Trạng thái',
+            dataIndex: 'statusPromotion',
+            key: 'statusPromotion',
+            align: 'center',
+            render(str) {
+                if (str == 'HOAT_DONG') {
+                    return 'Hoạt động'
+                } else {
+                    return 'Không hoạt động'
+                }
+            }
+        },
+        {
             title: 'Hành động',
             key: 'action',
             align: 'center',
@@ -161,7 +185,18 @@ const Promotion = () => {
                         <a style={{ color: '#1677ff' }} onClick={() => handleEdit(record)}><EditOutlined /></a>
                     </Tooltip>
                     <Tooltip placement="top" title={textupdate} arrow={mergedArrow}>
-                        <a style={{ color: '#1677ff' }}><ReloadOutlined /></a>
+                        <Popconfirm
+                            title='Xóa mục này'
+                            description='Bạn chắc chắn muốn cập nhật khuyến mãi này thành không hoạt động không?'
+                            icon={<ReloadOutlined />}
+                            cancelText='Hủy'
+                            okText='Cập nhật'
+                            onConfirm={() => handleSubmitStatus(record)}
+                        >
+                            <a>
+                                <ReloadOutlined />
+                            </a>
+                        </Popconfirm>
                     </Tooltip>
                 </Space>
             ),
@@ -188,11 +223,10 @@ const Promotion = () => {
     /**
      * @returns Add promotion
      */
-    // console.log(moment(startDate).valueOf())
     const promotions = {
         name: name,
-        startDate: moment(startDate).valueOf(),
-        endDate: moment(endDate).valueOf(),
+        startDate: startDate?.valueOf(),
+        endDate: endDate?.valueOf(),
         type: 'TIEN',
         value: value,
         owner: UserID,
@@ -238,7 +272,7 @@ const Promotion = () => {
                 await setIsLoading(false)
                 message.info('Sửa thành công');
             }
-            dispatch(fetchPromotion());
+            dispatch(fetchPromotion(UserID));
             setFormErrors({});
         } catch (errors) {
             const errorObject = {};
