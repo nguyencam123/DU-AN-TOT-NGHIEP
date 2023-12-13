@@ -4,9 +4,11 @@ import com.example.demo.cors.common.base.PageableObject;
 import com.example.demo.cors.customer.model.request.CustomerHomestayRequest;
 import com.example.demo.cors.customer.repository.CustomerDetailHomestayRepository;
 import com.example.demo.cors.customer.repository.CustomerHomestayRepository;
+import com.example.demo.cors.customer.repository.CustomerLoginRepository;
 import com.example.demo.cors.customer.services.CustomerHomestayService;
 import com.example.demo.entities.DetailHomestay;
 import com.example.demo.entities.Homestay;
+import com.example.demo.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -25,6 +27,9 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
 
     @Autowired
     private CustomerDetailHomestayRepository customerDetailHomestayRepository;
+
+    @Autowired
+    private CustomerLoginRepository customerLoginRepository;
 
     @Override
     public PageableObject<Homestay> getListHomestay(CustomerHomestayRequest request) {
@@ -95,6 +100,11 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
         Page<Homestay> res1 = new PageImpl<>(res, pageable, res.size());
         return new PageableObject<>(res1);
+    }
+
+    @Override
+    public User getCustomerByToken(String token) {
+        return customerLoginRepository.findUserByToken(token);
     }
 
 }
