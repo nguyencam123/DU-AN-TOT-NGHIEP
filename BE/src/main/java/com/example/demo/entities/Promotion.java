@@ -5,6 +5,7 @@ import com.example.demo.infrastructure.contant.EntityProperties;
 import com.example.demo.infrastructure.contant.StatusPromotion;
 import com.example.demo.infrastructure.contant.TypePromotion;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -38,8 +39,8 @@ public class Promotion extends PrimaryEntity {
     @JoinColumn(name = "owner_id")
     private OwnerHomestay idOwnerHomestay;
 
-    @OneToMany(mappedBy = "promotion", cascade = CascadeType.ALL)
-    @JsonBackReference
+    @OneToMany(mappedBy = "promotion", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("promotion")
     private List<Homestay> homestays;
 
 }

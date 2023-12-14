@@ -2,6 +2,7 @@ package com.example.demo.cors.homestayowner.controller;
 
 import com.example.demo.cors.common.base.ResponseObject;
 import com.example.demo.cors.homestayowner.model.request.HomestayOwnerPromotionRequest;
+import com.example.demo.cors.homestayowner.model.request.HomestayOwnerPromotionSearchRequest;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerPromotionService;
 import com.example.demo.entities.Promotion;
 import com.example.demo.infrastructure.exception.rest.RestApiException;
@@ -22,6 +23,11 @@ public class HomestayOwnerPromotionController {
     @GetMapping()
     public ResponseObject getPromotion(@RequestParam("idOwner") String idOwner) {
         return new ResponseObject(homestayOwnerPromotionService.getPromotion(idOwner));
+    }
+
+    @GetMapping("/search")
+    public ResponseObject searchPromotion(final HomestayOwnerPromotionSearchRequest request){
+        return new ResponseObject(homestayOwnerPromotionService.searchPromotionByNameAndStatus(request));
     }
 
     @PostMapping("/add-promotion")
