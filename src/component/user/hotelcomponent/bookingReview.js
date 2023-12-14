@@ -9,7 +9,6 @@ import moment from 'moment';
 const { Header, Content, Footer } = Layout;
 
 export const BookingReviewHomestay = () => {
-  const navigate = useNavigate();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -17,6 +16,7 @@ export const BookingReviewHomestay = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
 
+  const bookingId = params?.get('bookingId') || '';
   const name = params?.get('name') || '';
   const email = params?.get('email') || '';
   const phoneNumber = params?.get('phoneNumber') || '';
@@ -30,31 +30,13 @@ export const BookingReviewHomestay = () => {
   const dispatch = useDispatch();
   const detailHomestay = useSelector((state) => state.product.productDetails)
   const payment = useSelector((state) => state.product.payment)
-  const booking = useSelector((state) => state.booking.bookings);
-  console.log(startDate, endDate);
 
-  const handleBooking = async () => {
-    const userDetail = JSON.parse(localStorage.getItem('userDetail'));
-    const userID = userDetail?.data.id;
-    const bookingData = {
-      userId: userID,
-      totalPrice: detailHomestay.price + detailHomestay.price * 11 / 100,
-      startDate: startDate.valueOf(),
-      endDate: endDate.valueOf(),
-      name: name,
-      email: email,
-      phoneNumber: phoneNumber,
-      homestayId: detailHomestay.id,
-      idPromotion: '908989'
-    }
-    await dispatch(addBooking(bookingData));
+  const handleBooking = () => {
     const bookingDataGet = {
       vnp_Ammount: detailHomestay.price + detailHomestay.price * 11 / 100,
-      vnp_OrderInfo: String('bookingId' + '=' + booking?.id)
+      vnp_OrderInfo: String('bookingId' + '=' + bookingId)
     }
-    console.log(bookingDataGet.vnp_OrderInfo);
-    await dispatch(getPayment(bookingDataGet));
-    console.log(payment);
+    dispatch(getPayment(bookingDataGet));
   }
   return (
     <>
