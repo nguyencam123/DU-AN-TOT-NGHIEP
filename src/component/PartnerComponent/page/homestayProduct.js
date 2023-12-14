@@ -345,7 +345,8 @@ const HomeStayProduct = () => {
     acreage: Yup.number()
       .required('Vui lòng nhập diện tích')
       .typeError('Vui lòng nhập diện tích')
-      .positive('diện tích phòng phải lớn hơn 0')
+      .positive('diện tích phòng phải lớn hơn 0'),
+    desc: Yup.string().required('vui lòng nhập vào mô tả')
   });
   const handleSubmitStatus = async (record) => {
     await message.info(
