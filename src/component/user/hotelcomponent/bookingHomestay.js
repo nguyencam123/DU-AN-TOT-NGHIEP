@@ -1,10 +1,10 @@
 
 import React, { useEffect, useState } from 'react';
-import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progress, Space } from 'antd';
+import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progress, Space, Modal } from 'antd';
 import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, InfoCircleTwoTone, StarTwoTone } from '@ant-design/icons'
 import { Form, Table } from 'react-bootstrap';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { addInfoPayment, getOneProduct } from '../../../features/product/productThunk';
+import { addBooking, addInfoPayment, getOneProduct } from '../../../features/product/productThunk';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 
@@ -18,6 +18,7 @@ export const BookingHomestay = () => {
   }, []);
   const dispatch = useDispatch();
   const [infoPayment, setInfoPayment] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const detailHomestay = useSelector((state) => state.product.productDetails);
   const navigate = useNavigate();
   const onChangeName = (e) => {
@@ -29,13 +30,34 @@ export const BookingHomestay = () => {
   const onChangePhoneNumber = (e) => {
     setInfoPayment({ ...infoPayment, phoneNumber: e.target.value });
   }
+  const booking = useSelector((state) => state.booking.bookings);
+
   const location = useLocation();
   const param = new URLSearchParams(location.search);
   const startDate = param.get('startDate');
   const endDate = param.get('endDate');
+  const handleBooking = () => {
+    setIsModalOpen(true)
+    const userDetail = JSON.parse(localStorage.getItem('userDetail'));
+    const userID = userDetail?.data.id;
+    const bookingData = {
+      userId: userID,
+      totalPrice: detailHomestay.price + detailHomestay.price * 11 / 100,
+      startDate: startDate.valueOf(),
+      endDate: endDate.valueOf(),
+      name: infoPayment.name,
+      email: infoPayment.email,
+      phoneNumber: infoPayment.phoneNumber,
+      homestayId: detailHomestay.id,
+      idPromotion: '908989'
+    }
+    dispatch(addBooking(bookingData));
+    console.log(booking);
+  }
   const handleReviewBookingHomestay = (id) => {
+    console.log(booking.id);
     // Chuyển đến trang review với dữ liệu infoPayment trên URL
-    navigate(`/review/booking/${id}?name=${infoPayment.name}&email=${infoPayment.email}&phoneNumber=${infoPayment.phoneNumber}&startDate=${startDate}&endDate=${endDate}`);
+    navigate(`/review/booking/${id}?bookingId=${booking.id}&name=${infoPayment.name}&email=${infoPayment.email}&phoneNumber=${infoPayment.phoneNumber}&startDate=${startDate}&endDate=${endDate}`);
   };
 
   return (
@@ -215,7 +237,7 @@ export const BookingHomestay = () => {
                 </Col>
                 <Col span={16} >
                   <div style={{ float: 'right', marginTop: '5px' }}>
-                    <Button onClick={() => handleReviewBookingHomestay(params.id)} style={{ color: 'white', fontWeight: '500', fontSize: '14px', backgroundColor: 'rgb(255, 94, 31)', width: '85px', height: '40px' }}>Tiếp tục</Button>
+                    <Button onClick={() => handleBooking()} style={{ color: 'white', fontWeight: '500', fontSize: '14px', backgroundColor: 'rgb(255, 94, 31)', width: '85px', height: '40px' }}>Tiếp tục</Button>
                   </div>
                 </Col>
               </Row>
@@ -230,6 +252,16 @@ export const BookingHomestay = () => {
         }}
       >
       </Footer>
+      <Modal
+        title='Xác nhận thông tin'
+        open={isModalOpen}
+        onOk={() => handleReviewBookingHomestay(params.id)}
+        onCancel={() => setIsModalOpen(false)}
+      >
+        <h5>Tất cả thông tin bạn điền đã chính xác chưa?</h5>
+        <p>{infoPayment.email}</p>
+        <p>{infoPayment.phoneNumber}</p>
+      </Modal>
     </>
   )
 
