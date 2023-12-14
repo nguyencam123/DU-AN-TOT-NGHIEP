@@ -1,15 +1,21 @@
 package com.example.demo.cors.homestayowner.service.impl;
 
+import com.example.demo.cors.common.base.PageableObject;
 import com.example.demo.cors.homestayowner.model.request.HomestayOwnerPromotionRequest;
+import com.example.demo.cors.homestayowner.model.request.HomestayOwnerPromotionSearchRequest;
 import com.example.demo.cors.homestayowner.repository.HomestayOwnerHomestayRepository;
 import com.example.demo.cors.homestayowner.repository.HomestayOwnerOwnerHomestayRepository;
 import com.example.demo.cors.homestayowner.repository.HomestayOwnerPromotionRepository;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerPromotionService;
+import com.example.demo.entities.Booking;
 import com.example.demo.entities.Homestay;
 import com.example.demo.entities.Promotion;
 import com.example.demo.infrastructure.contant.StatusPromotion;
 import com.example.demo.infrastructure.exception.rest.RestApiException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -31,6 +37,13 @@ public class HomestayOwnerPromotionServiceImpl implements HomestayOwnerPromotion
     @Override
     public List<Promotion> getPromotion(String idOwner) {
         return homestayOwnerPromotionRepository.getAllPromotion(idOwner);
+    }
+
+    @Override
+    public PageableObject<Promotion> searchPromotionByNameAndStatus(HomestayOwnerPromotionSearchRequest request) {
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+        Page<Promotion> getPromotion = homestayOwnerPromotionRepository.getBookingByNameAndStatus(request, pageable);
+        return new PageableObject<>(getPromotion);
     }
 
     @Override
