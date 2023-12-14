@@ -25,7 +25,7 @@ const ProtectedRoute = ({ partnerOnly, adminOnly, ...rest }) => {
         return <Navigate to="/error-role" replace />;
     }
     if (partnerOnly && !isPartner) {
-        return <Navigate to="/error-role" replace />;
+        return <Navigate to="/hop-tac/login" replace />;
     }
 
     return <Outlet />;

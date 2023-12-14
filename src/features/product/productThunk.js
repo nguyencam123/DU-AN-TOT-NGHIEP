@@ -1,6 +1,7 @@
 import { fetchProductsStart, fetchProductsSuccess, fetchProductsFailure, fetchProductsDetailSuccess, fetchCommentProductSuccess, fetchAvgPointSuccess, getPaymentSuccess, addInfoBooking } from './productSlide';
 import { instance } from '../../app/axiosConfig';
 import axios from 'axios';
+import { addBookingsSuccess } from '../owner_homestay/getbooking/bookingSlice';
 
 const BASE_URL = '/homestay/get-all?size=999';
 
@@ -76,7 +77,8 @@ export const getPayment = (price) => async (dispatch) => {
 
 export const addBooking = (booking) => async (dispatch) => {
   try {
-    await instance.post('http://localhost:8080/api/v1/booking/create', booking);
+    const response = await instance.post('http://localhost:8080/api/v1/booking/create', booking);
+    dispatch(addBookingsSuccess(response.data.data)); // Lấy dữ liệu từ response.data.data
     // console.log(response.data.data);
   } catch (error) {
     dispatch(fetchProductsFailure(error.message));

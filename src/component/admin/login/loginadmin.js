@@ -72,7 +72,6 @@ function LoginAdmin() {
                                 onChange={(e) => setPassword(e.target.value)} />
 
                             <MDBBtn className="mb-4 px-5" color='dark' size='lg' onClick={() => handleLogin()}>Đăng nhập</MDBBtn>
-                            <a className="small text-muted" href="#!">Quên mật khẩu ?</a>
                         </MDBCardBody>
                     </MDBCol>
 

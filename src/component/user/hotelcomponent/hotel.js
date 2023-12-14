@@ -41,8 +41,10 @@ const Hotel = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   let checkOutDate
-  const handleDetailHomestay = (id) => {
-    navigate(`/homestay/detail/${id}`);
+  const handleDetailHomestay = async (id) => {
+    navigate(
+      `/homestay/detail/${id}?startDate=${checkInDate.valueOf()}&endDate=${calculateCheckOutDate().valueOf()}`
+    )
   }
   useEffect(() => {
     dispatch(getProducts());
@@ -57,7 +59,6 @@ const Hotel = () => {
   const handleCheckInChange = (date) => {
     setCheckInDate(date);
   };
-
   const handleNumNightsChange = (value) => {
     setNumNights(value);
   };
@@ -118,9 +119,9 @@ const Hotel = () => {
   const handleresetinput = () => {
     setRangeValue(initialValue);
   }
-  const [nameOrAddress, setNameOrAddress] = useState('')
-  const [numberPerson, setNumberPerson] = useState(0)
-  const [roomNumber, setRoomNumber] = useState(0)
+  const [nameOrAddress, setNameOrAddress] = useState('Hà Nội')
+  const [numberPerson, setNumberPerson] = useState(12)
+  const [roomNumber, setRoomNumber] = useState(12)
   const [convenientvir, setconvenient] = useState('')
   const [notification, setNotification] = useState('')
   const onChangeConvenients = (checkedValues) => {
@@ -132,14 +133,14 @@ const Hotel = () => {
       setNotification("Vui lòng nhập tên hoặc địa chỉ")
     } else {
       setNotification('')
-      dispatch(fetchSearchProducts(moment(checkInDate).valueOf(), calculateCheckOutDate().valueOf(), nameOrAddress, numberPerson, roomNumber, rangeValue[0], rangeValue[1], convenientvir))
+      dispatch(fetchSearchProducts(checkInDate.valueOf(), calculateCheckOutDate().valueOf(), nameOrAddress, numberPerson, roomNumber, rangeValue[0], rangeValue[1], convenientvir))
     }
   }
 
   const text = <section>
     <div style={{ justifyContent: 'space-between', display: 'flex', fontSize: 18 }}>
-      <div style={{ display: 'flex' }}><UserOutlined style={{ marginBottom: 10 }} />&ensp;số lượng người</div><div><Input style={{ width: 100, height: 40 }} defaultValue={1} onChange={(e) => setNumberPerson(e.target.value)} /></div>
-      <div style={{ display: 'flex' }}><InsertRowRightOutlined style={{ marginBottom: 10 }} />&ensp;số lượng phòng</div><div><Input style={{ width: 100, height: 40 }} defaultValue={1} onChange={(e) => setRoomNumber(e.target.value)} /></div>
+      <div style={{ display: 'flex' }}><UserOutlined style={{ marginBottom: 10 }} />&ensp;số lượng người</div><div><Input style={{ width: 100, height: 40 }} defaultValue={12} onChange={(e) => setNumberPerson(e.target.value)} /></div>
+      <div style={{ display: 'flex' }}><InsertRowRightOutlined style={{ marginBottom: 10 }} />&ensp;số lượng phòng</div><div><Input style={{ width: 100, height: 40 }} defaultValue={12} onChange={(e) => setRoomNumber(e.target.value)} /></div>
     </div>
   </section>;
   const utilities = <div style={{ width: '100%', height: '30%', backgroundColor: 'white', borderRadius: 10, padding: '5px 5px 5px' }}>
@@ -303,8 +304,8 @@ const Hotel = () => {
                     <div style={{ marginLeft: 10, borderLeft: '1px solid #ACAEB1', padding: '8px 8px 2px 2px', width: '40%' }}>
                       <div style={{ display: 'flex', color: 'rgb(5, 165, 105)' }}><ShopOutlined style={{ marginTop: 3, fontSize: 14 }} /> Ưu đãi dành riêng cho bạn...</div>
                       <div style={{ float: 'right' }}>
-                        <div style={{ fontSize: 16 }}><del>{items.price} VND</del></div>
-                        <div style={{ fontSize: 22, color: 'rgb(231, 9, 14)' }}>{items.price} VND</div>
+                        <div style={{ fontSize: 16 }}><del>{items.price + items.price * 11 / 100} VND</del></div>
+                        <div style={{ fontSize: 22, color: 'rgb(231, 9, 14)' }}>{items.price + items.price * 11 / 100} VND</div>
                         <div style={{ fontSize: 12, color: 'rgb(231, 9, 14)' }}>Ngày bạn chọn đã có 10 lượt<br /> đặt</div>
                         <div style={{ fontSize: 22 }}><Button style={{ backgroundColor: 'rgb(231, 9, 14)', color: 'white' }} onClick={() => handleDetailHomestay(items.id)} >Chọn phòng</Button></div>
                       </div>

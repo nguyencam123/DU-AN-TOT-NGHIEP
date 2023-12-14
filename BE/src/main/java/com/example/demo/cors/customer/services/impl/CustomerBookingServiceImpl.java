@@ -65,9 +65,16 @@ public class CustomerBookingServiceImpl implements CustomerBookingService {
         booking.setHomestay(homestay);
         booking.setPromotion(promotion);
         booking.setNote(request.getNote());
-        booking.setStatus(StatusBooking.THANH_CONG);
+        booking.setStatus(StatusBooking.KHONG_THANH_CONG);
         customerBookingRepository.save(booking);
         return booking;
+    }
+
+    @Override
+    public Booking updateBooking(CustomerBookingRequest request) {
+        Booking booking = customerBookingRepository.findById(request.getBookingId()).orElse(null);
+        booking.setStatus(StatusBooking.THANH_CONG);
+        return customerBookingRepository.save(booking);
     }
 
     private Booking findForUpdate(String id) {
