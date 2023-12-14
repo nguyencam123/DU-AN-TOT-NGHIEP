@@ -18,3 +18,11 @@ export const addPromotion = (promotion) => async (dispatch) => {
         dispatch(fetchBookingsFailure(error.message));
     }
 };
+export const UpdateStatusPromotion = (id) => async (dispatch) => {
+    dispatch(fetchBookingsStart());
+    try {
+        await instance.put(`/api/v2/promotion/update-status-promotion?idPromotion=${id}`);
+    } catch (error) {
+        dispatch(fetchBookingsFailure(error.message));
+    }
+};

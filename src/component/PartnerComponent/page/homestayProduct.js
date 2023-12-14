@@ -874,6 +874,7 @@ const HomeStayProduct = () => {
         }
         open={isViewmodal}
         onCancel={handleCancel}
+        onOk={handleCancel}
         width={1100}
         style={{ fontSize: '40px' }}
       >

@@ -10,36 +10,17 @@ export const BookingSuccess = () => {
   const dispatch = useDispatch();
   const urlParams = new URLSearchParams(window.location.search)
   const userDetail = JSON.parse(localStorage.getItem('userDetail'));
-  const UserID = userDetail?.data.id;
+  const userID = userDetail?.data.id;
   const navigate = useNavigate();
   const handleReturn = () => {
-    dispatch(addBooking(booking));
     navigate('/')
   }
 
   const info = urlParams.get('vnp_OrderInfo');
-  const name = info?.substring(0, info.indexOf('+'));
-  const phoneNumber = info?.substring(info.indexOf('+') + 1, info.indexOf(','));
-  const email = info?.substring(info.indexOf(',') + 1, info.lastIndexOf('+'));
-  const startDate = info?.substring(info.lastIndexOf('+') + 1, info.lastIndexOf(','));
-  const endDate = info?.substring(info.lastIndexOf(',') + 1, info.indexOf('='));
-  const homestayId = info?.substring(info.indexOf('=') + 1, info.lastIndexOf('='));
-  const userId = UserID;
-  const booking = {
-    userId: userId,
-    totalPrice: urlParams.get('vnp_Amount'),
-    startDate: startDate,
-    endDate: endDate,
-    name: name,
-    email: email,
-    phoneNumber: phoneNumber,
-    homestayId: homestayId,
-    idPromotion: '908989'
-  }
+  console.log(info);
 
   const handleBooking = () => {
-    dispatch(addBooking(booking));
-    navigate(`/booking/${userId}`)
+    navigate(`/booking/${userID}`)
   }
   return (
     <>
