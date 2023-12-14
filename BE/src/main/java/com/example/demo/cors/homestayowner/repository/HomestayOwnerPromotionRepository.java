@@ -24,8 +24,8 @@ public interface HomestayOwnerPromotionRepository extends PromotionRepository {
             FROM promotion a
             WHERE a.owner_id = :#{#request.idOwner}
             AND (
-            a.name LIKE %:#{#request.name}% OR a.name IS NULL OR a.name = ''
-            AND a.status_promotion is null or a.status_promotion=:#{#request.status}
+            (a.name LIKE %:#{#request.name}% OR :#{#request.name} IS NULL OR a.name like '')
+            AND (:#{#request.status} is null or a.status_promotion=:#{#request.status})
             )
     """,nativeQuery = true)
     Page<Promotion> getBookingByNameAndStatus(@Param("request") HomestayOwnerPromotionSearchRequest request, Pageable pageable);
