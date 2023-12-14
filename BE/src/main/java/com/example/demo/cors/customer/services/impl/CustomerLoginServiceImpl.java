@@ -65,36 +65,36 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
     @Override
     public CustomerAuthenticationReponse CustomerRegister(CustomerRequest request) {
         if (isNullOrEmpty(request.getUsername())) {
-            throw new RestApiException("Username cannot be empty");
+            throw new RestApiException("tên tài khoản không được để trống");
         }
         if (isNullOrEmpty(request.getName())) {
-            throw new RestApiException("Name cannot be empty");
+            throw new RestApiException("Tên không được để trống");
         }
         if (isNullOrEmpty(request.getPhoneNumber())) {
-            throw new RestApiException("Phone number cannot be empty");
+            throw new RestApiException("Số điện thoại không được để trống");
         }
         if (isNullOrEmpty(request.getEmail())) {
-            throw new RestApiException("Email cannot be empty");
+            throw new RestApiException("Email không được để trống");
         }
         if (isNullOrEmpty(request.getPassword())) {
-            throw new RestApiException("Password cannot be empty");
+            throw new RestApiException("Password không được để trống");
         }
         if (customerLoginRepository.existsByUsername(request.getUsername())) {
-            throw new RestApiException("Username is already in use");
+            throw new RestApiException("Tên tài khoản đã tồn tại");
         }
         if (customerLoginRepository.existsByEmail(request.getEmail())) {
-            throw new RestApiException("Email is already in use");
+            throw new RestApiException("Email đã tồn tại");
         }
         if (customerLoginRepository.existsByPhoneNumber(request.getPhoneNumber())) {
-            throw new RestApiException("PhoneNumber is already in use");
+            throw new RestApiException("Số điện thoại đã tồn tại");
         }
         String phoneNumber = request.getPhoneNumber();
         if (!isValidVietnamesePhoneNumber(phoneNumber)) {
-            throw new RestApiException("Invalid Vietnamese phone number format");
+            throw new RestApiException("số điện thoại phải là số điện thoại Việt Nam");
         }
         String emails=request.getEmail();
         if (!isValidEmail(emails)){
-            throw new RestApiException("Invalid Email format");
+            throw new RestApiException("Email phải đúng định dạng @.gmail.com");
         }
         User user = new User();
         Random random = new Random();
@@ -140,20 +140,20 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
     @Override
     public CustomerAuthenticationReponse CustomerAuthenticate(CustomerUserPassRequest request) {
         if (isNullOrEmpty(request.getUsername())) {
-            throw new RestApiException("Username cannot be empty");
+            throw new RestApiException("Tên tài khoản không được để trống");
         }
         if (isNullOrEmpty(request.getPassword())) {
-            throw new RestApiException("Password number cannot be empty");
+            throw new RestApiException("Mật khẩu không được để trống");
         }
         if (customerLoginRepository.existsByUsername(request.getUsername())==false) {
-            throw new RestApiException("Username isn't exist");
+            throw new RestApiException("Tài khoản không tồn tại");
         }
         var user = customerLoginRepository.findByUsername(request.getUsername()).orElseThrow();
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RestApiException("password isn't true");
+            throw new RestApiException("Mật khẩu không đúng");
         }
         if(user.getStatus().equals(Status.KHONG_HOAT_DONG)){
-            throw new RestApiException("user isn't work");
+            throw new RestApiException("Tài khoản đang không hoạt động");
         }
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -212,40 +212,37 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
     @Override
     public CustomerAuthenticationReponse updateInformationCusmoter(String idCustomer, CustomerRequest request, MultipartFile multipartFile) throws IOException {
         User customer = customerLoginRepository.findById(idCustomer).get();
+        if (isNullOrEmpty(request.getUsername())) {
+            throw new RestApiException("tên tài khoản không được để trống");
+        }
         if (isNullOrEmpty(request.getName())) {
-            throw new IOException("Name cannot be empty");
+            throw new RestApiException("Tên không được để trống");
+        }
+        if (isNullOrEmpty(request.getPhoneNumber())) {
+            throw new RestApiException("Số điện thoại không được để trống");
         }
         if (isNullOrEmpty(request.getEmail())) {
-            throw new IOException("Email cannot be empty");
+            throw new RestApiException("Email không được để trống");
         }
-        if (isNullOrEmpty(request.getAddress())) {
-            throw new IOException("Address cannot be empty");
+        if (isNullOrEmpty(request.getPassword())) {
+            throw new RestApiException("Password không được để trống");
         }
-        if (isNullOrEmpty(request.getUsername())) {
-            throw new IOException("Username cannot be empty");
+        if (customerLoginRepository.existsByUsername(request.getUsername())) {
+            throw new RestApiException("Tên tài khoản đã tồn tại");
         }
-        if (request.getBirthday() == null) {
-            throw new IOException("Birthday cannot be empty");
+        if (customerLoginRepository.existsByEmail(request.getEmail())) {
+            throw new RestApiException("Email đã tồn tại");
         }
-        if (request.getGender() == null && request.getGender().booleanValue()) {
-            throw new IOException("Gender cannot be empty");
-        }
-        if (customerLoginRepository.existsByUsername(request.getUsername()) && !customer.getUsername().equals(request.getUsername())) {
-            throw new RestApiException("Username is already in use");
-        }
-        if (customerLoginRepository.existsByEmail(request.getEmail()) && !customer.getEmail().equals(request.getEmail())) {
-            throw new RestApiException("Email is already in use");
-        }
-        if (customerLoginRepository.existsByPhoneNumber(request.getPhoneNumber()) && !customer.getPhoneNumber().equals(request.getPhoneNumber())) {
-            throw new RestApiException("PhoneNumber is already in use");
+        if (customerLoginRepository.existsByPhoneNumber(request.getPhoneNumber())) {
+            throw new RestApiException("Số điện thoại đã tồn tại");
         }
         String phoneNumber = request.getPhoneNumber();
         if (!isValidVietnamesePhoneNumber(phoneNumber)) {
-            throw new RestApiException("Invalid Vietnamese phone number format");
+            throw new RestApiException("số điện thoại phải là số điện thoại Việt Nam");
         }
-        String emails = request.getEmail();
-        if (!isValidEmail(emails)) {
-            throw new RestApiException("Invalid Email format");
+        String emails=request.getEmail();
+        if (!isValidEmail(emails)){
+            throw new RestApiException("Email phải đúng định dạng @.gmail.com");
         }
         customer.setName(request.getName());
         customer.setBirthday(request.getBirthday());

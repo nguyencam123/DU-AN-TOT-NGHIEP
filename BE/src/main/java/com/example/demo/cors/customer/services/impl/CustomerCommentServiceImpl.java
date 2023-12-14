@@ -5,14 +5,13 @@ import com.cloudinary.utils.ObjectUtils;
 import com.example.demo.cors.common.base.PageableObject;
 import com.example.demo.cors.customer.model.request.CustomerCommentAddRequest;
 import com.example.demo.cors.customer.model.request.CustomerCommentRequest;
-import com.example.demo.cors.customer.repository.CustomerCommentRepository;
-import com.example.demo.cors.customer.repository.CustomerHomestayRepository;
-import com.example.demo.cors.customer.repository.CustomerImgCommentRepository;
-import com.example.demo.cors.customer.repository.CustomerLoginRepository;
+import com.example.demo.cors.customer.repository.*;
 import com.example.demo.cors.customer.services.CustomerCommentService;
 import com.example.demo.cors.customer.services.CustomerLoginService;
+import com.example.demo.entities.Booking;
 import com.example.demo.entities.Comment;
 import com.example.demo.entities.ImgComment;
+import com.example.demo.infrastructure.exception.rest.RestApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,6 +40,9 @@ public class CustomerCommentServiceImpl implements CustomerCommentService {
     private CustomerImgCommentRepository customerImgCommentRepository;
 
     @Autowired
+    private CustomerBookingRepository customerBookingRepository;
+
+    @Autowired
     private Cloudinary cloudinary;
 
     @Override
@@ -62,6 +64,10 @@ public class CustomerCommentServiceImpl implements CustomerCommentService {
 
     @Override
     public Comment addComment(CustomerCommentAddRequest request) throws IOException {
+        Booking booking=customerBookingRepository.findById(request.getCode()).get();
+        if (!booking.getHomestay().getId().equals(request.getHomestay()) || !booking.getUser().getId().equals(request.getUser())){
+            throw new RestApiException("mã code không đúng, không thể thực hiện đánh giá");
+        }
         Comment comment = new Comment();
         comment.setHomestay(customerHomestayRepository.findById(request.getHomestay()).get());
         comment.setComment(request.getComment());
