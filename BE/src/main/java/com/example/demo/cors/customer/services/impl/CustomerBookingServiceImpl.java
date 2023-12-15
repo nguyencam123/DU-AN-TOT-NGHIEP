@@ -41,7 +41,7 @@ public class CustomerBookingServiceImpl implements CustomerBookingService {
     @Override
     public PageableObject<Booking> getBookingByUser(CustomerBookingRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-        Page<Booking> res = customerBookingRepository.findByUserId(pageable, request.getUserId());
+        Page<Booking> res = customerBookingRepository.getBookingByUserId(pageable, request);
         return new PageableObject<>(res);
     }
 
