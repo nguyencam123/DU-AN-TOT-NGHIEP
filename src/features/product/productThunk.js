@@ -85,6 +85,16 @@ export const addBooking = (booking) => async (dispatch) => {
   }
 };
 
+export const cancelBooking = (bookingId, node) => async (dispatch) => {
+  try {
+    const response = await instance.put('http://localhost:8080/api/v1/booking/cancel/' + bookingId, {note: node});
+    dispatch(addBookingsSuccess(response.data.data)); // Lấy dữ liệu từ response.data.data
+    // console.log(response.data.data);
+  } catch (error) {
+    dispatch(fetchProductsFailure(error.message));
+  }
+};
+
 export const updateBooking = (bookingId) => async (dispatch) => {
   try {
     const response = await instance.put('http://localhost:8080/api/v1/booking/update?bookingId=' + bookingId);
