@@ -84,7 +84,6 @@ const Promotion = () => {
                 <Space size="middle">
                     <Checkbox onChange={onChangePromotion(record)} checked={homestay.map((item) => item.id).includes(record.id)}
                     />
-                    {console.log(record.id)}
                 </Space>
             ),
         },
@@ -138,6 +137,7 @@ const Promotion = () => {
         setEndDate(null);
         setValue(0);
         setCheckedValues([])
+        setHomestay([])
     };
     const handleOk = () => {
         setIsModalOpen(false);

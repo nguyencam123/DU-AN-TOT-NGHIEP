@@ -57,7 +57,7 @@ const Register = () => {
         point: 9
     }
     const handleSubmit = async (e) => {
-        setIsLoading(true)
+
         e.preventDefault();
         if (password.length < 8 || username.length < 8) {
             alert('Mật khẩu và tài khoản phải có ít nhất 8 ký tự');
@@ -66,6 +66,7 @@ const Register = () => {
             alert('Số điện thoại phải có đúng 10 số');
             return;
         } else {
+            setIsLoading(true)
             try {
                 // Gửi POST request tới API
                 await message.info(

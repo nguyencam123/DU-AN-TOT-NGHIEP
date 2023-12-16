@@ -33,8 +33,8 @@ const HeaderUser = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-  const idUser = useSelector((state) => state.user?.userData?.data.id);
-  const statusUser = JSON.parse(localStorage.getItem('userDetail'))?.success;
+  const userDetail = JSON.parse(localStorage.getItem('userDetail'));
+  const userId = userDetail?.data.id; const statusUser = JSON.parse(localStorage.getItem('userDetail'))?.success;
   const dispatch = useDispatch();
   const [searchVisible, setSearchVisible] = useState(false);
   const [searchValue, setSearchValue] = useState('');
@@ -78,10 +78,10 @@ const HeaderUser = () => {
     navigate('/login');
   };
   const booking = () => {
-    navigate(`/booking/${idUser}`);
+    navigate(`/booking/${userId}`);
   };
   const cart = () => {
-    navigate('/shopingcart');
+    navigate(`/shopingcart/${userId}`);
   };
   return (
     <header>
@@ -117,7 +117,7 @@ const HeaderUser = () => {
             </Nav>
             <div className='headercart'>
               <div className='cartAndPerson' style={{ display: 'flex' }}>
-                <div className='search-bar-container'>
+                {/* <div className='search-bar-container'>
                   {searchVisible ? (
                     <div className='search-input-container'>
                       <Input
@@ -136,7 +136,7 @@ const HeaderUser = () => {
                       style={{ fontSize: '26px' }}
                     />
                   )}
-                </div>
+                </div> */}
                 &emsp;
                 <Link to='/shopingcart' className='headercart'>
                   <span className='picturecart'>
