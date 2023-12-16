@@ -143,6 +143,7 @@ const HomeStayProduct = () => {
     setSelectedDistrict('');
     setSelectedWard('');
     setCheckedValues([]);
+    setFile([])
   };
   const handleOk = () => {
     setIsModalOpen(false);
@@ -198,7 +199,7 @@ const HomeStayProduct = () => {
           )}
           {record.status === 'HOAT_DONG' && (
             <Popconfirm
-              title='Xóa mục này'
+              title='Cập nhật mục này'
               description='Bạn chắc chắn muốn cập nhật homestay thành không hoạt động không?'
               icon={<ReloadOutlined />}
               cancelText='Hủy'
@@ -212,7 +213,7 @@ const HomeStayProduct = () => {
           )}
           {record.status === 'KHONG_HOAT_DONG' && (
             <Popconfirm
-              title='Xóa mục này'
+              title='Cập nhật mục này'
               description='Bạn chắc chắn muốn cập nhật homestay thành chờ duyệt không?'
               icon={<ReloadOutlined />}
               cancelText='Hủy'
@@ -294,8 +295,8 @@ const HomeStayProduct = () => {
     timeCheckIn: timeCheckIn,
     timeCheckOut: timeCheckOut,
     cancellationPolicy: parseFloat(cancellationPolicy),
-    startDate: moment(startDate).valueOf(),
-    endDate: moment(endDate).valueOf(),
+    startDate: startDate?.valueOf(),
+    endDate: endDate?.valueOf(),
     desc: desc,
     price: parseFloat(price),
     numberPerson: parseInt(numberPerson),
@@ -330,7 +331,7 @@ const HomeStayProduct = () => {
         return value && value.trim().length > 0;
       }),
     timeCheckIn: Yup.string().required('Vui lòng chọn thời gian nhận phòng'),
-    timeCheckOut: Yup.string().required('Vui lòng chọn thời gian nhận phòng'),
+    timeCheckOut: Yup.string().required('Vui lòng chọn thời gian trả phòng'),
     roomNumber: Yup.number()
       .required('Vui lòng nhập số phòng')
       .typeError('Vui lòng nhập số phòng')
@@ -346,7 +347,7 @@ const HomeStayProduct = () => {
       .required('Vui lòng nhập diện tích')
       .typeError('Vui lòng nhập diện tích')
       .positive('diện tích phòng phải lớn hơn 0'),
-    desc: Yup.string().required('vui lòng nhập vào mô tả')
+    desc: Yup.string().required('vui lòng nhập vào mô tả').max(500, 'Vui lòng nhập ít hơn 500 ký tự')
   });
   const handleSubmitStatus = async (record) => {
     await message.info(
@@ -436,15 +437,8 @@ const HomeStayProduct = () => {
     setnumberPerson(record.numberPerson);
     setaddress(record.address);
     setprice(record.price);
-    const formattedDateStart = moment(record.startDate)
-      .locale('vi')
-      .format('YYYY-MM-DD');
-    const formattedDateEnd = moment(record.endDate)
-      .locale('vi')
-      .format('YYYY-MM-DD');
-
-    setstartDate(formattedDateStart);
-    setendDate(formattedDateEnd);
+    setstartDate(record.startDate);
+    setendDate(record.endDate);
     setIamge(record.images);
     setcancellationPolicy(record.cancellationPolicy);
     setroomNumber(record.numberPerson);
@@ -452,6 +446,8 @@ const HomeStayProduct = () => {
     settimeCheckIn(record.timeCheckIn);
     settimeCheckOut(record.timeCheckOut);
     setconvenient(record.detailHomestays);
+    setFile([])
+
     console.log(record)
     //
     setFormErrors({});
@@ -643,7 +639,7 @@ const HomeStayProduct = () => {
                 <DatePicker
                   onChange={handleDateChangestart}
                   style={{ width: '100%' }}
-                  value={startDate ? dayjs(startDate, 'YYYY-MM-DD') : null}
+                  value={startDate ? dayjs(dayjs(startDate).locale('vi').format('YYYY-MM-DD'), 'YYYY-MM-DD') : null}
                   disabledDate={isBeforeToday}
                   allowClear={true}
                 />
@@ -655,7 +651,7 @@ const HomeStayProduct = () => {
                 <DatePicker
                   onChange={handleDateChangeend}
                   style={{ width: '100%' }}
-                  value={endDate ? dayjs(endDate, 'YYYY-MM-DD') : null}
+                  value={endDate ? dayjs(dayjs(endDate).locale('vi').format('YYYY-MM-DD'), 'YYYY-MM-DD') : null}
                   disabledDate={isBeforeToday}
                   allowClear={true}
                 />
@@ -792,6 +788,7 @@ const HomeStayProduct = () => {
                 value={desc}
                 onChange={(e) => setdesc(e.target.value)}
               />
+              <div style={{ color: 'red' }}>{formErrors.desc}</div>
             </Col>
             {/* <Col span={12}>
               <Title level={5}>Ngày kết thúc</Title>

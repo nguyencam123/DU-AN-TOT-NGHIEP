@@ -32,7 +32,6 @@ const Booking = () => {
     const [homestayname, setHomestayName] = useState('')
     const [namebooking, setNameBooking] = useState('')
     const [valueselect, setValueSelect] = useState('')
-    console.log(namebooking)
     useEffect(() => {
         dispatch(getBookingByNameHomestay(UserID, homestayname, namebooking, valueselect));
     }, [homestayname, namebooking, valueselect]);

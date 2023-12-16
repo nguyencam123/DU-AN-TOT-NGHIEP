@@ -21,18 +21,24 @@ const { Title } = Typography
 
 
 const text = <span>Sửa khuyến mãi</span>;
+const textView = <span>xem chi tiết khuyến mãi</span>;
 const textupdate = <span>Dừng hoạt động khuyến mãi</span>;
 const Promotion = () => {
     const [isAddFrom, setIsAddFrom] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
+    const [homestayname, setHomestayName] = useState('')
+    const [valueselect, setValueSelect] = useState('')
+    const [isViewmodal, setIsviewmodal] = useState(false);
+    const [homestay, setHomestay] = useState([])
+
     const [arrow, setArrow] = useState('Show');
     const dispatch = useDispatch();
     const userDetail = JSON.parse(localStorage.getItem('ownerDetail'));
     const UserID = userDetail?.data.id;
     useEffect(() => {
-        dispatch(fetchPromotion(UserID));
+        dispatch(fetchPromotion(UserID, homestayname, valueselect));
         dispatch(fetchHomestay());
-    }, []);
+    }, [homestayname, valueselect]);
     const promotion = useSelector((state) => state.booking.promotions)
     const products = useSelector((state) => state.ownerHomestay.homestays);
     const [checkedValues, setCheckedValues] = useState([]);
@@ -52,6 +58,8 @@ const Promotion = () => {
     /**
      * @returns Table colums
      */
+    const [selectedHomestays, setSelectedHomestays] = useState([]);
+
     const columnsData = [
         {
             title: 'Tên homestay',
@@ -74,10 +82,43 @@ const Promotion = () => {
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
-                    <Checkbox onChange={onChangePromotion(record)} />
+                    <Checkbox onChange={onChangePromotion(record)} checked={homestay.map((item) => item.id).includes(record.id)}
+                    />
+                    {console.log(record.id)}
                 </Space>
             ),
         },
+    ];
+
+    /**
+     * table view row
+     */
+    const columnsDataView = [
+        {
+            title: 'Tên homestay',
+            dataIndex: 'name',
+            key: 'name'
+        },
+        {
+            title: 'Địa chỉ homestay',
+            dataIndex: 'address',
+            key: 'address'
+        },
+        {
+            title: 'Giá homestay',
+            dataIndex: 'price',
+            key: 'price',
+            align: 'center'
+        },
+        {
+            title: 'Giá homestay sau khi giảm',
+            dataIndex: 'price',
+            key: 'price',
+            align: 'center',
+            render(str) {
+                return str - value
+            }
+        }
     ];
     /**
     * @access modal thêm 
@@ -86,11 +127,11 @@ const Promotion = () => {
     const [name, setName] = useState('');
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
-
-    const [homestay, setHomestay] = useState([])
+    const [idPromotion, setPromotion] = useState('')
     const [value, setValue] = useState(0);
     const [formErrors, setFormErrors] = useState({});
     const showModal = () => {
+        setIsAddFrom(true)
         setIsModalOpen(true);
         setName('');
         setStartDate(null);
@@ -103,6 +144,8 @@ const Promotion = () => {
     };
     const handleCancel = () => {
         setIsModalOpen(false);
+        setIsviewmodal(false)
+
     };
     /**
      * update status promotion
@@ -113,7 +156,6 @@ const Promotion = () => {
         );
         await dispatch(UpdateStatusPromotion(record.id));
         dispatch(fetchPromotion(UserID));
-
     };
     /**
      * Table promotion
@@ -181,12 +223,15 @@ const Promotion = () => {
             align: 'center',
             render: (_, record) => (
                 <Space size="middle">
+                    <Tooltip placement="top" title={textView} arrow={mergedArrow}>
+                        <a style={{ color: '#1677ff' }} onClick={() => handleViewRow(record)}> <EyeOutlined /></a>
+                    </Tooltip>
                     <Tooltip placement="top" title={text} arrow={mergedArrow}>
                         <a style={{ color: '#1677ff' }} onClick={() => handleEdit(record)}><EditOutlined /></a>
                     </Tooltip>
                     <Tooltip placement="top" title={textupdate} arrow={mergedArrow}>
                         <Popconfirm
-                            title='Xóa mục này'
+                            title='Cập nhật mục này'
                             description='Bạn chắc chắn muốn cập nhật khuyến mãi này thành không hoạt động không?'
                             icon={<ReloadOutlined />}
                             cancelText='Hủy'
@@ -209,6 +254,18 @@ const Promotion = () => {
         setIsAddFrom(false)
         setIsModalOpen(true);
         setName(record.name);
+        setStartDate(record.startDate)
+        setEndDate(record.endDate)
+        setValue(record.value)
+        setHomestay(record.homestays)
+        setPromotion(record.id)
+    }
+    /**
+     * Handle view row
+     */
+    const handleViewRow = (record) => {
+        setIsviewmodal(true)
+        setName(record.name);
         const formattedDateStart = moment(record.startDate)
             .locale('vi')
             .format('YYYY-MM-DD');
@@ -218,7 +275,7 @@ const Promotion = () => {
         setStartDate(formattedDateStart)
         setEndDate(formattedDateEnd)
         setValue(record.value)
-        console.log(record)
+        setHomestay(record.homestays)
     }
     /**
      * @returns Add promotion
@@ -256,7 +313,7 @@ const Promotion = () => {
             if (isAddFrom) {
                 await message.info('Đang tiến hành thêm bạn vui lòng đợi một vài giây nhé!');
                 await dispatch(addPromotion(promotions));
-                await dispatch(fetchPromotion(UserID));
+                await dispatch(fetchPromotion(UserID, homestayname, valueselect));
                 await setIsModalOpen(false);
                 await setIsLoading(false)
                 message.info('Thêm thành công');
@@ -266,8 +323,8 @@ const Promotion = () => {
                 setEndDate(null)
             } else {
                 await message.info('Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!');
-                await dispatch(addPromotion(promotions));
-                await dispatch(fetchPromotion(UserID));
+                await dispatch(UpdateStatusPromotion(idPromotion, promotions));
+                await dispatch(fetchPromotion(UserID, homestayname, valueselect));
                 await setIsModalOpen(false);
                 await setIsLoading(false)
                 message.info('Sửa thành công');
@@ -283,6 +340,27 @@ const Promotion = () => {
             setIsLoading(false);
         }
     };
+    const hanhdleSelect = (selectedValue) => {
+        setValueSelect(selectedValue) // You can access the selected value here
+    };
+    const handleSearch = (value) => {
+        setHomestayName(value)
+    };
+    const listFilter = [
+        {
+            name: 'Tất cả',
+            value: ''
+        },
+        {
+            name: 'Hoạt động',
+            value: 0
+        },
+        {
+            name: 'Không hoạt động',
+            value: 1
+        }
+    ]
+
     return (
         <div style={{ marginTop: '20px' }}>
             <Title level={2}>Quản trị khuyến mãi</Title>
@@ -301,22 +379,31 @@ const Promotion = () => {
                         defaultValue={listFilter[0].value}
                     />
                 </Form.Item> */}
-                <Form.Item label="Tìm kiếm theo tên" style={{ float: 'left', marginLeft: ' 50px' }}>
-                    <Search
-                        placeholder="Tên homestay"
+                <Form.Item label="Trạng thái" style={{ float: 'left' }}>
+                    <Select
+                        style={{ width: 143 }}
+                        options={listFilter.map(filter => ({ value: filter.value, label: filter.name }))}
+                        defaultValue={listFilter[0].value}
+                        onChange={hanhdleSelect}
+                    />
+                </Form.Item>
+                <Form.Item label="Tìm kiếm theo tên khuyến mãi" style={{ float: 'left', marginLeft: ' 50px' }}>
+                    <Input.Search
+                        placeholder="Tên khuyến mãi"
                         allowClear
                         size="medium"
                         enterButton="search"
+                        onSearch={handleSearch}
                     />
                 </Form.Item>
-                <Form.Item label="Tìm kiếm theo tên chủ homestay" style={{ float: 'left', marginLeft: ' 50px' }}>
+                {/* <Form.Item label="Tìm kiếm theo tên chủ homestay" style={{ float: 'left', marginLeft: ' 50px' }}>
                     <Search
                         placeholder="Tên chủ homestay"
                         allowClear
                         size="medium"
                         enterButton="search"
                     />
-                </Form.Item>
+                </Form.Item> */}
             </Row>
             <Table columns={columns} dataSource={promotion} />
             <Modal width={1200} title={isAddFrom == true ? 'Thêm khuyến mãi' : 'Sửa khuyến mãi'}
@@ -378,7 +465,7 @@ const Promotion = () => {
                                         help={formErrors.startDate} // Hiển thị thông báo lỗi cho trường name nếu có
                                     >
                                         <DatePicker style={{ width: '300px' }}
-                                            value={startDate ? dayjs(startDate, 'YYYY-MM-DD') : null}
+                                            value={startDate ? dayjs(dayjs(startDate).locale('vi').format('YYYY-MM-DD'), 'YYYY-MM-DD') : null}
                                             onChange={(dates) => setStartDate(dates)} />
                                     </Form.Item>
                                 </Col>
@@ -392,7 +479,7 @@ const Promotion = () => {
                                         help={formErrors.endDate} // Hiển thị thông báo lỗi cho trường name nếu có
                                     >
                                         <DatePicker style={{ width: '300px' }}
-                                            value={endDate ? dayjs(endDate, 'YYYY-MM-DD') : null}
+                                            value={endDate ? dayjs(dayjs(endDate).locale('vi').format('YYYY-MM-DD'), 'YYYY-MM-DD') : null}
                                             onChange={(dates) => setEndDate(dates)} />
                                     </Form.Item>
                                 </Col>
@@ -418,6 +505,44 @@ const Promotion = () => {
                         </div>
                     </div>
                 </Form>
+            </Modal>
+            <Modal
+                title={
+                    <div style={{ fontSize: '22px' }}>Xem thông tin chi tiết homstay</div>
+                }
+                open={isViewmodal}
+                onCancel={handleCancel}
+                onOk={handleCancel}
+                width={900}
+                style={{ fontSize: '40px' }}
+            >
+                <div style={{ fontSize: 18, fontWeight: 600 }}>
+
+                    <div style={{ display: 'flex' }}>
+                        <div style={{ width: 400 }}>Tên khuyến mãi </div> : {name}
+                    </div>
+                    <br />
+                    <div style={{ display: 'flex' }}>
+                        <div style={{ width: 400 }}>Thời gian bắt đầu khuyến mãi </div> :{' '}
+                        {startDate}
+                    </div>
+                    <br />
+                    <div style={{ display: 'flex' }}>
+                        <div style={{ width: 400 }}>Thời gian kết thúc khuyến mãi </div> :{' '}
+                        {endDate}
+                    </div>
+                    <br />
+                    <div style={{ display: 'flex' }}>
+                        <div style={{ width: 400 }}>Số tiền giảm </div> :{' '}
+                        {value} (VNĐ)
+                    </div>
+                    <br />
+                    <div style={{ display: 'flex' }}>
+                        <div style={{ width: 400 }}>Các homestay đã được áp dụng khuyến mãi </div>
+
+                    </div>
+                    <Table columns={columnsDataView} dataSource={homestay} />
+                </div>
             </Modal>
         </div>
     )
