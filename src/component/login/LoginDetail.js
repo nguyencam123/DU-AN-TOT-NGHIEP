@@ -1,11 +1,12 @@
 import { useDispatch, useSelector } from "react-redux"
-import { Avatar, Tabs, Typography } from 'antd'
-import { UserOutlined, FileProtectOutlined, LogoutOutlined, BellOutlined } from '@ant-design/icons'
+import { Avatar, Tabs, Typography, notification } from 'antd'
+import { UserOutlined, FileProtectOutlined, LogoutOutlined, BellOutlined, RedoOutlined } from '@ant-design/icons'
 import { useState } from "react";
 import { MDBBtn, MDBCol, MDBInput, MDBRow } from "mdb-react-ui-kit";
 import moment from 'moment';
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../../features/user/userThunk";
+import { ChangePasswordByPass, ChangePasswordByPassUser } from "../../features/owner_homestay/changePassword/changPassword";
 const { Title } = Typography;
 const { TabPane } = Tabs;
 const LoginDetail = () => {
@@ -23,6 +24,47 @@ const LoginDetail = () => {
     const [identificationNumber, setidentificationNumber] = useState('')
     const handleDateChangestart = (dates) => {
         setbirthday(moment(dates).valueOf());
+    };
+    const [newpassword, setnewpassword] = useState('')
+    const [confirmpassword, setconfirmpassword] = useState('')
+    const formChangePass = {
+        currentPassword: password,
+        newPassword: newpassword,
+        confirmationPassword: confirmpassword
+    }
+    const openNotification = () => {
+        notification.open({
+            message: 'Thông báo',
+            description:
+                'Cập nhật thông tin thành công',
+            onClick: () => {
+                console.log('Notification Clicked!');
+            },
+        });
+    };
+    const openNotificationChangePass = () => {
+        notification.open({
+            message: 'Thông báo',
+            description:
+                'Mật khẩu mới và mật khẩu xác nhận phải giống nhau',
+            onClick: () => {
+                console.log('Notification Clicked!');
+            },
+        });
+    };
+    const handleSubmitchange = async (e) => {
+        e.preventDefault();
+        if (newpassword !== confirmpassword) {
+            openNotificationChangePass();
+            return;
+        }
+        try {
+            // Assuming ChangePasswordByPass function takes an object with a 'password' property
+            await ChangePasswordByPassUser(formChangePass);
+            openNotification();
+        } catch (error) {
+            console.error("Password change failed:", error);
+        }
     };
     const formData = {
         name: name,
@@ -171,6 +213,23 @@ const LoginDetail = () => {
         },
         {
             key: '4',
+            label: <div style={{ display: 'flex' }}><RedoOutlined style={{ fontSize: 25 }} /><Title level={5} style={{ marginTop: 2 }}>Đổi mật khẩu</Title></div>,
+            children: <div>
+                <Title level={3}>Đặt lại mật khẩu</Title>
+                <form>
+                    <MDBInput wrapperClass='mb-4' label='Mật khẩu cũ' id='password' type='password' required
+                        onChange={(e) => setpassword(e.target.value)} />
+                    <MDBInput wrapperClass='mb-4' label='Mật khẩu mới' id='newpassword' type='password' required
+                        onChange={(e) => setnewpassword(e.target.value)} />
+                    <MDBInput wrapperClass='mb-4' label='Xác nhận mật khẩu' id='confirmpassword' type='password' required
+                        onChange={(e) => setconfirmpassword(e.target.value)} />
+                    <MDBBtn className='w-100 mb-4' size='md' style={{ marginTop: 10 }} onClick={handleSubmitchange}>Đổi mật khẩu</MDBBtn>
+                </form>
+            </div>,
+        }
+        ,
+        {
+            key: '5',
             label: <div style={{ display: 'flex' }}><LogoutOutlined style={{ fontSize: 25 }} /><Title level={5} style={{ marginTop: 2 }}>Đăng xuất</Title></div>,
             children: <button type="button" className="btn btn-primary" style={{ color: 'black' }} onClick={logout}>
                 <UserOutlined /> Đăng xuất
@@ -184,7 +243,7 @@ const LoginDetail = () => {
     const activeItem = items.find(item => item.key === activeTab);
     return (
         <section style={{ padding: '50px 270px 270px 270px', display: 'flex' }}>
-            <div style={{ width: '30%', height: 400, border: '1px solid #b0b0b0', borderRadius: 8, padding: '10px 0px 10px 0px', backgroundColor: 'rgba(255,255,255,1.00)' }}>
+            <div style={{ width: '30%', height: '100%', border: '1px solid #b0b0b0', borderRadius: 8, padding: '10px 0px 10px 0px', backgroundColor: 'rgba(255,255,255,1.00)' }}>
                 <div style={{ display: "flex", padding: '0px 15px 0px 20px' }}>
                     <Avatar size={64} icon={<UserOutlined />} />
                     <Title level={4} style={{ marginLeft: 20, marginTop: 20 }}>{namelocal}</Title>
