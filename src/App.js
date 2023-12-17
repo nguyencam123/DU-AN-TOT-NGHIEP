@@ -12,7 +12,7 @@ import ErrorLogin from './features/admin/errorLogin/error';
 import Endow from './component/user/endow/endow';
 import HomePartner from './component/PartnerComponent/homepartner';
 import LoginPartner from './component/PartnerComponent/login/partnerlogin';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import LoginAdmin from './component/admin/login/loginadmin';
 import PartnerLayout from './layout/layoutpartner/partnerlayout';
 import { DetailHomestay } from './component/user/hotelcomponent/detailHomestay';
@@ -23,11 +23,13 @@ import { BookingSuccess } from './component/user/hotelcomponent/bookigSucces';
 import { useEffect } from 'react';
 import { CartUser } from './component/user/cart/cart';
 import { BookingUser } from './component/user/booking';
+import ComfirmMail from './component/user/cofirmMail/confirm';
+import ComfirmMailUser from './component/user/cofirmMail/confirmUser';
+import ResetPassWordOwner from './component/PartnerComponent/login/resetPassword';
+import { checkToken } from './app/middleware';
 
 function App() {
   //map component user
-  const isAdmin = useSelector((state) => state.user.isAdmin);
-
   const items = [
     { path: '', element: <ProductList /> },
     { path: 'user/propreties', element: <LoginDetail /> },
@@ -45,12 +47,21 @@ function App() {
     { path: 'hop-tac/register', element: <PartnerRegister /> },
     { path: 'booking/success', element: <BookingSuccess /> },
     { path: 'booking/:id', element: <BookingUser /> },
-    { path: 'shopingcart/:id', element: <CartUser /> }
+    { path: 'shopingcart/:id', element: <CartUser /> },
+    { path: 'changePassword', element: <ResetPassWordOwner /> }
   ];
   useEffect(() => {
     window.scrollTo(0, 0); // Cuộn lên đầu trang khi path thay đổi
   }, [window.location.pathname]);
   //
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    // Lấy token từ localStorage, Redux state, hoặc nơi khác
+    const token = JSON.parse(localStorage.getItem('ownerDetail'))?.data?.token;
+    // Gọi middleware để kiểm tra token
+    dispatch(checkToken(token));
+  }, [dispatch]);
   return (
     <>
       <Router>
@@ -65,6 +76,8 @@ function App() {
             } */}
           </Route>
           {/* map quyen voi url admin */}
+          <Route path='/user/comfirmmail' element={<ComfirmMailUser />} />
+          <Route path='/owner/comfirmmail' element={<ComfirmMail />} />
           <Route path="/*" element={<PartnerLayout />}>
             <Route path="partner/*" element={<ProtectedRoute partnerOnly />} />
           </Route>

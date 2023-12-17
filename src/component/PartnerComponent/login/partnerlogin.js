@@ -7,7 +7,7 @@ import {
   MDBIcon
 }
   from 'mdb-react-ui-kit';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { notification } from 'antd';
 import { loginpartner } from '../../../features/user/userThunk';
@@ -55,7 +55,9 @@ const LoginPartner = () => {
 
       <div className="d-flex justify-content-between mx-3 mb-4">
         <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Remember me' />
-        <a href="!#">Quên mật khẩu?</a>
+        <Link to={'/changePassword'}>
+          <div>Quên mật khẩu?</div>
+        </Link>
       </div>
 
       <MDBBtn className="mb-4" onClick={() => handleLogin()}>Đăng nhập</MDBBtn>

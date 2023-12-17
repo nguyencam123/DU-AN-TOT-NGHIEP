@@ -36,6 +36,11 @@ public class CustomerBookingController {
         return new ResponseObject(customerBookingService.saveBooking(customerBookingRequest));
     }
 
+    @PutMapping("/update")
+    private ResponseObject updateBooking(CustomerBookingRequest customerBookingRequest) {
+        return new ResponseObject(customerBookingService.updateBooking(customerBookingRequest));
+    }
+
     @PutMapping("/cancel/{bookingId}")
     public ResponseObject cancelBooking(@PathVariable("bookingId") String bookingId, @Valid @RequestBody CustomerBookingRequest customerBookingRequest, BindingResult result) {
         if (result.hasErrors()) {

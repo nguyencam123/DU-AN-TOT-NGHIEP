@@ -44,13 +44,16 @@ export const loginUser = (username, password) => async (dispatch) => {
     if (accounts.success) {
       dispatch(loginSuccess({ user: accounts }));
       localStorage.setItem('userDetail', JSON.stringify(accounts));
+      const token = JSON.parse(localStorage.getItem('userDetail')).data.token;
       openNotificationlogin()
       dispatch(loginSuccess({ user: accounts, userData: accounts }))
+      updateAxiosToken(token);
     } else {
       openNotification()
     }
   } catch (error) {
     console.error('Đăng nhập thất bại:', error);
+    openNotification()
   }
 };
 export const loginAdmin = (username, password) => async (dispatch) => {
@@ -62,8 +65,8 @@ export const loginAdmin = (username, password) => async (dispatch) => {
     const accounts = response.data;
     if (accounts.success) {
       dispatch(adminloginSuccess({ admin: accounts }));
-      localStorage.setItem('userDetail', JSON.stringify(accounts));
-      const token = JSON.parse(localStorage.getItem('userDetail')).data.token;
+      localStorage.setItem('adminDetail', JSON.stringify(accounts));
+      const token = JSON.parse(localStorage.getItem('adminDetail')).data.token;
       dispatch(adminloginSuccess({ admin: accounts, adminData: accounts }))
       updateAxiosToken(token);
     } else {
@@ -83,8 +86,8 @@ export const loginpartner = (username, password) => async (dispatch) => {
     const accounts = response.data;
     if (accounts.success) {
       dispatch(partnerloginSuccess({ partner: accounts }));
-      localStorage.setItem('userDetail', JSON.stringify(accounts));
-      const token = JSON.parse(localStorage.getItem('userDetail')).data.token;
+      localStorage.setItem('ownerDetail', JSON.stringify(accounts));
+      const token = JSON.parse(localStorage.getItem('ownerDetail')).data.token;
       dispatch(partnerloginSuccess({ partner: accounts, partnerData: accounts.data }))
       updateAxiosToken(token);
     } else {
@@ -98,5 +101,10 @@ export const loginpartner = (username, password) => async (dispatch) => {
 export const logoutUser = () => (dispatch) => {
   dispatch(logout());
   localStorage.removeItem('userDetail');
+  localStorage.removeItem('ownerDetail');
+  localStorage.removeItem('adminDetail');
 };
 
+// Similarly modify loginAdmin and loginpartner functions
+
+// Add a function to check local storage on page load

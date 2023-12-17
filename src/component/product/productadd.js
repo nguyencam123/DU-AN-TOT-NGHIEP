@@ -5,7 +5,7 @@ import { getAllHomestay, getAllHomestayByHomestayName, getAllHomestayByNameOwner
 import { fetchCategory } from "../../features/category/categoryThunk"
 import { useState } from "react";
 import { Space, Table, Typography, Modal, Spin, Popconfirm, Form, Input, Row, Col, Select, Button, Pagination, Image, message } from 'antd';
-import {   EyeOutlined,  RotateLeftOutlined, RotateRightOutlined, SwapOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
+import { EyeOutlined, RotateLeftOutlined, RotateRightOutlined, SwapOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { aproveHomestay, disAgreeHomestay } from "../../features/admin/adminThunk";
 import TextArea from "antd/es/input/TextArea";
@@ -20,7 +20,8 @@ function AddProductForm() {
   const [confirmModal, setConfirmModal] = useState(false);
   const [deniedModal, setDeniedModal] = useState(false);
   const [refuse, setRefuse] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState(    {
+  const [loadingConfirm, setLoadingConfirm] = useState(false)
+  const [selectedStatus, setSelectedStatus] = useState({
     name: 'Chờ duyệt',
     value: 1
   });
@@ -100,10 +101,16 @@ function AddProductForm() {
       adminId: idAdmin,
       desc: ''
     }
+    setLoadingConfirm(true)
+    setConfirmModal(false)
+    await message.info(
+      'Đang tiến hành cập nhật trạng thái bạn vui lòng đợi một vài giây nhé!', 5
+    );
     await dispatch(aproveHomestay(data))
     await message.info('Duyệt thành công');
+    await setLoadingConfirm(false)
     setIsViewModal(false);
-    setConfirmModal(false)
+
     setSelectedStatus(
       {
         name: 'Đã duyệt',
@@ -118,10 +125,16 @@ function AddProductForm() {
       adminId: idAdmin,
       desc: refuse
     }
+    setLoadingConfirm(true)
+    setDeniedModal(false)
+    await message.info(
+      'Đang tiến hành cập nhật trạng thái bạn vui lòng đợi một vài giây nhé!', 5
+    );
     await dispatch(disAgreeHomestay(data))
     await message.info('Từ chối thành công');
+    await setLoadingConfirm(false)
     setIsViewModal(false);
-    setDeniedModal(false)
+
     setSelectedStatus(
       {
         name: 'Từ chối',
@@ -241,20 +254,34 @@ function AddProductForm() {
       <Table columns={columns} dataSource={products} />
       {/* popup form */}
 
-      <Modal title={<div style={{ fontSize: '22px' }}>Xem thông tin chi tiết homstay</div>} open={isViewModal}
+      <Modal
+        title={<div style={{ fontSize: '22px' }}>Xem thông tin chi tiết homstay</div>}
+        open={isViewModal}
         onCancel={handleCancel}
         footer={[
-          <Button key="back" onClick={handleCancel}>
+          <Button key="back" onClick={handleCancel} disabled={loadingConfirm}>
             Cancel
           </Button>,
-          <Button key="submit" style={{ backgroundColor: 'red', color: 'white' }} disabled={viewHomestay.status === 3 ? true : false} onClick={handleDenied}>
+          <Button
+            key="submit"
+            style={{ backgroundColor: 'red', color: 'white' }}
+            disabled={loadingConfirm || viewHomestay.status === 3}
+            onClick={handleDenied}
+            loading={loadingConfirm}
+          >
             Từ chối duyệt
           </Button>,
-          <Button type="primary" onClick={handleOk}>
+          <Button
+            type="primary"
+            onClick={handleOk}
+            disabled={loadingConfirm}
+            loading={loadingConfirm}
+          >
             Đồng ý duyệt
           </Button>
         ]}
-        width={1100} style={{ fontSize: '40px' }}
+        width={1100}
+        style={{ fontSize: '40px' }}
       >
         <div style={{ fontSize: 18, fontWeight: 600 }}>
           <table>
@@ -351,7 +378,7 @@ function AddProductForm() {
             }
           ]}
         >
-          <TextArea style={{height:'50px'}} value={refuse} onChange={(e) => handleChangeRefuse(e)} />
+          <TextArea style={{ height: '50px' }} value={refuse} onChange={(e) => handleChangeRefuse(e)} />
         </Form.Item>
       </Modal>
     </div>

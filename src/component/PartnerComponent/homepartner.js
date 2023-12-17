@@ -30,7 +30,7 @@ const HomePartner = () => {
       <ColorBox>
         <div style={{ padding: '80px 30px 0px 30px', marginBottom: 50 }}>
           <Title style={{ textAlign: 'center', color: 'white' }}>GHI DANH NHÀ CỦA BẠN TRÊN TravelVIVU</Title>
-          <Title level={5} style={{ textAlign: 'center', color: 'white' }}>Độc giả toàn cầu, trọng điểm châu Á. Nhận các đặt phòng bạn đã bỏ lỡ bằng cách ghi danh miễn phí trên Agoda, ngay hôm nay!
+          <Title level={5} style={{ textAlign: 'center', color: 'white' }}>Độc giả toàn cầu, trọng điểm châu Á. Nhận các đặt phòng bạn đã bỏ lỡ bằng cách ghi danh miễn phí trên TravelVIVU, ngay hôm nay!
 
           </Title>
         </div>

@@ -41,8 +41,10 @@ const Hotel = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   let checkOutDate
-  const handleDetailHomestay = (id) => {
-    navigate(`/homestay/detail/${id}`);
+  const handleDetailHomestay = async (id) => {
+    navigate(
+      `/homestay/detail/${id}?startDate=${checkInDate.valueOf()}&endDate=${calculateCheckOutDate().valueOf()}`
+    )
   }
   useEffect(() => {
     dispatch(getProducts());
@@ -57,7 +59,6 @@ const Hotel = () => {
   const handleCheckInChange = (date) => {
     setCheckInDate(date);
   };
-
   const handleNumNightsChange = (value) => {
     setNumNights(value);
   };
@@ -90,10 +91,11 @@ const Hotel = () => {
   const calculateCheckOutDate = () => {
     if (checkInDate) {
       checkOutDate = dayjs(checkInDate).add(numNights, 'day');
-      return checkOutDate.format('dddd, DD [tháng] MM [năm] YYYY');
+      return checkOutDate;
     }
     return '';
   };
+  checkOutDate = dayjs(checkInDate).add(numNights, 'day');
   const [rangeValue, setRangeValue] = useState([0, 25000000]);
   const initialValue = [0, 25000000];
   const handleSliderChange = (value) => {
@@ -117,25 +119,28 @@ const Hotel = () => {
   const handleresetinput = () => {
     setRangeValue(initialValue);
   }
-  const [nameOrAddress, setNameOrAddress] = useState('')
-  const [numberPerson, setNumberPerson] = useState(0)
-  const [startDate, setStartDate] = useState(1414231414)
-  const [enDate, setEnDate] = useState(181245435)
-  const [priceMin, setPriceMin] = useState(0)
-  const [roomNumber, setRoomNumber] = useState(0)
+  const [nameOrAddress, setNameOrAddress] = useState('Hà Nội')
+  const [numberPerson, setNumberPerson] = useState(12)
+  const [roomNumber, setRoomNumber] = useState(12)
   const [convenientvir, setconvenient] = useState('')
-  const [convenientHomestayList, setConvenientHomestayList] = useState('')
+  const [notification, setNotification] = useState('')
   const onChangeConvenients = (checkedValues) => {
     setconvenient(checkedValues.join(','))
   };
+
   const handleSearch = () => {
-    dispatch(fetchSearchProducts(moment(checkInDate).valueOf(), moment(checkOutDate).valueOf(), nameOrAddress, numberPerson, roomNumber, rangeValue[0], rangeValue[1], convenientvir))
+    if (nameOrAddress == '') {
+      setNotification("Vui lòng nhập tên hoặc địa chỉ")
+    } else {
+      setNotification('')
+      dispatch(fetchSearchProducts(checkInDate.valueOf(), calculateCheckOutDate().valueOf(), nameOrAddress, numberPerson, roomNumber, rangeValue[0], rangeValue[1], convenientvir))
+    }
   }
 
   const text = <section>
     <div style={{ justifyContent: 'space-between', display: 'flex', fontSize: 18 }}>
-      <div style={{ display: 'flex' }}><UserOutlined style={{ marginBottom: 10 }} />&ensp;số lượng người</div><div><Input style={{ width: 100, height: 40 }} defaultValue={1} onChange={(e) => setNumberPerson(e.target.value)} /></div>
-      <div style={{ display: 'flex' }}><InsertRowRightOutlined style={{ marginBottom: 10 }} />&ensp;số lượng phòng</div><div><Input style={{ width: 100, height: 40 }} defaultValue={1} onChange={(e) => setRoomNumber(e.target.value)} /></div>
+      <div style={{ display: 'flex' }}><UserOutlined style={{ marginBottom: 10 }} />&ensp;số lượng người</div><div><Input style={{ width: 100, height: 40 }} defaultValue={12} onChange={(e) => setNumberPerson(e.target.value)} /></div>
+      <div style={{ display: 'flex' }}><InsertRowRightOutlined style={{ marginBottom: 10 }} />&ensp;số lượng phòng</div><div><Input style={{ width: 100, height: 40 }} defaultValue={12} onChange={(e) => setRoomNumber(e.target.value)} /></div>
     </div>
   </section>;
   const utilities = <div style={{ width: '100%', height: '30%', backgroundColor: 'white', borderRadius: 10, padding: '5px 5px 5px' }}>
@@ -184,8 +189,9 @@ const Hotel = () => {
             <hr />
             <div><h5 style={{ fontSize: 16 }}>Thành phố đia điểm hoặc tên khách sạn</h5>
               <MDBInputGroup className='mb-3' size='lg' noBorder textBefore={<MDBIcon fas icon='search' />}>
-                <input className='form-control' type='text' placeholder='Search' defaultValue={'Hà Nội'} onChange={(e) => setNameOrAddress(e.target.value)} />
+                <input className='form-control' type='text' placeholder='Search' defaultValue={'Hà Nội'} onChange={(e) => setNameOrAddress(e.target.value)} required />
               </MDBInputGroup>
+              <div style={{ color: 'red', marginLeft: 30 }}>{notification}</div>
               <div>
                 <div style={{ display: 'flex' }}>
                   <h5 style={{ fontSize: 16 }}>Nhận phòng:</h5>
@@ -211,7 +217,7 @@ const Hotel = () => {
                     onChange={handleNumNightsChange}
                   />
                   <div>
-                    <h5 style={{ fontSize: 18, marginLeft: 30, marginTop: 8 }}>{calculateCheckOutDate()}</h5>
+                    <h5 style={{ fontSize: 18, marginLeft: 30, marginTop: 8 }}>{calculateCheckOutDate().format('dddd, DD [tháng] MM [năm] YYYY')}</h5>
                   </div>
                 </div>
               </div>
@@ -223,7 +229,7 @@ const Hotel = () => {
                 </div>
               </div><br />
               <div style={{ color: '#0194f3', fontSize: 18, display: 'flex', float: 'right' }}>
-                <PayCircleOutlined style={{ marginTop: 5 }} /> &ensp;Thanh toán khi nhận phòng
+                <PayCircleOutlined style={{ marginTop: 5 }} /> &ensp;Thanh toán trực tuyến
               </div>
             </div>
           </div>
@@ -298,8 +304,8 @@ const Hotel = () => {
                     <div style={{ marginLeft: 10, borderLeft: '1px solid #ACAEB1', padding: '8px 8px 2px 2px', width: '40%' }}>
                       <div style={{ display: 'flex', color: 'rgb(5, 165, 105)' }}><ShopOutlined style={{ marginTop: 3, fontSize: 14 }} /> Ưu đãi dành riêng cho bạn...</div>
                       <div style={{ float: 'right' }}>
-                        <div style={{ fontSize: 16 }}><del>{items.price} VND</del></div>
-                        <div style={{ fontSize: 22, color: 'rgb(231, 9, 14)' }}>{items.price} VND</div>
+                        <div style={{ fontSize: 16 }}><del>{items.price + items.price * 11 / 100} VND</del></div>
+                        <div style={{ fontSize: 22, color: 'rgb(231, 9, 14)' }}>{items.price + items.price * 11 / 100} VND</div>
                         <div style={{ fontSize: 12, color: 'rgb(231, 9, 14)' }}>Ngày bạn chọn đã có 10 lượt<br /> đặt</div>
                         <div style={{ fontSize: 22 }}><Button style={{ backgroundColor: 'rgb(231, 9, 14)', color: 'white' }} onClick={() => handleDetailHomestay(items.id)} >Chọn phòng</Button></div>
                       </div>

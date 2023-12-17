@@ -12,7 +12,7 @@ const onChange = (key) => {
 
 const { Title } = Typography
 const ChangePassword = () => {
-    const userDetail = JSON.parse(localStorage.getItem('userDetail'));
+    const userDetail = JSON.parse(localStorage.getItem('ownerDetail'));
     const namelocal = userDetail?.data.name;
     const idowner = userDetail?.data.id;
     const [name, setname] = useState('')

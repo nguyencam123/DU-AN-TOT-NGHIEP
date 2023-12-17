@@ -1,18 +1,19 @@
 package com.example.demo.entities;
 
 import com.example.demo.entities.base.PrimaryEntity;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Nationalized;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import com.example.demo.infrastructure.contant.EntityProperties;
 import com.example.demo.infrastructure.contant.Status;
+import com.example.demo.infrastructure.contant.role.RoleOwner;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Nationalized;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
@@ -22,7 +23,7 @@ import java.util.Collection;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OwnerHomestay extends PrimaryEntity implements UserDetails{
+public class OwnerHomestay extends PrimaryEntity implements UserDetails {
 
     @Column(length = EntityProperties.LENGTH_CODE)
     @Nationalized
@@ -58,18 +59,20 @@ public class OwnerHomestay extends PrimaryEntity implements UserDetails{
 
     private Status status;
 
+    private RoleOwner role;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return role.getAuthorities();
     }
 
     @Override
-    public String getUsername(){
+    public String getUsername() {
         return username;
     }
 
     @Override
-    public String getPassword(){
+    public String getPassword() {
         return password;
     }
 

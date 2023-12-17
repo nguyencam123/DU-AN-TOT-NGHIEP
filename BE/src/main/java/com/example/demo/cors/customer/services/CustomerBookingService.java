@@ -10,6 +10,8 @@ public interface CustomerBookingService {
 
     Booking saveBooking(CustomerBookingRequest request);
 
+    Booking updateBooking(CustomerBookingRequest request);
+
     Booking cancel(String id, CustomerBookingRequest request);
 
 }

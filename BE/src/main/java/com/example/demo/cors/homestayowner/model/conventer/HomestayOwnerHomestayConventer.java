@@ -16,8 +16,8 @@ public class HomestayOwnerHomestayConventer implements Converter<String, Homesta
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             JsonNode jsonNode = objectMapper.readTree(source);
-            if (!jsonNode.has("name") || jsonNode.get("name").textValue().isEmpty() || jsonNode.get("name").isNull()) {
-                throw new RestApiException("Trường 'name' bị trống");
+            if (!jsonNode.has("name") || jsonNode.get("name").textValue().isEmpty() || jsonNode.get("name").isNull() || jsonNode.get("name").textValue().length() > 100) {
+                throw new RestApiException("Trường 'name' bị trống hoặc nhiều hơn 100 kí tự");
             }
             if (!jsonNode.has("timeCheckIn") || jsonNode.get("timeCheckIn").textValue().isEmpty() || jsonNode.get("timeCheckIn").isNull()) {
                 throw new RestApiException("Trường 'timeCheckIn' bị trống");
@@ -40,11 +40,11 @@ public class HomestayOwnerHomestayConventer implements Converter<String, Homesta
             if (!jsonNode.has("endDate") || !jsonNode.get("endDate").isLong() || jsonNode.get("startDate").isNull()) {
                 throw new RestApiException("Trường 'endDate' bị trống");
             }
-            if (!jsonNode.has("desc") || jsonNode.get("desc").textValue().isEmpty() || jsonNode.get("desc").isNull()) {
-                throw new RestApiException("Trường 'desc' bị trống");
+            if (!jsonNode.has("desc") || jsonNode.get("desc").textValue().isEmpty() || jsonNode.get("desc").isNull() || jsonNode.get("desc").textValue().length() > 500) {
+                throw new RestApiException("Trường 'desc' bị trống hoặc nhiều hơn 500 kí tự");
             }
-            if (!jsonNode.has("address") || jsonNode.get("address").textValue().isEmpty() || jsonNode.get("address").isNull()) {
-                throw new RestApiException("Trường 'address' bị trống");
+            if (!jsonNode.has("address") || jsonNode.get("address").textValue().isEmpty() || jsonNode.get("address").isNull()|| jsonNode.get("address").textValue().length() > 100) {
+                throw new RestApiException("Trường 'address' bị trống hoặc nhiều hơn 100 kí tự");
             }
             if (!jsonNode.has("price") || !(jsonNode.get("price").isInt() && jsonNode.get("price").asInt() > 0) || jsonNode.get("price").isNull()) {
                 throw new RestApiException("Trường 'price' bị trống");

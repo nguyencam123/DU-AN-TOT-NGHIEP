@@ -14,15 +14,20 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface HomestayOwnerBookingRepository extends BookingRepository {
 
-    @Query(value = "select * from booking where homestay_id=:id", nativeQuery = true)
-    Page<Booking> getBookingByHomestay(String id, Pageable pageable);
+    @Query(value = "select a.* from booking a \n" +
+            "left join  homestay b on a.homestay_id=b.id\n" +
+            "left join owner_homestay c on b.owner_id=c.id\n" +
+            "where c.id=:id", nativeQuery = true)
+    Page<Booking> getBookingByOwnerHomestay(String id, Pageable pageable);
 
     @Query(value = """
             SELECT ROW_NUMBER() OVER(ORDER BY b.created_date DESC) AS stt, b.* 
             FROM booking b
             JOIN dbo.homestay h ON b.homestay_id = h.id 
+            JOIN owner_homestay c ON h.owner_id=c.id
             JOIN dbo.[user] u ON b.user_id = u.id
-            WHERE ( ( :#{#request.userName} IS NULL OR :#{#request.userName} LIKE '' OR u.name = :#{#request.userName})
+            WHERE c.id=:#{#request.idOwner} AND
+            ( ( :#{#request.userName} IS NULL OR :#{#request.userName} LIKE '' OR u.name = :#{#request.userName})
             AND ( :#{#request.homestayName} IS NULL OR :#{#request.homestayName} LIKE '' OR h.name LIKE %:#{#request.homestayName}% )
             AND ( :#{#request.sdtUser} IS NULL OR :#{#request.sdtUser} LIKE '' OR u.phone_number = :#{#request.sdtUser} OR b.phone_number = :#{#request.sdtUser})
             AND ( :#{#request.nameBooking} IS NULL OR :#{#request.nameBooking} LIKE '' OR b.name LIKE %:#{#request.nameBooking}%)
@@ -34,46 +39,37 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
     HomestayOwnerStatisticalReponse getStatistical(String id);
 
     @Query(value = """
-            SELECT\s
-            COUNT(a.id) AS 'DoanhSo',\s
-            ((SUM(a.total_price))-((Sum(a.total_price)) * 11/100)) AS 'TongSoTien'\s
-            FROM\s
-            booking a\s
-            inner join homestay b on a.homestay_id=b.id
-            inner join owner_homestay c on b.owner_id=c.id
-            WHERE\s
-            c.id = :#{#request.idOwnerHomestay}
-            AND (
-                    (
-                        DATEPART(YEAR, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.year}
-                        AND DATEPART(MONTH, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.month}
-                    )
-                    OR (
-                        DATEPART(YEAR, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.year}
-                    )
-                    OR
-                    (
-                        DATEPART(YEAR, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.year}
-                        AND DATEPART(MONTH, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.month}
-                        AND DATEPART(DATE, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.date}
-                    )
-                )
-            AND a.status=0;                     
+            SELECT
+                COUNT(a.id) AS 'DoanhSo',
+                (SUM(a.total_price) - (SUM(a.total_price) * 11 / 100)) AS 'TongSoTien'
+            FROM
+                booking a
+                INNER JOIN homestay b ON a.homestay_id = b.id
+                INNER JOIN owner_homestay c ON b.owner_id = c.id
+            WHERE
+                c.id = :#{#request.idOwnerHomestay}
+                AND (
+                YEAR(DATEADD(SECOND, a.created_date / 1000, '1970-01-01')) = :#{#request.year}
+                AND (MONTH(DATEADD(SECOND, a.created_date / 1000, '1970-01-01')) = :#{#request.month} OR :#{#request.month} IS NULL OR :#{#request.month} LIKE '')
+                AND (DAY(DATEADD(SECOND, a.created_date / 1000, '1970-01-01')) = :#{#request.date} OR :#{#request.date} IS NULL OR :#{#request.date} LIKE '')
+				)
+                AND a.status = 1;                 
             """, nativeQuery = true)
     HomestayOwnerStatisticalReponse getAllStatistical(HomestayOwnerStatisticalRequest request);
 
     @Query(value = """
-            SELECT\s
-            COUNT(a.id) AS 'DoanhSo',\s
-            SUM(a.total_price) AS 'TongSoTien'\s
-            FROM\s
-            booking a\s
+            SELECT
+            COUNT(a.id) AS 'DoanhSo',
+            SUM(a.total_price) AS 'TongSoTien'
+            FROM
+            booking a
             inner join homestay b on a.homestay_id=b.id
             inner join owner_homestay c on b.owner_id=c.id
-            WHERE\s
+            WHERE
             c.id = :#{#request.idOwnerHomestay}
+            AND MONTH(DATEADD(SECOND, a.created_date / 1000, '1970-01-01')) = :#{#request.month}
             AND DATEPART(YEAR, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.year}
-            AND a.status=0;                     
+            AND a.status=1;                     
             """, nativeQuery = true)
     HomestayOwnerStatisticalReponse getAllStatisticalYear(HomestayOwnerStatisticalRequest request);
 }

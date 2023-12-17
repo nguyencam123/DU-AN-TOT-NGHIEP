@@ -1,5 +1,5 @@
 // src/app/store.js
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import productReducer from '../features/product/productSlide';
 import userReducer from '../features/user/userSlice';
 import addproductReducer from '../features/product/createproductslice'
@@ -11,6 +11,7 @@ import provinceReducer from '../features/owner_homestay/region/provinceSlice'
 import adminReducer from '../features/admin/adminSlice'
 import bookingReducer from '../features/owner_homestay/getbooking/bookingSlice'
 import statisticalReducer from '../features/owner_homestay/statistical/statisticalSlice'
+const middleware = [...getDefaultMiddleware(), AuthMiddleware];
 
 export const store = configureStore({
   reducer: {

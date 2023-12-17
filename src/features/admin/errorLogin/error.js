@@ -1,12 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Result } from 'antd';
+import { useSelector } from 'react-redux';
+import { updateAxiosToken } from '../../../app/axiosConfig';
 const ErrorLogin = () => {
     const navigate = useNavigate(); // Use the useNavigate hook
 
     const navigatetologin = () => {
         navigate('/'); // Use navigate to go to the /login route
     }
+    useEffect(() => {
+        const storedToken = JSON.parse(localStorage.getItem('ownerDetail'))?.data?.token;
+        updateAxiosToken(storedToken);
+    }, []);
+    const ispartner = useSelector((state) => state.user.ispartner);
+    useEffect(() => {
+        if (ispartner) {
+            navigate('/partner/homestay')
+            // openNotificationpartner()
+        }
+    }, [ispartner]);
 
     return (
         <Result

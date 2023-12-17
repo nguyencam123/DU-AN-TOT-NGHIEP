@@ -1,6 +1,7 @@
 package com.example.demo.cors.homestayowner.service.impl;
 
 import com.example.demo.cors.homestayowner.repository.HomestayOwnerOwnerHomestayRepository;
+import com.example.demo.cors.homestayowner.repository.HomestayOwnerTokenRepository;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerForgetPassService;
 import com.example.demo.entities.OwnerHomestay;
 import com.example.demo.infrastructure.configemail.Email;

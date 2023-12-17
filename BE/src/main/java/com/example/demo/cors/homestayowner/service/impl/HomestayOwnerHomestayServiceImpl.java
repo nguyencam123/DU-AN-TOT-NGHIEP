@@ -8,9 +8,7 @@ import com.example.demo.cors.homestayowner.repository.*;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerHomestayService;
 import com.example.demo.entities.*;
 import com.example.demo.infrastructure.contant.Status;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -95,14 +92,15 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
     @Override
     public Homestay updateHomestayPromition(String id, HomestayownerHomestayRequest request){
         Homestay homestay = homestayownerHomestayRepository.findById(id).get();
-        Promotion newPromotion = homestayOwnerPromotionRepository.findById(request.getPromotion()).orElseThrow(EntityNotFoundException::new);
-        if (isEndDateToday(newPromotion.getEndDate())) {
-            homestay.setPromotion(null);
-        } else {
-            homestay.setPromotion(newPromotion);
-        }
+        Promotion newPromotion = homestayOwnerPromotionRepository.findById(request.getPromotion()).orElse(null);
+        homestay.setPromotion(newPromotion);
         Homestay homestay1=homestayownerHomestayRepository.save(homestay);
         return homestay1;
+    }
+
+    @Override
+    public OwnerHomestay getOwnerHomestayByToken(String token) {
+        return homestayOwnerOwnerHomestayRepository.findOwnerByToken(token);
     }
 
 
@@ -119,6 +117,7 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
         homestay.setTimeCheckIn(request.getTimeCheckIn());
         homestay.setTimeCheckOut(request.getTimeCheckOut());
         homestay.setCancellationPolicy(request.getCancellationPolicy());
+        homestay.setCart(null);
         homestay.setOwnerHomestay(homestayOwnerOwnerHomestayRepository.findById(request.getOwnerHomestay()).orElse(null));
     }
 
@@ -144,13 +143,6 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
             detailHomestays.add(detailHomestay);
         }
         homestay1.setDetailHomestays(detailHomestays);
-
         return homestay1;
     }
-
-    private boolean isEndDateToday(Long endDate) {
-        LocalDate endLocalDate = LocalDate.ofEpochDay(endDate / (24 * 60 * 60 * 1000));
-        return endLocalDate.isEqual(LocalDate.now());
-    }
-
 }

@@ -41,7 +41,7 @@ public class CustomerBookingServiceImpl implements CustomerBookingService {
     @Override
     public PageableObject<Booking> getBookingByUser(CustomerBookingRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-        Page<Booking> res = customerBookingRepository.findByUserId(pageable, request.getUserId());
+        Page<Booking> res = customerBookingRepository.getBookingByUserId(pageable, request);
         return new PageableObject<>(res);
     }
 
@@ -65,9 +65,16 @@ public class CustomerBookingServiceImpl implements CustomerBookingService {
         booking.setHomestay(homestay);
         booking.setPromotion(promotion);
         booking.setNote(request.getNote());
-        booking.setStatus(StatusBooking.THANH_CONG);
+        booking.setStatus(StatusBooking.KHONG_THANH_CONG);
         customerBookingRepository.save(booking);
         return booking;
+    }
+
+    @Override
+    public Booking updateBooking(CustomerBookingRequest request) {
+        Booking booking = customerBookingRepository.findById(request.getBookingId()).orElse(null);
+        booking.setStatus(StatusBooking.THANH_CONG);
+        return customerBookingRepository.save(booking);
     }
 
     private Booking findForUpdate(String id) {
@@ -79,12 +86,6 @@ public class CustomerBookingServiceImpl implements CustomerBookingService {
     public Booking cancel(String id, CustomerBookingRequest request) {
         Booking booking = findForUpdate(id);
 
-//        if (!request.getNote().trim().isBlank()) {
-//            throw new RestApiException("Bạn phải nhập lý do hủy phòng");
-//        } else if (request.getNote().length() >= 20) {
-//
-//
-//        } else {
         booking.setNote(request.getNote());
 
         booking.setStatus(StatusBooking.HUY);
@@ -97,7 +98,6 @@ public class CustomerBookingServiceImpl implements CustomerBookingService {
         emailSender.sendEmail(email.getToEmail(), email.getSubject(), email.getTitleEmail(), email.getBody());
 
         customerBookingRepository.save(booking);
-//        }
 
         return booking;
     }

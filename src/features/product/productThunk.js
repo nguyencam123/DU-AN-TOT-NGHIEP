@@ -1,6 +1,7 @@
 import { fetchProductsStart, fetchProductsSuccess, fetchProductsFailure, fetchProductsDetailSuccess, fetchCommentProductSuccess, fetchAvgPointSuccess, getPaymentSuccess, addInfoBooking } from './productSlide';
 import { instance } from '../../app/axiosConfig';
 import axios from 'axios';
+import { addBookingsSuccess } from '../owner_homestay/getbooking/bookingSlice';
 
 const BASE_URL = '/homestay/get-all?size=999';
 
@@ -66,7 +67,7 @@ export const getNumberPersonPoint = (id) => async (dispatch) => {
 
 export const getPayment = (price) => async (dispatch) => {
   try {
-    const response = await axios.post('http://localhost:8080/api/v1/payment/vnpay', price);
+    const response = await instance.post('http://localhost:8080/api/v1/payment/vnpay', price);
     dispatch(getPaymentSuccess(response.data.data)); // Lấy dữ liệu từ response.data.data
     // console.log(response.data.data);
   } catch (error) {
@@ -76,8 +77,28 @@ export const getPayment = (price) => async (dispatch) => {
 
 export const addBooking = (booking) => async (dispatch) => {
   try {
-    const response = await axios.post('http://localhost:8080/api/v1/booking/create', booking);
-    dispatch(getPaymentSuccess(response.data.data)); // Lấy dữ liệu từ response.data.data
+    const response = await instance.post('http://localhost:8080/api/v1/booking/create', booking);
+    dispatch(addBookingsSuccess(response.data.data)); // Lấy dữ liệu từ response.data.data
+    // console.log(response.data.data);
+  } catch (error) {
+    dispatch(fetchProductsFailure(error.message));
+  }
+};
+
+export const cancelBooking = (bookingId, node) => async (dispatch) => {
+  try {
+    const response = await instance.put('http://localhost:8080/api/v1/booking/cancel/' + bookingId, {note: node});
+    dispatch(addBookingsSuccess(response.data.data)); // Lấy dữ liệu từ response.data.data
+    // console.log(response.data.data);
+  } catch (error) {
+    dispatch(fetchProductsFailure(error.message));
+  }
+};
+
+export const updateBooking = (bookingId) => async (dispatch) => {
+  try {
+    const response = await instance.put('http://localhost:8080/api/v1/booking/update?bookingId=' + bookingId);
+    dispatch(addBookingsSuccess(response.data.data)); // Lấy dữ liệu từ response.data.data
     // console.log(response.data.data);
   } catch (error) {
     dispatch(fetchProductsFailure(error.message));

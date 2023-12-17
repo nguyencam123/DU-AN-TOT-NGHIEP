@@ -18,7 +18,7 @@ import { EyeOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import moment from 'moment';
 import Search from 'antd/es/input/Search';
-import { fetchBooking } from '../../../features/owner_homestay/getbooking/bookingThunk';
+import { fetchBooking, getBookingByNameHomestay } from '../../../features/owner_homestay/getbooking/bookingThunk';
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 const { Title } = Typography
@@ -27,11 +27,14 @@ const { Title } = Typography
 
 const Booking = () => {
     const dispatch = useDispatch();
-    const userDetail = JSON.parse(localStorage.getItem('userDetail'));
+    const userDetail = JSON.parse(localStorage.getItem('ownerDetail'));
     const UserID = userDetail?.data.id;
+    const [homestayname, setHomestayName] = useState('')
+    const [namebooking, setNameBooking] = useState('')
+    const [valueselect, setValueSelect] = useState('')
     useEffect(() => {
-        dispatch(fetchBooking(UserID));
-    }, []);
+        dispatch(getBookingByNameHomestay(UserID, homestayname, namebooking, valueselect));
+    }, [homestayname, namebooking, valueselect]);
     const booking = useSelector((state) => state.booking.bookings)
     const columns = [
         {
@@ -63,13 +66,13 @@ const Booking = () => {
             dataIndex: 'status',
             key: 'status',
             render: (data) => {
-                if (data === 0) {
-                    return 'Hủy'
-                }
-                if (data === 1) {
+                if (data === 'THANH_CONG') {
                     return 'Thành công'
                 }
-                if (data === 2) {
+                else if (data === 'HUY') {
+                    return 'Hủy'
+                }
+                else {
                     return 'Không thành công'
                 }
             }
@@ -93,16 +96,7 @@ const Booking = () => {
             title: 'Tổng tiền',
             dataIndex: 'totalPrice',
             key: 'totalPrice'
-        },
-        {
-            title: 'Action',
-            key: 'action',
-            render: (_, record) => (
-                <Space size="middle">
-                    <a style={{ color: '#1677ff' }}><EyeOutlined /></a>
-                </Space>
-            ),
-        },
+        }
     ];
     const listFilter = [
         {
@@ -122,32 +116,44 @@ const Booking = () => {
             value: 2
         }
     ]
+    const hanhdleSelect = (selectedValue) => {
+        setValueSelect(selectedValue) // You can access the selected value here
+    };
+    const handleSearch = (value) => {
+        setHomestayName(value)
+    };
+    const handleSearchBooking = (value) => {
+        setNameBooking(value)
+    };
     return (
         <div style={{ marginTop: '20px' }}>
-            <Title level={2}>Quản trị booking</Title>
+            <Title level={2}>Quản trị đặt phòng</Title>
             <Title level={4}>Danh mục</Title>
-            <Row>
+            <Row >
                 <Form.Item label="Trạng thái" style={{ float: 'left' }}>
                     <Select
                         style={{ width: 143 }}
                         options={listFilter.map(filter => ({ value: filter.value, label: filter.name }))}
                         defaultValue={listFilter[0].value}
+                        onChange={hanhdleSelect}
                     />
                 </Form.Item>
-                <Form.Item label="Tìm kiếm theo tên" style={{ float: 'left', marginLeft: ' 50px' }}>
-                    <Search
+                <Form.Item label="Tìm kiếm theo tên homestay" style={{ float: 'left', marginLeft: ' 50px' }}>
+                    <Input.Search
                         placeholder="Tên homestay"
                         allowClear
                         size="medium"
                         enterButton="search"
+                        onSearch={handleSearch}
                     />
                 </Form.Item>
-                <Form.Item label="Tìm kiếm theo tên chủ homestay" style={{ float: 'left', marginLeft: ' 50px' }}>
-                    <Search
-                        placeholder="Tên chủ homestay"
+                <Form.Item label="Tìm kiếm theo tên người đặt" style={{ float: 'left', marginLeft: ' 50px' }}>
+                    <Input.Search
+                        placeholder="Tên chủ người đặt"
                         allowClear
                         size="medium"
                         enterButton="search"
+                        onSearch={handleSearchBooking}
                     />
                 </Form.Item>
             </Row>
