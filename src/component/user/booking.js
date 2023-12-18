@@ -49,81 +49,6 @@ export const BookingUser = () => {
     setNode(e.target.value)
   }
   const booking = useSelector((state) => state.admin.booking)
-  console.log(booking);
-  const columns = [
-    {
-      title: 'Tên Homestay',
-      dataIndex: 'homestay',
-      key: 'homestayName',
-      render: (data) => {
-        return data.name
-      }
-    },
-    {
-      title: 'Ngày đặt',
-      dataIndex: 'startDate',
-      key: 'createdDate',
-      render: (data) => {
-        return moment(data).locale('vi').format('LL')
-      }
-    },
-    {
-      title: 'Ngày kêt thúc',
-      dataIndex: 'endDate',
-      key: 'endDtae',
-      render: (data) => {
-        return moment(data).locale('vi').format('LL')
-      }
-    },
-    {
-      title: 'Trạng thái',
-      dataIndex: 'status',
-      key: 'status',
-      render: (data) => {
-        if (data === 'HUY') {
-          return 'Hủy'
-        }
-        if (data === 'THANH_CONG') {
-          return 'Thành công'
-        }
-        if (data === 'KHONG_THANH_CONG') {
-          return 'Không thành công'
-        }
-      }
-    },
-    {
-      title: 'Tổng tiền',
-      dataIndex: 'totalPrice',
-      key: 'totalPrice'
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (_, record) => (
-        <Space size="middle">
-          <a style={{ color: '#1677ff' }}><CloseOutlined /></a>
-        </Space>
-      ),
-    },
-  ];
-  const listFilter = [
-    {
-      name: 'Tất cả',
-      value: ''
-    },
-    {
-      name: 'Hủy',
-      value: 0
-    },
-    {
-      name: 'Thành công',
-      value: 1
-    },
-    {
-      name: 'Không thành công',
-      value: 2
-    }
-  ]
   return (
     <div
       className="site-layout"
@@ -173,11 +98,14 @@ export const BookingUser = () => {
                 </h1>
               </div>
               <div style={{ marginLeft: 10, borderLeft: '1px solid #ACAEB1', padding: '8px 8px 2px 2px', width: '40%' }}>
-                <div style={{ display: 'flex', color: 'rgb(5, 165, 105)' }}><ShopOutlined style={{ marginTop: 3, fontSize: 14 }} /> Ưu đãi dành riêng cho bạn...</div>
+                <div style={{ display: 'flex', color: 'rgb(5, 165, 105)' }}>{booking.status === 'HUY' ? 'Homestay đã hủy' : 'Đã thanh toán'}</div>
                 <div style={{ marginLeft: '10px' }}>
-                  <div style={{ fontSize: 22, color: 'rgb(231, 9, 14)' }}>{booking.homestay.price + booking.homestay.price * 11 / 100} VND</div>
+                  <div style={{ fontSize: 22, color: 'rgb(231, 9, 14)' }}>{booking.totalPrice} VND</div>
                   <div style={{ fontSize: 22 }}>
-                    <Button style={{ backgroundColor: 'rgb(231, 9, 14)', color: 'white' }} onClick={() => showRefusalView(booking)} >Hủy homestay</Button>
+                    {booking.status === 'HUY'
+                      ? ''
+                      :<Button style={{ backgroundColor: 'rgb(231, 9, 14)', color: 'white' }} onClick={() => showRefusalView(booking)} >Hủy homestay</Button>
+                    }
                     <Button style={{ backgroundColor: 'green', color: 'white' }} onClick={() => showModalView(booking)}>Xem chi tiết homestay</Button>
                   </div>
                 </div>

@@ -27,13 +27,14 @@ export const DetailHomestay = () => {
   const param = new URLSearchParams(location.search);
   const startDate = param?.get('startDate') || '';
   const endDate = param?.get('endDate') || '';
+  const numNight = param?.get('numNight') || '';
   const detailHomestay = useSelector((state) => state.product.productDetails)
   const comment = useSelector((state) => state.product.commentProduct)
   const avgPoint = useSelector((state) => state.product.avgPoint)
 
   // const imgHomestay = detailHomestay[0].images
   const handleBookingHomestay = (id) => {
-    navigate(`/homestay/booking/${id}?startDate=${startDate}&endDate=${endDate}`)
+    navigate(`/homestay/booking/${id}?startDate=${startDate}&endDate=${endDate}&numNight=${numNight}`)
   }
   const listComment = comment.map((comment, index) => {
     if (index === 2) {

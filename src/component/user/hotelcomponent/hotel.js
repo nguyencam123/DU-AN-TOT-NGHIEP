@@ -43,7 +43,7 @@ const Hotel = () => {
   let checkOutDate
   const handleDetailHomestay = async (id) => {
     navigate(
-      `/homestay/detail/${id}?startDate=${checkInDate.valueOf()}&endDate=${calculateCheckOutDate().valueOf()}`
+      `/homestay/detail/${id}?startDate=${checkInDate.valueOf()}&endDate=${calculateCheckOutDate().valueOf()}&numNight=${numNights}`
     )
   }
   useEffect(() => {
