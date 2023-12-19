@@ -9,7 +9,7 @@ import imgyellowchart from '../../../assets/img/yellowtoChart.png';
 import imgBluechart from '../../../assets/img/blueimg.png';
 import imgRedchart from '../../../assets/img/redimg.png';
 import dayjs from 'dayjs';
-import { fetchBooking } from "../../../features/owner_homestay/getbooking/bookingThunk";
+import { fetchBooking, getBookingByNameHomestay } from "../../../features/owner_homestay/getbooking/bookingThunk";
 const { Title } = Typography
 const StatisticalHomestay = () => {
     const dispatch = useDispatch()
@@ -26,7 +26,9 @@ const StatisticalHomestay = () => {
     const currentMonth = currentDate.getMonth() + 1; // Tháng bắt đầu từ 0
     const currentYear = new Date().getFullYear();
     const currentDateTime = new Date().getDate();
-
+    const [homestayname, setHomestayName] = useState('')
+    const [namebooking, setNameBooking] = useState('')
+    const [valueselect, setValueSelect] = useState('1')
     const [year, setYear] = useState('2023')
     const onChange = (dateString) => {
         setYear(dateString)
@@ -37,7 +39,8 @@ const StatisticalHomestay = () => {
         dispatch(fetchStatisticalByYears(UserID, year))
         dispatch(fetchStatisticalByDay(UserID, currentDateTime, currentMonth, currentYear))
         dispatch(fetchStatisticalByMonth(UserID, currentMonth, currentYear))
-        dispatch(fetchBooking(UserID));
+        dispatch(getBookingByNameHomestay(UserID, homestayname, namebooking, valueselect));
+
     }, []);
 
     const convertDataForChart = (data) => {
@@ -110,7 +113,7 @@ const StatisticalHomestay = () => {
             dataIndex: 'user',
             key: 'user',
             render: (data) => {
-                return data.name
+                return data?.name
             }
         },
         {
@@ -118,7 +121,7 @@ const StatisticalHomestay = () => {
             dataIndex: 'homestay',
             key: 'homestayName',
             render: (data) => {
-                return data.name
+                return data?.name
             }
         },
         {
@@ -150,7 +153,7 @@ const StatisticalHomestay = () => {
             key: 'totalPrice'
         }
     ];
-
+    console.log(booking)
     return (
         <div>
             <Title style={{ marginTop: '20px' }}>Thống kê doanh thu</Title>
