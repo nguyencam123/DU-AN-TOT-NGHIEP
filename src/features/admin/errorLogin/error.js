@@ -12,14 +12,20 @@ const ErrorLogin = () => {
     useEffect(() => {
         const storedToken = JSON.parse(localStorage.getItem('ownerDetail'))?.data?.token;
         updateAxiosToken(storedToken);
+        const storedTokenAdmin = JSON.parse(localStorage.getItem('adminDetail'))?.data?.token;
+        updateAxiosToken(storedTokenAdmin);
     }, []);
     const ispartner = useSelector((state) => state.user.ispartner);
+    const isAdmin = useSelector((state) => state.user.isAdmin);
     useEffect(() => {
         if (ispartner) {
             navigate('/partner/homestay')
             // openNotificationpartner()
         }
-    }, [ispartner]);
+        if (isAdmin) {
+            navigate('/admin/createform')
+        }
+    }, [ispartner, isAdmin]);
 
     return (
         <Result

@@ -42,13 +42,14 @@ export const DetailHomestay = () => {
     }
     return (
       <Col span={6} style={{ marginRight: '70px' }}>
-        <div style={{  minHeight:'80px', width: '270px', marginLeft: '15px', marginBottom:'15px' ,paddingLeft: '5px', fontSize: '12px', fontWeight: '500', boxShadow: '0px 2px 5px rgba(3,18,26,0.15)', borderRadius: '5px' }}>
+        <div style={{ minHeight: '80px', width: '270px', marginLeft: '15px', marginBottom: '15px', paddingLeft: '5px', fontSize: '12px', fontWeight: '500', boxShadow: '0px 2px 5px rgba(3,18,26,0.15)', borderRadius: '5px' }}>
           <div style={{ marginBottom: '5px', paddingTop: '5px' }}>{comment?.user.name}</div>
-          <div style={{ width: '250px', wordWrap:'break-word' }}>{comment?.comment}</div>
+          <div style={{ width: '250px', wordWrap: 'break-word' }}>{comment?.comment}</div>
         </div>
       </Col>
     )
   });
+
   return (
     <>
       <div
@@ -151,10 +152,9 @@ export const DetailHomestay = () => {
               <div style={{ margin: '10px 0px' }}>
                 <h4 style={{ marginLeft: '15px', marginTop: '10px', fontSize: '16px' }}>Tiện nghi chính</h4>
                 <div style={{ marginLeft: '15px', fontSize: '12px', fontWeight: '500' }}>
-                  <div>Wifi</div>
-                  <div>Pool</div>
-                  <div>Thang may</div>
-                  <div>Phong Gyms</div>
+                  {detailHomestay?.detailHomestays?.map((items) =>
+                    <div>{items.convenientHomestay.name}</div>
+                  )}
                 </div>
               </div>
             </Col>

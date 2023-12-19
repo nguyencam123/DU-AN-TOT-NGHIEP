@@ -15,10 +15,10 @@ export const fetchProducts = () => async (dispatch) => {
   }
 };
 
-export const getProducts = () => async (dispatch) => {
+export const getProducts = (page) => async (dispatch) => {
   dispatch(fetchProductsStart());
   try {
-    const response = await axios.get('http://localhost:8080/api/v1/homestay?size=99');
+    const response = await axios.get(`http://localhost:8080/api/v1/homestay?size=10&page=${page}`);
     dispatch(fetchProductsSuccess(response.data.data.data)); // Lấy dữ liệu từ response.data.data
   } catch (error) {
     dispatch(fetchProductsFailure(error.message));
@@ -87,7 +87,7 @@ export const addBooking = (booking) => async (dispatch) => {
 
 export const cancelBooking = (bookingId, node) => async (dispatch) => {
   try {
-    const response = await instance.put('http://localhost:8080/api/v1/booking/cancel/' + bookingId, {note: node});
+    const response = await instance.put('http://localhost:8080/api/v1/booking/cancel/' + bookingId, { note: node });
     dispatch(addBookingsSuccess(response.data.data)); // Lấy dữ liệu từ response.data.data
     // console.log(response.data.data);
   } catch (error) {

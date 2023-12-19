@@ -26,7 +26,8 @@ import { BookingUser } from './component/user/booking';
 import ComfirmMail from './component/user/cofirmMail/confirm';
 import ComfirmMailUser from './component/user/cofirmMail/confirmUser';
 import ResetPassWordOwner from './component/PartnerComponent/login/resetPassword';
-import { checkToken } from './app/middleware';
+import { checkToken, checkTokenAdmin } from './app/middleware';
+import ForgortPasswordOwner from './component/PartnerComponent/login/fogotPassword';
 
 function App() {
   //map component user
@@ -49,6 +50,7 @@ function App() {
     { path: 'booking/:id', element: <BookingUser /> },
     { path: 'shopingcart/:id', element: <CartUser /> },
     { path: 'changePassword', element: <ResetPassWordOwner /> }
+
   ];
   useEffect(() => {
     window.scrollTo(0, 0); // Cuộn lên đầu trang khi path thay đổi
@@ -59,8 +61,11 @@ function App() {
   useEffect(() => {
     // Lấy token từ localStorage, Redux state, hoặc nơi khác
     const token = JSON.parse(localStorage.getItem('ownerDetail'))?.data?.token;
+    const storedTokenAdmin = JSON.parse(localStorage.getItem('adminDetail'))?.data?.token;
+
     // Gọi middleware để kiểm tra token
     dispatch(checkToken(token));
+    dispatch(checkTokenAdmin(storedTokenAdmin));
   }, [dispatch]);
   return (
     <>
@@ -78,6 +83,7 @@ function App() {
           {/* map quyen voi url admin */}
           <Route path='/user/comfirmmail' element={<ComfirmMailUser />} />
           <Route path='/owner/comfirmmail' element={<ComfirmMail />} />
+          <Route path='/api/v2/login/reset-password/:id' element={<ForgortPasswordOwner />} />
           <Route path="/*" element={<PartnerLayout />}>
             <Route path="partner/*" element={<ProtectedRoute partnerOnly />} />
           </Route>

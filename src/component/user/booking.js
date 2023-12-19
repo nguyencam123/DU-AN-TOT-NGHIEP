@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Form, Image, Input, Modal, Rate, Row, Select, Space, Table, Typography } from "antd";
-import { CloseOutlined, CompassOutlined, EyeOutlined, RotateLeftOutlined, RotateRightOutlined, ShopOutlined, SwapOutlined, ZoomInOutlined, ZoomOutOutlined } from "@ant-design/icons";
+import { Button, Form, Image, Input, Modal, Rate, Row, Select, Space, Table, Typography, message } from "antd";
+import { CloseOutlined, CompassOutlined, EyeOutlined, LoadingOutlined, RotateLeftOutlined, RotateRightOutlined, ShopOutlined, SwapOutlined, ZoomInOutlined, ZoomOutOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import moment from 'moment';
 import dayjs from 'dayjs';
 import { fetchBookingUserId } from "../../features/admin/adminThunk";
 import { cancelBooking } from "../../features/product/productThunk";
 import TextArea from "antd/es/input/TextArea";
+import * as Yup from 'yup';
 
 dayjs.locale('vi');
 const { Title } = Typography;
@@ -24,6 +25,8 @@ export const BookingUser = () => {
   const [isRefusalModal, setIsRefusalModal] = useState(false);
   const [node, setNode] = useState('');
   const [bookingDeatil, setBookingDeatil] = useState({});
+  const [formErrors, setFormErrors] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const showModalView = (booking) => {
     setBookingDeatil(booking)
@@ -40,10 +43,26 @@ export const BookingUser = () => {
   const calculateDate = (createdDate) => {
     return dayjs(createdDate).add(1, 'day')
   };
-  const handleCancelBooking = () => {
-    dispatch(cancelBooking(bookingDeatil.id, node));
-    setIsRefusalModal(false)
-    dispatch(fetchBookingUserId(id));
+  /**
+   * validate
+   */
+
+  const handleCancelBooking = async () => {
+    if (!node || node.length <= 20) {
+      setFormErrors('bạn cần nhập lý do từ chối và lý do nhiều hơn 20 ký tự')
+    } else {
+      setIsLoading(true)
+      await message.info(
+        'Đang tiến hành hủy bạn vui lòng đợi một vài giây nhé!', 5
+      );
+      await dispatch(cancelBooking(bookingDeatil.id, node));
+      message.info(
+        'Hủy thành công', 5
+      );
+      setIsLoading(false)
+      setIsRefusalModal(false)
+      dispatch(fetchBookingUserId(id));
+    }
   }
   const handleChangeNote = (e) => {
     setNode(e.target.value)
@@ -77,7 +96,7 @@ export const BookingUser = () => {
               boxShadow: '0 0 3px 1px #ACAEB1', marginTop: 20,
               padding: '2px 2px 2px 2px', display: 'flex'
             }}>
-              <div style={{ width: '60%' }}>
+              <div style={{ width: '30%' }}>
                 <img src={booking.homestay.images[0]?.imgUrl} style={{ borderRadius: 8, height: 150, width: 255 }} />
                 <div style={{ marginTop: 8, display: 'flex' }}>
                   <img src={booking.homestay.images[1]?.imgUrl} style={{ borderRadius: 8, height: 48, marginRight: 6, width: 80 }} />
@@ -97,16 +116,16 @@ export const BookingUser = () => {
                   Ngày trả phòng : {moment(booking?.endDate).locale('vi').format('LL')} <br />
                 </h1>
               </div>
-              <div style={{ marginLeft: 10, borderLeft: '1px solid #ACAEB1', padding: '8px 8px 2px 2px', width: '40%' }}>
+              <div style={{ marginLeft: 10, borderLeft: '1px solid #ACAEB1', padding: '8px 8px 2px 15px', width: '25%' }}>
                 <div style={{ display: 'flex', color: 'rgb(5, 165, 105)' }}>{booking.status === 'HUY' ? 'Homestay đã hủy' : 'Đã thanh toán'}</div>
-                <div style={{ marginLeft: '10px' }}>
-                  <div style={{ fontSize: 22, color: 'rgb(231, 9, 14)' }}>{booking.totalPrice} VND</div>
+                <div >
+                  <div style={{ fontSize: 22, color: 'rgb(231, 9, 14)' }}>{booking.totalPrice} VNĐ</div>
                   <div style={{ fontSize: 22 }}>
                     {booking.status === 'HUY'
                       ? ''
-                      :<Button style={{ backgroundColor: 'rgb(231, 9, 14)', color: 'white' }} onClick={() => showRefusalView(booking)} >Hủy homestay</Button>
+                      : <Button style={{ backgroundColor: 'rgb(231, 9, 14)', color: 'white', width: 180 }} onClick={() => showRefusalView(booking)} >Hủy homestay</Button>
                     }
-                    <Button style={{ backgroundColor: 'green', color: 'white' }} onClick={() => showModalView(booking)}>Xem chi tiết homestay</Button>
+                    <Button style={{ backgroundColor: 'green', color: 'white', width: 180 }} onClick={() => showModalView(booking)}>Xem chi tiết homestay</Button>
                   </div>
                 </div>
               </div>
@@ -292,17 +311,30 @@ export const BookingUser = () => {
         open={isRefusalModal}
         onOk={() => handleCancelBooking()}
         onCancel={() => handleCancel()}
+        maskClosable={false}
+        okButtonProps={
+          isLoading
+            ? {
+              disabled: true,
+              icon: <LoadingOutlined />,
+              loading: true,
+            }
+            : {}
+        }
+        cancelButtonProps={
+          isLoading
+            ? {
+              disabled: true,
+            }
+            : {}
+        }
       >
         <Form>
           <Form.Item
             label='Lý do từ chối'
-            name='refusalReason'
-            rules={[
-              {
-                required: true,
-                message: 'Vui lòng điền lý do từ chối'
-              }
-            ]}
+            name='node'
+            validateStatus={formErrors ? 'error' : ''}
+            help={formErrors}
           >
             <TextArea onChange={(data) => handleChangeNote(data)} />
           </Form.Item>

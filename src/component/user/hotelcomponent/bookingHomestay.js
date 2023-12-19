@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progress, Space, Modal } from 'antd';
+import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progress, Space, Modal, message } from 'antd';
 import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, InfoCircleTwoTone, StarTwoTone } from '@ant-design/icons'
 import { Form, Table } from 'react-bootstrap';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -12,6 +12,7 @@ const { Header, Content, Footer } = Layout;
 
 
 export const BookingHomestay = () => {
+  const statusUser = JSON.parse(localStorage.getItem('userDetail'))?.success;
   const params = useParams();
   useEffect(() => {
     dispatch(getOneProduct(params.id));
@@ -38,22 +39,25 @@ export const BookingHomestay = () => {
   const endDate = param.get('endDate');
   const numNight = param.get('numNight');
   const handleBooking = () => {
-    setIsModalOpen(true)
-    const userDetail = JSON.parse(localStorage.getItem('userDetail'));
-    const userID = userDetail?.data.id;
-    const bookingData = {
-      userId: userID,
-      totalPrice: (detailHomestay.price + detailHomestay.price * 11 / 100) * numNight,
-      startDate: startDate.valueOf(),
-      endDate: endDate.valueOf(),
-      name: infoPayment.name,
-      email: infoPayment.email,
-      phoneNumber: infoPayment.phoneNumber,
-      homestayId: detailHomestay.id,
-      idPromotion: '908989'
+    if (statusUser) {
+      setIsModalOpen(true)
+      const userDetail = JSON.parse(localStorage.getItem('userDetail'));
+      const userID = userDetail?.data.id;
+      const bookingData = {
+        userId: userID,
+        totalPrice: (detailHomestay.price + detailHomestay.price * 11 / 100) * numNight,
+        startDate: startDate.valueOf(),
+        endDate: endDate.valueOf(),
+        name: infoPayment.name,
+        email: infoPayment.email,
+        phoneNumber: infoPayment.phoneNumber,
+        homestayId: detailHomestay.id,
+        idPromotion: '908989'
+      }
+      dispatch(addBooking(bookingData));
+    } else {
+      message.info('Bạn vui lòng đăng nhập trước khi đặt homestay');
     }
-    dispatch(addBooking(bookingData));
-    console.log(booking);
   }
   const handleReviewBookingHomestay = (id) => {
     console.log(booking.id);
@@ -192,7 +196,7 @@ export const BookingHomestay = () => {
                 Chi tiết giá
               </h6>
               <div style={{ backgroundColor: 'white', borderRadius: '10px' }}>
-              <Row>
+                <Row>
                   <Col span={10}>
                     <div style={{ padding: '20px 0px 5px 20px', fontSize: '18px', fontWeight: '700' }}>
                       Số tiền (1 Đêm)
