@@ -42,9 +42,9 @@ export const DetailHomestay = () => {
     }
     return (
       <Col span={6} style={{ marginRight: '70px' }}>
-        <div style={{  minHeight:'80px', width: '270px', marginLeft: '15px', marginBottom:'15px' ,paddingLeft: '5px', fontSize: '12px', fontWeight: '500', boxShadow: '0px 2px 5px rgba(3,18,26,0.15)', borderRadius: '5px' }}>
+        <div style={{ minHeight: '80px', width: '270px', marginLeft: '15px', marginBottom: '15px', paddingLeft: '5px', fontSize: '12px', fontWeight: '500', boxShadow: '0px 2px 5px rgba(3,18,26,0.15)', borderRadius: '5px' }}>
           <div style={{ marginBottom: '5px', paddingTop: '5px' }}>{comment?.user.name}</div>
-          <div style={{ width: '250px', wordWrap:'break-word' }}>{comment?.comment}</div>
+          <div style={{ width: '250px', wordWrap: 'break-word' }}>{comment?.comment}</div>
         </div>
       </Col>
     )
@@ -90,8 +90,14 @@ export const DetailHomestay = () => {
             <Col span={6} push={10} >
               <div>
                 <div style={{ fontSize: '12px', marginBottom: '0' }}>Giá mỗi phòng mỗi đêm từ</div>
-                <div style={{ fontSize: '24', color: 'rgb(255, 94, 31)', lineHeight: '28px', fontWeight: '700', marginTop: '-5px' }}> {detailHomestay.price + detailHomestay.price * 11 / 100}
-                  <span style={{ fontSize: '22' }}> VND</span> </div>
+                {detailHomestay?.promotion?.value
+                  ? <div style={{ fontSize: '24', color: 'rgb(255, 94, 31)', lineHeight: '28px', fontWeight: '700', marginTop: '-5px' }}>
+                    {detailHomestay.price - detailHomestay?.promotion?.value + (detailHomestay.price - detailHomestay?.promotion?.value) * 11 / 100}
+                    <span style={{ fontSize: '22' }}> VND</span> </div>
+                  : <div style={{ fontSize: '24', color: 'rgb(255, 94, 31)', lineHeight: '28px', fontWeight: '700', marginTop: '-5px' }}>
+                    {detailHomestay.price + detailHomestay.price * 11 / 100}
+                    <span style={{ fontSize: '22' }}> VND</span> </div>
+                }
               </div>
               <Button onClick={() => handleBookingHomestay(params.id)} style={{ width: '100%', backgroundColor: 'rgb(255, 94, 31)' }}>Chọn phòng</Button>
             </Col>
