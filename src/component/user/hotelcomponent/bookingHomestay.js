@@ -40,19 +40,21 @@ export const BookingHomestay = () => {
   const numNight = param.get('numNight');
   const handleBooking = () => {
     if (statusUser) {
-      setIsModalOpen(true)
-      const userDetail = JSON.parse(localStorage.getItem('userDetail'));
-      const userID = userDetail?.data.id;
-      const bookingData = {
-        userId: userID,
-        totalPrice: (detailHomestay.price + detailHomestay.price * 11 / 100) * numNight,
-        startDate: startDate.valueOf(),
-        endDate: endDate.valueOf(),
-        name: infoPayment.name,
-        email: infoPayment.email,
-        phoneNumber: infoPayment.phoneNumber,
-        homestayId: detailHomestay.id,
-        idPromotion: '908989'
+     setIsModalOpen(true)
+    const userDetail = JSON.parse(localStorage.getItem('userDetail'));
+    const userID = userDetail?.data.id;
+    const bookingData = {
+      userId: userID,
+      totalPrice: detailHomestay?.promotion?.value
+        ? (detailHomestay.price - detailHomestay?.promotion?.value + (detailHomestay.price - detailHomestay?.promotion?.value) * 11 / 100) * numNight
+        : (detailHomestay.price + detailHomestay.price * 11 / 100) * numNight,
+      startDate: startDate.valueOf(),
+      endDate: endDate.valueOf(),
+      name: infoPayment.name,
+      email: infoPayment.email,
+      phoneNumber: infoPayment.phoneNumber,
+      homestayId: detailHomestay.id,
+      idPromotion: detailHomestay.promotion.id || ''
       }
       dispatch(addBooking(bookingData));
     } else {
@@ -203,20 +205,25 @@ export const BookingHomestay = () => {
                     </div>
                   </Col>
                   <Col span={8} push={4}>
-                    <div style={{ padding: '20px 0px 5px 20px', fontSize: '18px', fontWeight: '700', float: 'right' }}>
-                      {detailHomestay.price + detailHomestay.price * 11 / 100} VND
-                    </div>
+                    {detailHomestay?.promotion?.value
+                      ? <div style={{ padding: '20px 0px 5px 20px', fontSize: '18px', fontWeight: '700', float: 'right' }}>
+                        {detailHomestay.price - detailHomestay?.promotion?.value + (detailHomestay.price - detailHomestay?.promotion?.value) * 11 / 100} VND
+                      </div>
+                      : <div style={{ padding: '20px 0px 5px 20px', fontSize: '18px', fontWeight: '700', float: 'right' }}>
+                        {detailHomestay.price + detailHomestay.price * 11 / 100} VND
+                      </div>
+                    }
                   </Col>
                 </Row>
                 <Row>
                   <Col span={10}>
                     <div style={{ padding: '20px 0px 5px 20px', fontSize: '18px', fontWeight: '700' }}>
-                      Thành tiền
+                      Số đêm
                     </div>
                   </Col>
                   <Col span={8} push={4}>
                     <div style={{ padding: '20px 0px 5px 20px', fontSize: '18px', fontWeight: '700', float: 'right' }}>
-                      {(detailHomestay.price + detailHomestay.price * 11 / 100) * numNight} VND
+                      {numNight} Đêm
                     </div>
                   </Col>
                 </Row>
@@ -239,9 +246,14 @@ export const BookingHomestay = () => {
                     </div>
                   </Col>
                   <Col span={8} push={4}>
-                    <div style={{ fontWeight: '600', fontSize: '18px', float: 'right' }}>
-                      {(detailHomestay.price + detailHomestay.price * 11 / 100) * numNight} VND
-                    </div>
+                    {detailHomestay?.promotion?.value
+                      ? <div style={{ fontWeight: '600', fontSize: '18px', float: 'right' }}>
+                        {(detailHomestay.price - detailHomestay?.promotion?.value + (detailHomestay.price - detailHomestay?.promotion?.value) * 11 / 100) * numNight} VND
+                      </div>
+                      : <div style={{ fontWeight: '600', fontSize: '18px', float: 'right' }}>
+                        {(detailHomestay.price + detailHomestay.price * 11 / 100) * numNight} VND
+                      </div>
+                    }
                   </Col>
                 </Row>
               </div>

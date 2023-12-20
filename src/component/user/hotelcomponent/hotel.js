@@ -312,7 +312,10 @@ const Hotel = () => {
                       <div style={{ display: 'flex', color: 'rgb(5, 165, 105)' }}><ShopOutlined style={{ marginTop: 3, fontSize: 14 }} /> Ưu đãi dành riêng cho bạn...</div>
                       <div style={{}}>
                         <div style={{ fontSize: 16 }}><del>{items.price + items.price * 11 / 100} VND</del></div>
-                        <div style={{ fontSize: 22, color: 'rgb(231, 9, 14)' }}>{items.price + items.price * 11 / 100} VND</div>
+                        {items?.promotion?.value
+                          ? <div style={{ fontSize: 22, color: 'rgb(231, 9, 14)' }}>{items.price - items?.promotion?.value + (items.price - items?.promotion?.value) * 11 / 100} VND</div>
+                          : <div style={{ fontSize: 22, color: 'rgb(231, 9, 14)' }}>{items.price + items.price * 11 / 100} VND</div>
+                        }
                         <div style={{ fontSize: 12, color: 'rgb(231, 9, 14)' }}>Ngày bạn chọn đã có 10 lượt<br /> đặt</div>
                         <div style={{ fontSize: 22 }}><Button style={{ backgroundColor: 'rgb(231, 9, 14)', color: 'white' }} onClick={() => handleDetailHomestay(items.id)} >Chọn phòng</Button></div>
                       </div>
