@@ -42,24 +42,24 @@ const Promotion = () => {
     const promotion = useSelector((state) => state.booking.promotions)
     const products = useSelector((state) => state.ownerHomestay.homestays);
     const [checkedValues, setCheckedValues] = useState([]);
-    const onChangePromotion = (record) => (e) => {
-        const { checked } = e.target;
-
-        // Nếu checkbox được chọn, thêm ID vào danh sách
-        // Nếu checkbox bị hủy chọn, loại bỏ ID khỏi danh sách
-        setCheckedValues((prevSelectedIds) => {
-            if (checked) {
-                return [...prevSelectedIds, record.id];
-            } else {
-                return prevSelectedIds.filter((id) => id !== record.id);
-            }
-        });
-    };
+    useEffect(() => {
+        // Update selectedRowKeys when homestay changes
+        setCheckedValues(homestay.map((item) => item.id));
+    }, [homestay]);
     /**
      * @returns Table colums
      */
-    const [selectedHomestays, setSelectedHomestays] = useState([]);
-
+    // console.log(homestay.map((item) => item.id))
+    const rowSelection = {
+        selectedRowKeys: checkedValues,
+        onChange: (selectedRowKeys, selectedRows) => {
+            setCheckedValues(selectedRowKeys)
+        },
+        getCheckboxProps: (record) => ({
+            // Column configuration not to be checked
+            name: record.name,
+        }),
+    };
     const columnsData = [
         {
             title: 'Tên homestay',
@@ -76,17 +76,7 @@ const Promotion = () => {
             dataIndex: 'price',
             key: 'price',
             align: 'center'
-        },
-        {
-            title: 'Action',
-            key: 'action',
-            render: (_, record) => (
-                <Space size="middle">
-                    <Checkbox onChange={onChangePromotion(record)} checked={homestay.map((item) => item.id).includes(record.id)}
-                    />
-                </Space>
-            ),
-        },
+        }
     ];
 
     /**
@@ -501,7 +491,10 @@ const Promotion = () => {
                         </div>
                         <div>
                             <div style={{ color: 'red', marginLeft: 30 }}>*(Vui lòng chọn homestay mà bạn muốn áp dụng khuyến mãi)</div>
-                            <Table columns={columnsData} dataSource={products} />
+                            <Table rowSelection={{
+                                type: 'checkbox',
+                                ...rowSelection,
+                            }} columns={columnsData} dataSource={products} rowKey="id" />
                         </div>
                     </div>
                 </Form>

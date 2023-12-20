@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progress, Space, Modal } from 'antd';
+import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progress, Space, Modal, message } from 'antd';
 import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, InfoCircleTwoTone, StarTwoTone } from '@ant-design/icons'
 import { Form, Table } from 'react-bootstrap';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -12,6 +12,7 @@ const { Header, Content, Footer } = Layout;
 
 
 export const BookingHomestay = () => {
+  const statusUser = JSON.parse(localStorage.getItem('userDetail'))?.success;
   const params = useParams();
   useEffect(() => {
     dispatch(getOneProduct(params.id));
@@ -38,7 +39,8 @@ export const BookingHomestay = () => {
   const endDate = param.get('endDate');
   const numNight = param.get('numNight');
   const handleBooking = () => {
-    setIsModalOpen(true)
+    if (statusUser) {
+     setIsModalOpen(true)
     const userDetail = JSON.parse(localStorage.getItem('userDetail'));
     const userID = userDetail?.data.id;
     const bookingData = {
@@ -53,9 +55,11 @@ export const BookingHomestay = () => {
       phoneNumber: infoPayment.phoneNumber,
       homestayId: detailHomestay.id,
       idPromotion: detailHomestay.promotion.id || ''
+      }
+      dispatch(addBooking(bookingData));
+    } else {
+      message.info('Bạn vui lòng đăng nhập trước khi đặt homestay');
     }
-    dispatch(addBooking(bookingData));
-    console.log(booking);
   }
   const handleReviewBookingHomestay = (id) => {
     console.log(booking.id);

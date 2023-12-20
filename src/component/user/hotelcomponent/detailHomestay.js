@@ -49,6 +49,7 @@ export const DetailHomestay = () => {
       </Col>
     )
   });
+
   return (
     <>
       <div
@@ -157,10 +158,9 @@ export const DetailHomestay = () => {
               <div style={{ margin: '10px 0px' }}>
                 <h4 style={{ marginLeft: '15px', marginTop: '10px', fontSize: '16px' }}>Tiện nghi chính</h4>
                 <div style={{ marginLeft: '15px', fontSize: '12px', fontWeight: '500' }}>
-                  <div>Wifi</div>
-                  <div>Pool</div>
-                  <div>Thang may</div>
-                  <div>Phong Gyms</div>
+                  {detailHomestay?.detailHomestays?.map((items) =>
+                    <div>{items.convenientHomestay.name}</div>
+                  )}
                 </div>
               </div>
             </Col>

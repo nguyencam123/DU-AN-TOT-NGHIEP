@@ -1,4 +1,4 @@
-import { Typography, DatePicker, Select, Input, Collapse, Button, Layout, Slider, Checkbox, Rate } from "antd"
+import { Typography, DatePicker, Select, Input, Collapse, Button, Layout, Slider, Checkbox, Rate, Pagination } from "antd"
 import hotelimg from "../../../assets/img/saleHotel.png"
 import logoTravel from "../../../assets/svg/Rectangle 405.svg"
 import {
@@ -36,6 +36,13 @@ const { Header, Footer, Sider, Content } = Layout;
 
 
 const Hotel = () => {
+  /**
+   * pagination
+   */
+  const [current, setCurrent] = useState(1);
+  const onChangePage = (page) => {
+    setCurrent(page);
+  };
   const products = useSelector((state) => state.product.products);
   const convenient = useSelector((state) => state.product.convenient);
   const dispatch = useDispatch();
@@ -47,7 +54,7 @@ const Hotel = () => {
     )
   }
   useEffect(() => {
-    dispatch(getProducts());
+    dispatch(getProducts(current - 1));
     dispatch(getAllConvinentHomestay());
   }, []);
   const onChange = (key) => {
@@ -133,7 +140,7 @@ const Hotel = () => {
       setNotification("Vui lòng nhập tên hoặc địa chỉ")
     } else {
       setNotification('')
-      dispatch(fetchSearchProducts(checkInDate.valueOf(), calculateCheckOutDate().valueOf(), nameOrAddress, numberPerson, roomNumber, rangeValue[0], rangeValue[1], convenientvir))
+      dispatch(fetchSearchProducts(checkInDate.valueOf(), calculateCheckOutDate().valueOf(), nameOrAddress, numberPerson, roomNumber, rangeValue[0], rangeValue[1], convenientvir, current - 1))
     }
   }
 
@@ -285,7 +292,7 @@ const Hotel = () => {
                     boxShadow: '0 0 3px 1px #ACAEB1', marginTop: 20,
                     padding: '2px 2px 2px 2px', display: 'flex'
                   }}>
-                    <div style={{ width: '60%' }}>
+                    <div style={{ width: '35%' }}>
                       <img src={items.images[0]?.imgUrl} style={{ borderRadius: 8, height: 150, width: 255 }} />
                       <div style={{ marginTop: 8, display: 'flex' }}>
                         <img src={items.images[1]?.imgUrl} style={{ borderRadius: 8, height: 48, marginRight: 6, width: 80 }} />
@@ -293,7 +300,7 @@ const Hotel = () => {
                         <img src={items.images[3]?.imgUrl} style={{ borderRadius: 8, height: 48, marginRight: 6, width: 80 }} />
                       </div>
                     </div>
-                    <div style={{ width: '50%', marginRight: 50 }}>
+                    <div style={{ width: '50%', marginRight: 'auto' }}>
                       <h1 style={{ fontSize: 18, marginTop: 10, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: 250 }}>{items?.name}</h1>
                       <Rate allowHalf disabled defaultValue={items.star} size='sm' /><br />
                       <div style={{ display: 'flex', marginTop: 10 }}>
@@ -301,9 +308,9 @@ const Hotel = () => {
                         <Title style={{ fontSize: 16, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, marginTop: 3 }}>{items.address}</Title></div>
                       <h1 style={{ width: '100%', height: 20, backgroundColor: 'rgb(242, 243, 243)', borderRadius: 8, fontSize: 14, padding: '0 2px 0 2px' }}>Thanh toán trực tuyến</h1>
                     </div>
-                    <div style={{ marginLeft: 10, borderLeft: '1px solid #ACAEB1', padding: '8px 8px 2px 2px', width: '40%' }}>
+                    <div style={{ marginLeft: 10, borderLeft: '1px solid #ACAEB1', padding: '8px 8px 2px 12px', width: '30%' }}>
                       <div style={{ display: 'flex', color: 'rgb(5, 165, 105)' }}><ShopOutlined style={{ marginTop: 3, fontSize: 14 }} /> Ưu đãi dành riêng cho bạn...</div>
-                      <div style={{ float: 'right' }}>
+                      <div style={{}}>
                         <div style={{ fontSize: 16 }}><del>{items.price + items.price * 11 / 100} VND</del></div>
                         {items?.promotion?.value
                           ? <div style={{ fontSize: 22, color: 'rgb(231, 9, 14)' }}>{items.price - items?.promotion?.value + (items.price - items?.promotion?.value) * 11 / 100} VND</div>
@@ -313,9 +320,12 @@ const Hotel = () => {
                         <div style={{ fontSize: 22 }}><Button style={{ backgroundColor: 'rgb(231, 9, 14)', color: 'white' }} onClick={() => handleDetailHomestay(items.id)} >Chọn phòng</Button></div>
                       </div>
                     </div>
+
                   </div>
                 ))}
-
+                <div style={{ float: 'right', marginTop: 20 }}>
+                  <Pagination current={current} onChange={onChangePage} total={products.length} />
+                </div>
               </div>
             </section>
           </Content>
