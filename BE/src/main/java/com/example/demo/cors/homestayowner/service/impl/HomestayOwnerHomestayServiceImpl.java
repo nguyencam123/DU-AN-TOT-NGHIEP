@@ -8,9 +8,7 @@ import com.example.demo.cors.homestayowner.repository.*;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerHomestayService;
 import com.example.demo.entities.*;
 import com.example.demo.infrastructure.contant.Status;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -101,6 +98,11 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
         return homestay1;
     }
 
+    @Override
+    public OwnerHomestay getOwnerHomestayByToken(String token) {
+        return homestayOwnerOwnerHomestayRepository.findOwnerByToken(token);
+    }
+
 
     private void getHomestay(HomestayownerHomestayRequest request, Homestay homestay) {
         homestay.setName(request.getName());
@@ -141,7 +143,6 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
             detailHomestays.add(detailHomestay);
         }
         homestay1.setDetailHomestays(detailHomestays);
-
         return homestay1;
     }
 }

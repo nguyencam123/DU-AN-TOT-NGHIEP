@@ -2,7 +2,7 @@ package com.example.demo.cors.customer.services;
 
 import com.example.demo.cors.customer.model.request.CustomerPasswordRequest;
 import com.example.demo.cors.customer.model.request.CustomerRequest;
-import com.example.demo.cors.customer.model.request.CustomerUserPasswordRequest;
+import com.example.demo.cors.customer.model.request.CustomerUserPassRequest;
 import com.example.demo.cors.customer.model.response.CustomerAuthenticationReponse;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,11 +11,11 @@ import java.security.Principal;
 
 public interface CustomerLoginService {
 
-    public void confirmEmail(String id);
+    void confirmEmail(String id);
 
     CustomerAuthenticationReponse CustomerRegister(CustomerRequest customerRequest);
 
-    CustomerAuthenticationReponse CustomerAuthenticate(CustomerUserPasswordRequest request);
+    CustomerAuthenticationReponse CustomerAuthenticate(CustomerUserPassRequest request);
 
     CustomerAuthenticationReponse changePassword(CustomerPasswordRequest request, Principal connecteUser);
 

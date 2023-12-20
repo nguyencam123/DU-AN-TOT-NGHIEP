@@ -6,7 +6,8 @@ import {
   PieChartOutlined,
   PayCircleOutlined,
   UserOutlined,
-  AreaChartOutlined
+  AreaChartOutlined,
+  CommentOutlined
 } from '@ant-design/icons';
 import { Link, Route, Routes, useNavigate } from 'react-router-dom'; // Import thư viện Link và Route
 import HomeStayProduct from '../../component/PartnerComponent/page/homestayProduct';
@@ -14,6 +15,8 @@ import HomeStayAdd from '../../component/PartnerComponent/page/homestayAdd';
 import ChangePassword from '../../component/PartnerComponent/login/changePassword';
 import Booking from '../../component/PartnerComponent/booking/booking'
 import StatisticalHomestay from '../../component/PartnerComponent/page/statisticalHomestay'
+import Promotion from '../../component/PartnerComponent/promotion/promotion';
+import UserCommment from '../../component/PartnerComponent/commentbyUser/usercomment';
 const { Header, Content, Sider } = Layout;
 
 
@@ -30,8 +33,9 @@ const items = [
   { label: 'Quản lý Homestay', key: '1', icon: <PieChartOutlined />, route: 'partner/homestay', component: <HomeStayProduct /> },
   { label: 'Quản lý đặt phòng', key: '2', icon: <PayCircleOutlined />, route: 'partner/booking', component: <Booking /> },
   { label: 'Quản lý thống kê', key: '3', icon: <AreaChartOutlined />, route: 'partner/statistical', component: <StatisticalHomestay /> },
-  { label: 'Quản lý khuyến mại', key: '4', icon: <DesktopOutlined />, route: 'partner/categor', component: <HomeStayProduct /> },
-  { label: 'Quản lý tài khoản', key: '5', icon: <UserOutlined />, route: 'partner/managementAccount', component: <ChangePassword /> }
+  { label: 'Quản lý khuyến mại', key: '4', icon: <DesktopOutlined />, route: 'partner/promotion', component: <Promotion /> },
+  { label: 'Đánh giá,nhận xét từ khách hàng', key: '5', icon: <CommentOutlined />, route: 'partner/commentUser', component: <UserCommment /> },
+  { label: 'Quản lý tài khoản', key: '6', icon: <UserOutlined />, route: 'partner/managementAccount', component: <ChangePassword /> }
 ];
 
 const Siderpartner = () => {

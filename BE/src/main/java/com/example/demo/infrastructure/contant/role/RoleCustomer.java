@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
+
 public enum RoleCustomer {
     CUSTOMER(
         Set.of(

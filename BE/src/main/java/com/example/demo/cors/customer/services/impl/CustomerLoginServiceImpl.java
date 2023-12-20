@@ -1,19 +1,21 @@
 package com.example.demo.cors.customer.services.impl;
 
 import com.cloudinary.Cloudinary;
-import com.example.demo.cors.customer.model.request.CustomerLoginRequest;
 import com.example.demo.cors.customer.model.request.CustomerPasswordRequest;
 import com.example.demo.cors.customer.model.request.CustomerRequest;
-import com.example.demo.cors.customer.model.request.CustomerUserPasswordRequest;
+import com.example.demo.cors.customer.model.request.CustomerUserPassRequest;
 import com.example.demo.cors.customer.model.response.CustomerAuthenticationReponse;
-import com.example.demo.cors.customer.model.response.CustomerLoginResponse;
 import com.example.demo.cors.customer.repository.CustomerLoginRepository;
+import com.example.demo.cors.customer.repository.CustomerTokenRepository;
 import com.example.demo.cors.customer.services.CustomerLoginService;
 import com.example.demo.entities.OwnerHomestay;
+import com.example.demo.entities.Token;
 import com.example.demo.entities.User;
 import com.example.demo.infrastructure.configemail.Email;
 import com.example.demo.infrastructure.configemail.EmailSender;
 import com.example.demo.infrastructure.contant.Status;
+import com.example.demo.infrastructure.contant.TypeToken;
+import com.example.demo.infrastructure.contant.role.RoleCustomer;
 import com.example.demo.infrastructure.exception.rest.RestApiException;
 import com.example.demo.infrastructure.security.token.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,9 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
 
     @Autowired
     private CustomerLoginRepository customerLoginRepository;
+
+    @Autowired
+    private CustomerTokenRepository customerTokenRepository;
 
     @Autowired
     private EmailSender emailSender;
@@ -60,39 +65,36 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
     @Override
     public CustomerAuthenticationReponse CustomerRegister(CustomerRequest request) {
         if (isNullOrEmpty(request.getUsername())) {
-            throw new RestApiException("Username cannot be empty");
+            throw new RestApiException("tên tài khoản không được để trống");
         }
         if (isNullOrEmpty(request.getName())) {
-            throw new RestApiException("Name cannot be empty");
+            throw new RestApiException("Tên không được để trống");
         }
         if (isNullOrEmpty(request.getPhoneNumber())) {
-            throw new RestApiException("Phone number cannot be empty");
+            throw new RestApiException("Số điện thoại không được để trống");
         }
         if (isNullOrEmpty(request.getEmail())) {
-            throw new RestApiException("Email cannot be empty");
+            throw new RestApiException("Email không được để trống");
         }
         if (isNullOrEmpty(request.getPassword())) {
-            throw new RestApiException("Password cannot be empty");
+            throw new RestApiException("Password không được để trống");
         }
         if (customerLoginRepository.existsByUsername(request.getUsername())) {
-            throw new RestApiException("Username is already in use");
+            throw new RestApiException("Tên tài khoản đã tồn tại");
         }
         if (customerLoginRepository.existsByEmail(request.getEmail())) {
-            throw new RestApiException("Email is already in use");
+            throw new RestApiException("Email đã tồn tại");
         }
         if (customerLoginRepository.existsByPhoneNumber(request.getPhoneNumber())) {
-            throw new RestApiException("PhoneNumber is already in use");
-        }
-        if (customerLoginRepository.existsByName(request.getName())) {
-            throw new RestApiException("Name is already in use");
+            throw new RestApiException("Số điện thoại đã tồn tại");
         }
         String phoneNumber = request.getPhoneNumber();
         if (!isValidVietnamesePhoneNumber(phoneNumber)) {
-            throw new RestApiException("Invalid Vietnamese phone number format");
+            throw new RestApiException("số điện thoại phải là số điện thoại Việt Nam");
         }
         String emails=request.getEmail();
         if (!isValidEmail(emails)){
-            throw new RestApiException("Invalid Email format");
+            throw new RestApiException("Email phải đúng định dạng @.gmail.com");
         }
         User user = new User();
         Random random = new Random();
@@ -104,15 +106,17 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         user.setEmail(request.getEmail());
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setStatus(Status.KHONG_HOAT_DONG);
-        customerLoginRepository.save(user);
+        user.setStatus(Status.HOAT_DONG);
+        user.setRole(RoleCustomer.CUSTOMER);
+        User user1=customerLoginRepository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+        saveUserToken(user1, jwtToken);
 
         Email email = new Email();
         email.setToEmail(new String[]{user.getEmail()});
         email.setSubject("Chào mừng đến với trang Web trvelViVu");
         email.setTitleEmail("Chúc mừng " + user.getUsername());
-        String confirmationLink = "http://localhost:8080/login/confirm-email?id=" + user.getId();
-        String emailBody = "Bạn đã đăng ký thành công. Vui lòng xác nhận email bằng cách nhấp vào liên kết sau: " + confirmationLink;
+        String emailBody = "Bạn đã đăng ký thành công.";
         email.setBody(emailBody);
         emailSender.sendEmail(email.getToEmail(), email.getSubject(), email.getTitleEmail(), emailBody);
 
@@ -129,26 +133,27 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 .email(user.getEmail())
                 .username(user.getUsername())
                 .status(user.getStatus())
+                .roleCustomer(user.getRole())
                 .build();
     }
 
     @Override
-    public CustomerAuthenticationReponse CustomerAuthenticate(CustomerUserPasswordRequest request) {
+    public CustomerAuthenticationReponse CustomerAuthenticate(CustomerUserPassRequest request) {
         if (isNullOrEmpty(request.getUsername())) {
-            throw new RestApiException("Username cannot be empty");
+            throw new RestApiException("Tên tài khoản không được để trống");
         }
         if (isNullOrEmpty(request.getPassword())) {
-            throw new RestApiException("Password number cannot be empty");
+            throw new RestApiException("Mật khẩu không được để trống");
         }
         if (customerLoginRepository.existsByUsername(request.getUsername())==false) {
-            throw new RestApiException("Username isn't exist");
+            throw new RestApiException("Tài khoản không tồn tại");
         }
         var user = customerLoginRepository.findByUsername(request.getUsername()).orElseThrow();
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RestApiException("password isn't true");
+            throw new RestApiException("Mật khẩu không đúng");
         }
         if(user.getStatus().equals(Status.KHONG_HOAT_DONG)){
-            throw new RestApiException("user isn't work");
+            throw new RestApiException("Tài khoản đang không hoạt động");
         }
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -157,6 +162,10 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 )
         );
         var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+        revokeAllUserTokens(user);
+        saveUserToken(user, jwtToken);
+
         return CustomerAuthenticationReponse.builder()
                 .token(jwtToken)
                 .id(user.getId())
@@ -169,6 +178,7 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 .email(user.getEmail())
                 .username(user.getUsername())
                 .status(user.getStatus())
+                .roleCustomer(user.getRole())
                 .build();
     }
 
@@ -195,49 +205,44 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 .email(user.getEmail())
                 .username(user.getUsername())
                 .status(user.getStatus())
+                .roleCustomer(user.getRole())
                 .build();
     }
 
     @Override
     public CustomerAuthenticationReponse updateInformationCusmoter(String idCustomer, CustomerRequest request, MultipartFile multipartFile) throws IOException {
         User customer = customerLoginRepository.findById(idCustomer).get();
+        if (isNullOrEmpty(request.getUsername())) {
+            throw new RestApiException("tên tài khoản không được để trống");
+        }
         if (isNullOrEmpty(request.getName())) {
-            throw new IOException("Name cannot be empty");
+            throw new RestApiException("Tên không được để trống");
+        }
+        if (isNullOrEmpty(request.getPhoneNumber())) {
+            throw new RestApiException("Số điện thoại không được để trống");
         }
         if (isNullOrEmpty(request.getEmail())) {
-            throw new IOException("Email cannot be empty");
+            throw new RestApiException("Email không được để trống");
         }
-        if (isNullOrEmpty(request.getAddress())) {
-            throw new IOException("Address cannot be empty");
+        if (isNullOrEmpty(request.getPassword())) {
+            throw new RestApiException("Password không được để trống");
         }
-        if (isNullOrEmpty(request.getUsername())) {
-            throw new IOException("Username cannot be empty");
+        if (customerLoginRepository.existsByUsername(request.getUsername())) {
+            throw new RestApiException("Tên tài khoản đã tồn tại");
         }
-        if (request.getBirthday() == null) {
-            throw new IOException("Birthday cannot be empty");
+        if (customerLoginRepository.existsByEmail(request.getEmail())) {
+            throw new RestApiException("Email đã tồn tại");
         }
-        if (request.getGender() == null && request.getGender().booleanValue()) {
-            throw new IOException("Gender cannot be empty");
-        }
-        if (customerLoginRepository.existsByUsername(request.getUsername()) && !customer.getUsername().equals(request.getUsername())) {
-            throw new RestApiException("Username is already in use");
-        }
-        if (customerLoginRepository.existsByEmail(request.getEmail()) && !customer.getEmail().equals(request.getEmail())) {
-            throw new RestApiException("Email is already in use");
-        }
-        if (customerLoginRepository.existsByPhoneNumber(request.getPhoneNumber()) && !customer.getPhoneNumber().equals(request.getPhoneNumber())) {
-            throw new RestApiException("PhoneNumber is already in use");
-        }
-        if (customerLoginRepository.existsByName(request.getName()) && !customer.getName().equals(request.getName())) {
-            throw new RestApiException("Name is already in use");
+        if (customerLoginRepository.existsByPhoneNumber(request.getPhoneNumber())) {
+            throw new RestApiException("Số điện thoại đã tồn tại");
         }
         String phoneNumber = request.getPhoneNumber();
         if (!isValidVietnamesePhoneNumber(phoneNumber)) {
-            throw new RestApiException("Invalid Vietnamese phone number format");
+            throw new RestApiException("số điện thoại phải là số điện thoại Việt Nam");
         }
-        String emails = request.getEmail();
-        if (!isValidEmail(emails)) {
-            throw new RestApiException("Invalid Email format");
+        String emails=request.getEmail();
+        if (!isValidEmail(emails)){
+            throw new RestApiException("Email phải đúng định dạng @.gmail.com");
         }
         customer.setName(request.getName());
         customer.setBirthday(request.getBirthday());
@@ -264,6 +269,7 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 .avataUrl(customer.getAvatarUrl())
                 .username(customer.getUsername())
                 .status(customer.getStatus())
+                .roleCustomer(customer.getRole())
                 .build();
     }
 
@@ -279,6 +285,28 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
 
     public static boolean isNullOrEmpty(String str) {
         return str == null || str.trim().isEmpty();
+    }
+
+    private void saveUserToken(User user, String jwtToken) {
+        var token = Token.builder()
+                .user(user)
+                .token(jwtToken)
+                .tokenType(TypeToken.BEARER)
+                .expired(false)
+                .revoked(false)
+                .build();
+        customerTokenRepository.save(token);
+    }
+
+    private void revokeAllUserTokens(User user) {
+        var validUserTokens = customerTokenRepository.findAllValidTokenByUser(user.getId());
+        if (validUserTokens.isEmpty())
+            return;
+        validUserTokens.forEach(token -> {
+            token.setExpired(true);
+            token.setRevoked(true);
+        });
+        customerTokenRepository.saveAll(validUserTokens);
     }
 
 }

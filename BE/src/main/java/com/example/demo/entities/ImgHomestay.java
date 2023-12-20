@@ -23,4 +23,5 @@ public class ImgHomestay extends PrimaryEntity {
 
     @Nationalized
     private String imgUrl;
+
 }

@@ -14,7 +14,12 @@ import java.util.Optional;
 @Repository
 public interface CustomerBookingRepository extends BookingRepository {
 
-    Page<Booking> findByUserId(Pageable pageable, String userId);
+    @Query(value = """
+            SELECT * FROM booking a
+            WHERE (a.user_id =:#{#customerBookingRequest.userId})
+            AND ((a.status = 1) OR (a.status = 0))
+            """, nativeQuery = true)
+    Page<Booking> getBookingByUserId(Pageable pageable, CustomerBookingRequest customerBookingRequest);
 
     @Query(value = """
             SELECT * FROM booking a

@@ -4,11 +4,11 @@ import com.example.demo.entities.base.PrimaryEntity;
 import com.example.demo.infrastructure.contant.EntityProperties;
 import com.example.demo.infrastructure.contant.Status;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -26,8 +26,9 @@ import java.util.List;
 @Setter
 public class Homestay extends PrimaryEntity {
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "promotion_id")
+    @JsonIgnoreProperties("homestays")
     private Promotion promotion;
 
     @Nationalized
@@ -81,5 +82,11 @@ public class Homestay extends PrimaryEntity {
     @JoinColumn(name = "cart_id")
     @JsonBackReference
     private Cart cart;
+
+    @Nationalized
+    private String email;
+
+    @Nationalized
+    private String phoneNumber;
 
 }

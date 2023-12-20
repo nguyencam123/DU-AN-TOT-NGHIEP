@@ -4,11 +4,11 @@ import axios from 'axios';
 
 const BASE_URL = '/homestay/get-all?size=999';
 
-export const fetchSearchProducts = (startDate, enDate, nameOrAddress, numberPerson, roomNumber, priceMin, priceMax, convenientHomestayList) => async (dispatch) => {
+export const fetchSearchProducts = (startDate, enDate, nameOrAddress, numberPerson, roomNumber, priceMin, priceMax, convenientHomestayList, page) => async (dispatch) => {
     dispatch(fetchProductsStart());
     try {
         const response = await
-            axios.post(`http://localhost:8080/api/v1/homestay/search?dateFrom=${startDate}&dateTo=${enDate}&nameOrAddress=${nameOrAddress}&numberPerson=${numberPerson}&roomNumber=${roomNumber}&priceMin=${priceMin}&priceMax=${priceMax}&${convenientHomestayList}`);
+            axios.get(`http://localhost:8080/api/v1/homestay/search?dateFrom=${startDate}&dateTo=${enDate}&nameOrAddress=${nameOrAddress}&numberPerson=${numberPerson}&roomNumber=${roomNumber}&priceMin=${priceMin}&priceMax=${priceMax}&${convenientHomestayList}&size=10&page=${page}`);
         dispatch(fetchProductsSuccess(response.data.data.data)); // Lấy dữ liệu từ response.data.data
     } catch (error) {
         dispatch(fetchProductsFailure(error.message));

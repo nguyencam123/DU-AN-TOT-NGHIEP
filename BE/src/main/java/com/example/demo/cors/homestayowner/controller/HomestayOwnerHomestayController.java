@@ -7,7 +7,6 @@ import com.example.demo.cors.homestayowner.service.HomestayOwnerHomestayService;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerImgHomestayService;
 import com.example.demo.entities.Homestay;
 import com.example.demo.infrastructure.exception.rest.RestApiException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +18,6 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v2/homestay/")
-@RequiredArgsConstructor
-@PreAuthorize("hasRole('OWNER')")
 public class HomestayOwnerHomestayController {
 
     @Autowired
@@ -39,9 +36,13 @@ public class HomestayOwnerHomestayController {
     }
 
     @GetMapping("get-imghomestay")
-    @PreAuthorize("hasAuthority('owner:read')")
     public ResponseObject getPageHomestayownerHomestay(@RequestParam("id") String id) {
         return new ResponseObject(homestayOwnerImgHomestayService.getImgHomestayByHomestayId(id));
+    }
+
+    @GetMapping("get-ownerhomestay-by-token")
+    public ResponseObject getOwnerByToken(@RequestParam("token") String token) {
+        return new ResponseObject(homestayownerHomestayService.getOwnerHomestayByToken(token));
     }
 
     @PostMapping("add-homestay")

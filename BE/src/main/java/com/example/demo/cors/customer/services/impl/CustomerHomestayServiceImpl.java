@@ -4,9 +4,11 @@ import com.example.demo.cors.common.base.PageableObject;
 import com.example.demo.cors.customer.model.request.CustomerHomestayRequest;
 import com.example.demo.cors.customer.repository.CustomerDetailHomestayRepository;
 import com.example.demo.cors.customer.repository.CustomerHomestayRepository;
+import com.example.demo.cors.customer.repository.CustomerLoginRepository;
 import com.example.demo.cors.customer.services.CustomerHomestayService;
 import com.example.demo.entities.DetailHomestay;
 import com.example.demo.entities.Homestay;
+import com.example.demo.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -25,6 +27,9 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
 
     @Autowired
     private CustomerDetailHomestayRepository customerDetailHomestayRepository;
+
+    @Autowired
+    private CustomerLoginRepository customerLoginRepository;
 
     @Override
     public PageableObject<Homestay> getListHomestay(CustomerHomestayRequest request) {
@@ -70,12 +75,11 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
         if (getHomestayByConvenient(request.getConvenientHomestayList(), lists) == null) {
             for (Homestay homestay : lists) {
                 if ((homestay.getName().contains(request.getNameOrAddress()) || homestay.getAddress().contains(request.getNameOrAddress()))
-                        && (homestay.getNumberPerson() == request.getNumberPerson())
-                        && (homestay.getRoomNumber() == request.getRoomNumber())
+                        && (homestay.getNumberPerson() >= request.getNumberPerson())
+                        && (homestay.getRoomNumber() >= request.getRoomNumber())
                         && (homestay.getPrice().compareTo(request.getPriceMin()) > 0)
                         && (homestay.getPrice().compareTo(request.getPriceMax()) < 0)
                 ) {
-                    res = new ArrayList<>();
                     res.add(homestay);
                 }
             }
@@ -83,13 +87,12 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
             for (Homestay homestay : lists) {
                 for (String homestayIdByConvenient : getHomestayByConvenient(request.getConvenientHomestayList(), lists))
                     if ((homestay.getName().contains(request.getNameOrAddress()) || homestay.getAddress().contains(request.getNameOrAddress()))
-                            && (homestay.getNumberPerson() == request.getNumberPerson())
-                            && (homestay.getRoomNumber() == request.getRoomNumber())
+                            && (homestay.getNumberPerson() >= request.getNumberPerson())
+                            && (homestay.getRoomNumber() >= request.getRoomNumber())
                             && (homestay.getId().equals(homestayIdByConvenient))
                             && (homestay.getPrice().compareTo(request.getPriceMin()) > 0)
                             && (homestay.getPrice().compareTo(request.getPriceMax()) < 0)
                     ) {
-                        res = new ArrayList<>();
                         res.add(homestay);
                     }
             }
@@ -97,7 +100,11 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
         Page<Homestay> res1 = new PageImpl<>(res, pageable, res.size());
         return new PageableObject<>(res1);
+    }
 
+    @Override
+    public User getCustomerByToken(String token) {
+        return customerLoginRepository.findUserByToken(token);
     }
 
 }

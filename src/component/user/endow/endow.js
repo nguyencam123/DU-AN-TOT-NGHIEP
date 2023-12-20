@@ -14,7 +14,7 @@ const { Sider, Content } = Layout;
 const Endow = () => {
     return (
         <section>
-            <div>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <img src={imgsale} />
             </div>
             <div style={{ padding: '50px 200px 50px 200px' }}>
