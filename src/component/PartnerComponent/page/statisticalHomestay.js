@@ -3,22 +3,32 @@ import { Column } from '@ant-design/plots';
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import moment from 'moment';
-import { fetchStatisticalByMonth, fetchStatisticalByYear } from "../../../features/owner_homestay/statistical/statisticalThunk";
+import { fetchStatisticalByDay, fetchStatisticalByMonth, fetchStatisticalByYear, fetchStatisticalByYears } from "../../../features/owner_homestay/statistical/statisticalThunk";
 import imgchart from '../../../assets/img/Tochartstatical.png';
 import imgyellowchart from '../../../assets/img/yellowtoChart.png';
 import imgBluechart from '../../../assets/img/blueimg.png';
 import imgRedchart from '../../../assets/img/redimg.png';
 import dayjs from 'dayjs';
-import { fetchBooking } from "../../../features/owner_homestay/getbooking/bookingThunk";
+import { fetchBooking, getBookingByNameHomestay } from "../../../features/owner_homestay/getbooking/bookingThunk";
 const { Title } = Typography
 const StatisticalHomestay = () => {
     const dispatch = useDispatch()
     const statistical = useSelector((state) => state.statistical.statisticalByYear)
     const statisticalByMonth = useSelector((state) => state.statistical.statisticalByMonth)
+    const statisticalByDay = useSelector((state) => state.statistical.statisticalByDay)
+    const statisticalByYears = useSelector((state) => state.statistical.statisticalByYears)
+
     const booking = useSelector((state) => state.booking.bookings)
     const userDetail = JSON.parse(localStorage.getItem('ownerDetail'));
     const UserID = userDetail?.data.id;
-
+    const currentDate = new Date();
+    // Lấy thông tin về tháng và năm từ ngày hiện tại
+    const currentMonth = currentDate.getMonth() + 1; // Tháng bắt đầu từ 0
+    const currentYear = new Date().getFullYear();
+    const currentDateTime = new Date().getDate();
+    const [homestayname, setHomestayName] = useState('')
+    const [namebooking, setNameBooking] = useState('')
+    const [valueselect, setValueSelect] = useState('1')
     const [year, setYear] = useState('2023')
     const onChange = (dateString) => {
         setYear(dateString)
@@ -26,8 +36,11 @@ const StatisticalHomestay = () => {
     };
     useEffect(() => {
         dispatch(fetchStatisticalByYear(UserID, year))
-        dispatch(fetchStatisticalByMonth(UserID))
-        dispatch(fetchBooking(UserID));
+        dispatch(fetchStatisticalByYears(UserID, year))
+        dispatch(fetchStatisticalByDay(UserID, currentDateTime, currentMonth, currentYear))
+        dispatch(fetchStatisticalByMonth(UserID, currentMonth, currentYear))
+        dispatch(getBookingByNameHomestay(UserID, homestayname, namebooking, valueselect));
+
     }, []);
 
     const convertDataForChart = (data) => {
@@ -100,7 +113,7 @@ const StatisticalHomestay = () => {
             dataIndex: 'user',
             key: 'user',
             render: (data) => {
-                return data.name
+                return data?.name
             }
         },
         {
@@ -108,7 +121,7 @@ const StatisticalHomestay = () => {
             dataIndex: 'homestay',
             key: 'homestayName',
             render: (data) => {
-                return data.name
+                return data?.name
             }
         },
         {
@@ -140,30 +153,29 @@ const StatisticalHomestay = () => {
             key: 'totalPrice'
         }
     ];
-    const currentYear = new Date().getFullYear();
-
+    console.log(booking)
     return (
         <div>
             <Title style={{ marginTop: '20px' }}>Thống kê doanh thu</Title>
             <div>
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <div style={{ width: '25%', height: 180, backgroundColor: '#321fdb', padding: 25, marginRight: 60, borderRadius: 8 }}>
-                        <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={3}> 3.999.000 VNĐ</Title>
+                        <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={3}> {statisticalByDay.tongSoTien == null ? 0 : statisticalByDay.tongSoTien} VNĐ</Title>
                         <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={5}> Doanh thu ngày hôm nay</Title>
                         <img src={imgchart} style={{ width: '100%' }} />
                     </div>
                     <div style={{ width: '25%', height: 180, backgroundColor: '#3399ff', padding: 25, marginRight: 60, borderRadius: 8 }}>
-                        <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={3}> {statisticalByMonth.doanhSo} VNĐ</Title>
+                        <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={3}> {statisticalByMonth.tongSoTien == null ? 0 : statisticalByMonth.tongSoTien} VNĐ</Title>
                         <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={5}> Doanh thu tháng này </Title>
                         <img src={imgBluechart} style={{ width: '100%' }} />
                     </div>
                     <div style={{ width: '25%', height: 180, backgroundColor: '#f9b115', padding: 25, marginRight: 60, borderRadius: 8 }}>
-                        <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={3}> 3.999.000 VNĐ</Title>
+                        <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={3}> {statisticalByYears.tongSoTien == null ? 0 : statisticalByYears.tongSoTien} VNĐ</Title>
                         <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={5}> Doanh thu năm nay </Title>
                         <img src={imgyellowchart} style={{ width: '100%', marginTop: 10 }} />
                     </div>
                     <div style={{ width: '25%', height: 180, backgroundColor: '#e55353', padding: 25, borderRadius: 8 }}>
-                        <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={3}> 0 lượt</Title>
+                        <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={3}> {statisticalByYears.doanhSo == null ? 0 : statisticalByYears.doanhSo} lượt</Title>
                         <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={5}>Số lượt đã đặt phòng trong năm</Title>
                         <img src={imgRedchart} style={{ width: '100%', marginTop: 1 }} />
                     </div>

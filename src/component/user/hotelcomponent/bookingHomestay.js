@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progress, Space, Modal } from 'antd';
+import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progress, Space, Modal, message } from 'antd';
 import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, InfoCircleTwoTone, StarTwoTone } from '@ant-design/icons'
 import { Form, Table } from 'react-bootstrap';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -12,6 +12,7 @@ const { Header, Content, Footer } = Layout;
 
 
 export const BookingHomestay = () => {
+  const statusUser = JSON.parse(localStorage.getItem('userDetail'))?.success;
   const params = useParams();
   useEffect(() => {
     dispatch(getOneProduct(params.id));
@@ -36,29 +37,37 @@ export const BookingHomestay = () => {
   const param = new URLSearchParams(location.search);
   const startDate = param.get('startDate');
   const endDate = param.get('endDate');
+  const numNight = param.get('numNight');
   const handleBooking = () => {
-    setIsModalOpen(true)
+    if (statusUser) {
+     setIsModalOpen(true)
     const userDetail = JSON.parse(localStorage.getItem('userDetail'));
     const userID = userDetail?.data.id;
     const bookingData = {
       userId: userID,
-      totalPrice: detailHomestay.price + detailHomestay.price * 11 / 100,
+      totalPrice: detailHomestay?.promotion?.value
+        ? (detailHomestay.price - detailHomestay?.promotion?.value + (detailHomestay.price - detailHomestay?.promotion?.value) * 11 / 100) * numNight
+        : (detailHomestay.price + detailHomestay.price * 11 / 100) * numNight,
       startDate: startDate.valueOf(),
       endDate: endDate.valueOf(),
       name: infoPayment.name,
       email: infoPayment.email,
       phoneNumber: infoPayment.phoneNumber,
       homestayId: detailHomestay.id,
-      idPromotion: '908989'
+      idPromotion: detailHomestay.promotion.id || ''
+      }
+      dispatch(addBooking(bookingData));
+    } else {
+      message.info('Bạn vui lòng đăng nhập trước khi đặt homestay');
     }
-    dispatch(addBooking(bookingData));
-    console.log(booking);
   }
   const handleReviewBookingHomestay = (id) => {
     console.log(booking.id);
     // Chuyển đến trang review với dữ liệu infoPayment trên URL
-    navigate(`/review/booking/${id}?bookingId=${booking.id}&name=${infoPayment.name}&email=${infoPayment.email}&phoneNumber=${infoPayment.phoneNumber}&startDate=${startDate}&endDate=${endDate}`);
-  };
+    navigate(
+      `/review/booking/${id}?bookingId=${booking.id}&name=${infoPayment.name}&email=${infoPayment.email}&phoneNumber=${infoPayment.phoneNumber}&startDate=${startDate}&endDate=${endDate}&numNight=${numNight}`
+    )
+  }
 
   return (
     <>
@@ -151,7 +160,7 @@ export const BookingHomestay = () => {
                     <div style={{ color: 'rgb(104, 113, 118)' }}>Ngày nhận phòng: </div>
                   </Col>
                   <Col span={11} push={1}>
-                    <div style={{ fontWeight: '500' }}>{moment(startDate*1).locale('vi').format('LL')}, Từ 14:00</div>
+                    <div style={{ fontWeight: '500' }}>{moment(startDate * 1).locale('vi').format('LL')}, Từ 14:00</div>
                   </Col>
                 </Row>
                 <Row style={{ backgroundColor: 'rgba(247,249,250,1.00)' }}>
@@ -159,7 +168,7 @@ export const BookingHomestay = () => {
                     <div style={{ color: 'rgb(104, 113, 118)' }}>Ngày trả phòng: </div>
                   </Col>
                   <Col span={11} push={1}>
-                    <div style={{ fontWeight: '500' }}>{moment(endDate*1).locale('vi').format('LL')}, Trước 12:00 </div>
+                    <div style={{ fontWeight: '500' }}>{moment(endDate * 1).locale('vi').format('LL')}, Trước 12:00 </div>
                   </Col>
                 </Row>
                 <Row style={{ margin: '25px 0px 0px 15px', paddingBottom: '20px' }}>
@@ -192,12 +201,29 @@ export const BookingHomestay = () => {
                 <Row>
                   <Col span={10}>
                     <div style={{ padding: '20px 0px 5px 20px', fontSize: '18px', fontWeight: '700' }}>
-                      Thành tiền
+                      Số tiền (1 Đêm)
+                    </div>
+                  </Col>
+                  <Col span={8} push={4}>
+                    {detailHomestay?.promotion?.value
+                      ? <div style={{ padding: '20px 0px 5px 20px', fontSize: '18px', fontWeight: '700', float: 'right' }}>
+                        {detailHomestay.price - detailHomestay?.promotion?.value + (detailHomestay.price - detailHomestay?.promotion?.value) * 11 / 100} VND
+                      </div>
+                      : <div style={{ padding: '20px 0px 5px 20px', fontSize: '18px', fontWeight: '700', float: 'right' }}>
+                        {detailHomestay.price + detailHomestay.price * 11 / 100} VND
+                      </div>
+                    }
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={10}>
+                    <div style={{ padding: '20px 0px 5px 20px', fontSize: '18px', fontWeight: '700' }}>
+                      Số đêm
                     </div>
                   </Col>
                   <Col span={8} push={4}>
                     <div style={{ padding: '20px 0px 5px 20px', fontSize: '18px', fontWeight: '700', float: 'right' }}>
-                      {detailHomestay.price + detailHomestay.price * 11 / 100} VND
+                      {numNight} Đêm
                     </div>
                   </Col>
                 </Row>
@@ -216,13 +242,18 @@ export const BookingHomestay = () => {
                 <Row style={{ padding: '5px 0px 5px 20px' }}>
                   <Col span={10}>
                     <div style={{ fontWeight: '600', fontSize: '18px' }}>
-                      Homestay name (1 Đêm)
+                      {detailHomestay.name} ({numNight} Đêm)
                     </div>
                   </Col>
                   <Col span={8} push={4}>
-                    <div style={{ fontWeight: '600', fontSize: '18px', float: 'right' }}>
-                      {detailHomestay.price + detailHomestay.price * 11 / 100} VND
-                    </div>
+                    {detailHomestay?.promotion?.value
+                      ? <div style={{ fontWeight: '600', fontSize: '18px', float: 'right' }}>
+                        {(detailHomestay.price - detailHomestay?.promotion?.value + (detailHomestay.price - detailHomestay?.promotion?.value) * 11 / 100) * numNight} VND
+                      </div>
+                      : <div style={{ fontWeight: '600', fontSize: '18px', float: 'right' }}>
+                        {(detailHomestay.price + detailHomestay.price * 11 / 100) * numNight} VND
+                      </div>
+                    }
                   </Col>
                 </Row>
               </div>
@@ -259,8 +290,8 @@ export const BookingHomestay = () => {
         onCancel={() => setIsModalOpen(false)}
       >
         <h5>Tất cả thông tin bạn điền đã chính xác chưa?</h5>
-        <p>{infoPayment.email}</p>
-        <p>{infoPayment.phoneNumber}</p>
+        <p>Email: {infoPayment.email}</p>
+        <p>Số điện thoại: {infoPayment.phoneNumber}</p>
       </Modal>
     </>
   )
