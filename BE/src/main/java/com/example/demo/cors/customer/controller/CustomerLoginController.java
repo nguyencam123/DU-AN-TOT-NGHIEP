@@ -1,6 +1,7 @@
 package com.example.demo.cors.customer.controller;
 
 import com.example.demo.cors.common.base.ResponseObject;
+import com.example.demo.cors.customer.model.request.CustomerForgetRequest;
 import com.example.demo.cors.customer.model.request.CustomerRequest;
 import com.example.demo.cors.customer.model.request.CustomerUserPassRequest;
 import com.example.demo.cors.customer.services.CustomerLoginService;
@@ -28,5 +29,12 @@ public class CustomerLoginController {
     public ResponseObject registers(@RequestBody CustomerRequest request) {
         return new ResponseObject(customerLoginService.CustomerRegister(request));
     }
+
+    @PostMapping("/forget-password")
+    public ResponseObject forgetPassword(final CustomerForgetRequest request) {
+        customerLoginService.sendResetPasswordEmail(request);
+        return new ResponseObject("Đã gửi mật khẩu mới về Email");
+    }
+
 
 }
