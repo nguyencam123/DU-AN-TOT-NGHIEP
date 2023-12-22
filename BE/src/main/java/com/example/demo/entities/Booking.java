@@ -64,4 +64,10 @@ public class Booking extends PrimaryEntity {
 
     private PaymentStatusBooking paymentStatusBooking;
 
+    private BigDecimal pricePerNight;
+
+    private BigDecimal promotionPrice;
+
+    private Integer numberOfNight;
+
 }

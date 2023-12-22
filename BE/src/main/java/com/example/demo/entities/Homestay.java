@@ -88,5 +88,4 @@ public class Homestay extends PrimaryEntity {
 
     @Nationalized
     private String phoneNumber;
-
 }
