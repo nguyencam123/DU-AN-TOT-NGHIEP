@@ -1,6 +1,7 @@
 package com.example.demo.cors.customer.services.impl;
 
 import com.cloudinary.Cloudinary;
+import com.example.demo.cors.customer.model.request.CustomerForgetRequest;
 import com.example.demo.cors.customer.model.request.CustomerPasswordRequest;
 import com.example.demo.cors.customer.model.request.CustomerRequest;
 import com.example.demo.cors.customer.model.request.CustomerUserPassRequest;
@@ -271,6 +272,26 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 .status(customer.getStatus())
                 .roleCustomer(customer.getRole())
                 .build();
+    }
+
+    @Override
+    public void sendResetPasswordEmail(CustomerForgetRequest request) {
+        User user= customerLoginRepository.findByUsername(request.getUsername()).orElse(null);
+        Random random = new Random();
+        int number = random.nextInt(1000);
+        String code = String.format("C%04d",number);
+        user.setPassword(passwordEncoder.encode(code));
+        if (user != null) {
+            String resetPasswordLink = "Đây là mật khẩu mới của bạn:" + user.getPassword();
+            String emailBody = "Vui lòng đăng nhập lại với mật khẩu mới." + resetPasswordLink;
+
+            Email email = new Email();
+            email.setToEmail(new String[]{user.getEmail()});
+            email.setSubject("Quên mật khẩu");
+            email.setTitleEmail("Mật khẩu mới của bạn");
+            email.setBody(emailBody);
+            emailSender.sendEmail(email.getToEmail(), email.getSubject(), email.getTitleEmail(), email.getBody());
+        }
     }
 
     private Boolean isValidEmail(String email) {
