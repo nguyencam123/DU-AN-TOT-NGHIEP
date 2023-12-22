@@ -1,10 +1,10 @@
 package com.example.demo.cors.customer.controller;
 
 import com.example.demo.cors.common.base.ResponseObject;
+import com.example.demo.cors.customer.model.request.CustomerBookingRequest;
 import com.example.demo.cors.customer.model.request.CustomerCartRequest;
 import com.example.demo.cors.customer.services.CustomerCartService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +28,11 @@ public class CustomerCartController {
     @PostMapping("/add")
     public ResponseObject saveCart(@RequestBody CustomerCartRequest request) {
         return new ResponseObject(customerCartService.saveCart(request));
+    }
+
+    @GetMapping("/check-available")
+    public ResponseObject checkAvailable(CustomerBookingRequest request) {
+        return new ResponseObject((customerCartService.getOne(request)));
     }
 
 }
