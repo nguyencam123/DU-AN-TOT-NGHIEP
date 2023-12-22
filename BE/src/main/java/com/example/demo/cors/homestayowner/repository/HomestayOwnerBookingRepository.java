@@ -14,14 +14,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface HomestayOwnerBookingRepository extends BookingRepository {
 
-    @Query(value = "select a.* from booking a \n" +
+    @Query(value = "select a.*,((a.total_price) - ((a.total_price) * 11 / 100 )) AS 'TongSoTien' from booking a \n" +
             "left join  homestay b on a.homestay_id=b.id\n" +
             "left join owner_homestay c on b.owner_id=c.id\n" +
             "where c.id=:id", nativeQuery = true)
     Page<Booking> getBookingByOwnerHomestay(String id, Pageable pageable);
 
     @Query(value = """
-            SELECT ROW_NUMBER() OVER(ORDER BY b.created_date DESC) AS stt, b.* 
+            SELECT ROW_NUMBER() OVER(ORDER BY b.created_date DESC) AS stt, b.* ,((b.total_price) - ((b.total_price) * 11 / 100)) AS 'TongSoTien'
             FROM booking b
             JOIN dbo.homestay h ON b.homestay_id = h.id 
             JOIN owner_homestay c ON h.owner_id=c.id
@@ -60,7 +60,7 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
     @Query(value = """
             SELECT
             COUNT(a.id) AS 'DoanhSo',
-            SUM(a.total_price) AS 'TongSoTien'
+            SUM(a.total_price) - (SUM(a.total_price) * 11 / 100)) AS 'TongSoTien'
             FROM
             booking a
             inner join homestay b on a.homestay_id=b.id

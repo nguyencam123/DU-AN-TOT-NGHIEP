@@ -1,5 +1,6 @@
 package com.example.demo.cors.customer.services;
 
+import com.example.demo.cors.customer.model.request.CustomerForgetRequest;
 import com.example.demo.cors.customer.model.request.CustomerPasswordRequest;
 import com.example.demo.cors.customer.model.request.CustomerRequest;
 import com.example.demo.cors.customer.model.request.CustomerUserPassRequest;
@@ -20,5 +21,7 @@ public interface CustomerLoginService {
     CustomerAuthenticationReponse changePassword(CustomerPasswordRequest request, Principal connecteUser);
 
     CustomerAuthenticationReponse updateInformationCusmoter(String idCustomer, CustomerRequest request, MultipartFile multipartFile) throws IOException;
+
+    void sendResetPasswordEmail(CustomerForgetRequest request);
 
 }

@@ -65,10 +65,6 @@ public class CustomerCommentServiceImpl implements CustomerCommentService {
 
     @Override
     public Comment addComment(CustomerCommentAddRequest request) throws IOException {
-        Booking booking=customerBookingRepository.findById(request.getCode()).get();
-        if (!booking.getHomestay().getId().equals(request.getHomestay()) || !booking.getUser().getId().equals(request.getUser()) || booking.getStatus().equals(StatusBooking.KHONG_THANH_CONG) || booking.getStatus().equals(StatusBooking.HUY)){
-            throw new RestApiException("mã code không đúng, không thể thực hiện đánh giá");
-        }
         Comment comment = new Comment();
         comment.setHomestay(customerHomestayRepository.findById(request.getHomestay()).get());
         comment.setComment(request.getComment());
