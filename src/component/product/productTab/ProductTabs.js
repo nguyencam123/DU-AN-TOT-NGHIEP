@@ -17,6 +17,21 @@ const ProductTabs = (props) => {
 
     const [productlist, setProducts] = useState([]);
 
+    const [checkInDate, setCheckInDate] = useState(null);
+    const [checkOutDate, setCheckOutDate] = useState(null);
+
+    useEffect(() => {
+        // Set checkInDate to tomorrow
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        setCheckInDate(tomorrow);
+
+        // Set checkOutDate to the day after tomorrow
+        const dayAfterTomorrow = new Date();
+        dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
+        setCheckOutDate(dayAfterTomorrow);
+    }, []);
+
     useEffect(() => {
         const fuse = new Fuse(products, {
             keys: ['address'],
@@ -64,7 +79,6 @@ const ProductTabs = (props) => {
         }
         return address;
     };
-
     return (
         <section style={{ padding: '0 200px 0 200px' }}>
             {
@@ -87,7 +101,9 @@ const ProductTabs = (props) => {
                         style={{ marginTop: '50px' }}
                         key={product.id}
                     >
-                        <Link to={`/homestay/detail/${product.id}`}>
+                        <Link to={
+                            `/homestay/detail/${product.id}?startDate=${checkInDate?.valueOf()}&endDate=${checkOutDate?.valueOf()}&numNight=1`
+                        }>
                             <Card
                                 hoverable
                                 style={{
@@ -112,7 +128,7 @@ const ProductTabs = (props) => {
                 ))}
             </Row>
             {
-                productlist.length < products.length && productlist.length > 0 && (
+                productlist.length < products.length && productlist.length > 5 && (
                     <div className="d-flex justify-content-center" style={{ marginTop: '20px' }}>
                         <button onClick={loadMore}
                             style={{
@@ -122,7 +138,6 @@ const ProductTabs = (props) => {
                     </div>
                 )
             }
-
         </section>
     );
 }

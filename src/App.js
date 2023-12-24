@@ -28,6 +28,7 @@ import ComfirmMailUser from './component/user/cofirmMail/confirmUser';
 import ResetPassWordOwner from './component/PartnerComponent/login/resetPassword';
 import { checkToken, checkTokenAdmin } from './app/middleware';
 import ForgortPasswordOwner from './component/PartnerComponent/login/fogotPassword';
+import ForgortPasswordUser from './component/login/forgotPassword';
 
 function App() {
   //map component user
@@ -49,8 +50,8 @@ function App() {
     { path: 'booking/success', element: <BookingSuccess /> },
     { path: 'booking/:id', element: <BookingUser /> },
     { path: 'shopingcart/:id', element: <CartUser /> },
-    { path: 'changePassword', element: <ResetPassWordOwner /> }
-
+    { path: 'changePassword', element: <ResetPassWordOwner /> },
+    { path: 'changePasswordUser', element: <ForgortPasswordUser /> }
   ];
   useEffect(() => {
     window.scrollTo(0, 0); // Cuộn lên đầu trang khi path thay đổi

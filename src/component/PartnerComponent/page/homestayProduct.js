@@ -12,7 +12,8 @@ import {
   Col,
   message,
   Image,
-  TimePicker
+  TimePicker,
+  Upload
 } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -27,7 +28,8 @@ import {
   ZoomOutOutlined,
   ZoomInOutlined,
   ReloadOutlined,
-  LoadingOutlined
+  LoadingOutlined,
+  UploadOutlined
 } from '@ant-design/icons';
 import { useState } from 'react';
 import {
@@ -95,12 +97,40 @@ const HomeStayProduct = () => {
   };
 
   const [file, setFile] = useState([]);
+  const [selectedImages, setSelectedImages] = useState([]);
 
-  const handleFileChange = (e) => {
-    let selectedFile = e.target.files;
+  const handleFileChange = (event) => {
+    const files = event.target.files;
+    let selectedFile = event.target.files;
     let fileList = [...selectedFile];
-    setFile(fileList);
+    const imagesArray = fileList.map((file) => ({
+      name: file.name,
+      url: URL.createObjectURL(file),
+    }));
+
+    setSelectedImages((prevImages) => [...prevImages, ...imagesArray]);
+    setFile(fileList)
+    const filesArray = Array.from(files).map((file) => ({
+      name: file.name,
+      size: file.size,
+      type: file.type,
+    }));
   };
+
+  const handleRemoveImage = (index) => {
+    const newImages = [...selectedImages];
+    file.splice(index, 1);
+    newImages.splice(index, 1);
+    setSelectedImages(newImages);
+    // document.getElementById('image').value = null;
+  };
+
+  // const handleFileChange = (e) => {
+  //   console.log(e)
+  //   // let selectedFile = e.target.files;
+  //   // let fileList = [...selectedFile];
+  //   // setFile(fileList);
+  // };
   //modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewmodal, setIsviewmodal] = useState(false);
@@ -144,6 +174,14 @@ const HomeStayProduct = () => {
     setSelectedWard('');
     setCheckedValues([]);
     setFile([])
+
+    const fileInput = document.getElementById('image');
+    if (fileInput) {
+      fileInput.value = null;
+    }
+    setSelectedImages([])
+
+
   };
   const handleOk = () => {
     setIsModalOpen(false);
@@ -404,6 +442,7 @@ const HomeStayProduct = () => {
         setSelectedCity('');
         setSelectedDistrict('');
         setSelectedWard('');
+
       } else {
         await message.info(
           'Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!', 5
@@ -448,7 +487,11 @@ const HomeStayProduct = () => {
     setconvenient(record.detailHomestays);
     setFile([])
 
-    console.log(record)
+    const fileInput = document.getElementById('image');
+    if (fileInput) {
+      fileInput.value = null;
+    }
+    setSelectedImages([])
     //
     setFormErrors({});
 
@@ -523,6 +566,32 @@ const HomeStayProduct = () => {
       }
     }
   }, [selectedDistrict, districts]);
+
+  const [fileList, setFileList] = useState([]);
+  const [uploading, setUploading] = useState(false);
+  const handleUpload = () => {
+    const formData = new FormData();
+    fileList.forEach((file) => {
+      formData.append('files[]', file);
+    });
+    setUploading(true);
+    // You can use any AJAX library you like
+    fetch('https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188', {
+      method: 'POST',
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then(() => {
+        setFileList([]);
+        message.success('upload successfully.');
+      })
+      .catch(() => {
+        message.error('upload failed.');
+      })
+      .finally(() => {
+        setUploading(false);
+      });
+  };
 
   return (
     <>
@@ -798,15 +867,32 @@ const HomeStayProduct = () => {
         </Form>
         <form onSubmit={handleSubmit} style={{ marginTop: 20 }}>
           <div>
-
-            <label htmlFor='image'>Chọn ảnh(Chọn ít nhất 5 ảnh và tối đa 20 ảnh)<br /></label>
-            <input
-              type='file'
-              id='image'
-              multiple
-              accept='image/*'
-              onChange={handleFileChange}
-            />
+            <div style={{ display: 'flex' }}>
+              <label htmlFor='image' style={{ marginTop: 5 }}>Chọn ảnh(Chọn ít nhất 5 ảnh và tối đa 20 ảnh)<br /></label>
+              <label htmlFor='image' style={{ cursor: 'pointer', border: '1px solid black', borderRadius: 8, padding: '6px 15px 6px 15px', marginLeft: 10 }}>
+                Chọn tệp
+              </label>
+              <input
+                type='file'
+                id='image'
+                multiple
+                accept='image/*'
+                onChange={handleFileChange}
+                style={{ display: 'none' }}
+              />
+              <div style={{ marginLeft: 8, marginTop: 5 }}>Đã có {selectedImages.length} file được chọn</div>
+            </div>
+            <div>
+              {selectedImages.map((image, index) => (
+                <div key={index} style={{ display: 'flex', marginTop: 10, border: '1px solid black', borderRadius: 8, width: '100%', height: 100, padding: 5 }}>
+                  <img src={image.url} alt={`selected-${index}`} style={{ border: '1px solid white', borderRadius: 8 }} />
+                  <div style={{ display: 'flex', justifyContent: 'center' }}>{`File Name: ${image.name}`}</div>
+                  <div style={{ marginLeft: 'auto', display: 'flex', justifyContent: 'center', marginRight: 20 }}>
+                    <DeleteOutlined onClick={() => handleRemoveImage(index)} />
+                  </div>
+                </div>
+              ))}
+            </div>
             {isAddFrom == true ? (
               ''
             ) : (
@@ -865,7 +951,7 @@ const HomeStayProduct = () => {
             ))}
           </div>
         )}
-      </Modal>
+      </Modal >
       <Modal
         title={
           <div style={{ fontSize: '22px' }}>Xem thông tin chi tiết homstay</div>
