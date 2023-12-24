@@ -13,12 +13,17 @@ const { Header, Content, Footer } = Layout;
 
 export const BookingHomestay = () => {
   const statusUser = JSON.parse(localStorage.getItem('userDetail'))?.success;
+  const userDetail = JSON.parse(localStorage.getItem('userDetail'));
   const params = useParams();
   useEffect(() => {
     dispatch(getOneProduct(params.id));
   }, []);
   const dispatch = useDispatch();
-  const [infoPayment, setInfoPayment] = useState({});
+  const [infoPayment, setInfoPayment] = useState({
+    name: userDetail?.data?.name,
+    email: userDetail?.data?.email,
+    phoneNumber: userDetail?.data?.phoneNumber
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const detailHomestay = useSelector((state) => state.product.productDetails);
   const navigate = useNavigate();
@@ -40,6 +45,7 @@ export const BookingHomestay = () => {
   const numNight = param.get('numNight');
   const handleBooking = () => {
     if (statusUser) {
+<<<<<<< HEAD
       setIsModalOpen(true)
       const userDetail = JSON.parse(localStorage.getItem('userDetail'));
       const userID = userDetail?.data.id;
@@ -55,6 +61,22 @@ export const BookingHomestay = () => {
         phoneNumber: infoPayment.phoneNumber,
         homestayId: detailHomestay.id,
         idPromotion: detailHomestay.promotion?.id || ''
+=======
+     setIsModalOpen(true)
+    const userID = userDetail?.data.id;
+    const bookingData = {
+      userId: userID,
+      totalPrice: detailHomestay?.promotion?.value
+        ? (detailHomestay.price - detailHomestay?.promotion?.value + (detailHomestay.price - detailHomestay?.promotion?.value) * 11 / 100) * numNight
+        : (detailHomestay.price + detailHomestay.price * 11 / 100) * numNight,
+      startDate: startDate.valueOf(),
+      endDate: endDate.valueOf(),
+      name: infoPayment.name,
+      email: infoPayment.email,
+      phoneNumber: infoPayment.phoneNumber,
+      homestayId: detailHomestay.id,
+      idPromotion: detailHomestay.promotion.id || ''
+>>>>>>> 8903bc1a57c3059259a1abdf35d9c4021e33749a
       }
       dispatch(addBooking(bookingData));
     } else {
@@ -118,7 +140,7 @@ export const BookingHomestay = () => {
                 <Form style={{ padding: '20px' }}>
                   <Form.Group className="mb-3" controlId="name">
                     <Form.Label style={{ fontWeight: '700' }}>Họ và tên</Form.Label>
-                    <Form.Control type="text" placeholder="Họ và tên" onChange={(e) => onChangeName(e)} />
+                    <Form.Control type="text" placeholder="Họ và tên" value={infoPayment.name} onChange={(e) => onChangeName(e)} />
                     <Form.Text className="text-muted">
                       *Nhập tên như trên CMND/ hộ chiếu
                     </Form.Text>
@@ -126,14 +148,14 @@ export const BookingHomestay = () => {
 
                   <Form.Group className="mb-3" controlId="phoneNumber">
                     <Form.Label style={{ fontWeight: '700' }}>Số điện thoại</Form.Label>
-                    <Form.Control type="text" placeholder="Số điện thoại" onChange={(e) => onChangePhoneNumber(e)} />
+                    <Form.Control type="text" placeholder="Số điện thoại" value={infoPayment.phoneNumber} onChange={(e) => onChangePhoneNumber(e)} />
                     <Form.Text className="text-muted">
                       VD : 09683741834
                     </Form.Text>
                   </Form.Group>
                   <Form.Group className="mb-3" controlId="Email">
                     <Form.Label style={{ fontWeight: '700' }}>Email</Form.Label>
-                    <Form.Control type="text" placeholder="Email" onChange={(e) => onChangeEmail(e)} />
+                    <Form.Control type="text" placeholder="Email" value={infoPayment.email} onChange={(e) => onChangeEmail(e)} />
                     <Form.Text className="text-muted">
                       VD: email@example.com
                     </Form.Text>
