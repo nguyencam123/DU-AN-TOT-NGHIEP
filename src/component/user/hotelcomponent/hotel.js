@@ -22,7 +22,7 @@ import imgheadhotel from "../../../assets/img/imgheadhotel.png"
 import 'dayjs/locale/vi';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProducts, getProducts } from "../../../features/product/productThunk";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { fetchSearchProducts, getAllConvinentHomestay } from "../../../features/product/searchProductThunk";
 import moment from 'moment';
 import { fetchConvenientsSuccess } from "../../../features/product/productSlide";
@@ -47,6 +47,11 @@ const Hotel = () => {
   const convenient = useSelector((state) => state.product.convenient);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const nameLocation = searchParams.get('name');
+
   let checkOutDate
   const handleDetailHomestay = async (id) => {
     navigate(
@@ -54,7 +59,7 @@ const Hotel = () => {
     )
   }
   useEffect(() => {
-    dispatch(getProducts(current - 1));
+    // dispatch(getProducts(current - 1));
     dispatch(getAllConvinentHomestay());
   }, []);
   const onChange = (key) => {
@@ -69,7 +74,12 @@ const Hotel = () => {
   const handleNumNightsChange = (value) => {
     setNumNights(value);
   };
-
+  const handleKeyDown = (e) => {
+    // Kiểm tra nếu ký tự không phải là số thì chặn
+    if (isNaN(Number(e.key))) {
+      e.preventDefault();
+    }
+  };
 
   const disabledDate = (current) => {
     // Can not select days before today and today
@@ -100,7 +110,7 @@ const Hotel = () => {
       checkOutDate = dayjs(checkInDate).add(numNights, 'day');
       return checkOutDate;
     }
-    return '';
+    return null;
   };
   checkOutDate = dayjs(checkInDate).add(numNights, 'day');
   const [rangeValue, setRangeValue] = useState([0, 25000000]);
@@ -127,8 +137,8 @@ const Hotel = () => {
     setRangeValue(initialValue);
   }
   const [nameOrAddress, setNameOrAddress] = useState('Hà Nội')
-  const [numberPerson, setNumberPerson] = useState(12)
-  const [roomNumber, setRoomNumber] = useState(12)
+  const [numberPerson, setNumberPerson] = useState(1)
+  const [roomNumber, setRoomNumber] = useState(1)
   const [convenientvir, setconvenient] = useState('')
   const [notification, setNotification] = useState('')
   const onChangeConvenients = (checkedValues) => {
@@ -140,14 +150,18 @@ const Hotel = () => {
       setNotification("Vui lòng nhập tên hoặc địa chỉ")
     } else {
       setNotification('')
-      dispatch(fetchSearchProducts(checkInDate.valueOf(), calculateCheckOutDate().valueOf(), nameOrAddress, numberPerson, roomNumber, rangeValue[0], rangeValue[1], convenientvir, current - 1))
+      dispatch(fetchSearchProducts(checkInDate.valueOf(), calculateCheckOutDate().valueOf(), nameLocation || nameOrAddress, numberPerson, roomNumber, rangeValue[0], rangeValue[1], convenientvir, current - 1))
     }
   }
+  // console.log(nameOrAddress)
+  useEffect(() => {
+    dispatch(fetchSearchProducts(checkInDate.valueOf(), calculateCheckOutDate().valueOf(), nameLocation || nameOrAddress, numberPerson, roomNumber, rangeValue[0], rangeValue[1], convenientvir, current - 1))
+  }, [checkInDate, nameLocation])
 
   const text = <section>
     <div style={{ justifyContent: 'space-between', display: 'flex', fontSize: 18 }}>
-      <div style={{ display: 'flex' }}><UserOutlined style={{ marginBottom: 10 }} />&ensp;số lượng người</div><div><Input style={{ width: 100, height: 40 }} defaultValue={12} onChange={(e) => setNumberPerson(e.target.value)} /></div>
-      <div style={{ display: 'flex' }}><InsertRowRightOutlined style={{ marginBottom: 10 }} />&ensp;số lượng phòng</div><div><Input style={{ width: 100, height: 40 }} defaultValue={12} onChange={(e) => setRoomNumber(e.target.value)} /></div>
+      <div style={{ display: 'flex' }}><UserOutlined style={{ marginBottom: 10 }} />&ensp;số lượng người</div><div><Input style={{ width: 100, height: 40 }} defaultValue={1} onChange={(e) => setNumberPerson(e.target.value)} /></div>
+      <div style={{ display: 'flex' }}><InsertRowRightOutlined style={{ marginBottom: 10 }} />&ensp;số lượng phòng</div><div><Input style={{ width: 100, height: 40 }} defaultValue={1} onChange={(e) => setRoomNumber(e.target.value)} /></div>
     </div>
   </section>;
   const utilities = <div style={{ width: '100%', height: '30%', backgroundColor: 'white', borderRadius: 10, padding: '5px 5px 5px' }}>
@@ -196,7 +210,7 @@ const Hotel = () => {
             <hr />
             <div><h5 style={{ fontSize: 16 }}>Thành phố đia điểm hoặc tên khách sạn</h5>
               <MDBInputGroup className='mb-3' size='lg' noBorder textBefore={<MDBIcon fas icon='search' />}>
-                <input className='form-control' type='text' placeholder='Search' defaultValue={'Hà Nội'} onChange={(e) => setNameOrAddress(e.target.value)} required />
+                <input className='form-control' type='text' placeholder='Search' defaultValue={nameLocation || 'Hà Nội'} onChange={(e) => setNameOrAddress(e.target.value)} required />
               </MDBInputGroup>
               <div style={{ color: 'red', marginLeft: 30 }}>{notification}</div>
               <div>
@@ -214,6 +228,7 @@ const Hotel = () => {
                     size="lg"
                     style={{ width: 300, height: 40 }}
                     onChange={handleCheckInChange}
+                    onKeyDown={handleKeyDown}
                   />&emsp;&emsp;&emsp;
                   <Select
                     defaultValue="1 đêm"
@@ -224,7 +239,7 @@ const Hotel = () => {
                     onChange={handleNumNightsChange}
                   />
                   <div>
-                    <h5 style={{ fontSize: 18, marginLeft: 30, marginTop: 8 }}>{calculateCheckOutDate().format('dddd, DD [tháng] MM [năm] YYYY')}</h5>
+                    <h5 style={{ fontSize: 18, marginLeft: 30, marginTop: 8 }}>{calculateCheckOutDate()?.format('dddd, DD [tháng] MM [năm] YYYY')}</h5>
                   </div>
                 </div>
               </div>

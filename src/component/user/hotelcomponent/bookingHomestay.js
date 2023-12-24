@@ -45,6 +45,23 @@ export const BookingHomestay = () => {
   const numNight = param.get('numNight');
   const handleBooking = () => {
     if (statusUser) {
+<<<<<<< HEAD
+      setIsModalOpen(true)
+      const userDetail = JSON.parse(localStorage.getItem('userDetail'));
+      const userID = userDetail?.data.id;
+      const bookingData = {
+        userId: userID,
+        totalPrice: detailHomestay?.promotion?.value
+          ? (detailHomestay.price - detailHomestay?.promotion?.value + (detailHomestay.price - detailHomestay?.promotion?.value) * 11 / 100) * numNight
+          : (detailHomestay.price + detailHomestay.price * 11 / 100) * numNight,
+        startDate: startDate.valueOf(),
+        endDate: endDate.valueOf(),
+        name: infoPayment.name,
+        email: infoPayment.email,
+        phoneNumber: infoPayment.phoneNumber,
+        homestayId: detailHomestay.id,
+        idPromotion: detailHomestay.promotion?.id || ''
+=======
      setIsModalOpen(true)
     const userID = userDetail?.data.id;
     const bookingData = {
@@ -59,6 +76,7 @@ export const BookingHomestay = () => {
       phoneNumber: infoPayment.phoneNumber,
       homestayId: detailHomestay.id,
       idPromotion: detailHomestay.promotion.id || ''
+>>>>>>> 8903bc1a57c3059259a1abdf35d9c4021e33749a
       }
       dispatch(addBooking(bookingData));
     } else {
