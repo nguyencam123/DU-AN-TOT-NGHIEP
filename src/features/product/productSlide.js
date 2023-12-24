@@ -8,6 +8,7 @@ const initialState = {
   payment: [],
   products: [],
   convenient: [],
+  productPromotion: [],
   loading: false,
   error: null,
 };
@@ -22,6 +23,11 @@ const productSlice = createSlice({
     },
     fetchConvenientsSuccess: (state, action) => {
       state.convenient = action.payload;
+      state.loading = true;
+      state.error = null;
+    },
+    fetchProductPromotionSuccess: (state, action) => {
+      state.productPromotion = action.payload;
       state.loading = true;
       state.error = null;
     },
@@ -67,6 +73,6 @@ const productSlice = createSlice({
 export const {
   fetchProductsStart, fetchProductsSuccess, fetchProductsFailure,
   deleteProduct, addproduct, fetchProductsDetailSuccess, fetchCommentProductSuccess,
-  fetchAvgPointSuccess, getPaymentSuccess, fetchConvenientsSuccess
+  fetchAvgPointSuccess, getPaymentSuccess, fetchConvenientsSuccess, fetchProductPromotionSuccess
 } = productSlice.actions;
 export default productSlice.reducer;

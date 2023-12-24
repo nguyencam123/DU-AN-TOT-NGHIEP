@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { EditOutlined, EyeOutlined, LoadingOutlined, ReloadOutlined, TeamOutlined } from '@ant-design/icons'
 import moment from 'moment';
 import Search from 'antd/es/input/Search';
-import { UpdateStatusPromotion, addPromotion, fetchPromotion } from '../../../features/owner_homestay/getbooking/promotionThunk';
+import { UpdatePromotion, UpdateStatusPromotion, addPromotion, fetchPromotion } from '../../../features/owner_homestay/getbooking/promotionThunk';
 import * as Yup from 'yup'
 import { fetchHomestay } from '../../../features/owner_homestay/homestayThunk';
 import dayjs from 'dayjs';
@@ -144,8 +144,8 @@ const Promotion = () => {
         await message.info(
             'Đang tiến hành sửa trạng thái bạn vui lòng đợi một vài giây nhé!'
         );
-        await dispatch(UpdateStatusPromotion(record.id));
-        dispatch(fetchPromotion(UserID));
+        await dispatch(UpdatePromotion(record.id));
+        await dispatch(fetchPromotion(UserID, homestayname, valueselect));
     };
     /**
      * Table promotion
@@ -213,13 +213,15 @@ const Promotion = () => {
             align: 'center',
             render: (_, record) => (
                 <Space size="middle">
-                    <Tooltip placement="top" title={textView} arrow={mergedArrow}>
-                        <a style={{ color: '#1677ff' }} onClick={() => handleViewRow(record)}> <EyeOutlined /></a>
-                    </Tooltip>
-                    <Tooltip placement="top" title={text} arrow={mergedArrow}>
-                        <a style={{ color: '#1677ff' }} onClick={() => handleEdit(record)}><EditOutlined /></a>
-                    </Tooltip>
-                    <Tooltip placement="top" title={textupdate} arrow={mergedArrow}>
+                    <a style={{ color: '#1677ff' }} onClick={() => handleViewRow(record)}>
+                        <EyeOutlined />
+                    </a>
+                    {record.statusPromotion === 'HOAT_DONG' && ( // Thêm điều kiện ở đây
+                        <a style={{ color: '#1677ff' }} onClick={() => handleEdit(record)}>
+                            <EditOutlined />
+                        </a>
+                    )}
+                    {record.statusPromotion === 'HOAT_DONG' && ( // Thêm điều kiện ở đây
                         <Popconfirm
                             title='Cập nhật mục này'
                             description='Bạn chắc chắn muốn cập nhật khuyến mãi này thành không hoạt động không?'
@@ -232,8 +234,9 @@ const Promotion = () => {
                                 <ReloadOutlined />
                             </a>
                         </Popconfirm>
-                    </Tooltip>
+                    )}
                 </Space>
+
             ),
         },
     ];
