@@ -3,7 +3,7 @@ import { Column } from '@ant-design/plots';
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import moment from 'moment';
-import { fetchStatisticalByDay, fetchStatisticalByMonth, fetchStatisticalByYear, fetchStatisticalByYears } from "../../../features/owner_homestay/statistical/statisticalThunk";
+import { fetchStatisticalByDay, fetchStatisticalByMonth, fetchStatisticalByTop5, fetchStatisticalByYear, fetchStatisticalByYears } from "../../../features/owner_homestay/statistical/statisticalThunk";
 import imgchart from '../../../assets/img/Tochartstatical.png';
 import imgyellowchart from '../../../assets/img/yellowtoChart.png';
 import imgBluechart from '../../../assets/img/blueimg.png';
@@ -17,6 +17,7 @@ const StatisticalHomestay = () => {
     const statisticalByMonth = useSelector((state) => state.statistical.statisticalByMonth)
     const statisticalByDay = useSelector((state) => state.statistical.statisticalByDay)
     const statisticalByYears = useSelector((state) => state.statistical.statisticalByYears)
+    const statisticalByTop5 = useSelector((state) => state.statistical.statisticalByTop5)
 
     const booking = useSelector((state) => state.booking.bookings)
     const userDetail = JSON.parse(localStorage.getItem('ownerDetail'));
@@ -40,7 +41,7 @@ const StatisticalHomestay = () => {
         dispatch(fetchStatisticalByDay(UserID, currentDateTime, currentMonth, currentYear))
         dispatch(fetchStatisticalByMonth(UserID, currentMonth, currentYear))
         dispatch(getBookingByNameHomestay(UserID, homestayname, namebooking, valueselect));
-
+        dispatch(fetchStatisticalByTop5(UserID, year))
     }, []);
 
     const convertDataForChart = (data) => {
@@ -109,51 +110,35 @@ const StatisticalHomestay = () => {
     // table
     const columns = [
         {
-            title: 'Tên tài khoản',
-            dataIndex: 'user',
-            key: 'user',
-            render: (data) => {
-                return data?.name
-            }
-        },
-        {
             title: 'Tên Homestay',
-            dataIndex: 'homestay',
-            key: 'homestayName',
-            render: (data) => {
-                return data?.name
-            }
-        },
-        {
-            title: 'Ngày đặt',
-            dataIndex: 'createdDate',
-            key: 'createdDate',
-            render: (data) => {
-                return moment(data).locale('vi').format('LL')
-            }
-        },
-        {
-            title: 'Email người đặt',
-            dataIndex: 'email',
-            key: 'email'
-        },
-        {
-            title: 'Tên người đặt',
             dataIndex: 'name',
             key: 'name'
         },
         {
-            title: 'Số điện thoại người đặt',
-            dataIndex: 'phoneNumber',
-            key: 'createdDate'
+            title: 'Số phòng',
+            dataIndex: 'roomNumber',
+            key: 'roomNumber'
         },
         {
-            title: 'Tổng tiền',
-            dataIndex: 'totalPrice',
-            key: 'totalPrice'
+            title: 'Doanh số',
+            dataIndex: 'doanhSo',
+            key: 'doanhSo'
+        },
+        {
+            title: 'Tổng số tiền',
+            dataIndex: 'tongSoTien',
+            key: 'tongSoTien',
+            render(str) {
+                return str + 'VNĐ'
+            }
+        },
+        {
+            title: 'Địa chỉ homestay',
+            dataIndex: 'address',
+            key: 'address'
         }
     ];
-    console.log(booking)
+
     return (
         <div>
             <Title style={{ marginTop: '20px' }}>Thống kê doanh thu</Title>
@@ -191,7 +176,8 @@ const StatisticalHomestay = () => {
             </div>
             <Column {...config} />
             <div style={{ marginTop: '40px' }}>
-                <Table columns={columns} dataSource={booking} />
+                <Title level={3}>Top 5 homestay có doanh thu cao nhất</Title>
+                <Table columns={columns} dataSource={statisticalByTop5} />
             </div>
         </div>
     )
