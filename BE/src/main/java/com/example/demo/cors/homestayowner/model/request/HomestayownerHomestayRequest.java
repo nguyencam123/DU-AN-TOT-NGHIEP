@@ -2,8 +2,10 @@ package com.example.demo.cors.homestayowner.model.request;
 
 import com.example.demo.cors.common.base.PageableRequest;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
@@ -40,6 +42,13 @@ public class HomestayownerHomestayRequest extends PageableRequest {
 
     private String promotion;
 
+    private String email;
+
+    private String phonenumber;
+
     private String status;
 
+    private List<MultipartFile> multipartFiles;
+
+    private List<String> idConvenientHomestay;
 }

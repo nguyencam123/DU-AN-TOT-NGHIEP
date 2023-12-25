@@ -1,8 +1,10 @@
 package com.example.demo.cors.homestayowner.repository;
 
 import com.example.demo.cors.homestayowner.model.reponse.HomestayOwnerStatisticalReponse;
+import com.example.demo.cors.homestayowner.model.reponse.HomestayOwnerStatisticalTop5Reponse;
 import com.example.demo.cors.homestayowner.model.request.HomestayOwnerBookingRequest;
 import com.example.demo.cors.homestayowner.model.request.HomestayOwnerStatisticalRequest;
+import com.example.demo.cors.homestayowner.model.request.HomestayOwnerTop5StatisticalRequest;
 import com.example.demo.entities.Booking;
 import com.example.demo.repositories.BookingRepository;
 import org.springframework.data.domain.Page;
@@ -10,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface HomestayOwnerBookingRepository extends BookingRepository {
@@ -60,7 +64,7 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
     @Query(value = """
             SELECT
             COUNT(a.id) AS 'DoanhSo',
-            SUM(a.total_price) - (SUM(a.total_price) * 11 / 100)) AS 'TongSoTien'
+            SUM(a.total_price) - (SUM(a.total_price) * 11 / 100) AS 'TongSoTien'
             FROM
             booking a
             inner join homestay b on a.homestay_id=b.id
@@ -72,4 +76,31 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
             AND a.status=1;                     
             """, nativeQuery = true)
     HomestayOwnerStatisticalReponse getAllStatisticalYear(HomestayOwnerStatisticalRequest request);
+
+    @Query(value = """
+                SELECT TOP 5
+                b.name,
+                b.address,
+                b.room_number AS "roomNumber",
+                COUNT(a.id) AS 'DoanhSo',
+                SUM(a.total_price) - (SUM(a.total_price) * 0.11) AS 'TongSoTien'
+                FROM
+                booking a
+                INNER JOIN homestay b ON a.homestay_id = b.id
+                INNER JOIN owner_homestay c ON b.owner_id = c.id
+                WHERE
+                c.id = :#{#request.idOwnerHomestay}
+                AND DATEPART(YEAR, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.year}
+                AND a.status=1
+                GROUP BY
+                    b.name,
+                    b.address,
+                    b.room_number
+                ORDER BY
+                    SUM(a.total_price) DESC
+    """,nativeQuery = true)
+    List<HomestayOwnerStatisticalTop5Reponse> getTop5StaticalYear(HomestayOwnerTop5StatisticalRequest request);
+
+
+
 }

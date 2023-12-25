@@ -2,6 +2,7 @@ package com.example.demo.cors.homestayowner.controller;
 
 import com.example.demo.cors.common.base.ResponseObject;
 import com.example.demo.cors.homestayowner.model.request.HomestayOwnerStatisticalRequest;
+import com.example.demo.cors.homestayowner.model.request.HomestayOwnerTop5StatisticalRequest;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerStatisticalServie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,6 +33,11 @@ public class HomestayOwnerStatisticalController {
     @PreAuthorize("hasAuthority('owner:read')")
     public ResponseObject getYear(final HomestayOwnerStatisticalRequest request) {
         return new ResponseObject(homestayOwnerStatisticalServie.getAllStatisticalForAllMonthsInYear(request));
+    }
+
+    @GetMapping("/top5")
+    public ResponseObject getTop5(final HomestayOwnerTop5StatisticalRequest request) {
+        return new ResponseObject(homestayOwnerStatisticalServie.getTop5HomestayInYear(request));
     }
 
 }
