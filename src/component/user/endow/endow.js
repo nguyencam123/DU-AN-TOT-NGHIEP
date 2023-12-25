@@ -1,6 +1,6 @@
 import imgsale from '../../../assets/svg/Rectangle 184.svg'
 import imghd from '../../../assets/img/Screenshot 2023-10-14 212504.png'
-import { Layout, Typography, Checkbox, Col, Divider, Row, Pagination } from 'antd';
+import { Layout, Typography, Checkbox, Col, Row, Pagination } from 'antd';
 import {
     MDBCard,
     MDBCardBody,
@@ -12,6 +12,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSearchProductsForPromotion } from '../../../features/product/searchProductThunk';
+import { Link } from 'react-router-dom';
 const { Title } = Typography
 const { Sider, Content } = Layout;
 const Endow = () => {
@@ -64,24 +65,35 @@ const Endow = () => {
                                     lg: 32,
                                 }}
                             >
-                                {productPromotion.map((items) =>
-                                    items.promotion !== null && (
-                                        <Col className="gutter-row" span={8} style={{ marginTop: 50 }} key={items.id}>
-                                            <MDBCard>
-                                                <MDBCardImage src={items.images[0]?.imgUrl} position="top" alt="..." />
-                                                <MDBCardBody>
-                                                    <MDBCardTitle style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{items.name}</MDBCardTitle>
-                                                    <MDBCardTitle>GIẢM ĐẾN {items.promotion?.value}₫</MDBCardTitle>
-                                                    <MDBCardText>
-                                                        *Không yêu cầu số tiền tối thiểu.
-                                                    </MDBCardText>
-                                                    <MDBBtn href="#">Đặt ngay</MDBBtn>
-                                                </MDBCardBody>
-                                            </MDBCard>
-                                        </Col>
-                                    )
-                                )}
+                                {productPromotion.map((items) => {
+                                    const currentDate = new Date().getTime();
+                                    const startDate = items.promotion?.startDate?.valueOf();
+                                    const endDate = items.promotion?.endDate?.valueOf();
 
+                                    if (items.promotion !== null && startDate < currentDate && currentDate < endDate) {
+                                        return (
+
+                                            <Col className="gutter-row" span={8} style={{ marginTop: 50 }} key={items.id}>
+                                                <Link to={
+                                                    `/homestay/detail/${items.id}?startDate=${checkInDate?.valueOf()}&endDate=${checkOutDate?.valueOf()}&numNight=1`
+                                                }>
+                                                    <MDBCard>
+                                                        <MDBCardImage src={items.images[0]?.imgUrl} position="top" alt="..." />
+                                                        <MDBCardBody>
+                                                            <MDBCardTitle style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{items.name}</MDBCardTitle>
+                                                            <MDBCardTitle>GIẢM ĐẾN {items.promotion?.value}₫</MDBCardTitle>
+                                                            <MDBCardText>
+                                                                *Không yêu cầu số tiền tối thiểu.
+                                                            </MDBCardText>
+                                                            <MDBBtn href="#">Đặt ngay</MDBBtn>
+                                                        </MDBCardBody>
+                                                    </MDBCard>
+                                                </Link>
+                                            </Col>
+                                        );
+                                    }
+                                    return null; // Return null for items that don't meet the date criteria
+                                })}
                             </Row>
                             <div style={{ float: 'right', marginTop: 20 }}>
                                 <Pagination current={current} onChange={onChangePage} total={productPromotion.length} />

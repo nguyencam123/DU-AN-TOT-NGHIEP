@@ -95,7 +95,10 @@ const Booking = () => {
         {
             title: 'Tổng tiền',
             dataIndex: 'totalPrice',
-            key: 'totalPrice'
+            key: 'totalPrice',
+            render(str) {
+                return str * 89 / 100
+            }
         }
     ];
     const listFilter = [
