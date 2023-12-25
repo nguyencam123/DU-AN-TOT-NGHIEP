@@ -117,32 +117,72 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
         homestay.setTimeCheckIn(request.getTimeCheckIn());
         homestay.setTimeCheckOut(request.getTimeCheckOut());
         homestay.setCancellationPolicy(request.getCancellationPolicy());
+        homestay.setEmail(request.getEmail());
+        homestay.setPhoneNumber(request.getPhonenumber());
         homestay.setCart(null);
         homestay.setOwnerHomestay(homestayOwnerOwnerHomestayRepository.findById(request.getOwnerHomestay()).orElse(null));
     }
 
     private Homestay getImgHomestayAndConvenientHomestay(List<MultipartFile> multipartFiles, List<String> idConvenientHomestay, Homestay homestay1) throws IOException {
         List<ImgHomestay> newImages = new ArrayList<>();
-        for (MultipartFile image : multipartFiles) {
-            ImgHomestay imgHomestay = new ImgHomestay();
-            imgHomestay.setHomestay(homestay1);
-            Map uploadResult = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.asMap("folder", "homestay_images"));
-            imgHomestay.setImgUrl(uploadResult.get("url").toString());
-            homestayOwnerImgHomestayRepo.save(imgHomestay);
-            newImages.add(imgHomestay);
-        }
-        homestay1.setImages(newImages);
-
         List<DetailHomestay> detailHomestays = new ArrayList<>();
-        for (String detail : idConvenientHomestay) {
-            DetailHomestay detailHomestay = new DetailHomestay();
-            detailHomestay.setHomestay(homestay1);
-            ConvenientHomestay convenientHomestay = homestayOwnerConvenientHomestayRepository.findById(detail).orElse(null);
-            detailHomestay.setConvenientHomestay(convenientHomestay);
-            homestayOwnerDetailHomestayReposritory.save(detailHomestay);
-            detailHomestays.add(detailHomestay);
+        List<Thread> threads = new ArrayList<>();
+
+        if (multipartFiles != null && !multipartFiles.isEmpty()) {
+            // Trường hợp có hình ảnh mới được chọn
+            for (MultipartFile image : multipartFiles) {
+                // Xử lý upload hình ảnh mới
+                Thread imageThread = new Thread(() -> {
+                    try {
+                        ImgHomestay imgHomestay = new ImgHomestay();
+                        imgHomestay.setHomestay(homestay1);
+                        Map uploadResult = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.asMap("folder", "homestay_images"));
+                        imgHomestay.setImgUrl(uploadResult.get("url").toString());
+                        homestayOwnerImgHomestayRepo.save(imgHomestay);
+                        synchronized (newImages) {
+                            newImages.add(imgHomestay);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                threads.add(imageThread);
+                imageThread.start();
+            }
+        } else {
+            // Trường hợp không có hình ảnh mới được chọn
+            // Giữ nguyên dữ liệu hình ảnh hiện tại của homestay
+            newImages.addAll(homestay1.getImages());
         }
+
+        for (String detail : idConvenientHomestay) {
+            // Xử lý thông tin chi tiết homestay
+            Thread detailThread = new Thread(() -> {
+                DetailHomestay detailHomestay = new DetailHomestay();
+                detailHomestay.setHomestay(homestay1);
+                ConvenientHomestay convenientHomestay = homestayOwnerConvenientHomestayRepository.findById(detail).orElse(null);
+                detailHomestay.setConvenientHomestay(convenientHomestay);
+                homestayOwnerDetailHomestayReposritory.save(detailHomestay);
+                synchronized (detailHomestays) {
+                    detailHomestays.add(detailHomestay);
+                }
+            });
+            threads.add(detailThread);
+            detailThread.start();
+        }
+
+        for (Thread thread : threads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        homestay1.setImages(newImages);
         homestay1.setDetailHomestays(detailHomestays);
+
         return homestay1;
     }
+
 }
