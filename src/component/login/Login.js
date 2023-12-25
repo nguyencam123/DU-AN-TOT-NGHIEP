@@ -14,7 +14,7 @@ import {
     MDBCheckbox
 }
     from 'mdb-react-ui-kit';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { notification } from 'antd';
 
 const { Title } = Typography
@@ -78,7 +78,9 @@ function LoginComponent() {
 
                         <div className="d-flex justify-content-between mx-4 mb-4">
                             <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Remember me' />
-                            <a href="!#">Forgot password?</a>
+                            <Link to={'/changePasswordUser'}>
+                                <div style={{ cursor: 'pointer' }}>Quên mật khẩu?</div>
+                            </Link>
                         </div>
 
                         <Button type="primary" style={{ width: '100%', height: 45 }} onClick={() => handleLogin()}>Đăng nhập</Button>

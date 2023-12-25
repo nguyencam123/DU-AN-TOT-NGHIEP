@@ -1,7 +1,6 @@
 package com.example.demo.cors.customer.model.request;
 
 import com.example.demo.cors.common.base.PageableRequest;
-import com.example.demo.entities.ConvenientHomestay;
 import com.example.demo.infrastructure.contant.Status;
 import lombok.Getter;
 import lombok.Setter;

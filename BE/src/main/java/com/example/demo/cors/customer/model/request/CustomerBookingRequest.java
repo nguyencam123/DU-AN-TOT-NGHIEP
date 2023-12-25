@@ -4,7 +4,6 @@ import com.example.demo.cors.common.base.PageableRequest;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
 
 @Getter
 @Setter
@@ -29,7 +28,6 @@ public class CustomerBookingRequest extends PageableRequest {
     private String idPromotion;
 
     @NotBlank(message = "Bạn phải nhập lý do hủy homestay")
-    @Length(min = 20, message = "Lý do phải > 20 ký tự")
     private String note;
 
     private String bookingId;
