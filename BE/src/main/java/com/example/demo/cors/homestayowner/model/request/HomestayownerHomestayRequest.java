@@ -48,7 +48,7 @@ public class HomestayownerHomestayRequest extends PageableRequest {
 
     private String status;
 
-    private List<MultipartFile> multipartFiles;
+    private List<MultipartFile> image;
 
     private List<String> idConvenientHomestay;
 }
