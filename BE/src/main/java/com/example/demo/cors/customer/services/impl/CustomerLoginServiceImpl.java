@@ -282,7 +282,7 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         String code = String.format("C%04d",number);
         user.setPassword(passwordEncoder.encode(code));
         if (user != null) {
-            String resetPasswordLink = "Đây là mật khẩu mới của bạn:" + user.getPassword();
+            String resetPasswordLink = "Đây là mật khẩu mới của bạn:" + code;
             String emailBody = "Vui lòng đăng nhập lại với mật khẩu mới." + resetPasswordLink;
 
             Email email = new Email();

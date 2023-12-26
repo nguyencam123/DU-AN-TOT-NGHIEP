@@ -5,6 +5,7 @@ const initialState = {
     statisticalByMonth: [],
     statisticalByYears: [],
     statisticalByDay: [],
+    statisticalByTop5: [],
     loading: false,
     error: null,
 };
@@ -32,6 +33,11 @@ const statisticalSlice = createSlice({
             state.loading = false;
             state.error = null;
         },
+        fetchStatisticalByTop5Success: (state, action) => {
+            state.statisticalByTop5 = action.payload;
+            state.loading = false;
+            state.error = null;
+        },
         fetchStatisticalByDaySuccess: (state, action) => {
             state.statisticalByDay = action.payload;
             state.loading = false;
@@ -45,5 +51,5 @@ const statisticalSlice = createSlice({
     },
 });
 
-export const { fetchstatisticalStart, fetchStatisticalByYearSuccess, fetchstatisticalFailure, fetchStatisticalByMonthSuccess, fetchStatisticalByYearsSuccess, fetchStatisticalByDaySuccess } = statisticalSlice.actions;
+export const { fetchstatisticalStart, fetchStatisticalByYearSuccess, fetchstatisticalFailure, fetchStatisticalByMonthSuccess, fetchStatisticalByYearsSuccess, fetchStatisticalByDaySuccess, fetchStatisticalByTop5Success } = statisticalSlice.actions;
 export default statisticalSlice.reducer;

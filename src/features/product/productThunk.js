@@ -35,9 +35,9 @@ export const getOneProduct = (id) => async (dispatch) => {
   }
 };
 
-export const getCommentProduct = (id) => async (dispatch) => {
+export const getCommentProduct = (id, page) => async (dispatch) => {
   try {
-    const response = await axios.get('http://localhost:8080/api/v1/comment?homestayId=' + id);
+    const response = await axios.get(`http://localhost:8080/api/v1/comment?homestayId=${id}&size=10&page=${page}`);
     dispatch(fetchCommentProductSuccess(response.data.data.data)); // Lấy dữ liệu từ response.data.data
     // console.log(response.data.data);
   } catch (error) {

@@ -1,9 +1,12 @@
 package com.example.demo.cors.homestayowner.service.impl;
 
 import com.example.demo.cors.homestayowner.model.reponse.HomestayOwnerStatisticalReponse;
+import com.example.demo.cors.homestayowner.model.reponse.HomestayOwnerStatisticalTop5Reponse;
 import com.example.demo.cors.homestayowner.model.request.HomestayOwnerStatisticalRequest;
+import com.example.demo.cors.homestayowner.model.request.HomestayOwnerTop5StatisticalRequest;
 import com.example.demo.cors.homestayowner.repository.HomestayOwnerBookingRepository;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerStatisticalServie;
+import com.example.demo.entities.Booking;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +40,12 @@ public class HomestayOwnerStatisticalServiceImpl implements HomestayOwnerStatist
         }
         return responseList;
     }
+
+    @Override
+    public List<HomestayOwnerStatisticalTop5Reponse> getTop5HomestayInYear(HomestayOwnerTop5StatisticalRequest request) {
+        return homestayOwnerBookingRepository.getTop5StaticalYear(request);
+    }
+
 
 }
 
