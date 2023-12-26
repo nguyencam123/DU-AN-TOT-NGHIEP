@@ -73,7 +73,8 @@ public class SecurityConfiguration {
             "/api/v1/homestay",
             "/api/v1/img-comment/**",
             "/api/v1/img-homestay/**",
-            "/api/v1/change-pass/**"
+            "/api/v1/change-pass/**",
+            "/api/v1/comment/**"
     };
 
     private static final String[] CUSTOMER_ROLE =
@@ -88,8 +89,7 @@ public class SecurityConfiguration {
                     "/api/v1/img-comment/**",
                     "/api/v1/img-homestay/**",
                     "/api/v1/change-pass/**",
-                    "/api/v1/payment/**",
-                    "/api/v1/comment/**"
+                    "/api/v1/payment/**"
             };
 
     @Bean

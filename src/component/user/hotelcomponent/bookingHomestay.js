@@ -68,7 +68,11 @@ export const BookingHomestay = () => {
   const handleBooking = () => {
     if (statusUser) {
       setIsModalOpen(true)
+<<<<<<< HEAD
       const userID = userDetail?.data.id
+=======
+      const userID = userDetail?.data.id;
+>>>>>>> a0609f732ecaba06ac534c2557a30e85acdec715
       const bookingData = {
         userId: userID,
         totalPrice: detailHomestay?.promotion?.value
@@ -85,7 +89,11 @@ export const BookingHomestay = () => {
         email: infoPayment.email,
         phoneNumber: infoPayment.phoneNumber,
         homestayId: detailHomestay.id,
+<<<<<<< HEAD
         idPromotion: detailHomestay.promotion.id || '',
+=======
+        idPromotion: detailHomestay.promotion.id || ''
+>>>>>>> a0609f732ecaba06ac534c2557a30e85acdec715
       }
       dispatch(addBooking(bookingData))
     } else {
