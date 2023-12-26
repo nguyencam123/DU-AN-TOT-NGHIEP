@@ -2,6 +2,7 @@ package com.example.demo.entities;
 
 import com.example.demo.entities.base.PrimaryEntity;
 import com.example.demo.infrastructure.contant.EntityProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -25,6 +26,7 @@ public class Comment extends PrimaryEntity {
 
     @ManyToOne
     @JoinColumn(name = "homestay_id")
+    @JsonIgnoreProperties("comment")
     private Homestay homestay;
 
     @ManyToOne
@@ -40,5 +42,6 @@ public class Comment extends PrimaryEntity {
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<ImgComment> images;
+
 
 }
