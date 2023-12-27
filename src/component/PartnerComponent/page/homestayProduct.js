@@ -94,6 +94,7 @@ const HomeStayProduct = () => {
   const onChangeConvenients = (checkedValues) => {
     setconvenient(checkedValues.join(','));
     setCheckedValues(checkedValues);
+    setCheckedList(checkedValues)
   };
 
   const [file, setFile] = useState([]);
@@ -174,7 +175,7 @@ const HomeStayProduct = () => {
     setSelectedWard('');
     setCheckedValues([]);
     setFile([])
-
+    setAddressDetail('')
     const fileInput = document.getElementById('image');
     if (fileInput) {
       fileInput.value = null;
@@ -279,6 +280,7 @@ const HomeStayProduct = () => {
   const [roomNumber, setroomNumber] = useState(0);
   const [cancellationPolicy, setcancellationPolicy] = useState(0);
   const [timeCheckIn, settimeCheckIn] = useState(null);
+  const [addressDetail, setAddressDetail] = useState('');
 
   const handleTimeChangestart = (time, timeString) => {
     settimeCheckIn(timeString);
@@ -311,7 +313,7 @@ const HomeStayProduct = () => {
     const selectedWardName =
       wards.find((ward) => ward.Id === selectedWard)?.Name || '';
 
-    const newAddress = `${selectedWardName}, ${selectedDistrictName}, ${selectedCityName}`;
+    const newAddress = `${selectedWardName}, ${selectedDistrictName}, ${selectedCityName}, ${addressDetail}`;
     setaddress(newAddress);
   };
   // Use useEffect to call updateAddress whenever the selectedCity, selectedDistrict, or selectedWard changes
@@ -341,7 +343,9 @@ const HomeStayProduct = () => {
     address: address,
     acreage: Number(parsedAcreage),
     ownerHomestay: UserID,
-    roomNumber: parseInt(roomNumber)
+    roomNumber: parseInt(roomNumber),
+    phonenumber: userDetail?.data.phoneNumber,
+    email: userDetail?.data.email
   };
   //validateform
   const [errorFile, setErrorFile] = useState('')
@@ -380,12 +384,25 @@ const HomeStayProduct = () => {
       .positive('Số lượng chính sách ủy phòng phải lớn hơn 0'),
     // province: Yup.string().required('Vui lòng chọn thành phố homestay'),
     startDate: Yup.number().required('Vui lòng chọn ngày bắt đầu'),
-    endDate: Yup.number().required('Vui lòng chọn ngày kết thúc'),
+    endDate: Yup.number()
+      .typeError('Vui lòng chọn ngày kết thúc')
+      .required('Vui lòng chọn ngày kết thúc')
+      .test('endDate', 'Ngày kết thúc phải lớn hơn ngày bắt đầu', function (value) {
+        const { startDate } = this.parent;
+
+        // Kiểm tra nếu giá trị là số (datelong)
+        if (typeof value === 'number') {
+          return value > startDate;
+        }
+
+        return false; // Trả về false nếu không phải là số
+      }),
     acreage: Yup.number()
       .required('Vui lòng nhập diện tích')
       .typeError('Vui lòng nhập diện tích')
       .positive('diện tích phòng phải lớn hơn 0'),
-    desc: Yup.string().required('vui lòng nhập vào mô tả').max(500, 'Vui lòng nhập ít hơn 500 ký tự')
+    desc: Yup.string().required('vui lòng nhập vào mô tả').max(500, 'Vui lòng nhập ít hơn 500 ký tự'),
+    // addressDetail: Yup.string().required('vui lòng nhập địa chỉ chi tiết')
   });
   const handleSubmitStatus = async (record) => {
     await message.info(
@@ -402,7 +419,6 @@ const HomeStayProduct = () => {
     dispatch(fetchHomestay());
   };
   const handleSubmit = async (e) => {
-    setIsLoading(true);
     e.preventDefault();
     try {
       await validationSchema.validate(homestay, { abortEarly: false });
@@ -420,6 +436,7 @@ const HomeStayProduct = () => {
         throw new Yup.ValidationError('File phải nhỏ hơn hoặc bằng 5MB', file, 'file');
       }
       if (isAddFrom) {
+        setIsLoading(true);
         await message.info(
           'Đang tiến hành thêm bạn vui lòng đợi một vài giây nhé!', 5
         );
@@ -442,8 +459,9 @@ const HomeStayProduct = () => {
         setSelectedCity('');
         setSelectedDistrict('');
         setSelectedWard('');
-
+        setAddressDetail('');
       } else {
+        setIsLoading(true);
         await message.info(
           'Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!', 5
         );
@@ -460,7 +478,6 @@ const HomeStayProduct = () => {
       errors.inner.forEach((error) => {
         errorObject[error.path] = error.message;
       });
-
       setFormErrors(errorObject);
       setIsLoading(false)
     }
@@ -486,7 +503,7 @@ const HomeStayProduct = () => {
     settimeCheckOut(record.timeCheckOut);
     setconvenient(record.detailHomestays);
     setFile([])
-
+    setviewEditConvennient(record.detailHomestays);
     const fileInput = document.getElementById('image');
     if (fileInput) {
       fileInput.value = null;
@@ -499,6 +516,7 @@ const HomeStayProduct = () => {
     const selectedWardName = addressParts[0]; // Lấy tên phường/xã từ địa chỉ
     const selectedDistrictName = addressParts[1]; // Lấy tên quận/huyện từ địa chỉ
     const selectedCityName = addressParts[2];
+    setAddressDetail(addressParts[3]);
     const selectedCityData = cities.find(
       (city) => city.Name === selectedCityName
     );
@@ -566,7 +584,7 @@ const HomeStayProduct = () => {
       }
     }
   }, [selectedDistrict, districts]);
-
+  const [checkedList, setCheckedList] = useState(viewEditConvennient?.map((item) => item.convenientHomestay?.id));
   const [fileList, setFileList] = useState([]);
   const [uploading, setUploading] = useState(false);
   const handleUpload = () => {
@@ -776,6 +794,21 @@ const HomeStayProduct = () => {
               </div>
             </Col>
           </Row>
+          <Row gutter={24}>
+            <Col span={24} style={{ marginLeft: 15 }}>
+              <Title level={5}>Tiện ích homestay</Title>
+              <div >
+                <Checkbox.Group
+                  options={convenients.map((item) => ({
+                    label: item.name,
+                    value: item.id,
+                  }))}
+                  value={checkedList}
+                  onChange={onChangeConvenients}
+                />
+              </div>
+            </Col>
+          </Row>
           <Row
             gutter={24}
             style={{ marginTop: 10, marginBottom: 20, marginLeft: 20 }}
@@ -836,17 +869,13 @@ const HomeStayProduct = () => {
           </Row>
           <Row gutter={24}>
             <Col span={24}>
-              <Title level={5}>Tiện ích homestay</Title>
-              <div>
-                <Checkbox.Group
-                  options={convenients.map((item) => ({
-                    label: item.name,
-                    value: item.id,
-                  }))}
-                  value={checkedValues}
-                  onChange={onChangeConvenients}
-                />
-              </div>
+              <Title level={5}>Địa chỉ chi tiết homestay</Title>
+              <TextArea
+                style={{ width: '900px' }}
+                value={addressDetail}
+                onChange={(e) => setAddressDetail(e.target.value)}
+              />
+              <div style={{ color: 'red' }}>{formErrors.addressDetail}</div>
             </Col>
           </Row>
           <Row gutter={24}>
@@ -859,10 +888,6 @@ const HomeStayProduct = () => {
               />
               <div style={{ color: 'red' }}>{formErrors.desc}</div>
             </Col>
-            {/* <Col span={12}>
-              <Title level={5}>Ngày kết thúc</Title>
-              <DatePicker onChange={handleDateChangeend} />
-            </Col> */}
           </Row>
         </Form>
         <form onSubmit={handleSubmit} style={{ marginTop: 20 }}>

@@ -1,4 +1,4 @@
-import { DatePicker, Table, Tabs, Typography } from "antd"
+import { Button, DatePicker, Table, Tabs, Typography } from "antd"
 import { Column } from '@ant-design/plots';
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,6 +10,8 @@ import imgBluechart from '../../../assets/img/blueimg.png';
 import imgRedchart from '../../../assets/img/redimg.png';
 import dayjs from 'dayjs';
 import { fetchBooking, getBookingByNameHomestay } from "../../../features/owner_homestay/getbooking/bookingThunk";
+import * as XLSX from 'xlsx';
+
 const { Title } = Typography
 const StatisticalHomestay = () => {
     const dispatch = useDispatch()
@@ -138,7 +140,66 @@ const StatisticalHomestay = () => {
             key: 'address'
         }
     ];
+    /**
+     * xuất file excel
+     */
 
+    const importAndAppendData = (data) => {
+        const today = moment().format('YYYY-MM-DD');
+        // Sample data
+        const title = [`Thống kê lượt đặt phòng trong năm(ngày xuất file ${today})`];
+        const header = ['Name', 'Age', 'City'];
+        // const data = [
+        //   { name: 'John Doe', age: 25, city: 'New York' },
+        //   { name: 'Jane Smith', age: 30, city: 'San Francisco' },
+        //   { name: 'Bob Johnson', age: 28, city: 'Los Angeles' },
+        // ];
+        const headers = Object.keys(data[0]);
+        const values = data.map(obj => headers.map(key => obj[key]));
+
+        // Create a worksheet
+        const ws = XLSX.utils.aoa_to_sheet([title, [], [], [...headers], ...values]);
+
+        // Apply styles to title
+        const titleStyle = {
+            font: { bold: true, size: 30, color: { rgb: 'FF0000' } }, // You can adjust the size and color as needed
+            alignment: { horizontal: 'center' },
+        };
+        const titleCell = ws[XLSX.utils.encode_cell({ c: 0, r: 0 })]; // Assuming the title is in cell A1
+        XLSX.utils.format_cell(titleCell, titleStyle);
+
+        // Apply styles to headers
+        const headerStyle = {
+            font: { bold: true },
+            border: { top: { style: 'thin' }, bottom: { style: 'thin' }, left: { style: 'thin' }, right: { style: 'thin' } },
+        };
+        headers.forEach((header, index) => {
+            const cell_address = { c: index, r: 3 }; // assuming headers start at row 3
+            XLSX.utils.format_cell(ws[cell_address], headerStyle);
+        });
+
+        // Apply styles to data cells
+        const dataStyle = {
+            border: { top: { style: 'thin' }, bottom: { style: 'thin' }, left: { style: 'thin' }, right: { style: 'thin' } },
+        };
+        values.forEach((row, rowIndex) => {
+            row.forEach((cell, cellIndex) => {
+                const cell_address = { c: cellIndex, r: rowIndex + 4 }; // assuming data starts at row 4
+                XLSX.utils.format_cell(ws[cell_address], dataStyle);
+            });
+        });
+
+        // Create a workbook
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+        // Save the workbook to a file
+        XLSX.writeFile(wb, `Thống_kê_doanh_thu_TravelViVu_${today}.xlsx`);
+    };
+
+    // Example usage
+    const exportExcel = () => {
+        importAndAppendData(statisticalByTop5);
+    }
     return (
         <div>
             <Title style={{ marginTop: '20px' }}>Thống kê doanh thu</Title>
@@ -176,7 +237,13 @@ const StatisticalHomestay = () => {
             </div>
             <Column {...config} />
             <div style={{ marginTop: '40px' }}>
-                <Title level={3}>Top 5 homestay có doanh thu cao nhất</Title>
+                <div style={{ display: 'flex', marginBottom: 20 }}>
+                    <Title level={5}>Top 5 homestay có doanh thu cao nhất</Title>
+
+                    <Button style={{ marginLeft: 'auto' }} type='primary' onClick={exportExcel}>
+                        Xuất file thống kê đặt phòng
+                    </Button>
+                </div>
                 <Table columns={columns} dataSource={statisticalByTop5} />
             </div>
         </div>

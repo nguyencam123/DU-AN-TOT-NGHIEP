@@ -75,10 +75,10 @@ export const BookingHomestay = () => {
         typeBooking: type,
         totalPrice: detailHomestay?.promotion?.value
           ? ((detailHomestay.price -
-              detailHomestay?.promotion?.value +
-              ((detailHomestay.price - detailHomestay?.promotion?.value) * 11) / 100) *
+            detailHomestay?.promotion?.value +
+            ((detailHomestay.price - detailHomestay?.promotion?.value) * 11) / 100) *
             numNight) /
-            (type === 1 ? 1 : 2)
+          (type === 1 ? 1 : 2)
           : ((detailHomestay.price + (detailHomestay.price * 11) / 100) * numNight) / (type === 1 ? 1 : 2),
         startDate: startDate.valueOf(),
         endDate: endDate.valueOf(),

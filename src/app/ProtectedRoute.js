@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-const ProtectedRoute = ({ partnerOnly, adminOnly, ...rest }) => {
+const ProtectedRoute = ({ partnerOnly, adminOnly, userOnly, ...rest }) => {
     const [isLoading, setIsLoading] = useState(true);
 
     const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
@@ -17,9 +17,9 @@ const ProtectedRoute = ({ partnerOnly, adminOnly, ...rest }) => {
         return null; // Render nothing while loading
     }
 
-    // if (!isLoggedIn) {
-    //     return <Navigate to="/login" />;
-    // }
+    if (window.location.pathname.includes('/user/propreties') && !isLoggedIn) {
+        return <Navigate to="/login" replace />;
+    }
 
     if (adminOnly && !isAdmin) {
         return <Navigate to="/error-role" replace />;

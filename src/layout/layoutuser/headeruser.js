@@ -190,14 +190,6 @@ const HeaderUser = () => {
                       type='button'
                       className='btn btn-primary'
                       style={{ color: 'black' }}
-                      onClick={cart}
-                    >
-                      <HeartOutlined /> Danh sách yêu thích
-                    </button>
-                    <button
-                      type='button'
-                      className='btn btn-primary'
-                      style={{ color: 'black' }}
                       onClick={logout}
                     >
                       <CommentOutlined /> Nhận xét của tôi
