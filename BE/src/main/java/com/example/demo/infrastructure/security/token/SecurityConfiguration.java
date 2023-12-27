@@ -74,6 +74,7 @@ public class SecurityConfiguration {
             "/api/v1/img-comment/**",
             "/api/v1/img-homestay/**",
             "/api/v1/change-pass/**",
+            "/api/v1/img-comment/**",
             "/api/v1/comment/**"
     };
 

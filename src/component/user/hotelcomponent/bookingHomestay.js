@@ -69,7 +69,7 @@ export const BookingHomestay = () => {
   const handleBooking = (type) => {
     if (statusUser) {
       setIsModalOpen(true)
-      const userID = userDetail?.data.id
+      const userID = userDetail?.data.id;
       const bookingData = {
         userId: userID,
         typeBooking: type,
@@ -86,7 +86,7 @@ export const BookingHomestay = () => {
         email: infoPayment.email,
         phoneNumber: infoPayment.phoneNumber,
         homestayId: detailHomestay.id,
-        idPromotion: detailHomestay?.promotion?.id || ''
+        idPromotion: detailHomestay.promotion.id || ''
       }
       dispatch(addBooking(bookingData))
     } else {
