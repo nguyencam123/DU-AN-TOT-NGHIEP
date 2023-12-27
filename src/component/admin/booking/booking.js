@@ -1,4 +1,4 @@
-import { EyeOutlined } from "@ant-design/icons";
+import { EditTwoTone, EyeOutlined, EyeTwoTone } from "@ant-design/icons";
 import { Input, Row, Select, Table, Typography, Form, Space } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { getBooking, getBookingByName, getBookingByNameHomestay, getBookingByPhoneNumber } from "../../../features/admin/adminThunk";
@@ -22,11 +22,6 @@ function BookingForm() {
       }
     },
     {
-      title: 'Số điện thoại',
-      dataIndex: 'phoneNumber',
-      key: 'phoneNumber'
-    },
-    {
       title: 'Tên Homestay',
       dataIndex: 'homestay',
       key: 'homestayName',
@@ -41,6 +36,11 @@ function BookingForm() {
       render: (data) => {
         return moment(data).locale('vi').format('LL')
       }
+    },
+    {
+      title: 'Số đêm',
+      dataIndex: 'numNight',
+      key: 'numNight'
     },
     {
       title: 'Trạng thái',
@@ -59,27 +59,32 @@ function BookingForm() {
       }
     },
     {
-      title: 'Email liên lạc',
-      dataIndex: 'email',
-      key: 'email'
-    },
-    {
-      title: 'Tên người liên lạc',
-      dataIndex: 'name',
-      key: 'name'
-    },
-    {
-      title: 'Số điện thoại liên lạc',
-      dataIndex: 'user',
-      key: 'userPhoneNumber',
-        render: (data) => {
-        return data.phoneNumber
+      title: 'Hình thức thanh toán',
+      dataIndex: 'typeBooking',
+      key: 'phoneNumber',
+      render: (data) => {
+        if (data === 'DAT_COC') {
+          return 'Đặt cọc'
+        }
+        if (data === 'THANH_TOAN_TRUOC') {
+          return 'Thanh toán'
+        }
       }
     },
     {
       title: 'Tổng tiền',
       dataIndex: 'totalPrice',
       key: 'totalPrice'
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (_, record) => (
+        <Space size='middle'>
+          <a><EyeTwoTone /></a>
+          <a><EditTwoTone /></a>
+        </Space>
+      )
     }
   ];
   const listFilter = [
