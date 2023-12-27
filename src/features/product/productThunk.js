@@ -77,6 +77,7 @@ export const getPayment = (price) => async (dispatch) => {
 
 export const addBooking = (booking) => async (dispatch) => {
   try {
+    console.log(booking.totalPrice);
     const response = await instance.post('http://localhost:8080/api/v1/booking/create', booking);
     dispatch(addBookingsSuccess(response.data.data)); // Lấy dữ liệu từ response.data.data
     // console.log(response.data.data);
