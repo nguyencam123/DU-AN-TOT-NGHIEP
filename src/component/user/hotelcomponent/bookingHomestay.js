@@ -68,32 +68,24 @@ export const BookingHomestay = () => {
   const handleBooking = () => {
     if (statusUser) {
       setIsModalOpen(true)
-<<<<<<< HEAD
-      const userID = userDetail?.data.id
-=======
       const userID = userDetail?.data.id;
->>>>>>> a0609f732ecaba06ac534c2557a30e85acdec715
       const bookingData = {
         userId: userID,
         totalPrice: detailHomestay?.promotion?.value
           ? (detailHomestay.price -
-              detailHomestay?.promotion?.value +
-              ((detailHomestay.price - detailHomestay?.promotion?.value) * 11) /
-                100) *
-            numNight
+            detailHomestay?.promotion?.value +
+            ((detailHomestay.price - detailHomestay?.promotion?.value) * 11) /
+            100) *
+          numNight
           : (detailHomestay.price + (detailHomestay.price * 11) / 100) *
-            numNight,
+          numNight,
         startDate: startDate.valueOf(),
         endDate: endDate.valueOf(),
         name: infoPayment.name,
         email: infoPayment.email,
         phoneNumber: infoPayment.phoneNumber,
         homestayId: detailHomestay.id,
-<<<<<<< HEAD
-        idPromotion: detailHomestay.promotion.id || '',
-=======
-        idPromotion: detailHomestay.promotion.id || ''
->>>>>>> a0609f732ecaba06ac534c2557a30e85acdec715
+        idPromotion: detailHomestay.promotion?.id || ''
       }
       dispatch(addBooking(bookingData))
     } else {
@@ -304,7 +296,7 @@ export const BookingHomestay = () => {
                           ((detailHomestay.price -
                             detailHomestay?.promotion?.value) *
                             11) /
-                            100}{' '}
+                          100}{' '}
                         VND
                       </div>
                     ) : (
@@ -389,7 +381,7 @@ export const BookingHomestay = () => {
                           ((detailHomestay.price -
                             detailHomestay?.promotion?.value) *
                             11) /
-                            100) *
+                          100) *
                           numNight}{' '}
                         VND
                       </div>
