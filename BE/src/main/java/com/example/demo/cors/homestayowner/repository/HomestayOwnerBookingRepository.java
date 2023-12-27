@@ -39,6 +39,20 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
             """, nativeQuery = true)
     Page<Booking> getAllBooking(@Param("request") HomestayOwnerBookingRequest request, Pageable pageable);
 
+    @Query(value = """
+            SELECT ROW_NUMBER() OVER(ORDER BY b.created_date DESC) AS stt, b.* ,((b.total_price) - ((b.total_price) * 11 / 100)) AS 'TongSoTien'
+            FROM booking b
+            JOIN dbo.homestay h ON b.homestay_id = h.id 
+            JOIN owner_homestay c ON h.owner_id=c.id
+            JOIN dbo.[user] u ON b.user_id = u.id
+            WHERE c.id=:#{#request.idOwner}                 
+            AND (
+                YEAR(DATEADD(SECOND, b.created_date / 1000, '1970-01-01')) = :#{#request.year}
+                AND (MONTH(DATEADD(SECOND, b.created_date / 1000, '1970-01-01')) = :#{#request.month} OR :#{#request.month} IS NULL OR :#{#request.month} LIKE '')
+			)
+            """, nativeQuery = true)
+    Page<Booking> getBookingByYearAndMonth(@Param("request") HomestayOwnerBookingRequest request, Pageable pageable);
+
     @Query(value = "select count(a.id) as 'DoanhSo',SUM(a.total_price) as 'TongSoTien'  from booking a where a.homestay_id=:id", nativeQuery = true)
     HomestayOwnerStatisticalReponse getStatistical(String id);
 

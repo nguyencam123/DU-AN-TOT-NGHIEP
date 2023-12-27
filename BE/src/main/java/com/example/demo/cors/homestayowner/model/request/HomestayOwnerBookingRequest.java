@@ -19,4 +19,8 @@ public class HomestayOwnerBookingRequest extends PageableRequest {
 
     Integer statusBooking;
 
+    Integer month;
+
+    Integer year;
+
 }

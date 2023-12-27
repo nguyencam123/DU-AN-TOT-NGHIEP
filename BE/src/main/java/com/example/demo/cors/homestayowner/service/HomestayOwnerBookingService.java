@@ -10,4 +10,6 @@ public interface HomestayOwnerBookingService {
 
     PageableObject<Booking> getAllBooking(HomestayOwnerBookingRequest request);
 
+    PageableObject<Booking> getBookingByYearAndMonth(HomestayOwnerBookingRequest request);
+
 }
