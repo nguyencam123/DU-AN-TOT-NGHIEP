@@ -60,6 +60,9 @@ const Promotion = () => {
             name: record.name,
         }),
     };
+    const isBeforeToday = (current) => {
+        return current && current.isBefore(moment().startOf('day'));
+    };
     const columnsData = [
         {
             title: 'Tên homestay',
@@ -287,15 +290,22 @@ const Promotion = () => {
         value: Yup.number()
             .required('Vui lòng nhập số tiền giảm')
             .typeError('Vui lòng nhập số tiền giảm')
-            .positive('Số tiền giảm phải là số dương'),
-        // startDate: Yup.date().nullable().required('Vui lòng chọn ngày bắt đầu'),
-        // endDate: Yup.date()
-        //     .nullable()
-        //     .required('Vui lòng chọn ngày kết thúc')
-        //     .when(
-        //         'startDate',
-        //         (startDate, schema) => startDate && schema.min(startDate, 'Ngày kết thúc phải sau ngày bắt đầu')
-        //     ),
+            .positive('Số tiền giảm phải là số dương')
+            .min(1000, 'Số tiền giảm phải lớn hơn 1000'),
+        startDate: Yup.number().required('Vui lòng chọn ngày bắt đầu'),
+        endDate: Yup.number()
+            .typeError('Vui lòng chọn ngày kết thúc')
+            .required('Vui lòng chọn ngày kết thúc')
+            .test('endDate', 'Ngày kết thúc phải lớn hơn ngày bắt đầu', function (value) {
+                const { startDate } = this.parent;
+
+                // Kiểm tra nếu giá trị là số (datelong)
+                if (typeof value === 'number') {
+                    return value > startDate;
+                }
+
+                return false; // Trả về false nếu không phải là số
+            }),
     })
 
     const handleSubmit = async (e) => {
@@ -458,7 +468,7 @@ const Promotion = () => {
                                         help={formErrors.startDate} // Hiển thị thông báo lỗi cho trường name nếu có
                                     >
                                         <DatePicker style={{ width: '300px' }}
-                                            value={startDate ? dayjs(dayjs(startDate).locale('vi').format('YYYY-MM-DD'), 'YYYY-MM-DD') : null}
+                                            value={startDate ? dayjs(dayjs(startDate).locale('vi').format('YYYY-MM-DD'), 'YYYY-MM-DD') : null} disabledDate={isBeforeToday}
                                             onChange={(dates) => setStartDate(dates)} />
                                     </Form.Item>
                                 </Col>
@@ -472,7 +482,7 @@ const Promotion = () => {
                                         help={formErrors.endDate} // Hiển thị thông báo lỗi cho trường name nếu có
                                     >
                                         <DatePicker style={{ width: '300px' }}
-                                            value={endDate ? dayjs(dayjs(endDate).locale('vi').format('YYYY-MM-DD'), 'YYYY-MM-DD') : null}
+                                            value={endDate ? dayjs(dayjs(endDate).locale('vi').format('YYYY-MM-DD'), 'YYYY-MM-DD') : null} disabledDate={isBeforeToday}
                                             onChange={(dates) => setEndDate(dates)} />
                                     </Form.Item>
                                 </Col>

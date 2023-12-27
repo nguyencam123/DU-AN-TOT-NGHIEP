@@ -1,6 +1,7 @@
 package com.example.demo.cors.customer.model.request;
 
 import com.example.demo.cors.common.base.PageableRequest;
+import com.example.demo.infrastructure.contant.TypeBooking;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,5 +36,7 @@ public class CustomerBookingRequest extends PageableRequest {
     private String customerTransactionCode;
 
     private String adminTransactionCode;
+
+    private Integer typeBooking;
 
 }
