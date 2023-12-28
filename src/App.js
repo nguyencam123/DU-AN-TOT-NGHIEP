@@ -26,7 +26,7 @@ import { BookingUser } from './component/user/booking';
 import ComfirmMail from './component/user/cofirmMail/confirm';
 import ComfirmMailUser from './component/user/cofirmMail/confirmUser';
 import ResetPassWordOwner from './component/PartnerComponent/login/resetPassword';
-import { checkToken, checkTokenAdmin } from './app/middleware';
+import { checkToken, checkTokenAdmin, checkTokenUser } from './app/middleware';
 import ForgortPasswordOwner from './component/PartnerComponent/login/fogotPassword';
 import ForgortPasswordUser from './component/login/forgotPassword';
 
@@ -47,7 +47,7 @@ function App() {
     { path: 'homestay/booking/:id', element: <BookingHomestay /> },
     { path: 'review/booking/:id', element: <BookingReviewHomestay /> },
     { path: 'hop-tac/register', element: <PartnerRegister /> },
-    { path: 'booking/success', element: <BookingSuccess /> },
+    { path: 'successBooking', element: <BookingSuccess /> },
     { path: 'booking/:id', element: <BookingUser /> },
     { path: 'shopingcart/:id', element: <CartUser /> },
     { path: 'changePassword', element: <ResetPassWordOwner /> },
@@ -63,10 +63,13 @@ function App() {
     // Lấy token từ localStorage, Redux state, hoặc nơi khác
     const token = JSON.parse(localStorage.getItem('ownerDetail'))?.data?.token;
     const storedTokenAdmin = JSON.parse(localStorage.getItem('adminDetail'))?.data?.token;
+    const storedTokenUser = JSON.parse(localStorage.getItem('userDetail'))?.data?.token;
 
     // Gọi middleware để kiểm tra token
     dispatch(checkToken(token));
     dispatch(checkTokenAdmin(storedTokenAdmin));
+    dispatch(checkTokenUser(storedTokenUser));
+
   }, [dispatch]);
   return (
     <>
@@ -77,9 +80,6 @@ function App() {
             {items.map(item => (
               <Route path={item.path} element={item.element} />
             ))}
-            {/* {isAdmin == true ?
-              null : <Route path="admin/*" element={<Navigate to="/error-role" replace />} />
-            } */}
           </Route>
           {/* map quyen voi url admin */}
           <Route path='/user/comfirmmail' element={<ComfirmMailUser />} />

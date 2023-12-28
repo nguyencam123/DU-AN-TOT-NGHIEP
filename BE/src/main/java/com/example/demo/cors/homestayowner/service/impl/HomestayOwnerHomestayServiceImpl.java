@@ -124,122 +124,59 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
 
     private Homestay getImgHomestayAndConvenientHomestay(List<MultipartFile> multipartFiles, List<String> idConvenientHomestay, Homestay homestay1) throws IOException {
         List<ImgHomestay> newImages = new ArrayList<>();
-        List<DetailHomestay> detailHomestays = new ArrayList<>();
-        List<Thread> threads = new ArrayList<>();
-        List<ImgHomestay> existingImages = homestay1.getImages();
-        if (multipartFiles != null && !multipartFiles.isEmpty()) {
-            for (MultipartFile image : multipartFiles) {
-                Thread imageThread = new Thread(() -> {
-                    try {
-                        ImgHomestay imgHomestay = new ImgHomestay();
-                        imgHomestay.setHomestay(homestay1);
-                        Map uploadResult = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.asMap("folder", "homestay_images"));
-                        imgHomestay.setImgUrl(uploadResult.get("url").toString());
-                        homestayOwnerImgHomestayRepo.save(imgHomestay);
-                        synchronized (newImages) {
-                            newImages.add(imgHomestay);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-                threads.add(imageThread);
-                imageThread.start();
-            }
-            if (existingImages != null) {
-                newImages.addAll(existingImages);
-            }
-        } else {
-            if (existingImages != null) {
-                newImages.addAll(existingImages);
-            }
-        }
-        for (String detail : idConvenientHomestay) {
-            Thread detailThread = new Thread(() -> {
-                DetailHomestay detailHomestay = new DetailHomestay();
-                detailHomestay.setHomestay(homestay1);
-                ConvenientHomestay convenientHomestay = homestayOwnerConvenientHomestayRepository.findById(detail).orElse(null);
-                detailHomestay.setConvenientHomestay(convenientHomestay);
-                homestayOwnerDetailHomestayReposritory.save(detailHomestay);
-                synchronized (detailHomestays) {
-                    detailHomestays.add(detailHomestay);
-                }
-            });
-            threads.add(detailThread);
-            detailThread.start();
-        }
-        for (Thread thread : threads) {
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        for (MultipartFile image : multipartFiles) {
+            ImgHomestay imgHomestay = new ImgHomestay();
+            imgHomestay.setHomestay(homestay1);
+            Map uploadResult = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.asMap("folder", "homestay_images"));
+            imgHomestay.setImgUrl(uploadResult.get("url").toString());
+            homestayOwnerImgHomestayRepo.save(imgHomestay);
+            newImages.add(imgHomestay);
         }
         homestay1.setImages(newImages);
+
+        List<DetailHomestay> detailHomestays = new ArrayList<>();
+        for (String detail : idConvenientHomestay) {
+            DetailHomestay detailHomestay = new DetailHomestay();
+            detailHomestay.setHomestay(homestay1);
+            ConvenientHomestay convenientHomestay = homestayOwnerConvenientHomestayRepository.findById(detail).orElse(null);
+            detailHomestay.setConvenientHomestay(convenientHomestay);
+            homestayOwnerDetailHomestayReposritory.save(detailHomestay);
+            detailHomestays.add(detailHomestay);
+        }
         homestay1.setDetailHomestays(detailHomestays);
 
         return homestay1;
     }
 
     private Homestay getImgHomestayAndConvenientHomestay(String id,List<MultipartFile> multipartFiles, List<String> idConvenientHomestay, Homestay homestay1) throws IOException {
-        List<ImgHomestay> newImages = new ArrayList<>();
-        List<DetailHomestay> detailHomestays = new ArrayList<>();
-        List<Thread> threads = new ArrayList<>();
         Homestay homestay = homestayownerHomestayRepository.findById(id).orElse(null);
         List<ImgHomestay> existingImages = homestay.getImages();
+        List<ImgHomestay> newImages = new ArrayList<>();
         if (multipartFiles != null || !multipartFiles.isEmpty()) {
             homestayOwnerImgHomestayRepo.deleteByHomestay(id);
             for (MultipartFile image : multipartFiles) {
-                Thread imageThread = new Thread(() -> {
-                    try {
-                        if (image.isEmpty() || image.getSize() <= 0) {
-                            return;
-                        }
-                        ImgHomestay imgHomestay = new ImgHomestay();
-                        imgHomestay.setHomestay(homestay);
-                        Map uploadResult = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.asMap("folder", "homestay_images"));
-                        imgHomestay.setImgUrl(uploadResult.get("url").toString());
-                        homestayOwnerImgHomestayRepo.save(imgHomestay);
-                        synchronized (newImages) {
-                            newImages.add(imgHomestay);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-                threads.add(imageThread);
-                imageThread.start();
+                ImgHomestay imgHomestay = new ImgHomestay();
+                imgHomestay.setHomestay(homestay1);
+                Map uploadResult = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.asMap("folder", "homestay_images"));
+                imgHomestay.setImgUrl(uploadResult.get("url").toString());
+                homestayOwnerImgHomestayRepo.save(imgHomestay);
+                newImages.add(imgHomestay);
             }
-            if (existingImages != null) {
-                newImages.addAll(existingImages);
-            }
-        } else {
+            homestay1.setImages(newImages);
+        }else{
             if (existingImages != null) {
                 newImages.addAll(existingImages);
             }
         }
+        List<DetailHomestay> detailHomestays = new ArrayList<>();
         for (String detail : idConvenientHomestay) {
-            Thread detailThread = new Thread(() -> {
-                DetailHomestay detailHomestay = new DetailHomestay();
-                detailHomestay.setHomestay(homestay);
-                ConvenientHomestay convenientHomestay = homestayOwnerConvenientHomestayRepository.findById(detail).orElse(null);
-                detailHomestay.setConvenientHomestay(convenientHomestay);
-                homestayOwnerDetailHomestayReposritory.save(detailHomestay);
-                synchronized (detailHomestays) {
-                    detailHomestays.add(detailHomestay);
-                }
-            });
-            threads.add(detailThread);
-            detailThread.start();
+            DetailHomestay detailHomestay = new DetailHomestay();
+            detailHomestay.setHomestay(homestay1);
+            ConvenientHomestay convenientHomestay = homestayOwnerConvenientHomestayRepository.findById(detail).orElse(null);
+            detailHomestay.setConvenientHomestay(convenientHomestay);
+            homestayOwnerDetailHomestayReposritory.save(detailHomestay);
+            detailHomestays.add(detailHomestay);
         }
-        for (Thread thread : threads) {
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        homestay1.setImages(newImages);
         homestay1.setDetailHomestays(detailHomestays);
 
         return homestay1;

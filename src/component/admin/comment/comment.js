@@ -1,14 +1,14 @@
-import { Avatar, Image, Modal, Pagination, Rate, Space, Table, Typography } from "antd"
+import { Avatar, Modal, Pagination, Rate, Table, Typography } from "antd"
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchHomestay } from "../../../features/owner_homestay/homestayThunk";
 import { fetchComment } from "../../../features/owner_homestay/getbooking/commentThunk";
-import { EditOutlined, EyeOutlined, RotateLeftOutlined, RotateRightOutlined, SwapOutlined, UserOutlined, ZoomInOutlined, ZoomOutOutlined } from "@ant-design/icons";
+import { EditOutlined, EyeOutlined, UserOutlined } from "@ant-design/icons";
 import { MDBCard, MDBCardBody, MDBCardImage, MDBCol, MDBContainer, MDBIcon, MDBRow, MDBSwitch, MDBTypography } from "mdb-react-ui-kit";
 import moment from 'moment';
 
 const { Title } = Typography
-const UserCommment = () => {
+const Comment = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [current, setCurrent] = useState(1);
     const onChangePage = (page) => {
@@ -17,7 +17,7 @@ const UserCommment = () => {
     const showModal = (record) => {
         dispatch(fetchComment(record.id, current - 1));
         setIsModalOpen(true);
-
+        console.log()
     };
     const handleOk = () => {
         setIsModalOpen(false);
@@ -50,15 +50,6 @@ const UserCommment = () => {
             align: 'center'
         },
         {
-            title: 'Số đánh giá của homestay',
-            dataIndex: 'comment',
-            key: 'comment',
-            align: 'center',
-            render(str) {
-                return 'Có ' + str.length + ' đánh giá'
-            }
-        },
-        {
             title: 'Xem đánh giá',
             key: 'action',
             align: 'center',
@@ -74,7 +65,7 @@ const UserCommment = () => {
         <div style={{ marginTop: '20px' }}>
             <Title level={2}>Nhận xét,điểm đánh giá của khách hàng</Title>
             <Table dataSource={products} columns={columns} />;
-            <Modal title="Đánh giá của khách hàng" width={900} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={[]}>
+            <Modal title="Đánh giá của khách hàng" width={900} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
                 <section style={{ backgroundColor: "#f7f6f6" }}>
                     <MDBContainer className="py-5 text-dark" style={{ maxWidth: "1000px" }}>
                         <MDBRow className="justify-content-center">
@@ -110,52 +101,12 @@ const UserCommment = () => {
                                                             <Rate disabled defaultValue={items.point} /><br /><br />
                                                             <span className="text-dark ">
                                                                 {items.comment}
-                                                            </span><br /><br />
-                                                            {items.images.map((imageurl, index) => (
-                                                                <Image
-                                                                    key={index}
-                                                                    src={imageurl.imgUrl}
-                                                                    alt={`Homestay Image ${index}`}
-                                                                    style={{
-                                                                        maxWidth: '100px', // Đảm bảo ảnh không vượt quá chiều rộng của phần tử cha
-                                                                        margin: '0 10px 10px 0' // Thêm khoảng cách giữa các ảnh
-                                                                    }}
-                                                                    preview={{
-                                                                        toolbarRender: (
-                                                                            _,
-                                                                            {
-                                                                                transform: { scale },
-                                                                                actions: {
-                                                                                    onFlipY,
-                                                                                    onFlipX,
-                                                                                    onRotateLeft,
-                                                                                    onRotateRight,
-                                                                                    onZoomOut,
-                                                                                    onZoomIn
-                                                                                }
-                                                                            }
-                                                                        ) => (
-                                                                            <Space className='toolbar-wrapper'>
-                                                                                <SwapOutlined rotate={90} onClick={onFlipY} />
-                                                                                <SwapOutlined onClick={onFlipX} />
-                                                                                <RotateLeftOutlined onClick={onRotateLeft} />
-                                                                                <RotateRightOutlined onClick={onRotateRight} />
-                                                                                <ZoomOutOutlined
-                                                                                    disabled={scale === 1}
-                                                                                    onClick={onZoomOut}
-                                                                                />
-                                                                                <ZoomInOutlined
-                                                                                    disabled={scale === 50}
-                                                                                    onClick={onZoomIn}
-                                                                                />
-                                                                            </Space>
-                                                                        )
-                                                                    }}
-                                                                />
-                                                            ))}
+                                                            </span>
                                                         </MDBTypography>
-                                                        <div style={{ marginBottom: 150 }}><p className="mb-16" >{moment(items.createdDate).fromNow()}</p></div>
+                                                        <p className="mb-0">{moment(items.createdDate).fromNow()}</p>
+
                                                     </div>
+
                                                 </div>
                                             </div>
                                         </MDBCardBody>
@@ -173,4 +124,4 @@ const UserCommment = () => {
 
     )
 }
-export default UserCommment
+export default Comment

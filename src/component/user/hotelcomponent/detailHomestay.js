@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progress, Space, Avatar, Pagination } from 'antd';
-import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, StarTwoTone } from '@ant-design/icons'
+import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, RotateLeftOutlined, RotateRightOutlined, StarTwoTone, SwapOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons'
 import { Table } from 'react-bootstrap';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -344,9 +344,51 @@ export const DetailHomestay = () => {
                               <Rate disabled defaultValue={items.point} /><br /><br />
                               <span className="text-dark ">
                                 {items.comment}
-                              </span>
+                              </span><br /><br />
+                              {items.images.map((imageurl, index) => (
+                                <Image
+                                  key={index}
+                                  src={imageurl.imgUrl}
+                                  alt={`Homestay Image ${index}`}
+                                  style={{
+                                    maxWidth: '100px', // Đảm bảo ảnh không vượt quá chiều rộng của phần tử cha
+                                    margin: '0 10px 10px 0' // Thêm khoảng cách giữa các ảnh
+                                  }}
+                                  preview={{
+                                    toolbarRender: (
+                                      _,
+                                      {
+                                        transform: { scale },
+                                        actions: {
+                                          onFlipY,
+                                          onFlipX,
+                                          onRotateLeft,
+                                          onRotateRight,
+                                          onZoomOut,
+                                          onZoomIn
+                                        }
+                                      }
+                                    ) => (
+                                      <Space className='toolbar-wrapper'>
+                                        <SwapOutlined rotate={90} onClick={onFlipY} />
+                                        <SwapOutlined onClick={onFlipX} />
+                                        <RotateLeftOutlined onClick={onRotateLeft} />
+                                        <RotateRightOutlined onClick={onRotateRight} />
+                                        <ZoomOutOutlined
+                                          disabled={scale === 1}
+                                          onClick={onZoomOut}
+                                        />
+                                        <ZoomInOutlined
+                                          disabled={scale === 50}
+                                          onClick={onZoomIn}
+                                        />
+                                      </Space>
+                                    )
+                                  }}
+                                />
+                              ))}
                             </MDBTypography>
-                            <p className="mb-0">{moment(items.createdDate).fromNow()}</p>
+                            <div style={{ marginBottom: 150 }}><p className="mb-16" >{moment(items.createdDate).fromNow()}</p></div>
 
                           </div>
 
