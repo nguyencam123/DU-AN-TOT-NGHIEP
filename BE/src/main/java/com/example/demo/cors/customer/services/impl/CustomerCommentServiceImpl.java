@@ -4,15 +4,12 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.example.demo.cors.common.base.PageableObject;
 import com.example.demo.cors.customer.model.request.CustomerCommentAddRequest;
+import com.example.demo.cors.customer.model.request.CustomerCommentByUserRequest;
 import com.example.demo.cors.customer.model.request.CustomerCommentRequest;
 import com.example.demo.cors.customer.repository.*;
 import com.example.demo.cors.customer.services.CustomerCommentService;
-import com.example.demo.cors.customer.services.CustomerLoginService;
-import com.example.demo.entities.Booking;
 import com.example.demo.entities.Comment;
 import com.example.demo.entities.ImgComment;
-import com.example.demo.infrastructure.contant.StatusBooking;
-import com.example.demo.infrastructure.exception.rest.RestApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -87,6 +84,13 @@ public class CustomerCommentServiceImpl implements CustomerCommentService {
         }
         Comment add = customerCommentRepository.save(savedComment);
         return add;
+    }
+
+    @Override
+    public PageableObject<Comment> getCommentByUserId(CustomerCommentByUserRequest request) {
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+        Page<Comment> res = customerCommentRepository.commentByUserId(pageable,request.getIdUser());
+        return new PageableObject<>(res);
     }
 
 
