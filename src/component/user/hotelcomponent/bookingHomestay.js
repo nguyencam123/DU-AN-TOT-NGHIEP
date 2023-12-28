@@ -66,11 +66,12 @@ export const BookingHomestay = () => {
   const startDate = param.get('startDate')
   const endDate = param.get('endDate')
   const numNight = param.get('numNight')
+  let bookingData = {}
   const handleBooking = (type) => {
     if (statusUser) {
       setIsModalOpen(true)
       const userID = userDetail?.data.id;
-      const bookingData = {
+       bookingData = {
         userId: userID,
         typeBooking: type,
         totalPrice: detailHomestay?.promotion?.value
@@ -97,7 +98,7 @@ export const BookingHomestay = () => {
     console.log(booking.id)
     // Chuyển đến trang review với dữ liệu infoPayment trên URL
     navigate(
-      `/review/booking/${id}?bookingId=${booking.id}&name=${infoPayment.name}&email=${infoPayment.email}&phoneNumber=${infoPayment.phoneNumber}&startDate=${startDate}&endDate=${endDate}&numNight=${numNight}`,
+      `/review/booking/${id}?bookingId=${booking.id}&name=${infoPayment.name}&email=${infoPayment.email}&phoneNumber=${infoPayment.phoneNumber}&startDate=${startDate}&endDate=${endDate}&numNight=${numNight}&totalPrice=${bookingData.totalPrice}`,
     )
   }
 
