@@ -225,9 +225,6 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         if (isNullOrEmpty(request.getEmail())) {
             throw new RestApiException("Email không được để trống");
         }
-        if (isNullOrEmpty(request.getPassword())) {
-            throw new RestApiException("Password không được để trống");
-        }
         if (customerLoginRepository.existsByUsername(request.getUsername())) {
             throw new RestApiException("Tên tài khoản đã tồn tại");
         }

@@ -1,5 +1,6 @@
 package com.example.demo.cors.customer.repository;
 
+import com.example.demo.cors.customer.model.request.CustomerCommentByUserRequest;
 import com.example.demo.cors.customer.model.request.CustomerCommentRequest;
 import com.example.demo.entities.Comment;
 import com.example.demo.repositories.CommentRepository;
@@ -24,5 +25,10 @@ public interface CustomerCommentRepository extends CommentRepository {
             WHERE a.homestay_id =:#{#customerCommentRequest.homestayId}
             """, nativeQuery = true)
     Double getAvgPoint(CustomerCommentRequest customerCommentRequest);
+
+    @Query(value = """
+        Select * from Comment Where user_id=:idUser
+    """,nativeQuery = true)
+    Page<Comment> commentByUserId(Pageable pageable,String idUser);
 
 }

@@ -3,8 +3,14 @@ package com.example.demo.cors.admin.repository;
 import com.example.demo.cors.admin.model.request.AdminBookingByHomestayRequest;
 import com.example.demo.cors.admin.model.request.AdminBookingRequest;
 import com.example.demo.cors.admin.model.request.AdminStatisticalRequest;
+import com.example.demo.cors.admin.model.request.AdminStatisticalTop5Request;
 import com.example.demo.cors.admin.model.response.AdminBookingResponse;
 import com.example.demo.cors.admin.model.response.AdminStatisticalReponse;
+import com.example.demo.cors.admin.model.response.AdminStatisticalTop5Response;
+import com.example.demo.cors.homestayowner.model.reponse.HomestayOwnerStatisticalReponse;
+import com.example.demo.cors.homestayowner.model.reponse.HomestayOwnerStatisticalTop5Reponse;
+import com.example.demo.cors.homestayowner.model.request.HomestayOwnerStatisticalRequest;
+import com.example.demo.cors.homestayowner.model.request.HomestayOwnerTop5StatisticalRequest;
 import com.example.demo.entities.Booking;
 import com.example.demo.repositories.BookingRepository;
 import org.springframework.data.domain.Page;
@@ -12,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface AdminBookingRepository extends BookingRepository {
@@ -38,14 +46,60 @@ public interface AdminBookingRepository extends BookingRepository {
                     """,nativeQuery = true)
     Page<AdminBookingResponse> getAllBookingByHomestay(@Param("req") AdminBookingByHomestayRequest req, Pageable pageable);
 
+    @Query(value = "select count(a.id) as 'DoanhSo',SUM(a.total_price) as 'TongSoTien'  from booking a where a.homestay_id=:id", nativeQuery = true)
+    AdminStatisticalReponse getStatistical(String id);
 
     @Query(value = """
-                    SELECT  count(dbo.booking.id)AS N'DoanhSo',SUM (dbo.booking.total_price)AS N'DoanhThu', SUM (dbo.booking.total_price)*0.11 as N'HoaHong'
-                    FROM dbo.booking
-                    WHERE (dbo.booking.status = 1)
-                    AND (DATEPART(MONTH, CONVERT(DATETIME, DATEADD(SECOND, dbo.booking.created_date / 1000, '1970-01-01'))) = :#{#adminStatisticalRequest.month}
-                    or DATEPART(MONTH, CONVERT(DATETIME, DATEADD(SECOND, dbo.booking.created_date / 1000, '1970-01-01'))) LIKE '')
-                    AND DATEPART(YEAR, CONVERT(DATETIME, DATEADD(SECOND, dbo.booking.created_date / 1000, '1970-01-01'))) = :#{#adminStatisticalRequest.year} 
-                    """,nativeQuery = true)
-    AdminStatisticalReponse getThongKe(AdminStatisticalRequest adminStatisticalRequest);
+            SELECT
+                COUNT(a.id) AS 'DoanhSo',
+                (SUM(a.total_price) - (SUM(a.total_price) * 11 / 100)) AS 'TongSoTien'
+            FROM
+                booking a
+                INNER JOIN homestay b ON a.homestay_id = b.id
+            WHERE
+                (
+                YEAR(DATEADD(SECOND, a.created_date / 1000, '1970-01-01')) = :#{#request.year}
+                AND (MONTH(DATEADD(SECOND, a.created_date / 1000, '1970-01-01')) = :#{#request.month} OR :#{#request.month} IS NULL OR :#{#request.month} LIKE '')
+                AND (DAY(DATEADD(SECOND, a.created_date / 1000, '1970-01-01')) = :#{#request.date} OR :#{#request.date} IS NULL OR :#{#request.date} LIKE '')
+				)
+                AND a.status = 1;                 
+            """, nativeQuery = true)
+    AdminStatisticalReponse getAllStatistical(AdminStatisticalRequest request);
+
+    @Query(value = """
+            SELECT
+            COUNT(a.id) AS 'DoanhSo',
+            SUM(a.total_price) - (SUM(a.total_price) * 11 / 100) AS 'TongSoTien'
+            FROM
+            booking a
+            inner join homestay b on a.homestay_id=b.id
+            WHERE
+             MONTH(DATEADD(SECOND, a.created_date / 1000, '1970-01-01')) = :#{#request.month}
+            AND DATEPART(YEAR, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.year}
+            AND a.status=1;                     
+            """, nativeQuery = true)
+    AdminStatisticalReponse getAllStatisticalYear(AdminStatisticalRequest request);
+
+    @Query(value = """
+                SELECT TOP 5
+                b.name,
+                b.address,
+                b.room_number AS "roomNumber",
+                COUNT(a.id) AS 'DoanhSo',
+                SUM(a.total_price) - (SUM(a.total_price) * 0.11) AS 'TongSoTien'
+                FROM
+                booking a
+                INNER JOIN homestay b ON a.homestay_id = b.id
+                WHERE
+                DATEPART(YEAR, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.year}
+                AND a.status=1
+                GROUP BY
+                    b.name,
+                    b.address,
+                    b.room_number
+                ORDER BY
+                    SUM(a.total_price) DESC
+    """,nativeQuery = true)
+    List<AdminStatisticalTop5Response> getTop5StaticalYear(AdminStatisticalTop5Request request);
+
 }

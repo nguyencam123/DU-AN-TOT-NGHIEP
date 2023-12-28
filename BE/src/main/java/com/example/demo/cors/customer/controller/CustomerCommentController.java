@@ -2,6 +2,7 @@ package com.example.demo.cors.customer.controller;
 
 import com.example.demo.cors.common.base.ResponseObject;
 import com.example.demo.cors.customer.model.request.CustomerCommentAddRequest;
+import com.example.demo.cors.customer.model.request.CustomerCommentByUserRequest;
 import com.example.demo.cors.customer.model.request.CustomerCommentRequest;
 import com.example.demo.cors.customer.services.CustomerCommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,11 @@ public class CustomerCommentController {
     @PostMapping("/add-comment")
     public ResponseObject addComment(final CustomerCommentAddRequest request) throws IOException{
         return new ResponseObject(customerCommentService.addComment(request));
+    }
+
+    @GetMapping("/by-user")
+    public ResponseObject getCommentByUserId(final CustomerCommentByUserRequest request){
+        return new ResponseObject(customerCommentService.getCommentByUserId(request));
     }
 
 }

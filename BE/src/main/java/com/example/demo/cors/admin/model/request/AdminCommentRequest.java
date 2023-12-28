@@ -9,5 +9,7 @@ import lombok.Setter;
 public class AdminCommentRequest extends PageableRequest {
     String homestayId;
 
+    String userName;
+
     String commentId;
 }

@@ -31,6 +31,7 @@ export const BookingReviewHomestay = () => {
   const startDate = params?.get('startDate') || '';
   const endDate = params?.get('endDate') || '';
   const numNight = params?.get('numNight') || '';
+  const totalPrice = params?.get('totalPrice') || '';
   console.log(endDate);
 
   useEffect(() => {
@@ -43,7 +44,7 @@ export const BookingReviewHomestay = () => {
 
   const handleBooking = () => {
     const bookingDataGet = {
-      vnp_Ammount: detailHomestay.price + detailHomestay.price * 11 / 100,
+      vnp_Ammount: totalPrice,
       vnp_OrderInfo: String('bookingId' + '=' + bookingId)
     }
     dispatch(getPayment(bookingDataGet));
