@@ -22,8 +22,8 @@ public class CustomerCotroller {
     @Autowired
     private CustomerConventer conventer;
 
-    @PutMapping("/update-information-owner")
-    public ResponseObject updateInformationOwners(@RequestParam("customer") String customerRequest, @RequestParam("id") String idCustomer, @RequestParam("avataUrl") MultipartFile multipartFile) throws IOException {
+    @PutMapping("/update-information-customer")
+    public ResponseObject updateInformationCustomer(@RequestParam("customer") String customerRequest, @RequestParam("id") String idCustomer, @RequestParam("avataUrl") MultipartFile multipartFile) throws IOException {
         CustomerRequest request = conventer.convert(customerRequest);
         return new ResponseObject(customerLoginService.updateInformationCusmoter(idCustomer, request, multipartFile));
     }
