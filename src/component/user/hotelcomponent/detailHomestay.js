@@ -16,6 +16,7 @@ export const DetailHomestay = () => {
   const [current, setCurrent] = useState(1);
   const onChangePage = (page) => {
     setCurrent(page);
+    dispatch(getCommentProduct(params.id, page - 1));
   };
   const params = useParams();
   const navigate = useNavigate();
@@ -48,12 +49,15 @@ export const DetailHomestay = () => {
   const handleBookingHomestay = (id) => {
     navigate(`/homestay/booking/${id}?startDate=${startDate}&endDate=${endDate}&numNight=${numNight}`)
   }
-  const listComment = comment.map((comment, index) => {
+  const maxCommentsToShow = 6;
+  const slicedComments = comment.slice(0, maxCommentsToShow);
+
+  const listComment = slicedComments.map((comment, index) => {
     if (index === 2) {
       return false;
     }
     return (
-      <Col span={6} style={{ marginRight: '70px' }}>
+      <Col key={index} span={6} style={{ marginRight: '70px' }}>
         <div style={{ minHeight: '80px', width: '270px', marginLeft: '15px', marginBottom: '15px', paddingLeft: '5px', fontSize: '12px', fontWeight: '500', boxShadow: '0px 2px 5px rgba(3,18,26,0.15)', borderRadius: '5px' }}>
           <div style={{ marginBottom: '5px', paddingTop: '5px' }}>{comment?.user.name}</div>
           <div style={{ width: '250px', wordWrap: 'break-word' }}>{comment?.comment}</div>
@@ -322,7 +326,7 @@ export const DetailHomestay = () => {
               <MDBCol md="12" lg="11" xl="10">
                 <div className="d-flex justify-content-between align-items-center mb-4">
                   <MDBTypography tag="h4" className="text-dark mb-0">
-                    Có tất cả ({detailHomestay.comment.length}) đánh giá
+                    Có tất cả ({detailHomestay?.comment?.length}) đánh giá
                   </MDBTypography>
                 </div>
                 {comment.map((items) =>
@@ -405,7 +409,7 @@ export const DetailHomestay = () => {
                   </MDBCard>
                 )}
                 <div style={{ float: 'right', marginTop: 20 }}>
-                  <Pagination current={current} onChange={onChangePage} total={detailHomestay.comment.length} />
+                  <Pagination current={current} onChange={onChangePage} total={detailHomestay?.comment?.length} />
                 </div>
               </MDBCol>
             </MDBRow>

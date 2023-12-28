@@ -27,6 +27,7 @@ const Endow = () => {
     const [current, setCurrent] = useState(1);
     const onChangePage = (page) => {
         setCurrent(page);
+        dispatch(fetchSearchProductsForPromotion(checkInDate?.valueOf(), checkOutDate?.valueOf(), parseInt(page) - 1));
     };
     const formatCurrency = (value) => {
         // Sử dụng Intl.NumberFormat để định dạng giá trị tiền tệ
@@ -88,7 +89,7 @@ const Endow = () => {
                                     lg: 32,
                                 }}
                             >
-                                {productPromotion.data && productPromotion.data.length > 0 ? (
+                                {productPromotion?.data && productPromotion?.data.length > 0 ? (
                                     productPromotion.data.map((items) => {
                                         const currentDate = new Date().getTime();
                                         const startDate = items.promotion?.startDate?.valueOf();

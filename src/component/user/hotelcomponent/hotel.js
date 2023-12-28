@@ -42,6 +42,7 @@ const Hotel = () => {
   const [current, setCurrent] = useState(1);
   const onChangePage = (page) => {
     setCurrent(page);
+    dispatch(fetchSearchProductsByPage(checkInDate.valueOf(), calculateCheckOutDate().valueOf(), nameLocation || nameOrAddress, numberPerson, roomNumber, rangeValue[0], rangeValue[1], convenientvir, page - 1))
   };
   const products = useSelector((state) => state.product.products);
   const convenient = useSelector((state) => state.product.convenient);
