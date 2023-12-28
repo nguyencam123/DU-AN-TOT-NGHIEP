@@ -2,6 +2,7 @@ package com.example.demo.cors.customer.services;
 
 import com.example.demo.cors.common.base.PageableObject;
 import com.example.demo.cors.customer.model.request.CustomerCommentAddRequest;
+import com.example.demo.cors.customer.model.request.CustomerCommentByUserRequest;
 import com.example.demo.cors.customer.model.request.CustomerCommentRequest;
 import com.example.demo.entities.Comment;
 
@@ -16,5 +17,7 @@ public interface CustomerCommentService {
     Double getAvgPoint(CustomerCommentRequest request);
 
     Comment addComment(CustomerCommentAddRequest request) throws IOException;
+
+    PageableObject<Comment> getCommentByUserId(CustomerCommentByUserRequest request);
 
 }
