@@ -13,7 +13,8 @@ import {
   message,
   Image,
   TimePicker,
-  Upload
+  Upload,
+  InputNumber
 } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -56,7 +57,13 @@ const { Title } = Typography;
 
 const HomeStayProduct = () => {
   const [checkedValues, setCheckedValues] = useState([]);
-
+  const formatCurrency = (value) => {
+    // Sử dụng Intl.NumberFormat để định dạng giá trị tiền tệ
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(value);
+  };
 
   const handleButtonClick = () => {
     setCheckedValues([]);
@@ -82,7 +89,10 @@ const HomeStayProduct = () => {
     }
     return false; // Bỏ điều kiện không cho chọn ngày lớn hơn ngày hiện tại
   };
-
+  const handlePriceChange = (value) => {
+    // You can perform any additional formatting or validation here
+    setprice(value);
+  };
   useEffect(() => {
     dispatch(fetchHomestay());
     dispatch(fetchConvenient());
@@ -206,7 +216,10 @@ const HomeStayProduct = () => {
       title: 'Giá homestay',
       dataIndex: 'price',
       key: 'price',
-      align: 'center'
+      align: 'center',
+      render(str) {
+        return formatCurrency(str)
+      }
     },
     {
       title: 'Trạng thái của homestay',
@@ -319,7 +332,7 @@ const HomeStayProduct = () => {
   // Use useEffect to call updateAddress whenever the selectedCity, selectedDistrict, or selectedWard changes
   useEffect(() => {
     updateAddress();
-  }, [selectedCity, selectedDistrict, selectedWard]);
+  }, [selectedCity, selectedDistrict, selectedWard, addressDetail]);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -584,7 +597,10 @@ const HomeStayProduct = () => {
       }
     }
   }, [selectedDistrict, districts]);
-  const [checkedList, setCheckedList] = useState(viewEditConvennient?.map((item) => item.convenientHomestay?.id));
+  const [checkedList, setCheckedList] = useState(null);
+  useEffect(() => {
+    setCheckedList(viewEditConvennient?.map((item) => item.convenientHomestay?.id))
+  }, [viewEditConvennient])
   const [fileList, setFileList] = useState([]);
   const [uploading, setUploading] = useState(false);
   const handleUpload = () => {
@@ -685,9 +701,16 @@ const HomeStayProduct = () => {
                 validateStatus={formErrors.price ? 'error' : ''}
                 help={formErrors.price}
               >
-                <Input
+                <InputNumber
+                  style={{ width: 254 }}
                   value={price}
-                  onChange={(e) => setprice(e.target.value)}
+                  onChange={handlePriceChange}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
+                  parser={(value) => {
+                    // Remove non-numeric characters and parse as a float
+                    const numericValue = parseFloat(value.replace(/\D/g, ''));
+                    return isNaN(numericValue) ? null : numericValue;
+                  }}
                   addonAfter='VNĐ'
                 />
               </Form.Item>
@@ -1007,7 +1030,7 @@ const HomeStayProduct = () => {
             <tr>
               <td style={{ width: 600 }}>
                 <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Giá </div> : {price} (VNĐ)
+                  <div style={{ width: 200 }}>Giá </div> : {formatCurrency(price)}
                 </div>
                 <br />
               </td>

@@ -34,6 +34,14 @@ import moment from 'moment'
 const { Header, Content, Footer } = Layout
 
 export const BookingHomestay = () => {
+  const formatCurrency = (value) => {
+    // Sử dụng Intl.NumberFormat để định dạng giá trị tiền tệ
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(value);
+  };
+
   const statusUser = JSON.parse(localStorage.getItem('userDetail'))?.success
   const userDetail = JSON.parse(localStorage.getItem('userDetail'))
   const params = useParams()
@@ -71,7 +79,7 @@ export const BookingHomestay = () => {
     if (statusUser) {
       setIsModalOpen(true)
       const userID = userDetail?.data.id;
-       bookingData = {
+      bookingData = {
         userId: userID,
         typeBooking: type,
         totalPrice: detailHomestay?.promotion?.value
@@ -293,13 +301,13 @@ export const BookingHomestay = () => {
                           float: 'right',
                         }}
                       >
-                        {detailHomestay.price -
+                        {formatCurrency(detailHomestay.price -
                           detailHomestay?.promotion?.value +
                           ((detailHomestay.price -
                             detailHomestay?.promotion?.value) *
                             11) /
-                          100}{' '}
-                        VND
+                          100)}{' '}
+
                       </div>
                     ) : (
                       <div
@@ -310,9 +318,9 @@ export const BookingHomestay = () => {
                           float: 'right',
                         }}
                       >
-                        {detailHomestay.price +
-                          (detailHomestay.price * 11) / 100}{' '}
-                        VND
+                        {formatCurrency(detailHomestay.price +
+                          (detailHomestay.price * 11) / 100)}{' '}
+
                       </div>
                     )}
                   </Col>
@@ -378,14 +386,14 @@ export const BookingHomestay = () => {
                           float: 'right',
                         }}
                       >
-                        {(detailHomestay.price -
+                        {formatCurrency((detailHomestay.price -
                           detailHomestay?.promotion?.value +
                           ((detailHomestay.price -
                             detailHomestay?.promotion?.value) *
                             11) /
                           100) *
-                          numNight}{' '}
-                        VND
+                          numNight)}{' '}
+
                       </div>
                     ) : (
                       <div
@@ -395,10 +403,10 @@ export const BookingHomestay = () => {
                           float: 'right',
                         }}
                       >
-                        {(detailHomestay.price +
+                        {formatCurrency((detailHomestay.price +
                           (detailHomestay.price * 11) / 100) *
-                          numNight}{' '}
-                        VND
+                          numNight)}{' '}
+
                       </div>
                     )}
                   </Col>
@@ -462,14 +470,14 @@ export const BookingHomestay = () => {
       <Modal
         title='Xác nhận thông tin'
         open={isModalOpen}
-        onOk={() => handleReviewBookingHomestay(params.id)}
+        onOk={() => handleReviewBookingHomestay(params?.id)}
         onCancel={() => setIsModalOpen(false)}
         okText='Tiếp tục'
         cancelText='Hủy'
       >
         <h5>Tất cả thông tin bạn điền đã chính xác chưa?</h5>
-        <p>Email: {infoPayment.email}</p>
-        <p>Số điện thoại: {infoPayment.phoneNumber}</p>
+        <p>Email: {infoPayment?.email}</p>
+        <p>Số điện thoại: {infoPayment?.phoneNumber}</p>
       </Modal>
     </>
   )

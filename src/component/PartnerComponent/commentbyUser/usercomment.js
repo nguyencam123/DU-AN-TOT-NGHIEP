@@ -19,6 +19,13 @@ const UserCommment = () => {
         setIsModalOpen(true);
 
     };
+    const formatCurrency = (value) => {
+        // Sử dụng Intl.NumberFormat để định dạng giá trị tiền tệ
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+        }).format(value);
+    };
     const handleOk = () => {
         setIsModalOpen(false);
     };
@@ -47,7 +54,10 @@ const UserCommment = () => {
             title: 'Giá homestay',
             dataIndex: 'price',
             key: 'price',
-            align: 'center'
+            align: 'center',
+            render(str) {
+                return formatCurrency(str)
+            }
         },
         {
             title: 'Số đánh giá của homestay',
