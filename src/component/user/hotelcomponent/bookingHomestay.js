@@ -86,7 +86,7 @@ export const BookingHomestay = () => {
         email: infoPayment.email,
         phoneNumber: infoPayment.phoneNumber,
         homestayId: detailHomestay.id,
-        idPromotion: detailHomestay.promotion.id || ''
+        idPromotion: detailHomestay?.promotion?.id || ''
       }
       dispatch(addBooking(bookingData))
     } else {
