@@ -32,7 +32,6 @@ export const BookingReviewHomestay = () => {
   const endDate = params?.get('endDate') || '';
   const numNight = params?.get('numNight') || '';
   const totalPrice = params?.get('totalPrice') || '';
-  console.log(endDate);
 
   useEffect(() => {
     dispatch(getOneProduct(id));
@@ -95,7 +94,7 @@ export const BookingReviewHomestay = () => {
                 Homestay
               </h5>
               <div style={{ backgroundColor: 'white', borderRadius: '10px' }}>
-                <Row style={{ margin: '10px' }} style={{ borderBottom: '1px solid', padding: '0px 10px 10px 10px', }}>
+                <Row style={{ borderBottom: '1px solid', padding: '0px 10px 10px 10px', margin: '10px' }}>
                   <Col span={5}>
                     <Image
                       src={detailHomestay?.images?.[0]?.imgUrl}
