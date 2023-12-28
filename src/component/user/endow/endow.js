@@ -88,45 +88,49 @@ const Endow = () => {
                                     lg: 32,
                                 }}
                             >
-                                {productPromotion.map((items) => {
-                                    const currentDate = new Date().getTime();
-                                    const startDate = items.promotion?.startDate?.valueOf();
-                                    const endDate = items.promotion?.endDate?.valueOf();
-                                    const promotionValue = items.promotion?.value;
+                                {productPromotion.data && productPromotion.data.length > 0 ? (
+                                    productPromotion.data.map((items) => {
+                                        const currentDate = new Date().getTime();
+                                        const startDate = items.promotion?.startDate?.valueOf();
+                                        const endDate = items.promotion?.endDate?.valueOf();
+                                        const promotionValue = items.promotion?.value;
 
-                                    if (
-                                        items.promotion !== null &&
-                                        startDate < currentDate &&
-                                        currentDate < endDate &&
-                                        ((priceFilter.under100k && promotionValue < 100000) ||
-                                            (priceFilter.between100kAnd1M && promotionValue >= 100000 && promotionValue <= 1000000) ||
-                                            (priceFilter.above1M && promotionValue > 1000000))
-                                    ) {
-                                        return (
-                                            <Col className="gutter-row" span={8} style={{ marginTop: 50 }} key={items.id}>
-                                                <Link to={
-                                                    `/homestay/detail/${items.id}?startDate=${checkInDate?.valueOf()}&endDate=${checkOutDate?.valueOf()}&numNight=1`
-                                                }>
-                                                    <MDBCard>
-                                                        <MDBCardImage src={items.images[0]?.imgUrl} position="top" alt="..." />
-                                                        <MDBCardBody>
-                                                            <MDBCardTitle style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{items.name}</MDBCardTitle>
-                                                            <MDBCardTitle>GIẢM ĐẾN {formatCurrency(items.promotion?.value)}</MDBCardTitle>
-                                                            <MDBCardText>
-                                                                *Không yêu cầu số tiền tối thiểu.
-                                                            </MDBCardText>
-                                                            <MDBBtn href="#">Đặt ngay</MDBBtn>
-                                                        </MDBCardBody>
-                                                    </MDBCard>
-                                                </Link>
-                                            </Col>
-                                        );
-                                    }
-                                    return null; // Return null for items that don't meet the date criteria
-                                })}
+                                        if (
+                                            items.promotion !== null &&
+                                            startDate < currentDate &&
+                                            currentDate < endDate &&
+                                            ((priceFilter.under100k && promotionValue < 100000) ||
+                                                (priceFilter.between100kAnd1M && promotionValue >= 100000 && promotionValue <= 1000000) ||
+                                                (priceFilter.above1M && promotionValue > 1000000))
+                                        ) {
+                                            return (
+                                                <Col className="gutter-row" span={8} style={{ marginTop: 50 }} key={items.id}>
+                                                    <Link to={
+                                                        `/homestay/detail/${items.id}?startDate=${checkInDate?.valueOf()}&endDate=${checkOutDate?.valueOf()}&numNight=1`
+                                                    }>
+                                                        <MDBCard>
+                                                            <MDBCardImage src={items.images[0]?.imgUrl} position="top" alt="..." />
+                                                            <MDBCardBody>
+                                                                <MDBCardTitle style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{items.name}</MDBCardTitle>
+                                                                <MDBCardTitle>GIẢM ĐẾN {formatCurrency(items.promotion?.value)}</MDBCardTitle>
+                                                                <MDBCardText>
+                                                                    *Không yêu cầu số tiền tối thiểu.
+                                                                </MDBCardText>
+                                                                <MDBBtn href="#">Đặt ngay</MDBBtn>
+                                                            </MDBCardBody>
+                                                        </MDBCard>
+                                                    </Link>
+                                                </Col>
+                                            );
+                                        }
+                                        return null; // Return null for items that don't meet the date criteria
+                                    })
+                                ) : (
+                                    <p>No data available</p>
+                                )}
                             </Row>
                             <div style={{ float: 'right', marginTop: 20 }}>
-                                <Pagination current={current} onChange={onChangePage} total={productPromotion.length} />
+                                <Pagination current={current} onChange={onChangePage} total={productPromotion?.totalPages * 10} />
                             </div>
                         </Content>
                     </Layout>

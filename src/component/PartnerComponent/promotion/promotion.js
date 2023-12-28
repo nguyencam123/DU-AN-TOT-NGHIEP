@@ -518,6 +518,7 @@ const Promotion = () => {
                                     >
                                         <InputNumber style={{ width: 300 }} addonAfter="VNĐ" onChange={handlePriceChange}
                                             formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
+                                            value={value}
                                             parser={(value) => {
                                                 // Remove non-numeric characters and parse as a float
                                                 const numericValue = parseFloat(value.replace(/\D/g, ''));

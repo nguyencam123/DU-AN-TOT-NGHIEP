@@ -57,6 +57,7 @@ export const BookingHomestay = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalTypeBooking, setModalTyBooking] = useState(false)
   const detailHomestay = useSelector((state) => state.product.productDetails)
+  const [totalPrice, setTotalPrice] = useState(0)
   const navigate = useNavigate()
   const onChangeName = (e) => {
     setInfoPayment({ ...infoPayment, name: e.target.value })
@@ -74,12 +75,13 @@ export const BookingHomestay = () => {
   const startDate = param.get('startDate')
   const endDate = param.get('endDate')
   const numNight = param.get('numNight')
-  let bookingData = {}
+
   const handleBooking = (type) => {
     if (statusUser) {
       setIsModalOpen(true)
+
       const userID = userDetail?.data.id;
-      bookingData = {
+      const bookingData = {
         userId: userID,
         typeBooking: type,
         totalPrice: detailHomestay?.promotion?.value
@@ -97,16 +99,16 @@ export const BookingHomestay = () => {
         homestayId: detailHomestay.id,
         idPromotion: detailHomestay?.promotion?.id || ''
       }
+      setTotalPrice(bookingData.totalPrice)
       dispatch(addBooking(bookingData))
     } else {
       message.info('Bạn vui lòng đăng nhập trước khi đặt homestay')
     }
   }
   const handleReviewBookingHomestay = (id) => {
-    console.log(booking.id)
     // Chuyển đến trang review với dữ liệu infoPayment trên URL
     navigate(
-      `/review/booking/${id}?bookingId=${booking.id}&name=${infoPayment.name}&email=${infoPayment.email}&phoneNumber=${infoPayment.phoneNumber}&startDate=${startDate}&endDate=${endDate}&numNight=${numNight}&totalPrice=${bookingData.totalPrice}`,
+      `/review/booking/${id}?bookingId=${booking.id}&name=${infoPayment.name}&email=${infoPayment.email}&phoneNumber=${infoPayment.phoneNumber}&startDate=${startDate}&endDate=${endDate}&numNight=${numNight}&totalPrice=${totalPrice}`,
     )
   }
 

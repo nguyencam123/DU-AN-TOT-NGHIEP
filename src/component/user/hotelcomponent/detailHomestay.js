@@ -322,7 +322,7 @@ export const DetailHomestay = () => {
               <MDBCol md="12" lg="11" xl="10">
                 <div className="d-flex justify-content-between align-items-center mb-4">
                   <MDBTypography tag="h4" className="text-dark mb-0">
-                    Có tất cả ({comment.length}) đánh giá
+                    Có tất cả ({detailHomestay.comment.length}) đánh giá
                   </MDBTypography>
                 </div>
                 {comment.map((items) =>
@@ -405,7 +405,7 @@ export const DetailHomestay = () => {
                   </MDBCard>
                 )}
                 <div style={{ float: 'right', marginTop: 20 }}>
-                  <Pagination current={current} onChange={onChangePage} total={comment.length} />
+                  <Pagination current={current} onChange={onChangePage} total={detailHomestay.comment.length} />
                 </div>
               </MDBCol>
             </MDBRow>

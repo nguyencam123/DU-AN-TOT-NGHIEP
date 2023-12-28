@@ -11,13 +11,17 @@ const { Title } = Typography
 const UserCommment = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [current, setCurrent] = useState(1);
+    const [idHomestay, setIdHomestay] = useState('');
+    const [totalPage, setTotalPage] = useState(0);
     const onChangePage = (page) => {
         setCurrent(page);
+        dispatch(fetchComment(idHomestay, page - 1));
     };
     const showModal = (record) => {
         dispatch(fetchComment(record.id, current - 1));
         setIsModalOpen(true);
-
+        setIdHomestay(record.id)
+        setTotalPage(record.comment.length)
     };
     const formatCurrency = (value) => {
         // Sử dụng Intl.NumberFormat để định dạng giá trị tiền tệ
@@ -74,7 +78,6 @@ const UserCommment = () => {
             align: 'center',
             render: (_, record) => (
                 <a onClick={() => showModal(record)}>
-
                     <EyeOutlined />
                 </a>
             )
@@ -91,7 +94,7 @@ const UserCommment = () => {
                             <MDBCol md="12" lg="10" xl="8">
                                 <div className="d-flex justify-content-between align-items-center mb-4">
                                     <MDBTypography tag="h4" className="text-dark mb-0">
-                                        Có tất cả ({dataComment.length}) đánh giá
+                                        Có tất cả ({totalPage}) đánh giá
                                     </MDBTypography>
                                 </div>
                                 {dataComment.map((items) =>
@@ -172,7 +175,7 @@ const UserCommment = () => {
                                     </MDBCard>
                                 )}
                                 <div style={{ float: 'right', marginTop: 20 }}>
-                                    <Pagination current={current} onChange={onChangePage} total={dataComment.length} />
+                                    <Pagination current={current} onChange={onChangePage} total={totalPage} />
                                 </div>
                             </MDBCol>
                         </MDBRow>
