@@ -68,7 +68,6 @@ public class SecurityConfiguration {
 
     private  static final String[] All_GET={
             "/api/v1/convenient-homestay/**",
-            "/api/v1/customer/**",
             "/api/v1/homestay/**",
             "/api/v1/homestay",
             "/api/v1/img-comment/**",
@@ -83,7 +82,7 @@ public class SecurityConfiguration {
                     "/api/v1/booking/**",
                     "/api/v1/cart/**",
                     "/api/v1/convenient-homestay/**",
-                    "/api/v1/customer/**",
+                    "/api/v1/customer/update-information-owner",
                     "/api/v1/homestay/**",
                     "/api/v1/homestay",
                     "/api/v1/promotion",
