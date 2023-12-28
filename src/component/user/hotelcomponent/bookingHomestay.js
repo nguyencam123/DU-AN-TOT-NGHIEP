@@ -47,6 +47,7 @@ export const BookingHomestay = () => {
     phoneNumber: userDetail?.data?.phoneNumber,
   })
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [modalTypeBooking, setModalTyBooking] = useState(false)
   const detailHomestay = useSelector((state) => state.product.productDetails)
   const navigate = useNavigate()
   const onChangeName = (e) => {
@@ -65,20 +66,20 @@ export const BookingHomestay = () => {
   const startDate = param.get('startDate')
   const endDate = param.get('endDate')
   const numNight = param.get('numNight')
-  const handleBooking = () => {
+  const handleBooking = (type) => {
     if (statusUser) {
       setIsModalOpen(true)
       const userID = userDetail?.data.id;
       const bookingData = {
         userId: userID,
+        typeBooking: type,
         totalPrice: detailHomestay?.promotion?.value
-          ? (detailHomestay.price -
-              detailHomestay?.promotion?.value +
-              ((detailHomestay.price - detailHomestay?.promotion?.value) * 11) /
-                100) *
-            numNight
-          : (detailHomestay.price + (detailHomestay.price * 11) / 100) *
-            numNight,
+          ? ((detailHomestay.price -
+            detailHomestay?.promotion?.value +
+            ((detailHomestay.price - detailHomestay?.promotion?.value) * 11) / 100) *
+            numNight) /
+          (type === 1 ? 1 : 2)
+          : ((detailHomestay.price + (detailHomestay.price * 11) / 100) * numNight) / (type === 1 ? 1 : 2),
         startDate: startDate.valueOf(),
         endDate: endDate.valueOf(),
         name: infoPayment.name,
@@ -296,7 +297,7 @@ export const BookingHomestay = () => {
                           ((detailHomestay.price -
                             detailHomestay?.promotion?.value) *
                             11) /
-                            100}{' '}
+                          100}{' '}
                         VND
                       </div>
                     ) : (
@@ -381,7 +382,7 @@ export const BookingHomestay = () => {
                           ((detailHomestay.price -
                             detailHomestay?.promotion?.value) *
                             11) /
-                            100) *
+                          100) *
                           numNight}{' '}
                         VND
                       </div>
@@ -413,7 +414,7 @@ export const BookingHomestay = () => {
                 <Col span={16}>
                   <div style={{ float: 'right', marginTop: '5px' }}>
                     <Button
-                      onClick={() => handleBooking()}
+                      onClick={() => setModalTyBooking(true)}
                       style={{
                         color: 'white',
                         fontWeight: '500',
@@ -438,11 +439,32 @@ export const BookingHomestay = () => {
           textAlign: 'center',
         }}
       ></Footer>
+
+      <Modal
+        title='Hình thức thanh toán'
+        open={modalTypeBooking}
+        onCancel={() => setModalTyBooking(false)}
+        okText='Thanh toán'
+        cancelText='Đặt cọc'
+        footer={[
+          <Button key="back" onClick={() => handleBooking(0)}>
+            Đặt cọc
+          </Button>,
+          <Button key="submit" style={{ backgroundColor: 'lightblue' }} onClick={() => handleBooking(1)}>
+            Thanh toán
+          </Button>
+        ]}
+      >
+        <h5>Bạn muốn đặt cọc 50% số tiền hay thanh toán trước?</h5>
+      </Modal>
+
       <Modal
         title='Xác nhận thông tin'
         open={isModalOpen}
         onOk={() => handleReviewBookingHomestay(params.id)}
         onCancel={() => setIsModalOpen(false)}
+        okText='Tiếp tục'
+        cancelText='Hủy'
       >
         <h5>Tất cả thông tin bạn điền đã chính xác chưa?</h5>
         <p>Email: {infoPayment.email}</p>

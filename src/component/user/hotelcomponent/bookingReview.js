@@ -132,7 +132,7 @@ console.log(endDate);
                 <Row>
                   <div style={{ margin: '10px 0px 0px 15px' }}>
                     <div style={{ fontSize: '18px', fontWeight: '600', marginBottom: '10px' }}>
-                      Số phòng : {detailHomestay.numberRoom}
+                      Số phòng : {detailHomestay.roomNumber}
                     </div>
                     <div>
                       <Image
