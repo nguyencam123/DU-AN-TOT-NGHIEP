@@ -35,6 +35,13 @@ const Booking = () => {
     useEffect(() => {
         dispatch(getBookingByNameHomestay(UserID, homestayname, namebooking, valueselect));
     }, [homestayname, namebooking, valueselect]);
+    const formatCurrency = (value) => {
+        // Sử dụng Intl.NumberFormat để định dạng giá trị tiền tệ
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+        }).format(value);
+    };
     const booking = useSelector((state) => state.booking.bookings)
     const columns = [
         {
@@ -97,7 +104,7 @@ const Booking = () => {
             dataIndex: 'totalPrice',
             key: 'totalPrice',
             render(str) {
-                return str * 89 / 100
+                return formatCurrency(str * 89 / 100)
             }
         }
     ];

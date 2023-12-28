@@ -9,6 +9,14 @@ import moment from 'moment';
 const { Header, Content, Footer } = Layout;
 
 export const BookingReviewHomestay = () => {
+  const formatCurrency = (value) => {
+    // Sử dụng Intl.NumberFormat để định dạng giá trị tiền tệ
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(value);
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -23,7 +31,7 @@ export const BookingReviewHomestay = () => {
   const startDate = params?.get('startDate') || '';
   const endDate = params?.get('endDate') || '';
   const numNight = params?.get('numNight') || '';
-console.log(endDate);
+  console.log(endDate);
 
   useEffect(() => {
     dispatch(getOneProduct(id));
@@ -244,7 +252,7 @@ console.log(endDate);
                   </Col>
                   <Col span={8} push={4}>
                     <div style={{ padding: '20px 0px 5px 20px', fontSize: '18px', fontWeight: '700', float: 'right' }}>
-                      {detailHomestay.price + detailHomestay.price * 11 / 100} VND
+                      {formatCurrency(detailHomestay.price + detailHomestay.price * 11 / 100)}
                     </div>
                   </Col>
                 </Row>
@@ -256,7 +264,7 @@ console.log(endDate);
                   </Col>
                   <Col span={8} push={4}>
                     <div style={{ padding: '20px 0px 5px 20px', fontSize: '18px', fontWeight: '700', float: 'right' }}>
-                      {(detailHomestay.price + detailHomestay.price * 11 / 100) * numNight} VND
+                      {formatCurrency((detailHomestay.price + detailHomestay.price * 11 / 100) * numNight)}
                     </div>
                   </Col>
                 </Row>
@@ -280,7 +288,7 @@ console.log(endDate);
                   </Col>
                   <Col span={8} push={4}>
                     <div style={{ fontWeight: '600', fontSize: '18px', float: 'right' }}>
-                      {(detailHomestay.price + detailHomestay.price * 11 / 100) * numNight} VND
+                      {formatCurrency((detailHomestay.price + detailHomestay.price * 11 / 100) * numNight)}
                     </div>
                   </Col>
                 </Row>

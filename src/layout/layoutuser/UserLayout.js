@@ -13,6 +13,7 @@ const UserLayout = ({ children }) => {
     const navigate = useNavigate()
     useEffect(() => {
         const storedToken = JSON.parse(localStorage.getItem('userDetail'))?.data?.token;
+        const storedTokenAccept = JSON.parse(localStorage.getItem('userDetail'))?.success
         updateAxiosToken(storedToken);
 
         const basePaths = [
@@ -31,7 +32,7 @@ const UserLayout = ({ children }) => {
             return regex.test(currentPath);
         });
 
-        if (isProtectedPath && !isLoggedIn) {
+        if (isProtectedPath && storedTokenAccept !== true) {
             navigate('/login');
             message.info('Bạn cần đăng nhập để thực hiện chức năng này');
         }

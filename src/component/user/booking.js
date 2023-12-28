@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Form, Image, Input, Modal, Rate, Row, Select, Space, Table, Typography, message } from "antd";
 import { CloseOutlined, CompassOutlined, DeleteOutlined, EyeOutlined, LoadingOutlined, RotateLeftOutlined, RotateRightOutlined, ShopOutlined, SwapOutlined, ZoomInOutlined, ZoomOutOutlined } from "@ant-design/icons";
@@ -157,12 +157,14 @@ export const BookingUser = () => {
         }}
       >
         <div style={{ marginTop: '30px' }}>
-          <Title level={2}>Homestay bạn đăng đặt</Title>
+          <Title level={2}>Homestay bạn đã đặt</Title>
           <Title level={4}>Danh mục</Title>
           {booking.map((booking) => {
             const currentDate = new Date().getTime();
             const startDate = booking?.startDate?.valueOf();
             const endDate = booking?.endDate?.valueOf();
+            const isCancelled = booking.status === 'HUY';
+            const isPastEndDate = currentDate > endDate + 1;
             return (
               <div style={{
                 width: '100%', height: 210,
@@ -195,10 +197,13 @@ export const BookingUser = () => {
                   <div >
                     <div style={{ fontSize: 22, color: 'rgb(231, 9, 14)' }}>{booking.totalPrice} VNĐ</div>
                     <div style={{ fontSize: 22 }}>
-                      {booking.status === 'HUY'
+                      {isCancelled
                         ? ''
-                        : <Button style={{ backgroundColor: 'rgb(231, 9, 14)', color: 'white', width: 180 }} onClick={() => showRefusalView(booking)} >Hủy homestay</Button>
-                      }
+                        : (
+                          <React.Fragment>
+                            {!isPastEndDate && <Button style={{ backgroundColor: 'rgb(231, 9, 14)', color: 'white', width: 180 }} onClick={() => showRefusalView(booking)} >Hủy homestay</Button>}
+                          </React.Fragment>
+                        )}
                       <Button style={{ backgroundColor: 'green', color: 'white', width: 180 }} onClick={() => showModalView(booking)}>Xem chi tiết homestay</Button>
                       {currentDate > endDate + 1 ?
                         <Button style={{ backgroundColor: 'green', color: 'white', width: 180 }} onClick={() => showModalComment(booking)}>Đánh giá homestay</Button>

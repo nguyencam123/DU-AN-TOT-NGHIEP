@@ -6,7 +6,7 @@ import {
     Table,
     Row,
     Space,
-    Modal, Tooltip, Button, Input, Col, DatePicker, message, Checkbox, Popconfirm
+    Modal, Tooltip, Button, Input, Col, DatePicker, message, Checkbox, Popconfirm, InputNumber
 } from 'antd';
 import { useDispatch, useSelector } from 'react-redux'
 import { EditOutlined, EyeOutlined, LoadingOutlined, ReloadOutlined, TeamOutlined } from '@ant-design/icons'
@@ -50,6 +50,10 @@ const Promotion = () => {
      * @returns Table colums
      */
     // console.log(homestay.map((item) => item.id))
+    const handlePriceChange = (value) => {
+        // You can perform any additional formatting or validation here
+        setValue(value);
+    };
     const rowSelection = {
         selectedRowKeys: checkedValues,
         onChange: (selectedRowKeys, selectedRows) => {
@@ -62,6 +66,13 @@ const Promotion = () => {
     };
     const isBeforeToday = (current) => {
         return current && current.isBefore(moment().startOf('day'));
+    };
+    const formatCurrency = (value) => {
+        // Sử dụng Intl.NumberFormat để định dạng giá trị tiền tệ
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+        }).format(value);
     };
     const columnsData = [
         {
@@ -78,7 +89,10 @@ const Promotion = () => {
             title: 'Giá homestay',
             dataIndex: 'price',
             key: 'price',
-            align: 'center'
+            align: 'center',
+            render(str) {
+                return formatCurrency(str)
+            }
         }
     ];
 
@@ -100,7 +114,10 @@ const Promotion = () => {
             title: 'Giá homestay',
             dataIndex: 'price',
             key: 'price',
-            align: 'center'
+            align: 'center',
+            render(str) {
+                return formatCurrency(str)
+            }
         },
         {
             title: 'Giá homestay sau khi giảm',
@@ -108,7 +125,7 @@ const Promotion = () => {
             key: 'price',
             align: 'center',
             render(str) {
-                return str - value
+                return formatCurrency(str - value)
             }
         }
     ];
@@ -196,6 +213,9 @@ const Promotion = () => {
             dataIndex: 'value',
             key: 'value',
             align: 'center',
+            render(str) {
+                return formatCurrency(str)
+            }
         },
         {
             title: 'Trạng thái',
@@ -496,7 +516,14 @@ const Promotion = () => {
                                         validateStatus={formErrors.value ? 'error' : ''} // Hiển thị lỗi cho trường name nếu có
                                         help={formErrors.value} // Hiển thị thông báo lỗi cho trường name nếu có
                                     >
-                                        <Input addonAfter="VNĐ" value={value} style={{ width: '300px' }} onChange={(e) => setValue(e.target.value)} />
+                                        <InputNumber style={{ width: 300 }} addonAfter="VNĐ" onChange={handlePriceChange}
+                                            formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
+                                            parser={(value) => {
+                                                // Remove non-numeric characters and parse as a float
+                                                const numericValue = parseFloat(value.replace(/\D/g, ''));
+                                                return isNaN(numericValue) ? null : numericValue;
+                                            }}
+                                        />
                                     </Form.Item>
                                 </Col>
                             </Row>
@@ -540,7 +567,7 @@ const Promotion = () => {
                     <br />
                     <div style={{ display: 'flex' }}>
                         <div style={{ width: 400 }}>Số tiền giảm </div> :{' '}
-                        {value} (VNĐ)
+                        {formatCurrency(value)} (VNĐ)
                     </div>
                     <br />
                     <div style={{ display: 'flex' }}>

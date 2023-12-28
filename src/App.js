@@ -29,6 +29,8 @@ import ResetPassWordOwner from './component/PartnerComponent/login/resetPassword
 import { checkToken, checkTokenAdmin, checkTokenUser } from './app/middleware';
 import ForgortPasswordOwner from './component/PartnerComponent/login/fogotPassword';
 import ForgortPasswordUser from './component/login/forgotPassword';
+import RulesWhile from './component/user/siderheader/ruleswhile';
+import SupportedUser from './component/user/siderheader/supporteduser';
 
 function App() {
   //map component user
@@ -49,9 +51,11 @@ function App() {
     { path: 'hop-tac/register', element: <PartnerRegister /> },
     { path: 'successBooking', element: <BookingSuccess /> },
     { path: 'booking/:id', element: <BookingUser /> },
-    { path: 'shopingcart/:id', element: <CartUser /> },
+    { path: 'shopingcart', element: <CartUser /> },
     { path: 'changePassword', element: <ResetPassWordOwner /> },
-    { path: 'changePasswordUser', element: <ForgortPasswordUser /> }
+    { path: 'changePasswordUser', element: <ForgortPasswordUser /> },
+    { path: 'RulesWhile', element: <RulesWhile /> },
+    { path: 'supporteduser', element: <SupportedUser /> },
   ];
   useEffect(() => {
     window.scrollTo(0, 0); // Cuộn lên đầu trang khi path thay đổi

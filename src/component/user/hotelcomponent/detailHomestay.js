@@ -28,6 +28,13 @@ export const DetailHomestay = () => {
     dispatch(getCommentProduct(params.id, current - 1));
     dispatch(getOneProduct(params.id));
   }, []);
+  const formatCurrency = (value) => {
+    // Sử dụng Intl.NumberFormat để định dạng giá trị tiền tệ
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(value);
+  };
   const location = useLocation();
   const param = new URLSearchParams(location.search);
   const startDate = param?.get('startDate') || '';
@@ -127,11 +134,11 @@ export const DetailHomestay = () => {
                 <div style={{ fontSize: '12px', marginBottom: '0' }}>Giá mỗi phòng mỗi đêm từ</div>
                 {detailHomestay?.promotion?.value
                   ? <div style={{ fontSize: '24', color: 'rgb(255, 94, 31)', lineHeight: '28px', fontWeight: '700', marginTop: '-5px' }}>
-                    {detailHomestay.price - detailHomestay?.promotion?.value + (detailHomestay.price - detailHomestay?.promotion?.value) * 11 / 100}
-                    <span style={{ fontSize: '22' }}> VND</span> </div>
+                    {formatCurrency(detailHomestay.price - detailHomestay?.promotion?.value + (detailHomestay.price - detailHomestay?.promotion?.value) * 11 / 100)}
+                    <span style={{ fontSize: '22' }}> </span> </div>
                   : <div style={{ fontSize: '24', color: 'rgb(255, 94, 31)', lineHeight: '28px', fontWeight: '700', marginTop: '-5px' }}>
-                    {detailHomestay.price + detailHomestay.price * 11 / 100}
-                    <span style={{ fontSize: '22' }}> VND</span> </div>
+                    {formatCurrency(detailHomestay.price + detailHomestay.price * 11 / 100)}
+                    <span style={{ fontSize: '22' }}></span> </div>
                 }
               </div>
               <Button onClick={() => handleBookingHomestay(params.id)} style={{ width: '100%', backgroundColor: 'rgb(255, 94, 31)' }}>Chọn phòng</Button>
