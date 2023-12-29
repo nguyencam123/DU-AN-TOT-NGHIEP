@@ -19,11 +19,10 @@ import { useState } from 'react'
 import moment from 'moment';
 import Search from 'antd/es/input/Search';
 import { fetchBooking, getBookingByNameHomestay } from '../../../features/owner_homestay/getbooking/bookingThunk';
+import * as XLSX from 'xlsx';
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 const { Title } = Typography
-
-
 
 const Booking = () => {
     const dispatch = useDispatch();
@@ -135,10 +134,95 @@ const Booking = () => {
     const handleSearchBooking = (value) => {
         setNameBooking(value)
     };
+    /**
+     * export excel
+     */
+    const formattedData = booking.map(item => ({
+        TenTaiKhoan: item.name,
+        TenHomestay: item.homestay.name,
+        NgayDat: moment(item.createdDate).locale('vi').format('LL'),
+        TrangThai: item.status,
+        EmailNguoiDat: item.user.email,
+        TenNguoiDat: item.user.name,
+        SoDienThoaiNguoiDat: item.user.phoneNumber,
+        TongTien: formatCurrency(item.totalPrice)
+    }));
+
+    const importAndAppendData = (data) => {
+        const today = moment().format('YYYY-MM-DD');
+        // Sample data
+        const title = [`Thống kê lượt đặt phòng trong năm(ngày xuất file ${today})`];
+        const header = ['Name', 'Age', 'City'];
+        // const data = [
+        //   { name: 'John Doe', age: 25, city: 'New York' },
+        //   { name: 'Jane Smith', age: 30, city: 'San Francisco' },
+        //   { name: 'Bob Johnson', age: 28, city: 'Los Angeles' },
+        // ];
+        const headers = Object.keys(data[0]);
+        const values = data.map(obj => headers.map(key => obj[key]));
+
+        // Create a worksheet
+        const ws = XLSX.utils.aoa_to_sheet([title, [], [], [...headers], ...values]);
+
+        // Apply styles to title
+        const titleStyle = {
+            font: { bold: true, size: 80, color: { rgb: 'FF0000' } }, // You can adjust the size and color as needed
+            alignment: { horizontal: 'center' },
+        };
+        const titleCell = ws[XLSX.utils.encode_cell({ c: 0, r: 0 })]; // Assuming the title is in cell A1
+        XLSX.utils.format_cell(titleCell, titleStyle);
+
+        // Apply styles to headers
+        const headerStyle = {
+            font: { bold: true },
+            border: { top: { style: 'thin' }, bottom: { style: 'thin' }, left: { style: 'thin' }, right: { style: 'thin' } },
+        };
+        // Set column widths based on content
+        headers.forEach((header, index) => {
+            const maxColumnWidth = Math.max(...values.map(row => row[index].toString().length));
+            const columnWidth = Math.min(50, maxColumnWidth); // Set a maximum width for columns (50 is just an example)
+            ws['!autofilter'] = { ref: `A1:${XLSX.utils.encode_col(headers.length - 1)}${values.length + 3}` };
+            ws['!cols'] = ws['!cols'] || [];
+            ws['!cols'][index] = { width: columnWidth + 2 }; // Add some extra padding
+        });
+
+
+        // Apply styles to data cells
+        // Apply styles to data cells
+        const dataStyle = {
+            border: { top: { style: 'thin' }, bottom: { style: 'thin' }, left: { style: 'thin' }, right: { style: 'thin' } },
+        };
+        values.forEach((row, rowIndex) => {
+            row.forEach((cell, cellIndex) => {
+                const cell_address = { c: cellIndex, r: rowIndex + 4 }; // assuming data starts at row 4
+                const cellStyle = Object.assign({}, dataStyle, {
+                    alignment: { horizontal: 'center' } // Optional: Center-align the content
+                });
+                XLSX.utils.format_cell(ws[cell_address], cellStyle);
+            });
+        });
+
+
+        // Create a workbook
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+        // Save the workbook to a file
+        XLSX.writeFile(wb, `Thống_kê_đặt_phòng_TravelViVu_${today}.xlsx`);
+    };
+
+    // Example usage
+    const exportExcel = () => {
+        importAndAppendData(formattedData);
+    }
     return (
         <div style={{ marginTop: '20px' }}>
             <Title level={2}>Quản trị đặt phòng</Title>
-            <Title level={4}>Danh mục</Title>
+            <div style={{ display: 'flex', marginBottom: 15 }}>
+                <Title level={4}>Danh mục</Title>
+                <Button style={{ marginLeft: 'auto' }} type='primary' onClick={exportExcel}>
+                    Xuất file thống kê đặt phòng
+                </Button>
+            </div>
             <Row >
                 <Form.Item label="Trạng thái" style={{ float: 'left' }}>
                     <Select

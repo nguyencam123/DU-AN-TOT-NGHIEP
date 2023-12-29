@@ -351,7 +351,7 @@ const Hotel = () => {
                     );
                   })
                 ) : (
-                  <p>No data available</p>
+                  <p>Nơi bạn tìm kiếm không có homestay nào</p>
                 )}
 
                 <div style={{ float: 'right', marginTop: 20 }}>
