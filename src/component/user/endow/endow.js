@@ -127,7 +127,7 @@ const Endow = () => {
                                         return null; // Return null for items that don't meet the date criteria
                                     })
                                 ) : (
-                                    <p>No data available</p>
+                                    <p>Nơi bạn tìm kiếm không có homestay nào</p>
                                 )}
                             </Row>
                             <div style={{ float: 'right', marginTop: 20 }}>
