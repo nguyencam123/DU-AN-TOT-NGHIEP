@@ -11,6 +11,7 @@ import provinceReducer from '../features/owner_homestay/region/provinceSlice'
 import adminReducer from '../features/admin/adminSlice'
 import bookingReducer from '../features/owner_homestay/getbooking/bookingSlice'
 import statisticalReducer from '../features/owner_homestay/statistical/statisticalSlice'
+import statisticalSliceAdmin from '../features/admin/statistical/statisticalSlice';
 const middleware = [...getDefaultMiddleware(), AuthMiddleware];
 
 export const store = configureStore({
@@ -24,7 +25,9 @@ export const store = configureStore({
     province: provinceReducer,
     admin: adminReducer,
     booking: bookingReducer,
-    statistical: statisticalReducer
+    statistical: statisticalReducer,
+    statisticalAdmin: statisticalSliceAdmin
+
   },
   middleware: (getDefaultMiddleware) => [...getDefaultMiddleware()],
 });
