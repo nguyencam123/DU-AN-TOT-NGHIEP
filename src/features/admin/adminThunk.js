@@ -112,4 +112,12 @@ export const updateConvenient = (data) => async (dispatch) => {
   }
 };
 
+export const deleteCommentHomestay = (id) => async (dispatch) => {
+  try {
+    const response = await instance.put('http://localhost:8080/api/v3/comment/delete?commentId=' + id);
+  } catch (error) {
+    dispatch(addConvenientFailed(error.message));
+  }
+};
+
 
