@@ -12,11 +12,11 @@ import dayjs from 'dayjs';
 const { Title } = Typography
 const Statistical = () => {
   const dispatch = useDispatch()
-  const statistical = useSelector((state) => state.statistical.statisticalByYear)
-  const statisticalByMonth = useSelector((state) => state.statistical.statisticalByMonth)
-  const statisticalByDay = useSelector((state) => state.statistical.statisticalByDay)
-  const statisticalByYears = useSelector((state) => state.statistical.statisticalByYears)
-  const statisticalByTop5 = useSelector((state) => state.statistical.statisticalByTop5)
+  const statistical = useSelector((state) => state.statisticalAdmin.statisticalByYear)
+  const statisticalByMonth = useSelector((state) => state.statisticalAdmin.statisticalByMonth)
+  const statisticalByDay = useSelector((state) => state.statisticalAdmin.statisticalByDay)
+  const statisticalByYears = useSelector((state) => state.statisticalAdmin.statisticalByYears)
+  const statisticalByTop5 = useSelector((state) => state.statisticalAdmin.statisticalByTop5)
 
   const booking = useSelector((state) => state.booking.bookings)
   const userDetail = JSON.parse(localStorage.getItem('ownerDetail'));
@@ -29,17 +29,17 @@ const Statistical = () => {
   const [homestayname, setHomestayName] = useState('')
   const [namebooking, setNameBooking] = useState('')
   const [valueselect, setValueSelect] = useState('1')
-  const [year, setYear] = useState('2023')
+  const [year, setYear] = useState(new Date().getFullYear())
   const onChange = (dateString) => {
     setYear(dateString)
     dispatch(fetchStatisticalByYear(UserID, dateString))
   };
   useEffect(() => {
-    dispatch(fetchStatisticalByYear(UserID, year))
-    dispatch(fetchStatisticalByYears(UserID, year))
-    dispatch(fetchStatisticalByDay(UserID, currentDateTime, currentMonth, currentYear))
-    dispatch(fetchStatisticalByMonth(UserID, currentMonth, currentYear))
-    dispatch(fetchStatisticalByTop5(UserID, year))
+    dispatch(fetchStatisticalByYear(year))
+    dispatch(fetchStatisticalByYears(year))
+    dispatch(fetchStatisticalByDay(currentDateTime, currentMonth, currentYear))
+    dispatch(fetchStatisticalByMonth(currentMonth, currentYear))
+    dispatch(fetchStatisticalByTop5(year))
   }, []);
 
   const convertDataForChart = (data) => {
