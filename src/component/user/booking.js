@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Form, Image, Input, Modal, Rate, Row, Select, Space, Table, Typography, message } from "antd";
 import { CloseOutlined, CompassOutlined, DeleteOutlined, EyeOutlined, LoadingOutlined, RotateLeftOutlined, RotateRightOutlined, ShopOutlined, SwapOutlined, ZoomInOutlined, ZoomOutOutlined } from "@ant-design/icons";
@@ -19,6 +19,14 @@ const { Search } = Input;
 const desc = ['Tệ', 'Không hài lòng', 'Bình thường', 'Hài lòng', 'Tuyệt vời'];
 
 export const BookingUser = () => {
+  const formatCurrency = (value) => {
+    // Sử dụng Intl.NumberFormat để định dạng giá trị tiền tệ
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(value);
+  };
+
   const { id } = useParams();
   const dispatch = useDispatch();
   useEffect(() => {
@@ -157,12 +165,17 @@ export const BookingUser = () => {
         }}
       >
         <div style={{ marginTop: '30px' }}>
-          <Title level={2}>Homestay bạn đăng đặt</Title>
+          <Title level={2}>Homestay bạn đã đặt</Title>
           <Title level={4}>Danh mục</Title>
           {booking.map((booking) => {
             const currentDate = new Date().getTime();
             const startDate = booking?.startDate?.valueOf();
             const endDate = booking?.endDate?.valueOf();
+            const isCancelled = booking.status === 'HUY';
+            const isPastEndDate = currentDate > endDate + 1;
+            // Check if the comment user id is different from UserID
+            const canComment = ((booking.homestay.comment.some(comment => comment.user.id !== UserID)) && currentDate > endDate);
+
             return (
               <div style={{
                 width: '100%', height: 210,
@@ -191,18 +204,21 @@ export const BookingUser = () => {
                   </h1>
                 </div>
                 <div style={{ marginLeft: 10, borderLeft: '1px solid #ACAEB1', padding: '8px 8px 2px 15px', width: '25%' }}>
-                  <div style={{ display: 'flex', color: 'rgb(5, 165, 105)' }}>{booking.status === 'HUY' ? 'Homestay đã hủy' : 'Đã thanh toán'}</div>
+                  <div style={{ display: 'flex' }}>{booking.status === 'HUY' ? <div style={{ color: "red" }}>Homestay đã hủy</div> : <div style={{ color: "green" }}>Đã thanh toán</div>}</div>
                   <div >
-                    <div style={{ fontSize: 22, color: 'rgb(231, 9, 14)' }}>{booking.totalPrice} VNĐ</div>
+                    <div style={{ fontSize: 22, color: 'rgb(231, 9, 14)' }}>{formatCurrency(booking.totalPrice)}</div>
                     <div style={{ fontSize: 22 }}>
-                      {booking.status === 'HUY'
+                      {isCancelled
                         ? ''
-                        : <Button style={{ backgroundColor: 'rgb(231, 9, 14)', color: 'white', width: 180 }} onClick={() => showRefusalView(booking)} >Hủy homestay</Button>
-                      }
+                        : (
+                          <React.Fragment>
+                            {!isPastEndDate && <Button style={{ backgroundColor: 'rgb(231, 9, 14)', color: 'white', width: 180 }} onClick={() => showRefusalView(booking)}>Hủy homestay</Button>}
+                            {canComment &&
+                              <Button style={{ backgroundColor: '#ee4d2d', color: 'white', width: 180 }} onClick={() => showModalComment(booking)}>Đánh giá homestay</Button>
+                            }
+                          </React.Fragment>
+                        )}
                       <Button style={{ backgroundColor: 'green', color: 'white', width: 180 }} onClick={() => showModalView(booking)}>Xem chi tiết homestay</Button>
-                      {currentDate > endDate + 1 ?
-                        <Button style={{ backgroundColor: 'green', color: 'white', width: 180 }} onClick={() => showModalComment(booking)}>Đánh giá homestay</Button>
-                        : <div />}
                     </div>
                   </div>
                 </div>

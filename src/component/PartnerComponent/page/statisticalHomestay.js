@@ -71,22 +71,25 @@ const StatisticalHomestay = () => {
         return monthNames[monthNumber - 1];
     };
 
-
+    const formatCurrency = (value) => {
+        // Sử dụng Intl.NumberFormat để định dạng giá trị tiền tệ
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+        }).format(value);
+    };
     const convertedData = convertDataForChart(statistical);
-
     const formattedData = convertedData.map(item => ({
         date: item.date,
         tongSoTien: parseInt(item.tongSoTien),
     }));
+
     const config = {
         data: formattedData,
         xField: 'date',
         yField: 'tongSoTien',
         label: {
-            // 可手动配置 label 数据标签位置
             position: 'middle',
-            // 'top', 'bottom', 'middle',
-            // 配置样式
             style: {
                 fill: '#FFFFFF',
                 opacity: 0.6,
@@ -98,12 +101,34 @@ const StatisticalHomestay = () => {
                 autoRotate: false,
             },
         },
-        meta: {
-            type: {
-                alias: '类别',
+        yAxis: {
+            label: {
+                formatter: (value) => formatCurrency(value),
             },
-            sales: {
-                alias: '销售额',
+        },
+        tooltip: {
+            customContent: (title, items) => {
+                const formattedItems = items.map(item => ({
+                    name: item.name,
+                    value: formatCurrency(item.value),
+                }));
+
+                return `
+                    <div class="g2-tooltip">
+                        <div class="g2-tooltip-title">${title}</div>
+                        <ul class="g2-tooltip-list">
+                            ${formattedItems.map(item => `<li class="g2-tooltip-list-item">${item.name}: ${item.value}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            },
+        },
+        meta: {
+            date: {
+                alias: 'Ngày',
+            },
+            tongSoTien: {
+                alias: 'Tổng Số Tiền',
             },
         },
     };
@@ -131,7 +156,7 @@ const StatisticalHomestay = () => {
             dataIndex: 'tongSoTien',
             key: 'tongSoTien',
             render(str) {
-                return str + 'VNĐ'
+                return formatCurrency(str)
             }
         },
         {
@@ -206,17 +231,17 @@ const StatisticalHomestay = () => {
             <div>
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <div style={{ width: '25%', height: 180, backgroundColor: '#321fdb', padding: 25, marginRight: 60, borderRadius: 8 }}>
-                        <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={3}> {statisticalByDay.tongSoTien == null ? 0 : statisticalByDay.tongSoTien} VNĐ</Title>
+                        <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={3}> {statisticalByDay.tongSoTien == null ? 0 : formatCurrency(statisticalByDay.tongSoTien)} </Title>
                         <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={5}> Doanh thu ngày hôm nay</Title>
                         <img src={imgchart} style={{ width: '100%' }} />
                     </div>
                     <div style={{ width: '25%', height: 180, backgroundColor: '#3399ff', padding: 25, marginRight: 60, borderRadius: 8 }}>
-                        <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={3}> {statisticalByMonth.tongSoTien == null ? 0 : statisticalByMonth.tongSoTien} VNĐ</Title>
+                        <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={3}> {statisticalByMonth.tongSoTien == null ? 0 : formatCurrency(statisticalByMonth.tongSoTien)} </Title>
                         <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={5}> Doanh thu tháng này </Title>
                         <img src={imgBluechart} style={{ width: '100%' }} />
                     </div>
                     <div style={{ width: '25%', height: 180, backgroundColor: '#f9b115', padding: 25, marginRight: 60, borderRadius: 8 }}>
-                        <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={3}> {statisticalByYears.tongSoTien == null ? 0 : statisticalByYears.tongSoTien} VNĐ</Title>
+                        <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={3}> {statisticalByYears.tongSoTien == null ? 0 : formatCurrency(statisticalByYears.tongSoTien)} </Title>
                         <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={5}> Doanh thu năm nay </Title>
                         <img src={imgyellowchart} style={{ width: '100%', marginTop: 10 }} />
                     </div>

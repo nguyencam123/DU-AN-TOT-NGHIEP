@@ -14,6 +14,16 @@ export const fetchSearchProducts = (startDate, enDate, nameOrAddress, numberPers
         dispatch(fetchProductsFailure(error.message));
     }
 };
+export const fetchSearchProductsByPage = (startDate, enDate, nameOrAddress, numberPerson, roomNumber, priceMin, priceMax, convenientHomestayList, page) => async (dispatch) => {
+    dispatch(fetchProductsStart());
+    try {
+        const response = await
+            axios.get(`http://localhost:8080/api/v1/homestay/search?dateFrom=${startDate}&dateTo=${enDate}&nameOrAddress=${nameOrAddress}&numberPerson=${numberPerson}&roomNumber=${roomNumber}&priceMin=${priceMin}&priceMax=${priceMax}&${convenientHomestayList}&size=10&page=${page}`);
+        dispatch(fetchProductsSuccess(response.data.data)); // Lấy dữ liệu từ response.data.data
+    } catch (error) {
+        dispatch(fetchProductsFailure(error.message));
+    }
+};
 // get convinent homestay
 export const getAllConvinentHomestay = () => async (dispatch) => {
     dispatch(fetchProductsStart());
@@ -30,7 +40,7 @@ export const fetchSearchProductsForPromotion = (startDate, enDate, page) => asyn
     try {
         const response = await
             axios.get(`http://localhost:8080/api/v1/homestay/search-by-promotion?dateFrom=${startDate}&dateTo=${enDate}&size=10&page=${page}`);
-        dispatch(fetchProductPromotionSuccess(response.data.data.data)); // Lấy dữ liệu từ response.data.data
+        dispatch(fetchProductPromotionSuccess(response.data.data)); // Lấy dữ liệu từ response.data.data
     } catch (error) {
         dispatch(fetchProductsFailure(error.message));
     }
