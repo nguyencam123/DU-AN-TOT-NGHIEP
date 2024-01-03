@@ -1,20 +1,33 @@
 package com.example.demo.cors.homestayowner.service.impl;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.example.demo.cors.homestayowner.model.reponse.HomestayOwnerImgHomestayReponse;
+import com.example.demo.cors.homestayowner.repository.HomestayOwnerHomestayRepository;
 import com.example.demo.cors.homestayowner.repository.HomestayOwnerImgHomestayRepo;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerImgHomestayService;
 import com.example.demo.entities.Homestay;
 import com.example.demo.entities.ImgHomestay;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class HomestayOwnerImgHomestayServiceImpl implements HomestayOwnerImgHomestayService {
 
     @Autowired
     private HomestayOwnerImgHomestayRepo homestayOwnerImgHomestayRepo;
+
+    @Autowired
+    private HomestayOwnerHomestayRepository homestayOwnerHomestayRepository;
+
+    @Autowired
+    private Cloudinary cloudinary;
 
     @Override
     public List<ImgHomestay> getImgHomestayByHomestayId(String id) {
@@ -27,13 +40,25 @@ public class HomestayOwnerImgHomestayServiceImpl implements HomestayOwnerImgHome
     }
 
     @Override
-    public ImgHomestay AddImgHomestay(String idHomestay) {
-        return null;
+    public List<ImgHomestay> AddImgHomestay(List<MultipartFile> multipartFiles, String idHomestay) throws IOException {
+        List<ImgHomestay> newImages = new ArrayList<>();
+        for (MultipartFile image : multipartFiles) {
+           ImgHomestay imgHomestay=new ImgHomestay();
+           Homestay homestay=homestayOwnerHomestayRepository.findById(idHomestay).get();
+           imgHomestay.setHomestay(homestay);
+           Map uploadResult = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.asMap("folder", "homestay_images"));
+           imgHomestay.setImgUrl(uploadResult.get("url").toString());
+           homestayOwnerImgHomestayRepo.save(imgHomestay);
+           newImages.add(imgHomestay);
+        }
+        return newImages;
     }
 
     @Override
     public ImgHomestay deleteImghomestay(String id) {
-        return null;
+        ImgHomestay imgHomestay=homestayOwnerImgHomestayRepo.findById(id).get();
+        homestayOwnerImgHomestayRepo.delete(imgHomestay);
+        return imgHomestay;
     }
 
 

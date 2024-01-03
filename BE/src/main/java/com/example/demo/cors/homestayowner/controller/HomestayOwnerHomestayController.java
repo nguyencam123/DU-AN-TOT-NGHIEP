@@ -68,11 +68,10 @@ public class HomestayOwnerHomestayController {
     @PreAuthorize("hasAuthority('owner:update')")
     public ResponseObject updatehomestays(@RequestParam("id") String id,
                                           @RequestParam("homestay") String homestay,
-                                          @RequestParam("image") List<MultipartFile> images,
                                           @RequestParam("convenient") List<String> idConvenientHomestay) throws IOException {
         try {
             HomestayownerHomestayRequest request = conventer.convert(homestay);
-            Homestay homestay1 = homestayownerHomestayService.updateHomestays(id, request, images, idConvenientHomestay);
+            Homestay homestay1 = homestayownerHomestayService.updateHomestays(id, request, idConvenientHomestay);
             ResponseObject responseObject = new ResponseObject(homestay1);
             responseObject.setMessage("Thành công");
             return responseObject;

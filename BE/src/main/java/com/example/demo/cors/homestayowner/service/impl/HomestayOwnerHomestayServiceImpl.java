@@ -55,18 +55,12 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
 
     @Override
     @Transactional
-    public Homestay updateHomestays(String id, HomestayownerHomestayRequest request, List<MultipartFile> multipartFiles, List<String> idConvenientHomestay) throws IOException {
+    public Homestay updateHomestays(String id, HomestayownerHomestayRequest request,List<String> idConvenientHomestay) throws IOException {
         Homestay homestay = homestayownerHomestayRepository.findById(id).orElse(null);
         getHomestay(request, homestay);
         Homestay homestay1 = homestayownerHomestayRepository.save(homestay);
         homestayOwnerDetailHomestayReposritory.deleteByHomestay(id);
-
-        // Kiểm tra xem multipartFiles có rỗng không trước khi gọi hàm xử lý ảnh và tiện ích
-        if (!multipartFiles.isEmpty()) {
-            return getImgHomestayAndConvenientHomestay(id, multipartFiles, idConvenientHomestay, homestay1);
-        }
-
-        return homestay1;
+        return getImgHomestayAndConvenientHomestay(id,idConvenientHomestay, homestay1);
     }
 
     @Override
@@ -156,50 +150,8 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
         return homestay1;
     }
 
-    private Homestay getImgHomestayAndConvenientHomestay(String id, List<MultipartFile> multipartFiles, List<String> idConvenientHomestay, Homestay homestay1) throws IOException {
+    private Homestay getImgHomestayAndConvenientHomestay(String id,List<String> idConvenientHomestay, Homestay homestay1) throws IOException {
         Homestay homestay = homestayownerHomestayRepository.findById(id).orElse(null);
-        List<ImgHomestay> existingImages = homestay.getImages();
-        List<ImgHomestay> newImages = new ArrayList<>();
-
-        if (multipartFiles != null && !multipartFiles.isEmpty()) {
-            List<ImgHomestay> imgHomestayOlder=homestayOwnerImgHomestayRepo.getImgHomestayByHomestay(id);
-            homestayOwnerImgHomestayRepo.deleteByHomestay(id);
-
-            for (MultipartFile image : multipartFiles) {
-                ImgHomestay imgHomestay = new ImgHomestay();
-                imgHomestay.setHomestay(homestay1);
-
-                if (image.getSize() > 0) {
-                    try {
-                        Map uploadResult = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.asMap("folder", "homestay_images"));
-                        imgHomestay.setImgUrl(uploadResult.get("url").toString());
-                        homestayOwnerImgHomestayRepo.save(imgHomestay);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    // Trường hợp file rỗng, giữ nguyên ảnh hiện tại
-                    if (existingImages != null && !existingImages.isEmpty()) {
-                        for (ImgHomestay existingImage : imgHomestayOlder) {
-                            ImgHomestay preservedImage = new ImgHomestay();
-                            preservedImage.setHomestay(homestay1);
-                            preservedImage.setImgUrl(existingImage.getImgUrl());
-                            homestayOwnerImgHomestayRepo.save(preservedImage);
-                            newImages.add(preservedImage);
-                        }
-                    }
-                }
-                newImages.add(imgHomestay);
-            }
-
-            homestay1.setImages(newImages);
-        } else {
-            if (existingImages != null) {
-                newImages.addAll(existingImages);
-                homestay1.setImages(newImages);
-            }
-        }
-
         List<DetailHomestay> detailHomestays = new ArrayList<>();
         for (String detail : idConvenientHomestay) {
             DetailHomestay detailHomestay = new DetailHomestay();
