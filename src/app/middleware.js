@@ -17,6 +17,7 @@ export const checkToken = (token) => async (dispatch) => {
         }
     } catch (error) {
         console.error('Error checking token:', error);
+        // localStorage.removeItem('ownerDetail');
     }
 };
 export const checkTokenAdmin = (token) => async (dispatch) => {
@@ -31,6 +32,7 @@ export const checkTokenAdmin = (token) => async (dispatch) => {
         }
     } catch (error) {
         console.error('Error checking token:', error);
+        // localStorage.removeItem('adminDetail');
     }
 };
 export const checkTokenUser = (token) => async (dispatch) => {
@@ -45,5 +47,6 @@ export const checkTokenUser = (token) => async (dispatch) => {
         }
     } catch (error) {
         console.error('Error checking token:', error);
+        // localStorage.removeItem('userDetail');
     }
 };

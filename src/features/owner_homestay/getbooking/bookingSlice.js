@@ -5,6 +5,7 @@ const initialState = {
   booking: {},
   promotions: [],
   comments: [],
+  commentsUser:[],
   loading: false,
   error: null,
 };
@@ -27,6 +28,11 @@ const bookingSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
+    fetchCommentUserSuccess: (state, action) => {
+      state.commentsUser = action.payload;
+      state.loading = false;
+      state.error = null;
+    },
     addBookingsSuccess: (state, action) => {
       state.bookings = action.payload;
       state.loading = false;
@@ -44,5 +50,5 @@ const bookingSlice = createSlice({
   },
 });
 
-export const { fetchBookingsStart, fetchBookingsSuccess, fetchBookingsFailure, fetchPromotionsSuccess, addBookingsSuccess, fetchCommentSuccess } = bookingSlice.actions;
+export const { fetchBookingsStart, fetchBookingsSuccess, fetchBookingsFailure, fetchPromotionsSuccess, addBookingsSuccess, fetchCommentSuccess,fetchCommentUserSuccess } = bookingSlice.actions;
 export default bookingSlice.reducer;

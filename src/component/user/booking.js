@@ -174,8 +174,10 @@ export const BookingUser = () => {
             const isCancelled = booking.status === 'HUY';
             const isPastEndDate = currentDate > endDate + 1;
             // Check if the comment user id is different from UserID
-            const canComment = ((booking.homestay.comment.some(comment => comment.user.id !== UserID)) && currentDate > endDate);
-
+            // const canComment = booking.homestay.comment.every(comment => (
+            //   comment.user.id !== UserID && currentDate > endDate + 1
+            // ));
+            const canComment = currentDate > endDate + 1
             return (
               <div style={{
                 width: '100%', height: 210,

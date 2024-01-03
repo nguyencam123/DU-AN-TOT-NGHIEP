@@ -186,6 +186,7 @@ const HeaderUser = () => {
                     >
                       <FileDoneOutlined /> Đơn đặt hàng
                     </button>
+                    <Link to={'/userComment'}>
                     <button
                       type='button'
                       className='btn btn-primary'
@@ -193,6 +194,7 @@ const HeaderUser = () => {
                     >
                       <CommentOutlined /> Nhận xét của tôi
                     </button>
+                    </Link>
                     <Link to={'/RulesWhile'}>
                       <button
                         type='button'
