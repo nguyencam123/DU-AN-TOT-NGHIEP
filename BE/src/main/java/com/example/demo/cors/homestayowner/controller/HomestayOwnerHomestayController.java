@@ -2,6 +2,7 @@ package com.example.demo.cors.homestayowner.controller;
 
 import com.example.demo.cors.common.base.ResponseObject;
 import com.example.demo.cors.homestayowner.model.conventer.HomestayOwnerHomestayConventer;
+import com.example.demo.cors.homestayowner.model.request.HomestayOwnerHomestayGetRequest;
 import com.example.demo.cors.homestayowner.model.request.HomestayownerHomestayRequest;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerHomestayService;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerImgHomestayService;
@@ -31,8 +32,8 @@ public class HomestayOwnerHomestayController {
 
     @GetMapping("get-homestay-by-id")
     @PreAuthorize("hasAuthority('owner:read')")
-    public ResponseObject getAllHomestayownerHomestay(@RequestParam("id") String id, HomestayownerHomestayRequest homestayownerHomestayRequest) {
-        return new ResponseObject(homestayownerHomestayService.getPageHomestay(id, homestayownerHomestayRequest));
+    public ResponseObject getAllHomestayownerHomestay(final HomestayOwnerHomestayGetRequest homestayownerHomestayRequest) {
+        return new ResponseObject(homestayownerHomestayService.getPageHomestay(homestayownerHomestayRequest));
     }
 
     @GetMapping("get-imghomestay")
