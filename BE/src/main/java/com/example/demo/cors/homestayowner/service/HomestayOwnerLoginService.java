@@ -4,7 +4,6 @@ import com.example.demo.cors.homestayowner.model.reponse.loginreponse.HomestayOw
 import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayOwnerOwnerHomestayRequest;
 import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayOwnerPasswordRequest;
 import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayOwnerUsenamePasswordRequest;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -17,10 +16,8 @@ public interface HomestayOwnerLoginService {
 
     HomestayOwnerAuthenticationReponse changePassword(HomestayOwnerPasswordRequest request, Principal connecteUser);
 
-    HomestayOwnerAuthenticationReponse updateInformationOwner(String idOwner, HomestayOwnerOwnerHomestayRequest request);
+    HomestayOwnerAuthenticationReponse updateInformationOwner(String idOwner, HomestayOwnerOwnerHomestayRequest request) throws IOException;
 
     void confirmEmail(String code);
-
-    HomestayOwnerAuthenticationReponse updateInformationImgOwner(String idOwner,MultipartFile multipartFile) throws IOException;
 
 }

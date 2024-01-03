@@ -211,7 +211,7 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
     }
 
     @Override
-    public CustomerAuthenticationReponse updateInformationCusmoter(String idCustomer, CustomerRequest request, MultipartFile multipartFile) throws IOException {
+    public CustomerAuthenticationReponse updateInformationCusmoter(String idCustomer, CustomerRequest request) throws IOException {
         User customer = customerLoginRepository.findById(idCustomer).get();
         if (isNullOrEmpty(request.getUsername())) {
             throw new RestApiException("tên tài khoản không được để trống");
@@ -228,10 +228,10 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         if (customerLoginRepository.existsByUsername(request.getUsername()) && ! customer.getUsername().equals(request.getUsername())) {
             throw new RestApiException("Tên tài khoản đã tồn tại");
         }
-        if (customerLoginRepository.existsByEmail(request.getEmail())) {
+        if (customerLoginRepository.existsByEmail(request.getEmail()) && !customer.getEmail().equals(request.getEmail())) {
             throw new RestApiException("Email đã tồn tại");
         }
-        if (customerLoginRepository.existsByPhoneNumber(request.getPhoneNumber())) {
+        if (customerLoginRepository.existsByPhoneNumber(request.getPhoneNumber()) && !customer.getPhoneNumber().equals(request.getPhoneNumber())) {
             throw new RestApiException("Số điện thoại đã tồn tại");
         }
         String phoneNumber = request.getPhoneNumber();
@@ -249,12 +249,18 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         customer.setPhoneNumber(request.getPhoneNumber());
         customer.setEmail(request.getEmail());
         customer.setUsername(request.getUsername());
-        customer.setAvatarUrl(cloudinary.uploader()
-                .upload(multipartFile.getBytes(),
-                        Map.of("id", UUID.randomUUID().toString()))
-                .get("url")
-                .toString());
-        customerLoginRepository.save(customer);
+        if(request.getAvatar()!=null && request.getAvatar().getBytes().length > 0) {
+            customer.setAvatarUrl(cloudinary.uploader()
+                    .upload(request.getAvatar().getBytes(),
+                            Map.of("id", UUID.randomUUID().toString()))
+                    .get("url")
+                    .toString());
+            customerLoginRepository.save(customer);
+        }else if(request.getAvatar()==null && customer.getAvatarUrl()!=null){
+            customerLoginRepository.save(customer);
+        }else{
+            customerLoginRepository.save(customer);
+        }
         return CustomerAuthenticationReponse.builder()
                 .code(customer.getCode())
                 .id(customer.getId())

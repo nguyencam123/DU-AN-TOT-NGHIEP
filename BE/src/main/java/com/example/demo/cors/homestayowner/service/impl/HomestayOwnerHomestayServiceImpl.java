@@ -153,7 +153,7 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
         Homestay homestay = homestayownerHomestayRepository.findById(id).orElse(null);
         List<ImgHomestay> existingImages = homestay.getImages();
         List<ImgHomestay> newImages = new ArrayList<>();
-        if (multipartFiles != null || !multipartFiles.isEmpty()) {
+        if (multipartFiles != null && !multipartFiles.isEmpty()) {
             homestayOwnerImgHomestayRepo.deleteByHomestay(id);
             for (MultipartFile image : multipartFiles) {
                 ImgHomestay imgHomestay = new ImgHomestay();

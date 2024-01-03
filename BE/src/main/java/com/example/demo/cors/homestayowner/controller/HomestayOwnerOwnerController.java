@@ -7,7 +7,6 @@ import com.example.demo.cors.homestayowner.service.HomestayOwnerLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -26,15 +25,7 @@ public class HomestayOwnerOwnerController {
 
     @PutMapping("/update-information-owner")
     @PreAuthorize("hasAuthority('owner:update')")
-    public ResponseObject updateInformationOwners(@RequestParam("owner") String homestayOwnerOwnerHomestayRequest, @RequestParam("id") String idOwner){
-        HomestayOwnerOwnerHomestayRequest request=conventer.convert(homestayOwnerOwnerHomestayRequest);
+    public ResponseObject updateInformationOwners(final HomestayOwnerOwnerHomestayRequest request, @RequestParam("id") String idOwner) throws IOException {
         return new ResponseObject(homestayownerLoginService.updateInformationOwner(idOwner,request));
     }
-
-    @PutMapping("/update-information-imgowner")
-    @PreAuthorize("hasAuthority('owner:update')")
-    public ResponseObject updateInformationImgOwners(@RequestParam("id") String idOwner, @RequestParam("avataUrl")MultipartFile multipartFile) throws IOException {
-        return new ResponseObject(homestayownerLoginService.updateInformationImgOwner(idOwner,multipartFile));
-    }
-
 }

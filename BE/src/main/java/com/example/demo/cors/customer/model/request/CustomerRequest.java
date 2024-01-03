@@ -2,6 +2,7 @@ package com.example.demo.cors.customer.model.request;
 
 import com.example.demo.infrastructure.contant.Status;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -27,5 +28,7 @@ public class CustomerRequest {
     private String password;
 
     private Status status;
+
+    private MultipartFile avatar;
 
 }
