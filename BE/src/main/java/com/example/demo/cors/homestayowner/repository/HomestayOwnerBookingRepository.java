@@ -35,7 +35,11 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
             AND ( :#{#request.homestayName} IS NULL OR :#{#request.homestayName} LIKE '' OR h.name LIKE %:#{#request.homestayName}% )
             AND ( :#{#request.sdtUser} IS NULL OR :#{#request.sdtUser} LIKE '' OR u.phone_number = :#{#request.sdtUser} OR b.phone_number = :#{#request.sdtUser})
             AND ( :#{#request.nameBooking} IS NULL OR :#{#request.nameBooking} LIKE '' OR b.name LIKE %:#{#request.nameBooking}%)
-            AND (:#{#request.statusBooking} IS NULL OR b.status = :#{#request.statusBooking}) )
+            AND (:#{#request.statusBooking} IS NULL OR b.status = :#{#request.statusBooking})
+            AND (
+                YEAR(DATEADD(SECOND, b.created_date / 1000, '1970-01-01')) = :#{#request.year}
+                AND (MONTH(DATEADD(SECOND, b.created_date / 1000, '1970-01-01')) = :#{#request.month} OR :#{#request.month} IS NULL OR :#{#request.month} LIKE '')
+			))
             """, nativeQuery = true)
     Page<Booking> getAllBooking(@Param("request") HomestayOwnerBookingRequest request, Pageable pageable);
 
