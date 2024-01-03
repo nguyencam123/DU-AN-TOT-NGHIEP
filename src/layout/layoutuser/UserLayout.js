@@ -10,10 +10,11 @@ const { Header, Content } = Layout;
 
 const UserLayout = ({ children }) => {
     const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const storedToken = JSON.parse(localStorage.getItem('userDetail'))?.data?.token;
+    const storedTokenAccept = JSON.parse(localStorage.getItem('userDetail'))?.success
     useEffect(() => {
-        const storedToken = JSON.parse(localStorage.getItem('userDetail'))?.data?.token;
-        const storedTokenAccept = JSON.parse(localStorage.getItem('userDetail'))?.success
+        
         updateAxiosToken(storedToken);
 
         const basePaths = [
@@ -36,7 +37,7 @@ const UserLayout = ({ children }) => {
             navigate('/login');
             message.info('Bạn cần đăng nhập để thực hiện chức năng này');
         }
-    }, [window.location.pathname]);
+    }, [window.location.pathname,storedToken]);
 
 
     return (

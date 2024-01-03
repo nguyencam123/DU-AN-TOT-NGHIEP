@@ -113,6 +113,7 @@ const Endow = () => {
                                                             <MDBCardImage src={items.images[0]?.imgUrl} position="top" alt="..." />
                                                             <MDBCardBody>
                                                                 <MDBCardTitle style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{items.name}</MDBCardTitle>
+                                                                <MDBCardTitle style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Khuyến mãi {items.promotion?.name}</MDBCardTitle>
                                                                 <MDBCardTitle>GIẢM ĐẾN {formatCurrency(items.promotion?.value)}</MDBCardTitle>
                                                                 <MDBCardText>
                                                                     *Không yêu cầu số tiền tối thiểu.

@@ -15,12 +15,10 @@ const ChangePassword = () => {
     const userDetail = JSON.parse(localStorage.getItem('ownerDetail'));
     const namelocal = userDetail?.data.name;
     const idowner = userDetail?.data.id;
-    const [name, setname] = useState('')
+    const [name, setname] = useState(namelocal)
     const [birthday, setbirthday] = useState(856345)
     const [gender, setgender] = useState(true)
-    const [address, setaddress] = useState('')
-    const [phoneNumber, setphoneNumber] = useState(0)
-    const [email, setemail] = useState('')
+    const [address, setaddress] = useState(userDetail?.data.address)
     const [password, setpassword] = useState('')
     const [newpassword, setnewpassword] = useState('')
     const [confirmpassword, setconfirmpassword] = useState('')
@@ -30,17 +28,32 @@ const ChangePassword = () => {
     };
     const [file, setFile] = useState([]);
 
-    const handleFileChange = (e) => {
-        let selectedFile = e.target.files;
-        let fileList = [...selectedFile]; // Chuyển đổi FileList thành mảng
-        setFile(fileList);
+
+    const [selectedImages, setSelectedImages] = useState([]);
+
+    const handleFileChange = (event) => {
+        const files = event.target.files;
+        let selectedFile = event.target.files;
+        let fileList = [...selectedFile];
+        const imagesArray = fileList.map((file) => ({
+            name: file.name,
+            url: URL.createObjectURL(file),
+        }));
+
+        setSelectedImages((prevImages) => [...prevImages, ...imagesArray]);
+        setFile(fileList)
+        const filesArray = Array.from(files).map((file) => ({
+            name: file.name,
+            size: file.size,
+            type: file.type,
+        }));
     };
     const navigate = useNavigate()
     const openNotification = () => {
         notification.open({
             message: 'Thông báo',
             description:
-                'Cập nhật thông tin thành công',
+                'Cập nhật thông tin thành công,thông tin mới sẽ được áp dụng cho lần đăng nhập sau',
             onClick: () => {
                 console.log('Notification Clicked!');
             },
@@ -64,9 +77,9 @@ const ChangePassword = () => {
     const formData = {
         username: userDetail?.data.username,
         birthday: 1234567890,
-        name: userDetail?.data.name,
-        gender: userDetail?.data.gender,
-        address: userDetail?.data.address,
+        name: name,
+        gender: gender,
+        address: address,
         phoneNumber: userDetail?.data.phoneNumber,
         email: userDetail?.data.email
     }
@@ -128,9 +141,50 @@ const ChangePassword = () => {
                             />
                         </MDBCol>
                     </MDBRow>
+                    <MDBRow>
+                            <MDBCol col='6'>
+                                Giới tính &emsp;&emsp;
+                                <label>
+                                    <input
+                                        type="radio"
+                                        name="gender"
+                                        value={true}
+                                        defaultChecked={true}
+                                        checked={gender === true}
+                                        onChange={() => setgender(true)}
+                                    />
+                                    Nam
+                                </label>
+                                &emsp;
+                                <label>
+                                    <input
+                                        type="radio"
+                                        name="gender"
+                                        value={false}
+                                        checked={gender === false}
+                                        onChange={() => setgender(false)}
+                                    />
+                                    Nữ
+                                </label>
+                            </MDBCol>
+
+                        </MDBRow><br />
+                        <div style={{ display: 'flex' }}>
+                            <label htmlFor='image' style={{ cursor: 'pointer', border: '1px solid black', borderRadius: 8, padding: '6px 15px 6px 15px', marginLeft: 10 }}>
+                                Chọn tệp
+                            </label>
+                            <input
+                                type='file'
+                                id='image'
+                                accept='image/*'
+                                onChange={handleFileChange}
+                                style={{ display: 'none' }}
+                            />
+                            <div style={{ marginLeft: 8, marginTop: 5 }}>Đã có {selectedImages.length} file được chọn</div>
+                        </div><br />
                     <div style={{ width: '100%' }}><span style={{ width: 150 }}>Email:</span><span>{userDetail?.data.email}</span></div><br />
                     <div style={{ width: '100%' }}><span style={{ width: 150 }}>Số điện thoại :</span><span>{userDetail?.data.phoneNumber}</span></div><br />
-                    <div style={{ width: '100%' }}><span style={{ width: 150 }}>GIới tính :</span><span>{userDetail?.data.gender == true ? 'nam' : 'nữ'}</span></div><br />
+                    
                     {/* <input type='file' accept="image/*" onChange={handleFileChange} /> */}
                     <MDBBtn type="submit" className='w-100 mb-4' size='md' style={{ marginTop: 10 }} onClick={handleSubmit}>Lưu</MDBBtn>
                 </form>

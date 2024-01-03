@@ -32,7 +32,7 @@ const StatisticalHomestay = () => {
     const [homestayname, setHomestayName] = useState('')
     const [namebooking, setNameBooking] = useState('')
     const [valueselect, setValueSelect] = useState('1')
-    const [year, setYear] = useState('2023')
+    const [year, setYear] = useState(currentYear)
     const onChange = (dateString) => {
         setYear(dateString)
         dispatch(fetchStatisticalByYear(UserID, dateString))

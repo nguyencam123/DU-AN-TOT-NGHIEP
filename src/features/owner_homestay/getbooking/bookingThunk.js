@@ -15,9 +15,9 @@ export const fetchBooking = (id) => async (dispatch) => {
     }
 };
 
-export const getBookingByNameHomestay = (id, name, nameBooking, statusBooking) => async (dispatch) => {
+export const getBookingByNameHomestay = (id, name, nameBooking, statusBooking,serchYear,serchMonth) => async (dispatch) => {
     try {
-        const response = await instance.get(`http://localhost:8080/api/v2/booking?idOwner=${id}&size=99&homestayName=${name}&nameBooking=${nameBooking}&statusBooking=${statusBooking}`);
+        const response = await instance.get(`http://localhost:8080/api/v2/booking?idOwner=${id}&size=99&homestayName=${name}&nameBooking=${nameBooking}&statusBooking=${statusBooking}&year=${serchYear}&month=${serchMonth}`);
         dispatch(fetchBookingsSuccess(response.data.data.data)); // Lấy dữ liệu từ response.data.data
 
     } catch (error) {

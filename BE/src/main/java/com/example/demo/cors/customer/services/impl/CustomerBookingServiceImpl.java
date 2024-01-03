@@ -54,7 +54,7 @@ public class CustomerBookingServiceImpl implements CustomerBookingService {
         if (totalPrice != homestay.getPrice()) {
             booking.setTypeBooking(TypeBooking.DAT_COC);
         }
-        booking.setTypeBooking(TypeBooking.THANH_TOAN_TRUOC);
+        booking.setTypeBooking(request.getTypeBooking());
         booking.setUser(userRepository.findById(request.getUserId()).get());
         booking.setTotalPrice(totalPrice);
         booking.setStartDate(request.getStartDate());
@@ -66,6 +66,7 @@ public class CustomerBookingServiceImpl implements CustomerBookingService {
         booking.setPromotion(promotion);
         booking.setNote(request.getNote());
         booking.setStatus(StatusBooking.KHONG_THANH_CONG);
+        booking.setNumberOfNight(request.getNumberOfNight());
         customerBookingRepository.save(booking);
         return booking;
     }

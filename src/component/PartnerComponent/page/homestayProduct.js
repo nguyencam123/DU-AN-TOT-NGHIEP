@@ -78,6 +78,7 @@ const HomeStayProduct = () => {
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [wards, setWards] = useState([]);
   const [selectedWard, setSelectedWard] = useState('');
+  const [valueselect, setValueSelect] = useState('');
   const dateFormat = 'YYYY/MM/DD';
   const isBeforeToday = (current) => {
     return current && current.isBefore(moment().startOf('day'));
@@ -94,10 +95,10 @@ const HomeStayProduct = () => {
     setprice(value);
   };
   useEffect(() => {
-    dispatch(fetchHomestay());
+    dispatch(fetchHomestay(valueselect));
     dispatch(fetchConvenient());
     // dispatch(fetchProvince());
-  }, []);
+  }, [valueselect]);
   const dispatch = useDispatch();
   const products = useSelector((state) => state.ownerHomestay.homestays);
   const convenients = useSelector((state) => state.convenient.convenients);
@@ -294,6 +295,29 @@ const HomeStayProduct = () => {
   const [cancellationPolicy, setcancellationPolicy] = useState(0);
   const [timeCheckIn, settimeCheckIn] = useState(null);
   const [addressDetail, setAddressDetail] = useState('');
+  
+
+  const listFilter = [
+    {
+        name: 'Tất cả',
+        value: ''
+    },
+    {
+        name: 'Chờ duyệt',
+        value: 1
+    },
+    {
+        name: 'Hoạt động',
+        value: 0
+    },
+    {
+        name: 'Không hoạt động',
+        value: 2
+    }
+]
+const hanhdleSelect = (selectedValue) => {
+    setValueSelect(selectedValue) // You can access the selected value here
+};
 
   const handleTimeChangestart = (time, timeString) => {
     settimeCheckIn(timeString);
@@ -630,8 +654,16 @@ const HomeStayProduct = () => {
   return (
     <>
       <Title style={{ marginTop: '20px' }}>Quản lý Homestay</Title>
-      <div style={{ marginBottom: 20, float: 'right' }}>
-        <Button type='primary' onClick={showModal}>
+      <div style={{ marginBottom: 20, float: 'right',display:'flex' }}>
+        <Form.Item label="Trạng thái" >
+          <Select
+            style={{ width: 143 }}
+            options={listFilter.map(filter => ({ value: filter.value, label: filter.name }))}
+            defaultValue={listFilter[0].value}
+            onChange={hanhdleSelect}
+             />
+        </Form.Item>
+        <Button style={{marginLeft:20}} type='primary' onClick={showModal}>
           Thêm mới HomeStay
         </Button>
       </div>
