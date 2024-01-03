@@ -136,6 +136,7 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                 .username(ownerHomestay.getUsername())
                 .status(ownerHomestay.getStatus())
                 .roleOwner(ownerHomestay.getRole())
+                .avataUrl(ownerHomestay.getAvatarUrl())
                 .build();
     }
 
@@ -183,6 +184,7 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                 .status(ownerHomestay.getStatus())
                 .roleOwner(ownerHomestay.getRole())
                 .refreshToken(refreshToken)
+                .avataUrl(ownerHomestay.getAvatarUrl())
                 .build();
     }
 
@@ -211,6 +213,7 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                 .username(ownerHomestay.getUsername())
                 .status(ownerHomestay.getStatus())
                 .roleOwner(ownerHomestay.getRole())
+                .avataUrl(ownerHomestay.getAvatarUrl())
                 .build();
     }
 

@@ -17,8 +17,8 @@ public class HomestayOwnerImgHomestayServiceImpl implements HomestayOwnerImgHome
     private HomestayOwnerImgHomestayRepo homestayOwnerImgHomestayRepo;
 
     @Override
-    public List<HomestayOwnerImgHomestayReponse> getImgHomestayByHomestayId(String id) {
-        return homestayOwnerImgHomestayRepo.getImgHomestayByHomestayId(id);
+    public List<ImgHomestay> getImgHomestayByHomestayId(String id) {
+        return homestayOwnerImgHomestayRepo.getImgHomestayByHomestay(id);
     }
 
     @Override
@@ -27,7 +27,12 @@ public class HomestayOwnerImgHomestayServiceImpl implements HomestayOwnerImgHome
     }
 
     @Override
-    public Homestay AddImgHomestay(String idHomestay) {
+    public ImgHomestay AddImgHomestay(String idHomestay) {
+        return null;
+    }
+
+    @Override
+    public ImgHomestay deleteImghomestay(String id) {
         return null;
     }
 
