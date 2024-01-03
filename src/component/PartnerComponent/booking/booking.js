@@ -20,8 +20,7 @@ import moment from 'moment';
 import Search from 'antd/es/input/Search';
 import { fetchBooking, getBookingByNameHomestay } from '../../../features/owner_homestay/getbooking/bookingThunk';
 import * as XLSX from 'xlsx';
-const { RangePicker } = DatePicker;
-const { TextArea } = Input;
+import dayjs from 'dayjs';
 const { Title } = Typography
 
 const Booking = () => {
@@ -31,9 +30,11 @@ const Booking = () => {
     const [homestayname, setHomestayName] = useState('')
     const [namebooking, setNameBooking] = useState('')
     const [valueselect, setValueSelect] = useState('')
+    const [serchYear,setSerchYear]=useState('2024')
+    const [serchMonth,setSerchMonth]=useState('')
     useEffect(() => {
-        dispatch(getBookingByNameHomestay(UserID, homestayname, namebooking, valueselect));
-    }, [homestayname, namebooking, valueselect]);
+        dispatch(getBookingByNameHomestay(UserID, homestayname, namebooking, valueselect,serchYear,serchMonth));
+    }, [homestayname, namebooking, valueselect,serchYear,serchMonth]);
     const formatCurrency = (value) => {
         // Sử dụng Intl.NumberFormat để định dạng giá trị tiền tệ
         return new Intl.NumberFormat('vi-VN', {
@@ -41,7 +42,22 @@ const Booking = () => {
             currency: 'VND',
         }).format(value);
     };
+    const currentDate = new Date();
+    // Lấy thông tin về tháng và năm từ ngày hiện tại
+    const currentMonth = currentDate.getMonth() + 1; // Tháng bắt đầu từ 0
+    const currentYear = new Date().getFullYear();
+    const currentDateTime = new Date().getDate();
     const booking = useSelector((state) => state.booking.bookings)
+    const onChangeMonth=(date, dateString)=>{
+        const selectedMonth = date ? date.format('MM') : ''; // Format the selected date to get only the month
+        const selectedYear = date ? date.format('YYYY') : '';
+        setSerchMonth(selectedMonth);
+        setSerchYear(selectedYear)
+    }
+    const onChangeyear=(date, dateString)=>{
+        const selectedYear = date ? date.year() : ''; // Extract the year from the date object
+        setSerchYear(selectedYear.toString());
+    }
     const columns = [
         {
             title: 'Tên tài khoản',
@@ -250,6 +266,17 @@ const Booking = () => {
                         onSearch={handleSearchBooking}
                     />
                 </Form.Item>
+                <div style={{marginLeft:30}}>
+                <Form.Item label="Tìm kiếm theo tháng và năm" style={{ float: 'left', marginLeft: ' 50px' }}>
+                <DatePicker onChange={onChangeMonth} picker="month" />
+                </Form.Item>
+                <Form.Item label="Tìm kiếm theo năm" style={{ float: 'left', marginLeft: ' 50px' }}>
+                <DatePicker style={{marginLeft:30}} onChange={onChangeyear} picker="year" disabledDate={(current) => current && current.year() > currentYear}
+                    defaultValue={dayjs(`${currentYear}-01-01`)}/>
+                </Form.Item>
+                
+                </div>
+                
             </Row>
             <Table columns={columns} dataSource={booking} />
         </div>

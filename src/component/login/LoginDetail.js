@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import { Avatar, Tabs, Typography, notification } from 'antd'
+import { Avatar, Tabs, Typography, message, notification } from 'antd'
 import { UserOutlined, FileProtectOutlined, LogoutOutlined, BellOutlined, RedoOutlined } from '@ant-design/icons'
 import { useState } from "react";
 import { MDBBtn, MDBCol, MDBInput, MDBRow } from "mdb-react-ui-kit";
@@ -24,6 +24,8 @@ const LoginDetail = () => {
     const [username, setusername] = useState('')
     const [password, setpassword] = useState('')
     const [identificationNumber, setidentificationNumber] = useState('')
+    const [loading, setLoading] = useState(false);
+
     const handleDateChangestart = (dates) => {
         setbirthday(moment(dates).valueOf());
     };
@@ -98,7 +100,6 @@ const LoginDetail = () => {
         phoneNumber: phoneNumber,
         email: email,
         birthday: new Date(identificationNumber).valueOf(),
-        point: 9,
         username: dataUser?.data?.username
     }
     const dispatch = useDispatch()
@@ -108,28 +109,34 @@ const LoginDetail = () => {
     }
     const handleSubmit = (e) => {
         e.preventDefault();
+        setLoading(true); // Set loading to true when submitting
+    
         const formData = new FormData();
         formData.append('customer', JSON.stringify(customerData));
         file.forEach((imageUrl) => {
             formData.append('avataUrl', imageUrl);
         });
-        // if (password.length < 8 || username.length < 8) {
-        //     alert('Mật khẩu và tài khoản phải có ít nhất 8 ký tự');
-        //     return;
-        // }
+    
         if (phoneNumber.toString().length !== 10) {
             alert('Số điện thoại phải có đúng 10 số');
+            setLoading(false); // Set loading to false if validation fails
             return;
         } else {
-            instance.put(`http://localhost:8080/api/v1/customer/update-information-owner?id=${userDetail?.data.id}`, formData)
+            message.info(
+                'Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!', 5
+              );
+            instance.put(`http://localhost:8080/api/v1/customer/update-information-customer?id=${userDetail?.data.id}`, formData)
                 .then(response => {
-                    // Xử lý dữ liệu ở đây nếu cần
+                   
+                    setLoading(false); // Set loading to false after a successful request
                 })
                 .catch(error => {
                     console.error('Error:', error);
+                    setLoading(false); // Set loading to false if the request fails
                 });
         }
     };
+    
     const [activeTab, setActiveTab] = useState('1');
     const items = [
         {
@@ -187,6 +194,8 @@ const LoginDetail = () => {
                                         name="gender"
                                         value={true}
                                         defaultChecked={true}
+                                        checked={gender === true}
+                                        onChange={() => setgender(true)}
                                     />
                                     Nam
                                 </label>
@@ -196,6 +205,8 @@ const LoginDetail = () => {
                                         type="radio"
                                         name="gender"
                                         value={false}
+                                        checked={gender === false}
+                                        onChange={() => setgender(false)}
                                     />
                                     Nữ
                                 </label>
@@ -215,7 +226,9 @@ const LoginDetail = () => {
                             />
                             <div style={{ marginLeft: 8, marginTop: 5 }}>Đã có {selectedImages.length} file được chọn</div>
                         </div>
-                        <MDBBtn type="submit" className='w-100 mb-4' size='md' style={{ marginTop: 10 }}>Lưu</MDBBtn>
+                        <MDBBtn type="submit" className='w-100 mb-4' size='md' style={{ marginTop: 10 }} disabled={loading}>
+                        {loading ? 'Đang lưu...' : 'Lưu'}
+                        </MDBBtn>
                     </form>
                 </div>
             </div>,

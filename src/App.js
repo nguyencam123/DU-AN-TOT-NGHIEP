@@ -31,6 +31,7 @@ import ForgortPasswordOwner from './component/PartnerComponent/login/fogotPasswo
 import ForgortPasswordUser from './component/login/forgotPassword';
 import RulesWhile from './component/user/siderheader/ruleswhile';
 import SupportedUser from './component/user/siderheader/supporteduser';
+import UserComment from './component/user/siderheader/userComment';
 
 function App() {
   //map component user
@@ -56,6 +57,7 @@ function App() {
     { path: 'changePasswordUser', element: <ForgortPasswordUser /> },
     { path: 'RulesWhile', element: <RulesWhile /> },
     { path: 'supporteduser', element: <SupportedUser /> },
+    {path:'userComment',element:<UserComment/>}
   ];
   useEffect(() => {
     window.scrollTo(0, 0); // Cuộn lên đầu trang khi path thay đổi

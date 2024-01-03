@@ -178,7 +178,7 @@ function ProductList() {
                     {(currentPage + 1) * itemsPerPage < YourData.length && <div onClick={handleNextPage}><RightOutlined style={{ fontSize: '22px', position: 'absolute' }} /></div>}
                 </div>
             </section>
-            <section style={{ padding: '0 150px 0 150px' }}>
+            {/* <section style={{ padding: '0 150px 0 150px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Title>Chương trình khuyến mại</Title>
                     <div><a href='/home-stay' style={{ fontSize: 18, textDecoration: 'none' }}>Xem tất cả &gt;</a></div>
@@ -200,7 +200,7 @@ function ProductList() {
                         </div>
                     </div>
                 </Carousel>
-            </section>
+            </section> */}
             <section style={{ marginTop: 30 }}>
                 <div style={{ justifyContent: 'center', textAlign: 'center' }}>
                     <Title level={2}>Tiếng lành đồn xa</Title>

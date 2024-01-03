@@ -2,11 +2,11 @@ import { fetchProductsStart, fetchProductsSuccess, fetchProductsFailure, addprod
 import { instance } from '../../app/axiosConfig';
 
 const BASE_URL = '/api/v2/homestay';
-export const fetchHomestay = () => async (dispatch) => {
+export const fetchHomestay = (status) => async (dispatch) => {
   dispatch(fetchProductsStart());
   try {
     const id = JSON.parse(localStorage.getItem('ownerDetail'))?.data.id;
-    const response = await instance.get(BASE_URL + `/get-homestay-by-id?id=${id}&size=999`);
+    const response = await instance.get(BASE_URL + `/get-homestay-by-id?id=${id}&size=999&status=${status}`);
     dispatch(fetchProductsSuccess(response.data.data.data));
   } catch (error) {
     dispatch(fetchProductsFailure(error.message));
