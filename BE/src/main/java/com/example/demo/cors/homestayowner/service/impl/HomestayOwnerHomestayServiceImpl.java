@@ -3,6 +3,7 @@ package com.example.demo.cors.homestayowner.service.impl;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.example.demo.cors.common.base.PageableObject;
+import com.example.demo.cors.homestayowner.model.request.HomestayOwnerHomestayGetRequest;
 import com.example.demo.cors.homestayowner.model.request.HomestayownerHomestayRequest;
 import com.example.demo.cors.homestayowner.repository.*;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerHomestayService;
@@ -46,9 +47,9 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
     private Cloudinary cloudinary;
 
     @Override
-    public PageableObject<Homestay> getPageHomestay(String id, HomestayownerHomestayRequest request) {
+    public PageableObject<Homestay> getPageHomestay(HomestayOwnerHomestayGetRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-        Page<Homestay> res = homestayownerHomestayRepository.getHomestayByOwnerH(id, pageable);
+        Page<Homestay> res = homestayownerHomestayRepository.getHomestayByOwnerH(request, pageable);
         return new PageableObject<>(res);
     }
 
