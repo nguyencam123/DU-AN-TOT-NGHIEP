@@ -27,7 +27,7 @@ public class HomestayOwnerOwnerHomestayRequest {
 
     private String password;
 
-    private String avataUrl;
+    private MultipartFile avataUrl;
 
     private Status status;
 

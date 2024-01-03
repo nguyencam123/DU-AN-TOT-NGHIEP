@@ -23,9 +23,8 @@ public class CustomerCotroller {
     private CustomerConventer conventer;
 
     @PutMapping("/update-information-customer")
-    public ResponseObject updateInformationCustomer(@RequestParam("customer") String customerRequest, @RequestParam("id") String idCustomer, @RequestParam("avataUrl") MultipartFile multipartFile) throws IOException {
-        CustomerRequest request = conventer.convert(customerRequest);
-        return new ResponseObject(customerLoginService.updateInformationCusmoter(idCustomer, request, multipartFile));
+    public ResponseObject updateInformationCustomer(final CustomerRequest customerRequest, @RequestParam("id") String idCustomer) throws IOException {
+        return new ResponseObject(customerLoginService.updateInformationCusmoter(idCustomer, customerRequest));
     }
 
 }

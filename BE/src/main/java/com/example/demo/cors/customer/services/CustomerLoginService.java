@@ -20,7 +20,7 @@ public interface CustomerLoginService {
 
     CustomerAuthenticationReponse changePassword(CustomerPasswordRequest request, Principal connecteUser);
 
-    CustomerAuthenticationReponse updateInformationCusmoter(String idCustomer, CustomerRequest request, MultipartFile multipartFile) throws IOException;
+    CustomerAuthenticationReponse updateInformationCusmoter(String idCustomer, CustomerRequest request) throws IOException;
 
     void sendResetPasswordEmail(CustomerForgetRequest request);
 
