@@ -15,7 +15,7 @@ public interface HomestayOwnerHomestayRepository extends HomestayRepository {
     @Query(value = """
             Select * from homestay a
             where a.owner_id=:#{#request.id}
-            and (a.status=:#{#request.status} or :#{#request.status} is null)
+            and (a.status=:#{#request.status} or :#{#request.status} is null or :#{#request.status} like '')
             """, nativeQuery = true)
     Page<Homestay> getHomestayByOwnerH(HomestayOwnerHomestayGetRequest request, Pageable pageable);
 

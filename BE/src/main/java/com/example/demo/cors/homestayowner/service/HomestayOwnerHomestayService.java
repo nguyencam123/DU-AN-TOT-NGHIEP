@@ -14,7 +14,7 @@ public interface HomestayOwnerHomestayService {
 
     PageableObject<Homestay> getPageHomestay(HomestayOwnerHomestayGetRequest request);
 
-    Homestay updateHomestays(String id, HomestayownerHomestayRequest request, List<MultipartFile> multipartFiles, List<String> idConvenientHomestay) throws IOException;
+    Homestay updateHomestays(String id, HomestayownerHomestayRequest request, List<String> idConvenientHomestay) throws IOException;
 
     Homestay deleteHomestays(String id);
 
