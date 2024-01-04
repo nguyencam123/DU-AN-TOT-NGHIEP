@@ -119,7 +119,6 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
         homestay.setCancellationPolicy(request.getCancellationPolicy());
         homestay.setEmail(request.getEmail());
         homestay.setPhoneNumber(request.getPhonenumber());
-        homestay.setCart(null);
         homestay.setOwnerHomestay(homestayOwnerOwnerHomestayRepository.findById(request.getOwnerHomestay()).orElse(null));
     }
 

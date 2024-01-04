@@ -72,11 +72,6 @@ public class Homestay extends PrimaryEntity {
     @JsonManagedReference
     private List<DetailHomestay> detailHomestays;
 
-    @ManyToOne
-    @JoinColumn(name = "cart_id")
-    @JsonBackReference
-    private Cart cart;
-
     @Nationalized
     private String email;
 
