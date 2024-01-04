@@ -63,7 +63,10 @@ public class SecurityConfiguration {
                     "/api/v3/change-pass/**",
                     "/api/v3/promotion/**",
                     "/api/v3/statistical/**",
-                    "/api/v3/information/**"
+                    "/api/v3/information/**",
+                    "api/v3/owner-homestay/**",
+                    "api/v3/comment/**",
+                    "api/v3/comment"
             };
 
     private  static final String[] All_GET={

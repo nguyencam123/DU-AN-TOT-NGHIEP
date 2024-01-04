@@ -158,12 +158,12 @@ const Statistical = () => {
           </div>
           <div style={{ width: '25%', height: 180, backgroundColor: '#f9b115', padding: 25, marginRight: 60, borderRadius: 8 }}>
             <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={3}> {statisticalByYears.tongSoTien == null ? 0 : statisticalByYears.tongSoTien} VNĐ</Title>
-            <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={5}> Doanh thu năm nay </Title>
+            <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={5}> Doanh thu năm {year} </Title>
             <img src={imgyellowchart} style={{ width: '100%', marginTop: 10 }} />
           </div>
           <div style={{ width: '25%', height: 180, backgroundColor: '#e55353', padding: 25, borderRadius: 8 }}>
             <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={3}> {statisticalByYears.doanhSo == null ? 0 : statisticalByYears.doanhSo} lượt</Title>
-            <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={5}>Số lượt đã đặt phòng trong năm</Title>
+            <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={5}>Số lượt đã đặt phòng trong năm { year }</Title>
             <img src={imgRedchart} style={{ width: '100%', marginTop: 1 }} />
           </div>
         </div>

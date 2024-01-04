@@ -1,18 +1,19 @@
 // src/app/store.js
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
-import productReducer from '../features/product/productSlide';
-import userReducer from '../features/user/userSlice';
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
+import productReducer from '../features/product/productSlide'
+import userReducer from '../features/user/userSlice'
 import addproductReducer from '../features/product/createproductslice'
 import ownerHomestayReducer from '../features/owner_homestay/onwerHomestaySlice'
 import convenientReducer from '../features/owner_homestay/convenientSlice'
-import { AuthMiddleware } from './authMiddleware';
+import { AuthMiddleware } from './authMiddleware'
 import categoryReducer from '../features/category/categorySlides'
 import provinceReducer from '../features/owner_homestay/region/provinceSlice'
 import adminReducer from '../features/admin/adminSlice'
 import bookingReducer from '../features/owner_homestay/getbooking/bookingSlice'
 import statisticalReducer from '../features/owner_homestay/statistical/statisticalSlice'
-import statisticalSliceAdmin from '../features/admin/statistical/statisticalSlice';
-const middleware = [...getDefaultMiddleware(), AuthMiddleware];
+import statisticalSliceAdmin from '../features/admin/statistical/statisticalSlice'
+import shoppingCartSlice from '../features/user/shoppingCartSlice'
+const middleware = [...getDefaultMiddleware(), AuthMiddleware]
 
 export const store = configureStore({
   reducer: {
@@ -26,8 +27,8 @@ export const store = configureStore({
     admin: adminReducer,
     booking: bookingReducer,
     statistical: statisticalReducer,
-    statisticalAdmin: statisticalSliceAdmin
-
+    statisticalAdmin: statisticalSliceAdmin,
+    shoppingcart: shoppingCartSlice,
   },
   middleware: (getDefaultMiddleware) => [...getDefaultMiddleware()],
-});
+})
