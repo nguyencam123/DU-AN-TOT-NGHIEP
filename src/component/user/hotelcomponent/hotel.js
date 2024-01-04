@@ -343,7 +343,7 @@ const Hotel = () => {
                               ? <div style={{ fontSize: 22, color: 'rgb(231, 9, 14)' }}>{formatCurrency(item.price - item?.promotion?.value + (item.price - item?.promotion?.value) * 11 / 100)} </div>
                               : <div style={{ fontSize: 22, color: 'rgb(231, 9, 14)' }}>{formatCurrency(item.price + item.price * 11 / 100)} </div>
                             }
-                            <div style={{ fontSize: 12, color: 'rgb(231, 9, 14)' }}>Ngày bạn chọn đã có 10 lượt<br /> đặt</div>
+                            {/* <div style={{ fontSize: 12, color: 'rgb(231, 9, 14)' }}>Ngày bạn chọn đã có 10 lượt<br /> đặt</div> */}
                             <div style={{ fontSize: 22 }}><Button style={{ backgroundColor: 'rgb(231, 9, 14)', color: 'white' }} onClick={() => handleDetailHomestay(item.id)} >Chọn phòng</Button></div>
                           </div>
                         </div>
