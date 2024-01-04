@@ -117,7 +117,6 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
         homestay.setTimeCheckIn(request.getTimeCheckIn());
         homestay.setTimeCheckOut(request.getTimeCheckOut());
         homestay.setCancellationPolicy(request.getCancellationPolicy());
-        homestay.setCart(null);
         homestay.setOwnerHomestay(homestayOwnerOwnerHomestayRepository.findById(request.getOwnerHomestay()).orElse(null));
     }
 

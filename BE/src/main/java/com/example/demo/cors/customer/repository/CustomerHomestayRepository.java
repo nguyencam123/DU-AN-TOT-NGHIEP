@@ -1,5 +1,6 @@
 package com.example.demo.cors.customer.repository;
 
+import com.example.demo.cors.customer.model.request.CustomerCartRequest;
 import com.example.demo.cors.customer.model.request.CustomerHomestayRequest;
 import com.example.demo.entities.Homestay;
 import com.example.demo.repositories.HomestayRepository;
@@ -27,5 +28,14 @@ public interface CustomerHomestayRepository extends HomestayRepository {
             NOT IN (SELECT d.homestay_id FROM booking d WHERE (d.status = 1) AND ((start_date >=:#{#customerHomestayRequest.dateFrom}) OR (end_date <=:#{#customerHomestayRequest.dateTo})))
             """, nativeQuery = true)
     List<Homestay> findAllBetweenDate(CustomerHomestayRequest customerHomestayRequest);
+
+    @Query(value = """
+            SELECT h.* FROM cart_detail cd
+                             JOIN cart c ON c.id = cd.id_cart
+                             JOIN homestay h ON h.id = cd.homestay_id
+                             WHERE c.id_user = :#{#request.userId} 
+                             ORDER BY cd.created_date DESC
+            """, nativeQuery = true)
+    Page<Homestay> getAllHomestayInCart(Pageable pageable, CustomerCartRequest request);
 
 }
