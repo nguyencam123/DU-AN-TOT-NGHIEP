@@ -17,6 +17,7 @@ import CategoryType from '../../component/admin/category/categoryType';
 import { useSelector } from 'react-redux';
 import Statistical from '../../component/admin/statistical/statistical';
 import Comment from '../../component/admin/comment/comment';
+import User from '../../component/admin/user/user';
 const { Header, Content, Sider } = Layout;
 
 
@@ -36,6 +37,8 @@ const items = [
   { label: 'Loại tiện nghi', key: '4', icon: <DesktopOutlined />, route: 'admin/category/type', component: <CategoryType /> },
   { label: 'Đánh giá của khách hàng', key: '5', icon: <CommentOutlined />, route: 'admin/comment', component: <Comment /> },
   { label: 'Thống kê', key: '6', icon: <AreaChartOutlined />, route: 'admin/statistical', component: <Statistical /> },
+  { label: 'Tài khoản', key: '7', icon: <UserOutlined />, route: 'admin/owner', component: <User /> },
+
 
 ];
 

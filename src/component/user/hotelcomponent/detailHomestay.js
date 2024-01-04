@@ -204,7 +204,7 @@ export const DetailHomestay = () => {
                 <h4 style={{ marginLeft: '15px', marginTop: '10px', fontSize: '16px' }}>Tiện nghi chính</h4>
                 <div style={{ marginLeft: '15px', fontSize: '12px', fontWeight: '500' }}>
                   {detailHomestay?.detailHomestays?.map((items) =>
-                    <div>{items.convenientHomestay.name}</div>
+                    <div>{items?.convenientHomestay?.name}</div>
                   )}
                 </div>
               </div>
