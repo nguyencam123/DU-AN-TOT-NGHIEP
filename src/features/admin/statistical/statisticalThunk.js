@@ -17,7 +17,7 @@ export const fetchStatisticalByYear = (year) => async (dispatch) => {
 export const fetchStatisticalByYears = (year) => async (dispatch) => {
   dispatch(fetchstatisticalStart());
   try {
-    const response = await instance.get(`/api/v3/statistical/month-year?year=${year}`);
+    const response = await instance.get(`/api/v3/statistical/month-and-year?year=${year}`);
     dispatch(fetchStatisticalByYearsSuccess(response.data.data)); // Lấy dữ liệu từ response.data.data
   } catch (error) {
     dispatch(fetchstatisticalFailure(error.message));
