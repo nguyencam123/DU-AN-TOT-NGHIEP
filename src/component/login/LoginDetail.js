@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../../features/user/userThunk";
 import { ChangePasswordByPass, ChangePasswordByPassUser } from "../../features/owner_homestay/changePassword/changPassword";
 import { instance } from "../../app/axiosConfig";
+import dayjs from 'dayjs';
+
 const { Title } = Typography;
 const { TabPane } = Tabs;
 const LoginDetail = () => {
@@ -18,7 +20,7 @@ const LoginDetail = () => {
     const [name, setname] = useState(dataUser.data?.name)
     const [birthday, setbirthday] = useState(856345)
     const [gender, setgender] = useState(true)
-    const [address, setaddress] = useState('')
+    const [address, setaddress] = useState(dataUser.data?.address)
     const [phoneNumber, setphoneNumber] = useState(dataUser.data?.phoneNumber)
     const [email, setemail] = useState(dataUser.data?.email)
     const [username, setusername] = useState('')
@@ -112,9 +114,16 @@ const LoginDetail = () => {
         setLoading(true); // Set loading to true when submitting
     
         const formData = new FormData();
-        formData.append('customer', JSON.stringify(customerData));
+        formData.append('name', name);
+        formData.append('gender', gender);
+        formData.append('address', address);
+        formData.append('phoneNumber', phoneNumber);
+        formData.append('email', email);
+        formData.append('birthday', new Date(identificationNumber).valueOf());
+        formData.append('username', dataUser?.data?.username);
+
         file.forEach((imageUrl) => {
-            formData.append('avataUrl', imageUrl);
+            formData.append('avatar', imageUrl);
         });
     
         if (phoneNumber.toString().length !== 10) {
@@ -127,8 +136,10 @@ const LoginDetail = () => {
               );
             instance.put(`http://localhost:8080/api/v1/customer/update-information-customer?id=${userDetail?.data.id}`, formData)
                 .then(response => {
-                   
                     setLoading(false); // Set loading to false after a successful request
+                    message.info(
+                        'Sửa thông tin thành công!'
+                      );
                 })
                 .catch(error => {
                     console.error('Error:', error);
@@ -183,7 +194,8 @@ const LoginDetail = () => {
                             onChange={(e) => setemail(e.target.value)} />
                         <MDBInput wrapperClass='mb-4' label='Số điện thoại' id='phoneNumber' type='number' required value={dataUser.data?.phoneNumber}
                             onChange={(e) => setphoneNumber(e.target.value)} />
-                        <MDBInput wrapperClass='mb-4' label='Ngày sinh' id='birthday' type='date' required value={dataUser.data?.birthday}
+                        <MDBInput wrapperClass='mb-4' label='Ngày sinh' id='birthday' type='date' required 
+                            // value={dataUser.data?.birthday ? dayjs(dayjs(dataUser.data?.birthday).locale('vi').format('YYYY-MM-DD'), 'YYYY-MM-DD') : null}
                             onChange={(e) => setidentificationNumber(e.target.value)} />
                         <MDBRow>
                             <MDBCol col='6'>
