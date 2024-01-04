@@ -2,6 +2,7 @@ package com.example.demo.cors.homestayowner.repository;
 
 import com.example.demo.cors.homestayowner.model.request.HomestayOwnerPromotionSearchRequest;
 import com.example.demo.entities.Promotion;
+import com.example.demo.infrastructure.contant.StatusPromotion;
 import com.example.demo.repositories.PromotionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,4 +31,10 @@ public interface HomestayOwnerPromotionRepository extends PromotionRepository {
     """,nativeQuery = true)
     Page<Promotion> getBookingByNameAndStatus(@Param("request") HomestayOwnerPromotionSearchRequest request, Pageable pageable);
 
+    @Query(value = """
+        SELECT *
+        FROM Promotion a
+        WHERE DATEDIFF(second, '1970-01-01 00:00:00', GETDATE()) < a.end_date AND a.status_promotion = 0;
+    """, nativeQuery = true)
+    List<Promotion> findByEndDateLessThanAndStatusPromotion();
 }

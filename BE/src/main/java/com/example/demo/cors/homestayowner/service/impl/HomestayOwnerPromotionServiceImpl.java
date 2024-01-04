@@ -16,9 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +43,12 @@ public class HomestayOwnerPromotionServiceImpl implements HomestayOwnerPromotion
 
     @Override
     public PageableObject<Promotion> searchPromotionByNameAndStatus(HomestayOwnerPromotionSearchRequest request) {
+        List<Promotion> promotions=homestayOwnerPromotionRepository.findByEndDateLessThanAndStatusPromotion();
+        if (promotions!=null){
+        for (Promotion promotion: promotions){
+            promotion.setStatusPromotion(StatusPromotion.KET_THUC);
+        }
+        }
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
         Page<Promotion> getPromotion = homestayOwnerPromotionRepository.getBookingByNameAndStatus(request, pageable);
         return new PageableObject<>(getPromotion);
@@ -53,7 +61,7 @@ public class HomestayOwnerPromotionServiceImpl implements HomestayOwnerPromotion
         }
 
         if (request.getStartDate() <= 0 || request.getEndDate() <= 0) {
-            throw new RestApiException("Ngày bắt đầu và nagyf kết thúc không được nhỏ hơn 0");
+            throw new RestApiException("Ngày bắt đầu và ngày kết thúc không được nhỏ hơn 0");
         }
 
         if (request.getEndDate() < request.getStartDate()) {
