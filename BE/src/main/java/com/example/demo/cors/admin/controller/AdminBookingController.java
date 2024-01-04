@@ -25,4 +25,9 @@ public class AdminBookingController {
         return new ResponseObject(adminBookingService.getAllBookingByHomestay(request));
     }
 
+    @PutMapping("/update")
+    public ResponseObject update(final AdminBookingRequest adminBookingRequest) {
+        return new ResponseObject(adminBookingService.updateTranCode(adminBookingRequest));
+    }
+
 }
