@@ -9,6 +9,14 @@ import moment from 'moment';
 const { Header, Content, Footer } = Layout;
 
 export const BookingReviewHomestay = () => {
+  const formatCurrency = (value) => {
+    // Sử dụng Intl.NumberFormat để định dạng giá trị tiền tệ
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(value);
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -20,8 +28,10 @@ export const BookingReviewHomestay = () => {
   const name = params?.get('name') || '';
   const email = params?.get('email') || '';
   const phoneNumber = params?.get('phoneNumber') || '';
-  const startDate = params?.get('startDate') || '';;
-  const endDate = params?.get('endDate') || '';;
+  const startDate = params?.get('startDate') || '';
+  const endDate = params?.get('endDate') || '';
+  const numNight = params?.get('numNight') || '';
+  const totalPrice = params?.get('totalPrice') || '';
 
   useEffect(() => {
     dispatch(getOneProduct(id));
@@ -33,7 +43,7 @@ export const BookingReviewHomestay = () => {
 
   const handleBooking = () => {
     const bookingDataGet = {
-      vnp_Ammount: detailHomestay.price + detailHomestay.price * 11 / 100,
+      vnp_Ammount: totalPrice,
       vnp_OrderInfo: String('bookingId' + '=' + bookingId)
     }
     dispatch(getPayment(bookingDataGet));
@@ -84,7 +94,7 @@ export const BookingReviewHomestay = () => {
                 Homestay
               </h5>
               <div style={{ backgroundColor: 'white', borderRadius: '10px' }}>
-                <Row style={{ margin: '10px' }} style={{ borderBottom: '1px solid', padding: '0px 10px 10px 10px', }}>
+                <Row style={{ borderBottom: '1px solid', padding: '0px 10px 10px 10px', margin: '10px' }}>
                   <Col span={5}>
                     <Image
                       src={detailHomestay?.images?.[0]?.imgUrl}
@@ -122,7 +132,7 @@ export const BookingReviewHomestay = () => {
                       </Col>
                       <Col span={8}>
                         <div style={{ color: 'rgb(104, 113, 118)', fontWeight: '600', lineHeight: '28px', fontSize: '16px' }}>  Số đêm nghỉ</div>
-                        <div style={{ color: 'black', fontWeight: '600', lineHeight: '28px', fontSize: '16px' }}> 1 đêm </div>
+                        <div style={{ color: 'black', fontWeight: '600', lineHeight: '28px', fontSize: '16px' }}> {numNight} đêm </div>
                       </Col>
                     </Row>
                   </Col>
@@ -130,7 +140,7 @@ export const BookingReviewHomestay = () => {
                 <Row>
                   <div style={{ margin: '10px 0px 0px 15px' }}>
                     <div style={{ fontSize: '18px', fontWeight: '600', marginBottom: '10px' }}>
-                      Số phòng : {detailHomestay.numberRoom}
+                      Số phòng : {detailHomestay.roomNumber}
                     </div>
                     <div>
                       <Image
@@ -237,12 +247,24 @@ export const BookingReviewHomestay = () => {
                 <Row>
                   <Col span={10}>
                     <div style={{ padding: '20px 0px 5px 20px', fontSize: '18px', fontWeight: '700' }}>
+                      Đơn giá
+                    </div>
+                  </Col>
+                  <Col span={8} push={4}>
+                    <div style={{ padding: '20px 0px 5px 20px', fontSize: '18px', fontWeight: '700', float: 'right' }}>
+                      {formatCurrency(detailHomestay.price + detailHomestay.price * 11 / 100)}
+                    </div>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={10}>
+                    <div style={{ padding: '20px 0px 5px 20px', fontSize: '18px', fontWeight: '700' }}>
                       Thành tiền
                     </div>
                   </Col>
                   <Col span={8} push={4}>
                     <div style={{ padding: '20px 0px 5px 20px', fontSize: '18px', fontWeight: '700', float: 'right' }}>
-                      {detailHomestay.price + detailHomestay.price * 11 / 100} VND
+                      {formatCurrency((detailHomestay.price + detailHomestay.price * 11 / 100) * numNight)}
                     </div>
                   </Col>
                 </Row>
@@ -261,12 +283,12 @@ export const BookingReviewHomestay = () => {
                 <Row style={{ padding: '5px 0px 5px 20px' }}>
                   <Col span={10}>
                     <div style={{ fontWeight: '600', fontSize: '18px' }}>
-                      Homestay name (1 Đêm)
+                      {detailHomestay.name} ({numNight} Đêm)
                     </div>
                   </Col>
                   <Col span={8} push={4}>
                     <div style={{ fontWeight: '600', fontSize: '18px', float: 'right' }}>
-                      {detailHomestay.price + detailHomestay.price * 11 / 100} VND
+                      {formatCurrency((detailHomestay.price + detailHomestay.price * 11 / 100) * numNight)}
                     </div>
                   </Col>
                 </Row>

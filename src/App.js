@@ -26,7 +26,12 @@ import { BookingUser } from './component/user/booking';
 import ComfirmMail from './component/user/cofirmMail/confirm';
 import ComfirmMailUser from './component/user/cofirmMail/confirmUser';
 import ResetPassWordOwner from './component/PartnerComponent/login/resetPassword';
-import { checkToken } from './app/middleware';
+import { checkToken, checkTokenAdmin, checkTokenUser } from './app/middleware';
+import ForgortPasswordOwner from './component/PartnerComponent/login/fogotPassword';
+import ForgortPasswordUser from './component/login/forgotPassword';
+import RulesWhile from './component/user/siderheader/ruleswhile';
+import SupportedUser from './component/user/siderheader/supporteduser';
+import UserComment from './component/user/siderheader/userComment';
 
 function App() {
   //map component user
@@ -45,10 +50,14 @@ function App() {
     { path: 'homestay/booking/:id', element: <BookingHomestay /> },
     { path: 'review/booking/:id', element: <BookingReviewHomestay /> },
     { path: 'hop-tac/register', element: <PartnerRegister /> },
-    { path: 'booking/success', element: <BookingSuccess /> },
+    { path: 'successBooking', element: <BookingSuccess /> },
     { path: 'booking/:id', element: <BookingUser /> },
-    { path: 'shopingcart/:id', element: <CartUser /> },
-    { path: 'changePassword', element: <ResetPassWordOwner /> }
+    { path: 'shopingcart', element: <CartUser /> },
+    { path: 'changePassword', element: <ResetPassWordOwner /> },
+    { path: 'changePasswordUser', element: <ForgortPasswordUser /> },
+    { path: 'RulesWhile', element: <RulesWhile /> },
+    { path: 'supporteduser', element: <SupportedUser /> },
+    {path:'userComment',element:<UserComment/>}
   ];
   useEffect(() => {
     window.scrollTo(0, 0); // Cuộn lên đầu trang khi path thay đổi
@@ -59,8 +68,14 @@ function App() {
   useEffect(() => {
     // Lấy token từ localStorage, Redux state, hoặc nơi khác
     const token = JSON.parse(localStorage.getItem('ownerDetail'))?.data?.token;
+    const storedTokenAdmin = JSON.parse(localStorage.getItem('adminDetail'))?.data?.token;
+    const storedTokenUser = JSON.parse(localStorage.getItem('userDetail'))?.data?.token;
+
     // Gọi middleware để kiểm tra token
     dispatch(checkToken(token));
+    dispatch(checkTokenAdmin(storedTokenAdmin));
+    dispatch(checkTokenUser(storedTokenUser));
+
   }, [dispatch]);
   return (
     <>
@@ -71,13 +86,11 @@ function App() {
             {items.map(item => (
               <Route path={item.path} element={item.element} />
             ))}
-            {/* {isAdmin == true ?
-              null : <Route path="admin/*" element={<Navigate to="/error-role" replace />} />
-            } */}
           </Route>
           {/* map quyen voi url admin */}
           <Route path='/user/comfirmmail' element={<ComfirmMailUser />} />
           <Route path='/owner/comfirmmail' element={<ComfirmMail />} />
+          <Route path='/api/v2/login/reset-password/:id' element={<ForgortPasswordOwner />} />
           <Route path="/*" element={<PartnerLayout />}>
             <Route path="partner/*" element={<ProtectedRoute partnerOnly />} />
           </Route>

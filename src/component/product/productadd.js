@@ -5,10 +5,11 @@ import { getAllHomestay, getAllHomestayByHomestayName, getAllHomestayByNameOwner
 import { fetchCategory } from "../../features/category/categoryThunk"
 import { useState } from "react";
 import { Space, Table, Typography, Modal, Spin, Popconfirm, Form, Input, Row, Col, Select, Button, Pagination, Image, message } from 'antd';
-import { EyeOutlined, RotateLeftOutlined, RotateRightOutlined, SwapOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
+import { EyeOutlined, ReloadOutlined, RotateLeftOutlined, RotateRightOutlined, SwapOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { aproveHomestay, disAgreeHomestay } from "../../features/admin/adminThunk";
 import TextArea from "antd/es/input/TextArea";
+import { UpdateStatus, UpdateStatusToUpdating } from "../../features/owner_homestay/homestayThunk";
 
 
 const { Title } = Typography;
@@ -160,7 +161,18 @@ function AddProductForm() {
   const onSearchHomestayName = (value, _e, info) => {
     dispatch(getAllHomestayByHomestayName(selectedStatus.value, value));
   }
-
+  const handleSubmitStatusToUpdating = async (record) => {
+    const data = {
+      homestayId: record.id,
+      adminId: idAdmin,
+      desc: 'Chuyển trạng thái homestay'
+    }
+    await message.info(
+      'Đang tiến hành sửa trạng thái bạn vui lòng đợi một vài giây nhé!'
+    );
+    await dispatch(disAgreeHomestay(data))
+    dispatch(getAllHomestayByStatus(2));
+  };
   //
   useEffect(() => {
     dispatch(getAllHomestayByStatus(1));
@@ -211,6 +223,20 @@ function AddProductForm() {
       render: (_, record) => (
         <Space size="middle">
           <a onClick={() => showModal(record)} style={{ color: '#1677ff' }}><EyeOutlined /></a>
+          {record.status === 'HOAT_DONG' && (
+            <Popconfirm
+              title='Cập nhật mục này'
+              description='Bạn chắc chắn muốn cập nhật homestay thành không hoạt động không?'
+              icon={<ReloadOutlined />}
+              cancelText='Hủy'
+              okText='Cập nhật'
+              onConfirm={() => handleSubmitStatusToUpdating(record)}
+            >
+              <a>
+                <ReloadOutlined />
+              </a>
+            </Popconfirm>
+          )}
         </Space>
       ),
     },

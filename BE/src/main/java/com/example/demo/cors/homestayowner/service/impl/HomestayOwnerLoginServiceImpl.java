@@ -17,18 +17,13 @@ import com.example.demo.infrastructure.contant.TypeToken;
 import com.example.demo.infrastructure.contant.role.RoleOwner;
 import com.example.demo.infrastructure.exception.rest.RestApiException;
 import com.example.demo.infrastructure.security.token.JwtService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -141,6 +136,7 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                 .username(ownerHomestay.getUsername())
                 .status(ownerHomestay.getStatus())
                 .roleOwner(ownerHomestay.getRole())
+                .avataUrl(ownerHomestay.getAvatarUrl())
                 .build();
     }
 
@@ -188,6 +184,7 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                 .status(ownerHomestay.getStatus())
                 .roleOwner(ownerHomestay.getRole())
                 .refreshToken(refreshToken)
+                .avataUrl(ownerHomestay.getAvatarUrl())
                 .build();
     }
 
@@ -216,11 +213,12 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                 .username(ownerHomestay.getUsername())
                 .status(ownerHomestay.getStatus())
                 .roleOwner(ownerHomestay.getRole())
+                .avataUrl(ownerHomestay.getAvatarUrl())
                 .build();
     }
 
     @Override
-    public HomestayOwnerAuthenticationReponse updateInformationOwner(String idOwner, HomestayOwnerOwnerHomestayRequest request){
+    public HomestayOwnerAuthenticationReponse updateInformationOwner(String idOwner, HomestayOwnerOwnerHomestayRequest request) throws IOException{
 
         checkNull(isNullOrEmpty(request.getUsername()), isNullOrEmpty(request.getName()), request.getBirthday(), isNullOrEmpty(request.getAddress()), isNullOrEmpty(request.getPhoneNumber()), isNullOrEmpty(request.getEmail()), request);
         OwnerHomestay ownerHomestay = homestayownerOwnerHomestayRepository.findById(idOwner).orElse(null);
@@ -250,9 +248,18 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         ownerHomestay.setPhoneNumber(request.getPhoneNumber());
         ownerHomestay.setEmail(request.getEmail());
         ownerHomestay.setUsername(request.getUsername());
-        ownerHomestay.setStatus(Status.HOAT_DONG);
-        homestayownerOwnerHomestayRepository.save(ownerHomestay);
-
+        if(request.getAvataUrl()!=null && request.getAvataUrl().getBytes().length > 0) {
+            ownerHomestay.setAvatarUrl(cloudinary.uploader()
+                    .upload(request.getAvataUrl().getBytes(),
+                            Map.of("id", UUID.randomUUID().toString()))
+                    .get("url")
+                    .toString());
+            homestayownerOwnerHomestayRepository.save(ownerHomestay);
+        }else if(request.getAvataUrl()==null && ownerHomestay.getAvatarUrl()!=null){
+            homestayownerOwnerHomestayRepository.save(ownerHomestay);
+        }else{
+            homestayownerOwnerHomestayRepository.save(ownerHomestay);
+        }
         var jwtServices = jwtService.generateToken(ownerHomestay);
 
         return HomestayOwnerAuthenticationReponse.builder()
@@ -263,33 +270,9 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                 .gender(ownerHomestay.getGender())
                 .address(ownerHomestay.getAddress())
                 .phoneNumber(ownerHomestay.getPhoneNumber())
-                .email(ownerHomestay.getEmail())
-                .username(ownerHomestay.getUsername())
-                .status(ownerHomestay.getStatus())
-                .roleOwner(ownerHomestay.getRole())
-                .build();
-    }
-
-    @Override
-    public HomestayOwnerAuthenticationReponse updateInformationImgOwner(String idOwner, MultipartFile multipartFile) throws IOException{
-        OwnerHomestay ownerHomestay = homestayownerOwnerHomestayRepository.findById(idOwner).orElse(null);
-        ownerHomestay.setAvatarUrl(cloudinary.uploader()
-                .upload(multipartFile.getBytes(),
-                        Map.of("id", UUID.randomUUID().toString()))
-                .get("url")
-                .toString());
-        homestayownerOwnerHomestayRepository.save(ownerHomestay);
-        return HomestayOwnerAuthenticationReponse.builder()
-                .code(ownerHomestay.getCode())
-                .id(ownerHomestay.getId())
-                .name(ownerHomestay.getName())
-                .birthday(ownerHomestay.getBirthday())
-                .gender(ownerHomestay.getGender())
-                .address(ownerHomestay.getAddress())
-                .phoneNumber(ownerHomestay.getPhoneNumber())
-                .email(ownerHomestay.getEmail())
-                .username(ownerHomestay.getUsername())
                 .avataUrl(ownerHomestay.getAvatarUrl())
+                .email(ownerHomestay.getEmail())
+                .username(ownerHomestay.getUsername())
                 .status(ownerHomestay.getStatus())
                 .roleOwner(ownerHomestay.getRole())
                 .build();

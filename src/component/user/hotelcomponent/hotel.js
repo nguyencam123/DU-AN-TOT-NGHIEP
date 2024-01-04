@@ -1,4 +1,4 @@
-import { Typography, DatePicker, Select, Input, Collapse, Button, Layout, Slider, Checkbox, Rate } from "antd"
+import { Typography, DatePicker, Select, Input, Collapse, Button, Layout, Slider, Checkbox, Rate, Pagination } from "antd"
 import hotelimg from "../../../assets/img/saleHotel.png"
 import logoTravel from "../../../assets/svg/Rectangle 405.svg"
 import {
@@ -22,8 +22,8 @@ import imgheadhotel from "../../../assets/img/imgheadhotel.png"
 import 'dayjs/locale/vi';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProducts, getProducts } from "../../../features/product/productThunk";
-import { useNavigate } from "react-router-dom";
-import { fetchSearchProducts, getAllConvinentHomestay } from "../../../features/product/searchProductThunk";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { fetchSearchProducts, fetchSearchProductsByPage, getAllConvinentHomestay } from "../../../features/product/searchProductThunk";
 import moment from 'moment';
 import { fetchConvenientsSuccess } from "../../../features/product/productSlide";
 dayjs.locale('vi');
@@ -36,22 +36,42 @@ const { Header, Footer, Sider, Content } = Layout;
 
 
 const Hotel = () => {
+  /**
+   * pagination
+   */
+  const [current, setCurrent] = useState(1);
+  const onChangePage = (page) => {
+    setCurrent(page);
+    dispatch(fetchSearchProductsByPage(checkInDate.valueOf(), calculateCheckOutDate().valueOf(), nameLocation || nameOrAddress, numberPerson, roomNumber, rangeValue[0], rangeValue[1], convenientvir, page - 1))
+  };
   const products = useSelector((state) => state.product.products);
   const convenient = useSelector((state) => state.product.convenient);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const nameLocation = searchParams.get('name');
+
   let checkOutDate
   const handleDetailHomestay = async (id) => {
     navigate(
-      `/homestay/detail/${id}?startDate=${checkInDate.valueOf()}&endDate=${calculateCheckOutDate().valueOf()}`
+      `/homestay/detail/${id}?startDate=${checkInDate.valueOf()}&endDate=${calculateCheckOutDate().valueOf()}&numNight=${numNights}`
     )
   }
   useEffect(() => {
-    dispatch(getProducts());
+    // dispatch(getProducts(current - 1));
     dispatch(getAllConvinentHomestay());
   }, []);
   const onChange = (key) => {
 
+  };
+  const formatCurrency = (value) => {
+    // Sử dụng Intl.NumberFormat để định dạng giá trị tiền tệ
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(value);
   };
   const today = dayjs();
   const [checkInDate, setCheckInDate] = useState(today);
@@ -62,7 +82,12 @@ const Hotel = () => {
   const handleNumNightsChange = (value) => {
     setNumNights(value);
   };
-
+  const handleKeyDown = (e) => {
+    // Kiểm tra nếu ký tự không phải là số thì chặn
+    if (isNaN(Number(e.key))) {
+      e.preventDefault();
+    }
+  };
 
   const disabledDate = (current) => {
     // Can not select days before today and today
@@ -93,7 +118,7 @@ const Hotel = () => {
       checkOutDate = dayjs(checkInDate).add(numNights, 'day');
       return checkOutDate;
     }
-    return '';
+    return null;
   };
   checkOutDate = dayjs(checkInDate).add(numNights, 'day');
   const [rangeValue, setRangeValue] = useState([0, 25000000]);
@@ -120,8 +145,8 @@ const Hotel = () => {
     setRangeValue(initialValue);
   }
   const [nameOrAddress, setNameOrAddress] = useState('Hà Nội')
-  const [numberPerson, setNumberPerson] = useState(12)
-  const [roomNumber, setRoomNumber] = useState(12)
+  const [numberPerson, setNumberPerson] = useState(1)
+  const [roomNumber, setRoomNumber] = useState(1)
   const [convenientvir, setconvenient] = useState('')
   const [notification, setNotification] = useState('')
   const onChangeConvenients = (checkedValues) => {
@@ -133,14 +158,18 @@ const Hotel = () => {
       setNotification("Vui lòng nhập tên hoặc địa chỉ")
     } else {
       setNotification('')
-      dispatch(fetchSearchProducts(checkInDate.valueOf(), calculateCheckOutDate().valueOf(), nameOrAddress, numberPerson, roomNumber, rangeValue[0], rangeValue[1], convenientvir))
+      dispatch(fetchSearchProductsByPage(checkInDate.valueOf(), calculateCheckOutDate().valueOf(), nameLocation || nameOrAddress, numberPerson, roomNumber, rangeValue[0], rangeValue[1], convenientvir, current - 1))
     }
   }
+  // console.log(nameOrAddress)
+  useEffect(() => {
+    dispatch(fetchSearchProductsByPage(checkInDate.valueOf(), calculateCheckOutDate().valueOf(), nameLocation || nameOrAddress, numberPerson, roomNumber, rangeValue[0], rangeValue[1], convenientvir, current - 1))
+  }, [checkInDate, nameLocation])
 
   const text = <section>
     <div style={{ justifyContent: 'space-between', display: 'flex', fontSize: 18 }}>
-      <div style={{ display: 'flex' }}><UserOutlined style={{ marginBottom: 10 }} />&ensp;số lượng người</div><div><Input style={{ width: 100, height: 40 }} defaultValue={12} onChange={(e) => setNumberPerson(e.target.value)} /></div>
-      <div style={{ display: 'flex' }}><InsertRowRightOutlined style={{ marginBottom: 10 }} />&ensp;số lượng phòng</div><div><Input style={{ width: 100, height: 40 }} defaultValue={12} onChange={(e) => setRoomNumber(e.target.value)} /></div>
+      <div style={{ display: 'flex' }}><UserOutlined style={{ marginBottom: 10 }} />&ensp;số lượng người</div><div><Input style={{ width: 100, height: 40 }} defaultValue={1} onChange={(e) => setNumberPerson(e.target.value)} /></div>
+      <div style={{ display: 'flex' }}><InsertRowRightOutlined style={{ marginBottom: 10 }} />&ensp;số lượng phòng</div><div><Input style={{ width: 100, height: 40 }} defaultValue={1} onChange={(e) => setRoomNumber(e.target.value)} /></div>
     </div>
   </section>;
   const utilities = <div style={{ width: '100%', height: '30%', backgroundColor: 'white', borderRadius: 10, padding: '5px 5px 5px' }}>
@@ -189,7 +218,7 @@ const Hotel = () => {
             <hr />
             <div><h5 style={{ fontSize: 16 }}>Thành phố đia điểm hoặc tên khách sạn</h5>
               <MDBInputGroup className='mb-3' size='lg' noBorder textBefore={<MDBIcon fas icon='search' />}>
-                <input className='form-control' type='text' placeholder='Search' defaultValue={'Hà Nội'} onChange={(e) => setNameOrAddress(e.target.value)} required />
+                <input className='form-control' type='text' placeholder='Search' defaultValue={nameLocation || 'Hà Nội'} onChange={(e) => setNameOrAddress(e.target.value)} required />
               </MDBInputGroup>
               <div style={{ color: 'red', marginLeft: 30 }}>{notification}</div>
               <div>
@@ -207,6 +236,7 @@ const Hotel = () => {
                     size="lg"
                     style={{ width: 300, height: 40 }}
                     onChange={handleCheckInChange}
+                    onKeyDown={handleKeyDown}
                   />&emsp;&emsp;&emsp;
                   <Select
                     defaultValue="1 đêm"
@@ -217,7 +247,7 @@ const Hotel = () => {
                     onChange={handleNumNightsChange}
                   />
                   <div>
-                    <h5 style={{ fontSize: 18, marginLeft: 30, marginTop: 8 }}>{calculateCheckOutDate().format('dddd, DD [tháng] MM [năm] YYYY')}</h5>
+                    <h5 style={{ fontSize: 18, marginLeft: 30, marginTop: 8 }}>{calculateCheckOutDate()?.format('dddd, DD [tháng] MM [năm] YYYY')}</h5>
                   </div>
                 </div>
               </div>
@@ -278,41 +308,55 @@ const Hotel = () => {
                 <h1 style={{ fontSize: 18, marginTop: 12, color: '#0194f3' }}>Chào mừng bạn đến với TravelVIVU nơi có những ưu đãi tốt nhất dành cho bạn!!!</h1>
               </div>
               <div>
-                {products.map((items) => (
-                  <div style={{
-                    width: '100%', height: 210,
-                    backgroundColor: '#ffffff', borderRadius: 8,
-                    boxShadow: '0 0 3px 1px #ACAEB1', marginTop: 20,
-                    padding: '2px 2px 2px 2px', display: 'flex'
-                  }}>
-                    <div style={{ width: '60%' }}>
-                      <img src={items.images[0]?.imgUrl} style={{ borderRadius: 8, height: 150, width: 255 }} />
-                      <div style={{ marginTop: 8, display: 'flex' }}>
-                        <img src={items.images[1]?.imgUrl} style={{ borderRadius: 8, height: 48, marginRight: 6, width: 80 }} />
-                        <img src={items.images[2]?.imgUrl} style={{ borderRadius: 8, height: 48, marginRight: 6, width: 80 }} />
-                        <img src={items.images[3]?.imgUrl} style={{ borderRadius: 8, height: 48, marginRight: 6, width: 80 }} />
-                      </div>
-                    </div>
-                    <div style={{ width: '50%', marginRight: 50 }}>
-                      <h1 style={{ fontSize: 18, marginTop: 10, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: 250 }}>{items?.name}</h1>
-                      <Rate allowHalf disabled defaultValue={items.star} size='sm' /><br />
-                      <div style={{ display: 'flex', marginTop: 10 }}>
-                        <CompassOutlined style={{}} />&ensp;
-                        <Title style={{ fontSize: 16, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, marginTop: 3 }}>{items.address}</Title></div>
-                      <h1 style={{ width: '100%', height: 20, backgroundColor: 'rgb(242, 243, 243)', borderRadius: 8, fontSize: 14, padding: '0 2px 0 2px' }}>Thanh toán trực tuyến</h1>
-                    </div>
-                    <div style={{ marginLeft: 10, borderLeft: '1px solid #ACAEB1', padding: '8px 8px 2px 2px', width: '40%' }}>
-                      <div style={{ display: 'flex', color: 'rgb(5, 165, 105)' }}><ShopOutlined style={{ marginTop: 3, fontSize: 14 }} /> Ưu đãi dành riêng cho bạn...</div>
-                      <div style={{ float: 'right' }}>
-                        <div style={{ fontSize: 16 }}><del>{items.price + items.price * 11 / 100} VND</del></div>
-                        <div style={{ fontSize: 22, color: 'rgb(231, 9, 14)' }}>{items.price + items.price * 11 / 100} VND</div>
-                        <div style={{ fontSize: 12, color: 'rgb(231, 9, 14)' }}>Ngày bạn chọn đã có 10 lượt<br /> đặt</div>
-                        <div style={{ fontSize: 22 }}><Button style={{ backgroundColor: 'rgb(231, 9, 14)', color: 'white' }} onClick={() => handleDetailHomestay(items.id)} >Chọn phòng</Button></div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                {products.data && products.data.length > 0 ? (
+                  products.data.map((item) => {
+                    const averagePoint = item.comment.reduce((sum, comment) => sum + comment.point, 0) / item.comment.length;
 
+                    return (
+                      <div key={item.id} style={{
+                        width: '100%', height: 210,
+                        backgroundColor: '#ffffff', borderRadius: 8,
+                        boxShadow: '0 0 3px 1px #ACAEB1', marginTop: 20,
+                        padding: '2px 2px 2px 2px', display: 'flex'
+                      }}>
+                        <div style={{ width: '35%' }}>
+                          <img src={item.images[0]?.imgUrl} style={{ borderRadius: 8, height: 150, width: 255 }} />
+                          <div style={{ marginTop: 8, display: 'flex' }}>
+                            <img src={item.images[1]?.imgUrl} style={{ borderRadius: 8, height: 48, marginRight: 6, width: 80 }} />
+                            <img src={item.images[2]?.imgUrl} style={{ borderRadius: 8, height: 48, marginRight: 6, width: 80 }} />
+                            <img src={item.images[3]?.imgUrl} style={{ borderRadius: 8, height: 48, marginRight: 6, width: 80 }} />
+                          </div>
+                        </div>
+                        <div style={{ width: '50%', marginRight: 'auto' }}>
+                          <h1 style={{ fontSize: 18, marginTop: 10, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: 250 }}>{item?.name}</h1>
+                          <Rate allowHalf disabled defaultValue={averagePoint} size='sm' /><br />
+                          <div style={{ display: 'flex', marginTop: 10 }}>
+                            <CompassOutlined style={{}} />&ensp;
+                            <Title style={{ fontSize: 16, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, marginTop: 3 }}>{item.address}</Title></div>
+                          <h1 style={{ width: '100%', height: 20, backgroundColor: 'rgb(242, 243, 243)', borderRadius: 8, fontSize: 14, padding: '0 2px 0 2px' }}>Thanh toán trực tuyến</h1>
+                        </div>
+                        <div style={{ marginLeft: 10, borderLeft: '1px solid #ACAEB1', padding: '8px 8px 2px 12px', width: '30%' }}>
+                          <div style={{ display: 'flex', color: 'rgb(5, 165, 105)' }}><ShopOutlined style={{ marginTop: 3, fontSize: 14 }} /> Ưu đãi dành riêng cho bạn...</div>
+                          <div style={{}}>
+                            <div style={{ fontSize: 16 }}><del>{formatCurrency(item.price + item.price * 11 / 100)} </del></div>
+                            {item?.promotion?.value
+                              ? <div style={{ fontSize: 22, color: 'rgb(231, 9, 14)' }}>{formatCurrency(item.price - item?.promotion?.value + (item.price - item?.promotion?.value) * 11 / 100)} </div>
+                              : <div style={{ fontSize: 22, color: 'rgb(231, 9, 14)' }}>{formatCurrency(item.price + item.price * 11 / 100)} </div>
+                            }
+                            <div style={{ fontSize: 12, color: 'rgb(231, 9, 14)' }}>Ngày bạn chọn đã có 10 lượt<br /> đặt</div>
+                            <div style={{ fontSize: 22 }}><Button style={{ backgroundColor: 'rgb(231, 9, 14)', color: 'white' }} onClick={() => handleDetailHomestay(item.id)} >Chọn phòng</Button></div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p>Nơi bạn tìm kiếm không có homestay nào</p>
+                )}
+
+                <div style={{ float: 'right', marginTop: 20 }}>
+                  <Pagination current={current} onChange={onChangePage} total={products.totalPages * 10} />
+                </div>
               </div>
             </section>
           </Content>

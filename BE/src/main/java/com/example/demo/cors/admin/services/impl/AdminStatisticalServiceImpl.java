@@ -1,10 +1,11 @@
 package com.example.demo.cors.admin.services.impl;
 
 import com.example.demo.cors.admin.model.request.AdminStatisticalRequest;
+import com.example.demo.cors.admin.model.request.AdminStatisticalTop5Request;
 import com.example.demo.cors.admin.model.response.AdminStatisticalReponse;
+import com.example.demo.cors.admin.model.response.AdminStatisticalTop5Response;
 import com.example.demo.cors.admin.repository.AdminBookingRepository;
 import com.example.demo.cors.admin.services.AdminStatisticalService;
-import com.example.demo.cors.homestayowner.model.reponse.HomestayOwnerStatisticalReponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +18,15 @@ public class AdminStatisticalServiceImpl implements AdminStatisticalService {
     @Autowired
     private AdminBookingRepository adminBookingRepository;
 
+
     @Override
-    public AdminStatisticalReponse getThongKe(AdminStatisticalRequest adminStatisticalRequest) {
-        return adminBookingRepository.getThongKe(adminStatisticalRequest);
+    public AdminStatisticalReponse getStatistical(String id) {
+        return adminBookingRepository.getStatistical(id);
+    }
+
+    @Override
+    public AdminStatisticalReponse getStatisticalbyMonthAndYear(AdminStatisticalRequest request) {
+        return adminBookingRepository.getAllStatistical(request);
     }
 
     @Override
@@ -28,9 +35,13 @@ public class AdminStatisticalServiceImpl implements AdminStatisticalService {
         for (int i = 1; i <= 12; i++) {
             request.setYear(request.getYear());
             request.setMonth(i);
-            responseList.add(adminBookingRepository.getThongKe(request));
+            responseList.add(adminBookingRepository.getAllStatisticalYear(request));
         }
         return responseList;
     }
 
+    @Override
+    public List<AdminStatisticalTop5Response> getTop5HomestayInYear(AdminStatisticalTop5Request request) {
+        return adminBookingRepository.getTop5StaticalYear(request);
+    }
 }

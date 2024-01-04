@@ -6,13 +6,13 @@ import {
     Table,
     Row,
     Space,
-    Modal, Tooltip, Button, Input, Col, DatePicker, message, Checkbox, Popconfirm
+    Modal, Tooltip, Button, Input, Col, DatePicker, message, Checkbox, Popconfirm, InputNumber
 } from 'antd';
 import { useDispatch, useSelector } from 'react-redux'
 import { EditOutlined, EyeOutlined, LoadingOutlined, ReloadOutlined, TeamOutlined } from '@ant-design/icons'
 import moment from 'moment';
 import Search from 'antd/es/input/Search';
-import { UpdateStatusPromotion, addPromotion, fetchPromotion } from '../../../features/owner_homestay/getbooking/promotionThunk';
+import { UpdatePromotion, UpdateStatusPromotion, addPromotion, fetchPromotion } from '../../../features/owner_homestay/getbooking/promotionThunk';
 import * as Yup from 'yup'
 import { fetchHomestay } from '../../../features/owner_homestay/homestayThunk';
 import dayjs from 'dayjs';
@@ -42,24 +42,38 @@ const Promotion = () => {
     const promotion = useSelector((state) => state.booking.promotions)
     const products = useSelector((state) => state.ownerHomestay.homestays);
     const [checkedValues, setCheckedValues] = useState([]);
-    const onChangePromotion = (record) => (e) => {
-        const { checked } = e.target;
-
-        // Nếu checkbox được chọn, thêm ID vào danh sách
-        // Nếu checkbox bị hủy chọn, loại bỏ ID khỏi danh sách
-        setCheckedValues((prevSelectedIds) => {
-            if (checked) {
-                return [...prevSelectedIds, record.id];
-            } else {
-                return prevSelectedIds.filter((id) => id !== record.id);
-            }
-        });
-    };
+    useEffect(() => {
+        // Update selectedRowKeys when homestay changes
+        setCheckedValues(homestay.map((item) => item.id));
+    }, [homestay]);
     /**
      * @returns Table colums
      */
-    const [selectedHomestays, setSelectedHomestays] = useState([]);
-
+    // console.log(homestay.map((item) => item.id))
+    const handlePriceChange = (value) => {
+        // You can perform any additional formatting or validation here
+        setValue(value);
+    };
+    const rowSelection = {
+        selectedRowKeys: checkedValues,
+        onChange: (selectedRowKeys, selectedRows) => {
+            setCheckedValues(selectedRowKeys)
+        },
+        getCheckboxProps: (record) => ({
+            // Column configuration not to be checked
+            name: record.name,
+        }),
+    };
+    const isBeforeToday = (current) => {
+        return current && current.isBefore(moment().startOf('day'));
+    };
+    const formatCurrency = (value) => {
+        // Sử dụng Intl.NumberFormat để định dạng giá trị tiền tệ
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+        }).format(value);
+    };
     const columnsData = [
         {
             title: 'Tên homestay',
@@ -75,18 +89,11 @@ const Promotion = () => {
             title: 'Giá homestay',
             dataIndex: 'price',
             key: 'price',
-            align: 'center'
-        },
-        {
-            title: 'Action',
-            key: 'action',
-            render: (_, record) => (
-                <Space size="middle">
-                    <Checkbox onChange={onChangePromotion(record)} checked={homestay.map((item) => item.id).includes(record.id)}
-                    />
-                </Space>
-            ),
-        },
+            align: 'center',
+            render(str) {
+                return formatCurrency(str)
+            }
+        }
     ];
 
     /**
@@ -107,7 +114,10 @@ const Promotion = () => {
             title: 'Giá homestay',
             dataIndex: 'price',
             key: 'price',
-            align: 'center'
+            align: 'center',
+            render(str) {
+                return formatCurrency(str)
+            }
         },
         {
             title: 'Giá homestay sau khi giảm',
@@ -115,7 +125,7 @@ const Promotion = () => {
             key: 'price',
             align: 'center',
             render(str) {
-                return str - value
+                return formatCurrency(str - value)
             }
         }
     ];
@@ -154,8 +164,8 @@ const Promotion = () => {
         await message.info(
             'Đang tiến hành sửa trạng thái bạn vui lòng đợi một vài giây nhé!'
         );
-        await dispatch(UpdateStatusPromotion(record.id));
-        dispatch(fetchPromotion(UserID));
+        await dispatch(UpdatePromotion(record.id));
+        await dispatch(fetchPromotion(UserID, homestayname, valueselect));
     };
     /**
      * Table promotion
@@ -203,6 +213,9 @@ const Promotion = () => {
             dataIndex: 'value',
             key: 'value',
             align: 'center',
+            render(str) {
+                return formatCurrency(str)
+            }
         },
         {
             title: 'Trạng thái',
@@ -223,13 +236,15 @@ const Promotion = () => {
             align: 'center',
             render: (_, record) => (
                 <Space size="middle">
-                    <Tooltip placement="top" title={textView} arrow={mergedArrow}>
-                        <a style={{ color: '#1677ff' }} onClick={() => handleViewRow(record)}> <EyeOutlined /></a>
-                    </Tooltip>
-                    <Tooltip placement="top" title={text} arrow={mergedArrow}>
-                        <a style={{ color: '#1677ff' }} onClick={() => handleEdit(record)}><EditOutlined /></a>
-                    </Tooltip>
-                    <Tooltip placement="top" title={textupdate} arrow={mergedArrow}>
+                    <a style={{ color: '#1677ff' }} onClick={() => handleViewRow(record)}>
+                        <EyeOutlined />
+                    </a>
+                    {record.statusPromotion === 'HOAT_DONG' && ( // Thêm điều kiện ở đây
+                        <a style={{ color: '#1677ff' }} onClick={() => handleEdit(record)}>
+                            <EditOutlined />
+                        </a>
+                    )}
+                    {record.statusPromotion === 'HOAT_DONG' && ( // Thêm điều kiện ở đây
                         <Popconfirm
                             title='Cập nhật mục này'
                             description='Bạn chắc chắn muốn cập nhật khuyến mãi này thành không hoạt động không?'
@@ -242,8 +257,9 @@ const Promotion = () => {
                                 <ReloadOutlined />
                             </a>
                         </Popconfirm>
-                    </Tooltip>
+                    )}
                 </Space>
+
             ),
         },
     ];
@@ -294,15 +310,22 @@ const Promotion = () => {
         value: Yup.number()
             .required('Vui lòng nhập số tiền giảm')
             .typeError('Vui lòng nhập số tiền giảm')
-            .positive('Số tiền giảm phải là số dương'),
-        // startDate: Yup.date().nullable().required('Vui lòng chọn ngày bắt đầu'),
-        // endDate: Yup.date()
-        //     .nullable()
-        //     .required('Vui lòng chọn ngày kết thúc')
-        //     .when(
-        //         'startDate',
-        //         (startDate, schema) => startDate && schema.min(startDate, 'Ngày kết thúc phải sau ngày bắt đầu')
-        //     ),
+            .positive('Số tiền giảm phải là số dương')
+            .min(1000, 'Số tiền giảm phải lớn hơn 1000'),
+        startDate: Yup.number().required('Vui lòng chọn ngày bắt đầu'),
+        endDate: Yup.number()
+            .typeError('Vui lòng chọn ngày kết thúc')
+            .required('Vui lòng chọn ngày kết thúc')
+            .test('endDate', 'Ngày kết thúc phải lớn hơn ngày bắt đầu', function (value) {
+                const { startDate } = this.parent;
+
+                // Kiểm tra nếu giá trị là số (datelong)
+                if (typeof value === 'number') {
+                    return value > startDate;
+                }
+
+                return false; // Trả về false nếu không phải là số
+            }),
     })
 
     const handleSubmit = async (e) => {
@@ -465,7 +488,7 @@ const Promotion = () => {
                                         help={formErrors.startDate} // Hiển thị thông báo lỗi cho trường name nếu có
                                     >
                                         <DatePicker style={{ width: '300px' }}
-                                            value={startDate ? dayjs(dayjs(startDate).locale('vi').format('YYYY-MM-DD'), 'YYYY-MM-DD') : null}
+                                            value={startDate ? dayjs(dayjs(startDate).locale('vi').format('YYYY-MM-DD'), 'YYYY-MM-DD') : null} disabledDate={isBeforeToday}
                                             onChange={(dates) => setStartDate(dates)} />
                                     </Form.Item>
                                 </Col>
@@ -479,7 +502,7 @@ const Promotion = () => {
                                         help={formErrors.endDate} // Hiển thị thông báo lỗi cho trường name nếu có
                                     >
                                         <DatePicker style={{ width: '300px' }}
-                                            value={endDate ? dayjs(dayjs(endDate).locale('vi').format('YYYY-MM-DD'), 'YYYY-MM-DD') : null}
+                                            value={endDate ? dayjs(dayjs(endDate).locale('vi').format('YYYY-MM-DD'), 'YYYY-MM-DD') : null} disabledDate={isBeforeToday}
                                             onChange={(dates) => setEndDate(dates)} />
                                     </Form.Item>
                                 </Col>
@@ -493,7 +516,15 @@ const Promotion = () => {
                                         validateStatus={formErrors.value ? 'error' : ''} // Hiển thị lỗi cho trường name nếu có
                                         help={formErrors.value} // Hiển thị thông báo lỗi cho trường name nếu có
                                     >
-                                        <Input addonAfter="VNĐ" value={value} style={{ width: '300px' }} onChange={(e) => setValue(e.target.value)} />
+                                        <InputNumber style={{ width: 300 }} addonAfter="VNĐ" onChange={handlePriceChange}
+                                            formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
+                                            value={value}
+                                            parser={(value) => {
+                                                // Remove non-numeric characters and parse as a float
+                                                const numericValue = parseFloat(value.replace(/\D/g, ''));
+                                                return isNaN(numericValue) ? null : numericValue;
+                                            }}
+                                        />
                                     </Form.Item>
                                 </Col>
                             </Row>
@@ -501,7 +532,10 @@ const Promotion = () => {
                         </div>
                         <div>
                             <div style={{ color: 'red', marginLeft: 30 }}>*(Vui lòng chọn homestay mà bạn muốn áp dụng khuyến mãi)</div>
-                            <Table columns={columnsData} dataSource={products} />
+                            <Table rowSelection={{
+                                type: 'checkbox',
+                                ...rowSelection,
+                            }} columns={columnsData} dataSource={products} rowKey="id" />
                         </div>
                     </div>
                 </Form>
@@ -534,7 +568,7 @@ const Promotion = () => {
                     <br />
                     <div style={{ display: 'flex' }}>
                         <div style={{ width: 400 }}>Số tiền giảm </div> :{' '}
-                        {value} (VNĐ)
+                        {formatCurrency(value)} (VNĐ)
                     </div>
                     <br />
                     <div style={{ display: 'flex' }}>

@@ -1,6 +1,7 @@
 package com.example.demo.cors.customer.services.impl;
 
 import com.cloudinary.Cloudinary;
+import com.example.demo.cors.customer.model.request.CustomerForgetRequest;
 import com.example.demo.cors.customer.model.request.CustomerPasswordRequest;
 import com.example.demo.cors.customer.model.request.CustomerRequest;
 import com.example.demo.cors.customer.model.request.CustomerUserPassRequest;
@@ -134,6 +135,7 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 .username(user.getUsername())
                 .status(user.getStatus())
                 .roleCustomer(user.getRole())
+                .avataUrl(user.getAvatarUrl())
                 .build();
     }
 
@@ -179,6 +181,7 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 .username(user.getUsername())
                 .status(user.getStatus())
                 .roleCustomer(user.getRole())
+                .avataUrl(user.getAvatarUrl())
                 .build();
     }
 
@@ -206,11 +209,12 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 .username(user.getUsername())
                 .status(user.getStatus())
                 .roleCustomer(user.getRole())
+                .avataUrl(user.getAvatarUrl())
                 .build();
     }
 
     @Override
-    public CustomerAuthenticationReponse updateInformationCusmoter(String idCustomer, CustomerRequest request, MultipartFile multipartFile) throws IOException {
+    public CustomerAuthenticationReponse updateInformationCusmoter(String idCustomer, CustomerRequest request) throws IOException {
         User customer = customerLoginRepository.findById(idCustomer).get();
         if (isNullOrEmpty(request.getUsername())) {
             throw new RestApiException("tên tài khoản không được để trống");
@@ -224,16 +228,13 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         if (isNullOrEmpty(request.getEmail())) {
             throw new RestApiException("Email không được để trống");
         }
-        if (isNullOrEmpty(request.getPassword())) {
-            throw new RestApiException("Password không được để trống");
-        }
-        if (customerLoginRepository.existsByUsername(request.getUsername())) {
+        if (customerLoginRepository.existsByUsername(request.getUsername()) && ! customer.getUsername().equals(request.getUsername())) {
             throw new RestApiException("Tên tài khoản đã tồn tại");
         }
-        if (customerLoginRepository.existsByEmail(request.getEmail())) {
+        if (customerLoginRepository.existsByEmail(request.getEmail()) && !customer.getEmail().equals(request.getEmail())) {
             throw new RestApiException("Email đã tồn tại");
         }
-        if (customerLoginRepository.existsByPhoneNumber(request.getPhoneNumber())) {
+        if (customerLoginRepository.existsByPhoneNumber(request.getPhoneNumber()) && !customer.getPhoneNumber().equals(request.getPhoneNumber())) {
             throw new RestApiException("Số điện thoại đã tồn tại");
         }
         String phoneNumber = request.getPhoneNumber();
@@ -251,12 +252,18 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         customer.setPhoneNumber(request.getPhoneNumber());
         customer.setEmail(request.getEmail());
         customer.setUsername(request.getUsername());
-        customer.setAvatarUrl(cloudinary.uploader()
-                .upload(multipartFile.getBytes(),
-                        Map.of("id", UUID.randomUUID().toString()))
-                .get("url")
-                .toString());
-        customerLoginRepository.save(customer);
+        if(request.getAvatar()!=null && request.getAvatar().getBytes().length > 0) {
+            customer.setAvatarUrl(cloudinary.uploader()
+                    .upload(request.getAvatar().getBytes(),
+                            Map.of("id", UUID.randomUUID().toString()))
+                    .get("url")
+                    .toString());
+            customerLoginRepository.save(customer);
+        }else if(request.getAvatar()==null && customer.getAvatarUrl()!=null){
+            customerLoginRepository.save(customer);
+        }else{
+            customerLoginRepository.save(customer);
+        }
         return CustomerAuthenticationReponse.builder()
                 .code(customer.getCode())
                 .id(customer.getId())
@@ -271,6 +278,26 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 .status(customer.getStatus())
                 .roleCustomer(customer.getRole())
                 .build();
+    }
+
+    @Override
+    public void sendResetPasswordEmail(CustomerForgetRequest request) {
+        User user= customerLoginRepository.findByUsername(request.getUsername()).orElse(null);
+        Random random = new Random();
+        int number = random.nextInt(1000);
+        String code = String.format("C%04d",number);
+        user.setPassword(passwordEncoder.encode(code));
+        if (user != null) {
+            String resetPasswordLink = "Đây là mật khẩu mới của bạn:" + code;
+            String emailBody = "Vui lòng đăng nhập lại với mật khẩu mới." + resetPasswordLink;
+
+            Email email = new Email();
+            email.setToEmail(new String[]{user.getEmail()});
+            email.setSubject("Quên mật khẩu");
+            email.setTitleEmail("Mật khẩu mới của bạn");
+            email.setBody(emailBody);
+            emailSender.sendEmail(email.getToEmail(), email.getSubject(), email.getTitleEmail(), email.getBody());
+        }
     }
 
     private Boolean isValidEmail(String email) {

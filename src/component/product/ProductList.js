@@ -23,6 +23,8 @@ import slideform from "../../assets/svg/Rectangle 7.svg"
 import "./ProductList.css"
 import dayjs from 'dayjs';
 import { DatePicker, Space } from 'antd';
+import { fetchSearchProducts } from '../../features/product/searchProductThunk';
+import { Link } from 'react-router-dom';
 const { Search } = Input;
 const { Title } = Typography
 const { RangePicker } = DatePicker;
@@ -54,16 +56,64 @@ const overlay = {
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     zIndex: "2" // Giá trị này phải cao hơn so với phần ảnh
 }
+const items = [
+    {
+        key: '1',
+        label: 'Hồ Chí Minh',
+        children: <ProductTabs city="Ho Chi Minh" />,
+    },
+    {
+        key: '2',
+        label: 'Hà Nội',
+        children: <ProductTabs city="Ha Noi" />,
+    },
+    {
+        key: '3',
+        label: 'Đà Nẵng',
+        children: <ProductTabs city="Da Nang" />,
+    },
+    {
+        key: '4',
+        label: 'Nha Trang',
+        children: <ProductTabs city="Nha Trang" />,
+    },
+    {
+        key: '5',
+        label: 'Vũng Tàu',
+        children: <ProductTabs city="Vung Tau" />,
+    },
+];
+
 function ProductList() {
     const dispatch = useDispatch();
     const [currentLocation, setCurrentLocation] = useState('1'); // Initialize with 'Hồ Chí Minh'
+    const [checkInDate, setCheckInDate] = useState(null);
+    const [checkOutDate, setCheckOutDate] = useState(null);
+    const [nameOrAddress, setNameOrAddress] = useState(null);
+    const [convenientvir, setconvenient] = useState('')
 
     const handleTabChange = (key) => {
         setCurrentLocation(key);
     };
     useEffect(() => {
-        dispatch(fetchProducts());
+        setNameOrAddress(items.find((item) => item.key === currentLocation))
+    }, [currentLocation])
+    useEffect(() => {
+        // Set checkInDate to tomorrow
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        setCheckInDate(tomorrow);
+
+        // Set checkOutDate to the day after tomorrow
+        const dayAfterTomorrow = new Date();
+        dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
+        setCheckOutDate(dayAfterTomorrow);
     }, []);
+
+
+    useEffect(() => {
+        dispatch(fetchSearchProducts(checkInDate?.valueOf(), checkOutDate?.valueOf(), nameOrAddress?.label, 1, 1, 0, 100000000, convenientvir, 0))
+    }, [checkInDate, checkOutDate, nameOrAddress]);
     const [currentPage, setCurrentPage] = useState(0);
 
     const handleNextPage = () => {
@@ -96,33 +146,6 @@ function ProductList() {
     const itemsToShow = YourData.slice(startIndex, endIndex);
     const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
 
-    const items = [
-        {
-            key: '1',
-            label: 'Hồ Chí Minh',
-            children: <ProductTabs city="Ho Chi Minh" />,
-        },
-        {
-            key: '2',
-            label: 'Hà Nội',
-            children: <ProductTabs city="Ha Noi" />,
-        },
-        {
-            key: '3',
-            label: 'Đà Nẵng',
-            children: <ProductTabs city="Da Nang" />,
-        },
-        {
-            key: '4',
-            label: 'Nha Trang',
-            children: <ProductTabs city="Nha Trang" />,
-        },
-        {
-            key: '5',
-            label: 'Vũng Tàu',
-            children: <ProductTabs city="Vung Tau" />,
-        },
-    ];
 
     return (
         <div>
@@ -142,21 +165,23 @@ function ProductList() {
                     {currentPage > 0 && <div onClick={handlePrevPage}><LeftOutlined style={{ fontSize: '22px' }} /></div>}
                     {itemsToShow.map((item, index) => (
                         <div className='picturetrval' style={{ textAlign: 'center', width: '10%' }} key={index}>
-                            <div className='image-container'>
-                                <img src={item.img} style={{ borderRadius: '50px' }} alt='Hình ảnh' />
-                                <div className='hover-text'>
-                                    <Title level={5}>{item.title}</Title>
+                            <Link to={`/home-stay?name=${item.title}`}>
+                                <div className='image-container'>
+                                    <img src={item.img} style={{ borderRadius: '50px' }} alt='Hình ảnh' />
+                                    <div className='hover-text'>
+                                        <Title level={5}>{item.title}</Title>
+                                    </div>
                                 </div>
-                            </div>
+                            </Link>
                         </div>
                     ))}
                     {(currentPage + 1) * itemsPerPage < YourData.length && <div onClick={handleNextPage}><RightOutlined style={{ fontSize: '22px', position: 'absolute' }} /></div>}
                 </div>
             </section>
-            <section style={{ padding: '0 150px 0 150px' }}>
+            {/* <section style={{ padding: '0 150px 0 150px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Title>Chương trình khuyến mại</Title>
-                    <div><a href='/home-stay' style={{ fontSize: 18, textDecoration: 'none' }}>Xem tất cả ></a></div>
+                    <div><a href='/home-stay' style={{ fontSize: 18, textDecoration: 'none' }}>Xem tất cả &gt;</a></div>
                 </div>
 
                 <Carousel style={{}}>
@@ -175,7 +200,7 @@ function ProductList() {
                         </div>
                     </div>
                 </Carousel>
-            </section>
+            </section> */}
             <section style={{ marginTop: 30 }}>
                 <div style={{ justifyContent: 'center', textAlign: 'center' }}>
                     <Title level={2}>Tiếng lành đồn xa</Title>

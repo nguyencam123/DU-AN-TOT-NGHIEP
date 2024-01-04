@@ -12,7 +12,9 @@ import {
   Col,
   message,
   Image,
-  TimePicker
+  TimePicker,
+  Upload,
+  InputNumber
 } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -27,7 +29,8 @@ import {
   ZoomOutOutlined,
   ZoomInOutlined,
   ReloadOutlined,
-  LoadingOutlined
+  LoadingOutlined,
+  UploadOutlined
 } from '@ant-design/icons';
 import { useState } from 'react';
 import {
@@ -54,7 +57,13 @@ const { Title } = Typography;
 
 const HomeStayProduct = () => {
   const [checkedValues, setCheckedValues] = useState([]);
-
+  const formatCurrency = (value) => {
+    // Sử dụng Intl.NumberFormat để định dạng giá trị tiền tệ
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(value);
+  };
 
   const handleButtonClick = () => {
     setCheckedValues([]);
@@ -69,6 +78,7 @@ const HomeStayProduct = () => {
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [wards, setWards] = useState([]);
   const [selectedWard, setSelectedWard] = useState('');
+  const [valueselect, setValueSelect] = useState('');
   const dateFormat = 'YYYY/MM/DD';
   const isBeforeToday = (current) => {
     return current && current.isBefore(moment().startOf('day'));
@@ -80,27 +90,59 @@ const HomeStayProduct = () => {
     }
     return false; // Bỏ điều kiện không cho chọn ngày lớn hơn ngày hiện tại
   };
-
+  const handlePriceChange = (value) => {
+    // You can perform any additional formatting or validation here
+    setprice(value);
+  };
   useEffect(() => {
-    dispatch(fetchHomestay());
+    dispatch(fetchHomestay(valueselect));
     dispatch(fetchConvenient());
     // dispatch(fetchProvince());
-  }, []);
+  }, [valueselect]);
   const dispatch = useDispatch();
   const products = useSelector((state) => state.ownerHomestay.homestays);
   const convenients = useSelector((state) => state.convenient.convenients);
   const onChangeConvenients = (checkedValues) => {
     setconvenient(checkedValues.join(','));
     setCheckedValues(checkedValues);
+    setCheckedList(checkedValues)
   };
 
   const [file, setFile] = useState([]);
+  const [selectedImages, setSelectedImages] = useState([]);
 
-  const handleFileChange = (e) => {
-    let selectedFile = e.target.files;
+  const handleFileChange = (event) => {
+    const files = event.target.files;
+    let selectedFile = event.target.files;
     let fileList = [...selectedFile];
-    setFile(fileList);
+    const imagesArray = fileList.map((file) => ({
+      name: file.name,
+      url: URL.createObjectURL(file),
+    }));
+
+    setSelectedImages((prevImages) => [...prevImages, ...imagesArray]);
+    setFile(fileList)
+    const filesArray = Array.from(files).map((file) => ({
+      name: file.name,
+      size: file.size,
+      type: file.type,
+    }));
   };
+
+  const handleRemoveImage = (index) => {
+    const newImages = [...selectedImages];
+    file.splice(index, 1);
+    newImages.splice(index, 1);
+    setSelectedImages(newImages);
+    // document.getElementById('image').value = null;
+  };
+
+  // const handleFileChange = (e) => {
+  //   console.log(e)
+  //   // let selectedFile = e.target.files;
+  //   // let fileList = [...selectedFile];
+  //   // setFile(fileList);
+  // };
   //modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewmodal, setIsviewmodal] = useState(false);
@@ -144,6 +186,14 @@ const HomeStayProduct = () => {
     setSelectedWard('');
     setCheckedValues([]);
     setFile([])
+    setAddressDetail('')
+    const fileInput = document.getElementById('image');
+    if (fileInput) {
+      fileInput.value = null;
+    }
+    setSelectedImages([])
+
+
   };
   const handleOk = () => {
     setIsModalOpen(false);
@@ -167,7 +217,10 @@ const HomeStayProduct = () => {
       title: 'Giá homestay',
       dataIndex: 'price',
       key: 'price',
-      align: 'center'
+      align: 'center',
+      render(str) {
+        return formatCurrency(str)
+      }
     },
     {
       title: 'Trạng thái của homestay',
@@ -241,6 +294,30 @@ const HomeStayProduct = () => {
   const [roomNumber, setroomNumber] = useState(0);
   const [cancellationPolicy, setcancellationPolicy] = useState(0);
   const [timeCheckIn, settimeCheckIn] = useState(null);
+  const [addressDetail, setAddressDetail] = useState('');
+  
+
+  const listFilter = [
+    {
+        name: 'Tất cả',
+        value: ''
+    },
+    {
+        name: 'Chờ duyệt',
+        value: 1
+    },
+    {
+        name: 'Hoạt động',
+        value: 0
+    },
+    {
+        name: 'Không hoạt động',
+        value: 2
+    }
+]
+const hanhdleSelect = (selectedValue) => {
+    setValueSelect(selectedValue) // You can access the selected value here
+};
 
   const handleTimeChangestart = (time, timeString) => {
     settimeCheckIn(timeString);
@@ -273,13 +350,13 @@ const HomeStayProduct = () => {
     const selectedWardName =
       wards.find((ward) => ward.Id === selectedWard)?.Name || '';
 
-    const newAddress = `${selectedWardName}, ${selectedDistrictName}, ${selectedCityName}`;
+    const newAddress = `${selectedWardName}, ${selectedDistrictName}, ${selectedCityName}, ${addressDetail}`;
     setaddress(newAddress);
   };
   // Use useEffect to call updateAddress whenever the selectedCity, selectedDistrict, or selectedWard changes
   useEffect(() => {
     updateAddress();
-  }, [selectedCity, selectedDistrict, selectedWard]);
+  }, [selectedCity, selectedDistrict, selectedWard, addressDetail]);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -303,7 +380,9 @@ const HomeStayProduct = () => {
     address: address,
     acreage: Number(parsedAcreage),
     ownerHomestay: UserID,
-    roomNumber: parseInt(roomNumber)
+    roomNumber: parseInt(roomNumber),
+    phonenumber: userDetail?.data.phoneNumber,
+    email: userDetail?.data.email
   };
   //validateform
   const [errorFile, setErrorFile] = useState('')
@@ -342,12 +421,25 @@ const HomeStayProduct = () => {
       .positive('Số lượng chính sách ủy phòng phải lớn hơn 0'),
     // province: Yup.string().required('Vui lòng chọn thành phố homestay'),
     startDate: Yup.number().required('Vui lòng chọn ngày bắt đầu'),
-    endDate: Yup.number().required('Vui lòng chọn ngày kết thúc'),
+    endDate: Yup.number()
+      .typeError('Vui lòng chọn ngày kết thúc')
+      .required('Vui lòng chọn ngày kết thúc')
+      .test('endDate', 'Ngày kết thúc phải lớn hơn ngày bắt đầu', function (value) {
+        const { startDate } = this.parent;
+
+        // Kiểm tra nếu giá trị là số (datelong)
+        if (typeof value === 'number') {
+          return value > startDate;
+        }
+
+        return false; // Trả về false nếu không phải là số
+      }),
     acreage: Yup.number()
       .required('Vui lòng nhập diện tích')
       .typeError('Vui lòng nhập diện tích')
       .positive('diện tích phòng phải lớn hơn 0'),
-    desc: Yup.string().required('vui lòng nhập vào mô tả').max(500, 'Vui lòng nhập ít hơn 500 ký tự')
+    desc: Yup.string().required('vui lòng nhập vào mô tả').max(500, 'Vui lòng nhập ít hơn 500 ký tự'),
+    // addressDetail: Yup.string().required('vui lòng nhập địa chỉ chi tiết')
   });
   const handleSubmitStatus = async (record) => {
     await message.info(
@@ -364,7 +456,6 @@ const HomeStayProduct = () => {
     dispatch(fetchHomestay());
   };
   const handleSubmit = async (e) => {
-    setIsLoading(true);
     e.preventDefault();
     try {
       await validationSchema.validate(homestay, { abortEarly: false });
@@ -382,6 +473,7 @@ const HomeStayProduct = () => {
         throw new Yup.ValidationError('File phải nhỏ hơn hoặc bằng 5MB', file, 'file');
       }
       if (isAddFrom) {
+        setIsLoading(true);
         await message.info(
           'Đang tiến hành thêm bạn vui lòng đợi một vài giây nhé!', 5
         );
@@ -404,7 +496,9 @@ const HomeStayProduct = () => {
         setSelectedCity('');
         setSelectedDistrict('');
         setSelectedWard('');
+        setAddressDetail('');
       } else {
+        setIsLoading(true);
         await message.info(
           'Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!', 5
         );
@@ -421,7 +515,6 @@ const HomeStayProduct = () => {
       errors.inner.forEach((error) => {
         errorObject[error.path] = error.message;
       });
-
       setFormErrors(errorObject);
       setIsLoading(false)
     }
@@ -447,8 +540,12 @@ const HomeStayProduct = () => {
     settimeCheckOut(record.timeCheckOut);
     setconvenient(record.detailHomestays);
     setFile([])
-
-    console.log(record)
+    setviewEditConvennient(record.detailHomestays);
+    const fileInput = document.getElementById('image');
+    if (fileInput) {
+      fileInput.value = null;
+    }
+    setSelectedImages([])
     //
     setFormErrors({});
 
@@ -456,6 +553,7 @@ const HomeStayProduct = () => {
     const selectedWardName = addressParts[0]; // Lấy tên phường/xã từ địa chỉ
     const selectedDistrictName = addressParts[1]; // Lấy tên quận/huyện từ địa chỉ
     const selectedCityName = addressParts[2];
+    setAddressDetail(addressParts[3]);
     const selectedCityData = cities.find(
       (city) => city.Name === selectedCityName
     );
@@ -523,12 +621,49 @@ const HomeStayProduct = () => {
       }
     }
   }, [selectedDistrict, districts]);
+  const [checkedList, setCheckedList] = useState(null);
+  useEffect(() => {
+    setCheckedList(viewEditConvennient?.map((item) => item.convenientHomestay?.id))
+  }, [viewEditConvennient])
+  const [fileList, setFileList] = useState([]);
+  const [uploading, setUploading] = useState(false);
+  const handleUpload = () => {
+    const formData = new FormData();
+    fileList.forEach((file) => {
+      formData.append('files[]', file);
+    });
+    setUploading(true);
+    // You can use any AJAX library you like
+    fetch('https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188', {
+      method: 'POST',
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then(() => {
+        setFileList([]);
+        message.success('upload successfully.');
+      })
+      .catch(() => {
+        message.error('upload failed.');
+      })
+      .finally(() => {
+        setUploading(false);
+      });
+  };
 
   return (
     <>
       <Title style={{ marginTop: '20px' }}>Quản lý Homestay</Title>
-      <div style={{ marginBottom: 20, float: 'right' }}>
-        <Button type='primary' onClick={showModal}>
+      <div style={{ marginBottom: 20, float: 'right',display:'flex' }}>
+        <Form.Item label="Trạng thái" >
+          <Select
+            style={{ width: 143 }}
+            options={listFilter.map(filter => ({ value: filter.value, label: filter.name }))}
+            defaultValue={listFilter[0].value}
+            onChange={hanhdleSelect}
+             />
+        </Form.Item>
+        <Button style={{marginLeft:20}} type='primary' onClick={showModal}>
           Thêm mới HomeStay
         </Button>
       </div>
@@ -598,9 +733,16 @@ const HomeStayProduct = () => {
                 validateStatus={formErrors.price ? 'error' : ''}
                 help={formErrors.price}
               >
-                <Input
+                <InputNumber
+                  style={{ width: 254 }}
                   value={price}
-                  onChange={(e) => setprice(e.target.value)}
+                  onChange={handlePriceChange}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
+                  parser={(value) => {
+                    // Remove non-numeric characters and parse as a float
+                    const numericValue = parseFloat(value.replace(/\D/g, ''));
+                    return isNaN(numericValue) ? null : numericValue;
+                  }}
                   addonAfter='VNĐ'
                 />
               </Form.Item>
@@ -707,6 +849,21 @@ const HomeStayProduct = () => {
               </div>
             </Col>
           </Row>
+          <Row gutter={24}>
+            <Col span={24} style={{ marginLeft: 15 }}>
+              <Title level={5}>Tiện ích homestay</Title>
+              <div >
+                <Checkbox.Group
+                  options={convenients.map((item) => ({
+                    label: item.name,
+                    value: item.id,
+                  }))}
+                  value={checkedList}
+                  onChange={onChangeConvenients}
+                />
+              </div>
+            </Col>
+          </Row>
           <Row
             gutter={24}
             style={{ marginTop: 10, marginBottom: 20, marginLeft: 20 }}
@@ -767,17 +924,13 @@ const HomeStayProduct = () => {
           </Row>
           <Row gutter={24}>
             <Col span={24}>
-              <Title level={5}>Tiện ích homestay</Title>
-              <div>
-                <Checkbox.Group
-                  options={convenients.map((item) => ({
-                    label: item.name,
-                    value: item.id,
-                  }))}
-                  value={checkedValues}
-                  onChange={onChangeConvenients}
-                />
-              </div>
+              <Title level={5}>Địa chỉ chi tiết homestay</Title>
+              <TextArea
+                style={{ width: '900px' }}
+                value={addressDetail}
+                onChange={(e) => setAddressDetail(e.target.value)}
+              />
+              <div style={{ color: 'red' }}>{formErrors.addressDetail}</div>
             </Col>
           </Row>
           <Row gutter={24}>
@@ -790,23 +943,36 @@ const HomeStayProduct = () => {
               />
               <div style={{ color: 'red' }}>{formErrors.desc}</div>
             </Col>
-            {/* <Col span={12}>
-              <Title level={5}>Ngày kết thúc</Title>
-              <DatePicker onChange={handleDateChangeend} />
-            </Col> */}
           </Row>
         </Form>
         <form onSubmit={handleSubmit} style={{ marginTop: 20 }}>
           <div>
-
-            <label htmlFor='image'>Chọn ảnh(Chọn ít nhất 5 ảnh và tối đa 20 ảnh)<br /></label>
-            <input
-              type='file'
-              id='image'
-              multiple
-              accept='image/*'
-              onChange={handleFileChange}
-            />
+            <div style={{ display: 'flex' }}>
+              <label htmlFor='image' style={{ marginTop: 5 }}>Chọn ảnh(Chọn ít nhất 5 ảnh và tối đa 20 ảnh)<br /></label>
+              <label htmlFor='image' style={{ cursor: 'pointer', border: '1px solid black', borderRadius: 8, padding: '6px 15px 6px 15px', marginLeft: 10 }}>
+                Chọn tệp
+              </label>
+              <input
+                type='file'
+                id='image'
+                multiple
+                accept='image/*'
+                onChange={handleFileChange}
+                style={{ display: 'none' }}
+              />
+              <div style={{ marginLeft: 8, marginTop: 5 }}>Đã có {selectedImages.length} file được chọn</div>
+            </div>
+            <div>
+              {selectedImages.map((image, index) => (
+                <div key={index} style={{ display: 'flex', marginTop: 10, border: '1px solid black', borderRadius: 8, width: '100%', height: 100, padding: 5 }}>
+                  <img src={image.url} alt={`selected-${index}`} style={{ border: '1px solid white', borderRadius: 8 }} />
+                  <div style={{ display: 'flex', justifyContent: 'center' }}>{`File Name: ${image.name}`}</div>
+                  <div style={{ marginLeft: 'auto', display: 'flex', justifyContent: 'center', marginRight: 20 }}>
+                    <DeleteOutlined onClick={() => handleRemoveImage(index)} />
+                  </div>
+                </div>
+              ))}
+            </div>
             {isAddFrom == true ? (
               ''
             ) : (
@@ -865,7 +1031,7 @@ const HomeStayProduct = () => {
             ))}
           </div>
         )}
-      </Modal>
+      </Modal >
       <Modal
         title={
           <div style={{ fontSize: '22px' }}>Xem thông tin chi tiết homstay</div>
@@ -896,7 +1062,7 @@ const HomeStayProduct = () => {
             <tr>
               <td style={{ width: 600 }}>
                 <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Giá </div> : {price} (VNĐ)
+                  <div style={{ width: 200 }}>Giá </div> : {formatCurrency(price)}
                 </div>
                 <br />
               </td>

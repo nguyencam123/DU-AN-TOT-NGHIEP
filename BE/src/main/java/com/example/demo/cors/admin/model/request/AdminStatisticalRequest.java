@@ -12,4 +12,6 @@ public class AdminStatisticalRequest {
 
     private Integer year;
 
+    private Integer date;
+
 }

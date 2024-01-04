@@ -186,47 +186,36 @@ const HeaderUser = () => {
                     >
                       <FileDoneOutlined /> Đơn đặt hàng
                     </button>
+                    <Link to={'/userComment'}>
                     <button
                       type='button'
                       className='btn btn-primary'
                       style={{ color: 'black' }}
-                      onClick={cart}
-                    >
-                      <HeartOutlined /> Danh sách yêu thích
-                    </button>
-                    <button
-                      type='button'
-                      className='btn btn-primary'
-                      style={{ color: 'black' }}
-                      onClick={logout}
                     >
                       <CommentOutlined /> Nhận xét của tôi
                     </button>
-                    <button
-                      type='button'
-                      className='btn btn-primary'
-                      style={{ color: 'black' }}
-                      onClick={logout}
-                    >
-                      <StarOutlined /> Dành cho vip
-                    </button>
-                    <button
-                      type='button'
-                      className='btn btn-primary'
-                      style={{ color: 'black' }}
-                      onClick={logout}
-                    >
-                      <BankOutlined /> Những luật trong khi đặt phòng
-                    </button>
-                    <button
-                      type='button'
-                      className='btn btn-primary'
-                      style={{ color: 'black', display: 'flex' }}
-                      onClick={logout}
-                    >
-                      <MDBIcon fas icon='question' style={{ marginTop: 4 }} />
-                      &nbsp; Những câu hỏi thắc mắc
-                    </button>
+                    </Link>
+                    <Link to={'/RulesWhile'}>
+                      <button
+                        type='button'
+                        className='btn btn-primary'
+                        style={{ color: 'black' }}
+
+                      >
+                        <BankOutlined />Những luật trong khi đặt homestay
+                      </button>
+                    </Link>
+                    <Link to={'/supporteduser'}>
+                      <button
+                        type='button'
+                        className='btn btn-primary'
+                        style={{ color: 'black', display: 'flex' }}
+
+                      >
+                        <MDBIcon fas icon='question' style={{ marginTop: 4 }} />
+                        &nbsp; Những câu hỏi thắc mắc
+                      </button>
+                    </Link>
                     <Link
                       to='/user/propreties'
                       style={{ textDecoration: 'none' }}

@@ -2,6 +2,7 @@ package com.example.demo.cors.homestayowner.controller;
 
 import com.example.demo.cors.common.base.ResponseObject;
 import com.example.demo.cors.homestayowner.model.conventer.HomestayOwnerHomestayConventer;
+import com.example.demo.cors.homestayowner.model.request.HomestayOwnerHomestayGetRequest;
 import com.example.demo.cors.homestayowner.model.request.HomestayownerHomestayRequest;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerHomestayService;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerImgHomestayService;
@@ -31,8 +32,8 @@ public class HomestayOwnerHomestayController {
 
     @GetMapping("get-homestay-by-id")
     @PreAuthorize("hasAuthority('owner:read')")
-    public ResponseObject getAllHomestayownerHomestay(@RequestParam("id") String id, HomestayownerHomestayRequest homestayownerHomestayRequest) {
-        return new ResponseObject(homestayownerHomestayService.getPageHomestay(id, homestayownerHomestayRequest));
+    public ResponseObject getAllHomestayownerHomestay(final HomestayOwnerHomestayGetRequest homestayownerHomestayRequest) {
+        return new ResponseObject(homestayownerHomestayService.getPageHomestay(homestayownerHomestayRequest));
     }
 
     @GetMapping("get-imghomestay")
@@ -67,11 +68,10 @@ public class HomestayOwnerHomestayController {
     @PreAuthorize("hasAuthority('owner:update')")
     public ResponseObject updatehomestays(@RequestParam("id") String id,
                                           @RequestParam("homestay") String homestay,
-                                          @RequestParam("image") List<MultipartFile> images,
                                           @RequestParam("convenient") List<String> idConvenientHomestay) throws IOException {
         try {
             HomestayownerHomestayRequest request = conventer.convert(homestay);
-            Homestay homestay1 = homestayownerHomestayService.updateHomestays(id, request, images, idConvenientHomestay);
+            Homestay homestay1 = homestayownerHomestayService.updateHomestays(id, request, idConvenientHomestay);
             ResponseObject responseObject = new ResponseObject(homestay1);
             responseObject.setMessage("Thành công");
             return responseObject;

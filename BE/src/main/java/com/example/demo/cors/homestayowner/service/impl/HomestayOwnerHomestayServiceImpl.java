@@ -3,6 +3,7 @@ package com.example.demo.cors.homestayowner.service.impl;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.example.demo.cors.common.base.PageableObject;
+import com.example.demo.cors.homestayowner.model.request.HomestayOwnerHomestayGetRequest;
 import com.example.demo.cors.homestayowner.model.request.HomestayownerHomestayRequest;
 import com.example.demo.cors.homestayowner.repository.*;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerHomestayService;
@@ -46,21 +47,20 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
     private Cloudinary cloudinary;
 
     @Override
-    public PageableObject<Homestay> getPageHomestay(String id, HomestayownerHomestayRequest request) {
+    public PageableObject<Homestay> getPageHomestay(HomestayOwnerHomestayGetRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-        Page<Homestay> res = homestayownerHomestayRepository.getHomestayByOwnerH(id, pageable);
+        Page<Homestay> res = homestayownerHomestayRepository.getHomestayByOwnerH(request, pageable);
         return new PageableObject<>(res);
     }
 
     @Override
     @Transactional
-    public Homestay updateHomestays(String id, HomestayownerHomestayRequest request, List<MultipartFile> multipartFiles, List<String> idConvenientHomestay) throws IOException {
+    public Homestay updateHomestays(String id, HomestayownerHomestayRequest request,List<String> idConvenientHomestay) throws IOException {
         Homestay homestay = homestayownerHomestayRepository.findById(id).orElse(null);
         getHomestay(request, homestay);
         Homestay homestay1 = homestayownerHomestayRepository.save(homestay);
-        homestayOwnerImgHomestayRepo.deleteByHomestay(id);
         homestayOwnerDetailHomestayReposritory.deleteByHomestay(id);
-        return getImgHomestayAndConvenientHomestay(multipartFiles, idConvenientHomestay, homestay1);
+        return getImgHomestayAndConvenientHomestay(id,idConvenientHomestay, homestay1);
     }
 
     @Override
@@ -117,6 +117,8 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
         homestay.setTimeCheckIn(request.getTimeCheckIn());
         homestay.setTimeCheckOut(request.getTimeCheckOut());
         homestay.setCancellationPolicy(request.getCancellationPolicy());
+        homestay.setEmail(request.getEmail());
+        homestay.setPhoneNumber(request.getPhonenumber());
         homestay.setOwnerHomestay(homestayOwnerOwnerHomestayRepository.findById(request.getOwnerHomestay()).orElse(null));
     }
 
@@ -125,6 +127,7 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
         for (MultipartFile image : multipartFiles) {
             ImgHomestay imgHomestay = new ImgHomestay();
             imgHomestay.setHomestay(homestay1);
+
             Map uploadResult = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.asMap("folder", "homestay_images"));
             imgHomestay.setImgUrl(uploadResult.get("url").toString());
             homestayOwnerImgHomestayRepo.save(imgHomestay);
@@ -142,6 +145,24 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
             detailHomestays.add(detailHomestay);
         }
         homestay1.setDetailHomestays(detailHomestays);
+
         return homestay1;
     }
+
+    private Homestay getImgHomestayAndConvenientHomestay(String id,List<String> idConvenientHomestay, Homestay homestay1) throws IOException {
+        Homestay homestay = homestayownerHomestayRepository.findById(id).orElse(null);
+        List<DetailHomestay> detailHomestays = new ArrayList<>();
+        for (String detail : idConvenientHomestay) {
+            DetailHomestay detailHomestay = new DetailHomestay();
+            detailHomestay.setHomestay(homestay1);
+            ConvenientHomestay convenientHomestay = homestayOwnerConvenientHomestayRepository.findById(detail).orElse(null);
+            detailHomestay.setConvenientHomestay(convenientHomestay);
+            homestayOwnerDetailHomestayReposritory.save(detailHomestay);
+            detailHomestays.add(detailHomestay);
+        }
+
+        homestay1.setDetailHomestays(detailHomestays);
+        return homestay1;
+    }
+
 }

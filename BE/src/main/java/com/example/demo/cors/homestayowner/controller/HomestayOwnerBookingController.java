@@ -28,4 +28,10 @@ public class HomestayOwnerBookingController {
         return new ResponseObject(homestayOwnerBookingService.getAllBooking(request));
     }
 
+    @GetMapping("/year-month")
+    @PreAuthorize("hasAuthority('owner:read')")
+    public ResponseObject getBookingByYearAndMonth(final HomestayOwnerBookingRequest request) {
+        return new ResponseObject(homestayOwnerBookingService.getBookingByYearAndMonth(request));
+    }
+
 }

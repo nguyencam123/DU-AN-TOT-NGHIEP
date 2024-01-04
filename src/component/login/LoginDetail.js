@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import { Avatar, Tabs, Typography, notification } from 'antd'
+import { Avatar, Tabs, Typography, message, notification } from 'antd'
 import { UserOutlined, FileProtectOutlined, LogoutOutlined, BellOutlined, RedoOutlined } from '@ant-design/icons'
 import { useState } from "react";
 import { MDBBtn, MDBCol, MDBInput, MDBRow } from "mdb-react-ui-kit";
@@ -7,21 +7,25 @@ import moment from 'moment';
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../../features/user/userThunk";
 import { ChangePasswordByPass, ChangePasswordByPassUser } from "../../features/owner_homestay/changePassword/changPassword";
+import { instance } from "../../app/axiosConfig";
 const { Title } = Typography;
 const { TabPane } = Tabs;
 const LoginDetail = () => {
     const navigate = useNavigate()
     const userDetail = JSON.parse(localStorage.getItem('userDetail'));
     const namelocal = userDetail?.data.name;
-    const [name, setname] = useState('')
+    const dataUser = useSelector((state) => state.user.userData);
+    const [name, setname] = useState(dataUser.data?.name)
     const [birthday, setbirthday] = useState(856345)
     const [gender, setgender] = useState(true)
     const [address, setaddress] = useState('')
-    const [phoneNumber, setphoneNumber] = useState(0)
-    const [email, setemail] = useState('')
+    const [phoneNumber, setphoneNumber] = useState(dataUser.data?.phoneNumber)
+    const [email, setemail] = useState(dataUser.data?.email)
     const [username, setusername] = useState('')
     const [password, setpassword] = useState('')
     const [identificationNumber, setidentificationNumber] = useState('')
+    const [loading, setLoading] = useState(false);
+
     const handleDateChangestart = (dates) => {
         setbirthday(moment(dates).valueOf());
     };
@@ -32,6 +36,28 @@ const LoginDetail = () => {
         newPassword: newpassword,
         confirmationPassword: confirmpassword
     }
+
+
+    const [file, setFile] = useState([]);
+    const [selectedImages, setSelectedImages] = useState([]);
+
+    const handleFileChange = (event) => {
+        const files = event.target.files;
+        let selectedFile = event.target.files;
+        let fileList = [...selectedFile];
+        const imagesArray = fileList.map((file) => ({
+            name: file.name,
+            url: URL.createObjectURL(file),
+        }));
+
+        setSelectedImages((prevImages) => [...prevImages, ...imagesArray]);
+        setFile(fileList)
+        const filesArray = Array.from(files).map((file) => ({
+            name: file.name,
+            size: file.size,
+            type: file.type,
+        }));
+    };
     const openNotification = () => {
         notification.open({
             message: 'Thông báo',
@@ -66,14 +92,15 @@ const LoginDetail = () => {
             console.error("Password change failed:", error);
         }
     };
-    const formData = {
+
+    const customerData = {
         name: name,
         gender: gender,
         address: address,
         phoneNumber: phoneNumber,
         email: email,
-        identificationNumber: identificationNumber,
-        point: 9
+        birthday: new Date(identificationNumber).valueOf(),
+        username: dataUser?.data?.username
     }
     const dispatch = useDispatch()
     const logout = () => {
@@ -82,30 +109,34 @@ const LoginDetail = () => {
     }
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (password.length < 8 || username.length < 8) {
-            alert('Mật khẩu và tài khoản phải có ít nhất 8 ký tự');
-            return;
-        }
-        else if (phoneNumber.toString().length !== 10) {
+        setLoading(true); // Set loading to true when submitting
+    
+        const formData = new FormData();
+        formData.append('customer', JSON.stringify(customerData));
+        file.forEach((imageUrl) => {
+            formData.append('avataUrl', imageUrl);
+        });
+    
+        if (phoneNumber.toString().length !== 10) {
             alert('Số điện thoại phải có đúng 10 số');
+            setLoading(false); // Set loading to false if validation fails
             return;
-        }
-        else {
-            fetch('http://localhost:8080/api/v1/login/registers', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            })
-                .then(response => response.json())
-                .then(data => {
+        } else {
+            message.info(
+                'Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!', 5
+              );
+            instance.put(`http://localhost:8080/api/v1/customer/update-information-customer?id=${userDetail?.data.id}`, formData)
+                .then(response => {
+                   
+                    setLoading(false); // Set loading to false after a successful request
                 })
                 .catch(error => {
                     console.error('Error:', error);
+                    setLoading(false); // Set loading to false if the request fails
                 });
         }
     };
+    
     const [activeTab, setActiveTab] = useState('1');
     const items = [
         {
@@ -132,7 +163,7 @@ const LoginDetail = () => {
                                     id='name'
                                     type='text'
                                     onChange={(e) => setname(e.target.value)}
-                                    defaultValue={namelocal}
+                                    value={dataUser.data?.name}
                                     required
                                 />
                             </MDBCol>
@@ -143,16 +174,16 @@ const LoginDetail = () => {
                                     id='address'
                                     type='text'
                                     required
-                                    defaultValue={userDetail?.data.address}
+                                    value={dataUser.data?.address}
                                     onChange={(e) => setaddress(e.target.value)}
                                 />
                             </MDBCol>
                         </MDBRow>
-                        <MDBInput wrapperClass='mb-4' required label='Email' id='email' type='email' defaultValue={userDetail?.data.email}
+                        <MDBInput wrapperClass='mb-4' required label='Email' id='email' type='email' value={dataUser.data?.email}
                             onChange={(e) => setemail(e.target.value)} />
-                        <MDBInput wrapperClass='mb-4' label='Số điện thoại' id='phoneNumber' type='number' required defaultValue={userDetail?.data.phoneNumber}
+                        <MDBInput wrapperClass='mb-4' label='Số điện thoại' id='phoneNumber' type='number' required value={dataUser.data?.phoneNumber}
                             onChange={(e) => setphoneNumber(e.target.value)} />
-                        <MDBInput wrapperClass='mb-4' label='Số căn cước công dân' id='identificationNumber' type='number' required defaultValue={userDetail?.data.identificationNumber}
+                        <MDBInput wrapperClass='mb-4' label='Ngày sinh' id='birthday' type='date' required value={dataUser.data?.birthday}
                             onChange={(e) => setidentificationNumber(e.target.value)} />
                         <MDBRow>
                             <MDBCol col='6'>
@@ -163,6 +194,8 @@ const LoginDetail = () => {
                                         name="gender"
                                         value={true}
                                         defaultChecked={true}
+                                        checked={gender === true}
+                                        onChange={() => setgender(true)}
                                     />
                                     Nam
                                 </label>
@@ -172,12 +205,30 @@ const LoginDetail = () => {
                                         type="radio"
                                         name="gender"
                                         value={false}
+                                        checked={gender === false}
+                                        onChange={() => setgender(false)}
                                     />
                                     Nữ
                                 </label>
                             </MDBCol>
                         </MDBRow>
-                        <MDBBtn type="submit" className='w-100 mb-4' size='md' style={{ marginTop: 10 }}>Lưu</MDBBtn>
+                        <Title level={5}>Tải lên hình đại diện</Title>
+                        <div style={{ display: 'flex' }}>
+                            <label htmlFor='image' style={{ cursor: 'pointer', border: '1px solid black', borderRadius: 8, padding: '6px 15px 6px 15px', marginLeft: 10 }}>
+                                Chọn tệp
+                            </label>
+                            <input
+                                type='file'
+                                id='image'
+                                accept='image/*'
+                                onChange={handleFileChange}
+                                style={{ display: 'none' }}
+                            />
+                            <div style={{ marginLeft: 8, marginTop: 5 }}>Đã có {selectedImages.length} file được chọn</div>
+                        </div>
+                        <MDBBtn type="submit" className='w-100 mb-4' size='md' style={{ marginTop: 10 }} disabled={loading}>
+                        {loading ? 'Đang lưu...' : 'Lưu'}
+                        </MDBBtn>
                     </form>
                 </div>
             </div>,

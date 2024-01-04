@@ -1,6 +1,7 @@
 package com.example.demo.cors.customer.controller;
 
 import com.example.demo.cors.common.base.ResponseObject;
+import com.example.demo.cors.customer.model.request.CustomerBookingRequest;
 import com.example.demo.cors.customer.model.request.CustomerCartRequest;
 import com.example.demo.cors.customer.services.CustomerCartDetailService;
 import com.example.demo.cors.customer.services.CustomerCartService;
@@ -41,6 +42,11 @@ public class CustomerCartController {
     @DeleteMapping("/delete-all")
     public void deleteAllCartDetail(@RequestBody CustomerCartRequest request) {
         customerCartDetailService.deleteAllCartDetail(request);
+    }
+
+    @GetMapping("/check-available")
+    public ResponseObject checkAvailable(CustomerBookingRequest request) {
+        return new ResponseObject((customerCartService.getOne(request)));
     }
 
 }

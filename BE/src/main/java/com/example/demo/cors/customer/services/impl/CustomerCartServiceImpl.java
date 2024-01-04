@@ -1,11 +1,13 @@
 package com.example.demo.cors.customer.services.impl;
 
 import com.example.demo.cors.common.base.PageableObject;
+import com.example.demo.cors.customer.model.request.CustomerBookingRequest;
 import com.example.demo.cors.customer.model.request.CustomerCartRequest;
 import com.example.demo.cors.customer.repository.CustomerCartDetailRepository;
 import com.example.demo.cors.customer.repository.CustomerCartRepository;
 import com.example.demo.cors.customer.repository.CustomerHomestayRepository;
 import com.example.demo.cors.customer.services.CustomerCartService;
+import com.example.demo.entities.Booking;
 import com.example.demo.entities.Cart;
 import com.example.demo.entities.CartDetail;
 import com.example.demo.entities.Homestay;
@@ -90,6 +92,15 @@ public class CustomerCartServiceImpl implements CustomerCartService {
             }
         }
         return cart;
+    }
+
+    @Override
+    public Boolean getOne(CustomerBookingRequest request) {
+        List<Booking> listBooking = customerCartRepository.getOneBooking(request);
+        if (listBooking.size() == 0) {
+            return false;
+        }
+        return true;
     }
 
 }

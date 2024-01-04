@@ -7,10 +7,7 @@ public interface AdminStatisticalReponse {
     @Value("#{target.DoanhSo}")
     String getDoanhSo();
 
-    @Value("#{target.DoanhThu}")
-    String getDoanhThu();
-
-    @Value("#{target.HoaHong}")
-    String getHoaHong();
+    @Value("#{target.TongSoTien}")
+    String getTongSoTien();
 
 }

@@ -10,8 +10,6 @@ import java.util.List;
 @Setter
 public class CustomerCommentAddRequest {
 
-    private String code;
-
     private String homestay;
 
     private String comment;

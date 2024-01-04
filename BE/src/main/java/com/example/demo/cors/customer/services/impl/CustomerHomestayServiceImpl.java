@@ -9,6 +9,7 @@ import com.example.demo.cors.customer.services.CustomerHomestayService;
 import com.example.demo.entities.DetailHomestay;
 import com.example.demo.entities.Homestay;
 import com.example.demo.entities.User;
+import jakarta.validation.OverridesAttribute;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -107,5 +108,12 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
         return customerLoginRepository.findUserByToken(token);
     }
 
+    @Override
+    public PageableObject<Homestay> searchHomestayByPromotion(CustomerHomestayRequest request) {
+        List<Homestay> lists = customerHomestayRepository.findAllBetweenDate(request);
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+        Page<Homestay> res = new PageImpl<>(lists, pageable, lists.size());
+        return new PageableObject<>(res);
+    }
 }
 

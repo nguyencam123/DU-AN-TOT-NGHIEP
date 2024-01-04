@@ -77,7 +77,7 @@ export const getBookingByNameHomestay = (name) => async (dispatch) => {
 };
 export const fetchBookingUserId = (id) => async (dispatch) => {
   try {
-    const response = await axios.get(`http://localhost:8080/api/v1/booking?userId=${id}`);
+    const response = await instance.get(`http://localhost:8080/api/v1/booking?userId=${id}&size=99`);
     dispatch(fetchBookingSuccess(response.data.data.data)); // Lấy dữ liệu từ response.data.data
   } catch (error) {
     dispatch(addConvenientFailed(error.message));
@@ -107,6 +107,14 @@ export const getBookingByName = (name) => async (dispatch) => {
 export const updateConvenient = (data) => async (dispatch) => {
   try {
     const response = await instance.put('http://localhost:8080/api/v3/convenient-homestay/update-convenient', data);
+  } catch (error) {
+    dispatch(addConvenientFailed(error.message));
+  }
+};
+
+export const deleteCommentHomestay = (id) => async (dispatch) => {
+  try {
+    const response = await instance.put('http://localhost:8080/api/v3/comment/delete?commentId=' + id);
   } catch (error) {
     dispatch(addConvenientFailed(error.message));
   }

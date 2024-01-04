@@ -1,17 +1,23 @@
 
-import React, { useEffect } from 'react';
-import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progress, Space } from 'antd';
-import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, StarTwoTone } from '@ant-design/icons'
+import React, { useEffect, useState } from 'react';
+import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progress, Space, Avatar, Pagination } from 'antd';
+import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, RotateLeftOutlined, RotateRightOutlined, StarTwoTone, SwapOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons'
 import { Table } from 'react-bootstrap';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProducts, getAvgPoint, getCommentProduct, getOneProduct } from '../../../features/product/productThunk';
 import moment from 'moment';
+import { MDBCard, MDBCardBody, MDBCol, MDBContainer, MDBRow, MDBTypography } from 'mdb-react-ui-kit';
 
 const { Header, Content, Footer } = Layout;
 
 
 export const DetailHomestay = () => {
+  const [current, setCurrent] = useState(1);
+  const onChangePage = (page) => {
+    setCurrent(page);
+    dispatch(getCommentProduct(params.id, page - 1));
+  };
   const params = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -20,34 +26,75 @@ export const DetailHomestay = () => {
   }, []);
   useEffect(() => {
     dispatch(getAvgPoint(params.id));
-    dispatch(getCommentProduct(params.id));
+    dispatch(getCommentProduct(params.id, current - 1));
     dispatch(getOneProduct(params.id));
   }, []);
+  const formatCurrency = (value) => {
+    // Sử dụng Intl.NumberFormat để định dạng giá trị tiền tệ
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(value);
+  };
   const location = useLocation();
   const param = new URLSearchParams(location.search);
   const startDate = param?.get('startDate') || '';
   const endDate = param?.get('endDate') || '';
+  const numNight = param?.get('numNight') || '';
   const detailHomestay = useSelector((state) => state.product.productDetails)
   const comment = useSelector((state) => state.product.commentProduct)
   const avgPoint = useSelector((state) => state.product.avgPoint)
 
   // const imgHomestay = detailHomestay[0].images
   const handleBookingHomestay = (id) => {
-    navigate(`/homestay/booking/${id}?startDate=${startDate}&endDate=${endDate}`)
+    navigate(`/homestay/booking/${id}?startDate=${startDate}&endDate=${endDate}&numNight=${numNight}`)
   }
-  const listComment = comment.map((comment, index) => {
+  const maxCommentsToShow = 6;
+  const slicedComments = comment.slice(0, maxCommentsToShow);
+
+  const listComment = slicedComments.map((comment, index) => {
     if (index === 2) {
       return false;
     }
     return (
-      <Col span={6} style={{ marginRight: '70px' }}>
-        <div style={{  minHeight:'80px', width: '270px', marginLeft: '15px', marginBottom:'15px' ,paddingLeft: '5px', fontSize: '12px', fontWeight: '500', boxShadow: '0px 2px 5px rgba(3,18,26,0.15)', borderRadius: '5px' }}>
+      <Col key={index} span={6} style={{ marginRight: '70px' }}>
+        <div style={{ minHeight: '80px', width: '270px', marginLeft: '15px', marginBottom: '15px', paddingLeft: '5px', fontSize: '12px', fontWeight: '500', boxShadow: '0px 2px 5px rgba(3,18,26,0.15)', borderRadius: '5px' }}>
           <div style={{ marginBottom: '5px', paddingTop: '5px' }}>{comment?.user.name}</div>
-          <div style={{ width: '250px', wordWrap:'break-word' }}>{comment?.comment}</div>
+          <div style={{ width: '250px', wordWrap: 'break-word' }}>{comment?.comment}</div>
         </div>
       </Col>
     )
   });
+  const calculatePercentage = (point, totalPoints) => {
+    return (point / totalPoints) * 100;
+  };
+
+  const renderProgressBars = () => {
+    if (!comment || comment.length === 0) {
+      return null;
+    }
+
+    // Initialize counts for each point
+    const pointCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+    let totalPoints = 0;
+
+    // Count points and calculate total points
+    comment.forEach((item) => {
+      const point = item.point;
+      if (point >= 1 && point <= 5) {
+        pointCounts[point]++;
+        totalPoints++;
+      }
+    });
+
+    return Object.keys(pointCounts).map((point) => (
+      <Progress
+        key={point}
+        percent={calculatePercentage(pointCounts[point], totalPoints)}
+        size="default"
+      />
+    ));
+  };
   return (
     <>
       <div
@@ -89,8 +136,14 @@ export const DetailHomestay = () => {
             <Col span={6} push={10} >
               <div>
                 <div style={{ fontSize: '12px', marginBottom: '0' }}>Giá mỗi phòng mỗi đêm từ</div>
-                <div style={{ fontSize: '24', color: 'rgb(255, 94, 31)', lineHeight: '28px', fontWeight: '700', marginTop: '-5px' }}> {detailHomestay.price + detailHomestay.price * 11 / 100}
-                  <span style={{ fontSize: '22' }}> VND</span> </div>
+                {detailHomestay?.promotion?.value
+                  ? <div style={{ fontSize: '24', color: 'rgb(255, 94, 31)', lineHeight: '28px', fontWeight: '700', marginTop: '-5px' }}>
+                    {formatCurrency(detailHomestay.price - detailHomestay?.promotion?.value + (detailHomestay.price - detailHomestay?.promotion?.value) * 11 / 100)}
+                    <span style={{ fontSize: '22' }}> </span> </div>
+                  : <div style={{ fontSize: '24', color: 'rgb(255, 94, 31)', lineHeight: '28px', fontWeight: '700', marginTop: '-5px' }}>
+                    {formatCurrency(detailHomestay.price + detailHomestay.price * 11 / 100)}
+                    <span style={{ fontSize: '22' }}></span> </div>
+                }
               </div>
               <Button onClick={() => handleBookingHomestay(params.id)} style={{ width: '100%', backgroundColor: 'rgb(255, 94, 31)' }}>Chọn phòng</Button>
             </Col>
@@ -150,10 +203,9 @@ export const DetailHomestay = () => {
               <div style={{ margin: '10px 0px' }}>
                 <h4 style={{ marginLeft: '15px', marginTop: '10px', fontSize: '16px' }}>Tiện nghi chính</h4>
                 <div style={{ marginLeft: '15px', fontSize: '12px', fontWeight: '500' }}>
-                  <div>Wifi</div>
-                  <div>Pool</div>
-                  <div>Thang may</div>
-                  <div>Phong Gyms</div>
+                  {detailHomestay?.detailHomestays?.map((items) =>
+                    <div>{items?.convenientHomestay?.name}</div>
+                  )}
                 </div>
               </div>
             </Col>
@@ -251,7 +303,7 @@ export const DetailHomestay = () => {
         >
           <h4 style={{ marginTop: '15px', marginLeft: '10px' }}>Thêm đánh giá từ khách hàng khác</h4>
           <div style={{ marginLeft: '10px' }}><b>Xếp hạng & Điểm đánh giá chung</b></div>
-          <div style={{ marginLeft: '10px', color: 'rgba(104,113,118,1.00)' }}>Từ 1.013 đánh giá của khách đã ở</div>
+          <div style={{ marginLeft: '10px', color: 'rgba(104,113,118,1.00)' }}>Từ {comment.length} đánh giá của khách đã ở</div>
           <Row style={{ backgroundColor: 'white', borderRadius: '5px', minHeight: '10px', marginTop: '15px' }}>
             <Col span={4} style={{ alignItems: 'center' }}>
               <Space wrap style={{ marginLeft: '40px', marginTop: '10px' }}>
@@ -259,46 +311,109 @@ export const DetailHomestay = () => {
               </Space>
             </Col>
             <Col span={14}>
-              <Progress percent={30} size="default" aria-label='20' />
-              <Progress percent={50} size="default" />
-              <Progress percent={70} size="default" />
-              <Progress percent={50} size="default" />
-              <Progress percent={70} size="default" />
+              {renderProgressBars()}
             </Col>
             <Col span={5} push={1}>
-              <Rate style={{ fontSize: '18px' }} defaultValue={5} disabled /> <br />
-              <Rate style={{ fontSize: '18px' }} defaultValue={4} disabled /> <br />
-              <Rate style={{ fontSize: '18px' }} defaultValue={3} disabled /> <br />
+              <Rate style={{ fontSize: '18px' }} defaultValue={1} disabled /> <br />
               <Rate style={{ fontSize: '18px' }} defaultValue={2} disabled /> <br />
-              <Rate style={{ fontSize: '18px' }} defaultValue={1} disabled />
+              <Rate style={{ fontSize: '18px' }} defaultValue={3} disabled /> <br />
+              <Rate style={{ fontSize: '18px' }} defaultValue={4} disabled /> <br />
+              <Rate style={{ fontSize: '18px' }} defaultValue={5} disabled />
             </Col>
           </Row>
-          {comment.map((value) =>
-            <Row style={{ margin: '20px 10px 10px 10px', border: '2px solid rgba(242,243,243,1.00)', borderRadius: '5px', minHeight: '70px' }}>
-              <Col span={5} >
-                <h5 style={{ marginLeft: '15px', marginTop: '10px', textAlign: 'center' }}>{value.user.name}</h5>
-              </Col>
-              <Col span={18} push={1}>
-                <div style={{ backgroundColor: 'rgba(236,248,255,1.00)', width: '100px', marginTop: '15px', borderRadius: '10px' }}>
-                  <StarTwoTone style={{ fontSize: '20px', paddingBottom: '5px', paddingLeft: '3px' }} />
-                  <span style={{ paddingTop: '10px', fontSize: '16px', marginLeft: '10px' }}>{value.point}/5</span>
+          <MDBContainer className="py-5 text-dark" >
+            <MDBRow className="justify-content-center">
+              <MDBCol md="12" lg="11" xl="10">
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                  <MDBTypography tag="h4" className="text-dark mb-0">
+                    Có tất cả ({detailHomestay?.comment?.length}) đánh giá
+                  </MDBTypography>
                 </div>
-                <div style={{ fontWeight: '500', marginTop: '10px' }}>
-                  {value.comment}
+                {comment.map((items) =>
+                  <MDBCard className="mb-3">
+                    <MDBCardBody>
+                      <div className="d-flex flex-start">
+                        <Avatar
+                          style={{
+                            backgroundColor: '#f56a00',
+                            verticalAlign: 'middle',
+                            width: 40,
+                            height: 40
+                          }}
+                          size="large"
+                        >
+                          {items.user?.name ? items.user.name.charAt(0).toUpperCase() : ''}
+                        </Avatar>
+
+                        <div className="w-100" style={{ marginLeft: 10 }}>
+                          <div className="d-flex justify-content-between align-items-center mb-3">
+                            <MDBTypography
+                              tag="h6"
+                              className="text-primary fw-bold mb-0"
+                            >
+                              {items.user?.name}<br />
+                              <Rate disabled defaultValue={items.point} /><br /><br />
+                              <span className="text-dark ">
+                                {items.comment}
+                              </span><br /><br />
+                              {items.images.map((imageurl, index) => (
+                                <Image
+                                  key={index}
+                                  src={imageurl.imgUrl}
+                                  alt={`Homestay Image ${index}`}
+                                  style={{
+                                    maxWidth: '100px', // Đảm bảo ảnh không vượt quá chiều rộng của phần tử cha
+                                    margin: '0 10px 10px 0' // Thêm khoảng cách giữa các ảnh
+                                  }}
+                                  preview={{
+                                    toolbarRender: (
+                                      _,
+                                      {
+                                        transform: { scale },
+                                        actions: {
+                                          onFlipY,
+                                          onFlipX,
+                                          onRotateLeft,
+                                          onRotateRight,
+                                          onZoomOut,
+                                          onZoomIn
+                                        }
+                                      }
+                                    ) => (
+                                      <Space className='toolbar-wrapper'>
+                                        <SwapOutlined rotate={90} onClick={onFlipY} />
+                                        <SwapOutlined onClick={onFlipX} />
+                                        <RotateLeftOutlined onClick={onRotateLeft} />
+                                        <RotateRightOutlined onClick={onRotateRight} />
+                                        <ZoomOutOutlined
+                                          disabled={scale === 1}
+                                          onClick={onZoomOut}
+                                        />
+                                        <ZoomInOutlined
+                                          disabled={scale === 50}
+                                          onClick={onZoomIn}
+                                        />
+                                      </Space>
+                                    )
+                                  }}
+                                />
+                              ))}
+                            </MDBTypography>
+                            <div style={{ marginBottom: 150 }}><p className="mb-16" >{moment(items.createdDate).fromNow()}</p></div>
+
+                          </div>
+
+                        </div>
+                      </div>
+                    </MDBCardBody>
+                  </MDBCard>
+                )}
+                <div style={{ float: 'right', marginTop: 20 }}>
+                  <Pagination current={current} onChange={onChangePage} total={detailHomestay?.comment?.length} />
                 </div>
-                <div style={{ margin: '15px 0' }}>
-                  {value.images.map((img) => {
-                    <Image
-                      style={{ borderRadius: '10px' }}
-                      width={85}
-                      height={85}
-                      src={img}
-                    />
-                  })}
-                </div>
-              </Col>
-            </Row>
-          )}
+              </MDBCol>
+            </MDBRow>
+          </MDBContainer>
         </div>
       </div>
 

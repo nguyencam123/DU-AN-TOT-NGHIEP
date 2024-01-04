@@ -9,5 +9,4 @@ public interface HomestayOwnerStatisticalReponse {
 
     @Value("#{target.TongSoTien}")
     String getTongSoTien();
-
 }

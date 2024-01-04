@@ -234,6 +234,8 @@ public class DBGenerator implements CommandLineRunner {
         homestay1.setPrice(new BigDecimal(1200000));
         homestay1.setNumberPerson(10);
         homestay1.setRoomNumber(3);
+        homestay1.setStartDate(1704042000L);
+        homestay1.setEndDate(1732986000L);
         homestayRepository.save(homestay1);
 
         Homestay homestay2 = new Homestay();
@@ -246,6 +248,8 @@ public class DBGenerator implements CommandLineRunner {
         homestay2.setNumberPerson(12);
         homestay2.setStatus(Status.KHONG_HOAT_DONG);
         homestay2.setRoomNumber(2);
+        homestay2.setStartDate(1704042000L);
+        homestay2.setEndDate(1732986000L);
         homestayRepository.save(homestay2);
 
         Homestay homestay3 = new Homestay();
@@ -258,6 +262,8 @@ public class DBGenerator implements CommandLineRunner {
         homestay3.setNumberPerson(8);
         homestay3.setStatus(Status.KHONG_HOAT_DONG);
         homestay3.setRoomNumber(4);
+        homestay3.setStartDate(1704042000L);
+        homestay3.setEndDate(1732986000L);
         homestayRepository.save(homestay3);
 
         Homestay homestay4 = new Homestay();
@@ -270,6 +276,8 @@ public class DBGenerator implements CommandLineRunner {
         homestay4.setNumberPerson(12);
         homestay4.setStatus(Status.KHONG_HOAT_DONG);
         homestay4.setRoomNumber(2);
+        homestay4.setStartDate(1704042000L);
+        homestay4.setEndDate(1732986000L);
         homestayRepository.save(homestay4);
 
         Homestay homestay5 = new Homestay();
@@ -282,6 +290,8 @@ public class DBGenerator implements CommandLineRunner {
         homestay5.setNumberPerson(10);
         homestay5.setStatus(Status.KHONG_HOAT_DONG);
         homestay5.setRoomNumber(5);
+        homestay5.setStartDate(1704042000L);
+        homestay5.setEndDate(1732986000L);
         homestayRepository.save(homestay5);
 
         //cart_detail

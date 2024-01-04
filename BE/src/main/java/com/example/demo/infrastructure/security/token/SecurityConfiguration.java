@@ -39,6 +39,7 @@ public class SecurityConfiguration {
                     "/api/v1/login/**",
                     "/api/v3/login/**"
             };
+
     private static final String[] OWNER_ROLE =
             {
                     "/api/v2/homestay/**",
@@ -53,6 +54,7 @@ public class SecurityConfiguration {
                     "/api/v2/comment/**",
                     "/api/v2/promotion"
             };
+
     private static final String[] ADMIN_ROLE =
             {
                     "/api/v3/booking/**",
@@ -63,20 +65,31 @@ public class SecurityConfiguration {
                     "/api/v3/statistical/**",
                     "/api/v3/information/**"
             };
+
+    private  static final String[] All_GET={
+            "/api/v1/convenient-homestay/**",
+            "/api/v1/homestay/**",
+            "/api/v1/homestay",
+            "/api/v1/img-comment/**",
+            "/api/v1/img-homestay/**",
+            "/api/v1/change-pass/**",
+            "/api/v1/img-comment/**",
+            "/api/v1/comment/**"
+    };
+
     private static final String[] CUSTOMER_ROLE =
             {
                     "/api/v1/booking/**",
                     "/api/v1/cart/**",
                     "/api/v1/convenient-homestay/**",
-                    "/api/v1/customer/**",
+                    "/api/v1/customer/update-information-owner",
                     "/api/v1/homestay/**",
                     "/api/v1/homestay",
                     "/api/v1/promotion",
                     "/api/v1/img-comment/**",
                     "/api/v1/img-homestay/**",
                     "/api/v1/change-pass/**",
-                    "/api/v1/payment/**",
-                    "/api/v1/comment/**"
+                    "/api/v1/payment/**"
             };
 
     @Bean
@@ -87,8 +100,9 @@ public class SecurityConfiguration {
                 .and()
                 .authorizeHttpRequests(res ->
                  res.requestMatchers(WHITE_LIST_URL).permitAll()
-                .requestMatchers(HttpMethod.GET, CUSTOMER_ROLE).permitAll()
+                .requestMatchers(HttpMethod.GET, All_GET).permitAll()
                 .requestMatchers(CUSTOMER_ROLE).hasAnyRole(RoleCustomer.CUSTOMER.name())
+                .requestMatchers(HttpMethod.GET,CUSTOMER_ROLE).hasAnyAuthority(PermissionCustomer.CUSTOMER_READ.name())
                 .requestMatchers(HttpMethod.POST, CUSTOMER_ROLE).hasAnyAuthority(PermissionCustomer.CUSTOMER_CREATE.name())
                 .requestMatchers(HttpMethod.PUT, CUSTOMER_ROLE).hasAnyAuthority(PermissionCustomer.CUSTOMER_UPDATE.name())
                 .requestMatchers(OWNER_ROLE).hasAnyRole(RoleOwner.OWNER.name())
