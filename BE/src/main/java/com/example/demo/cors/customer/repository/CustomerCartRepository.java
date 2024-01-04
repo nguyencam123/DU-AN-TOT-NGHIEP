@@ -5,8 +5,6 @@ import com.example.demo.cors.customer.model.request.CustomerCartRequest;
 import com.example.demo.entities.Booking;
 import com.example.demo.entities.Cart;
 import com.example.demo.repositories.CartRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -17,11 +15,10 @@ import java.util.List;
 public interface CustomerCartRepository extends CartRepository {
 
     @Query(value = """
-            SELECT c.* 
-            FROM cart c
-            WHERE c.user_id = :#{#request.userId} 
+            SELECT * FROM cart
+            WHERE id_user = :#{#request.userId} 
             """, nativeQuery = true)
-    Page<Cart> getAllHomestayInCart(Pageable pageable, @Param("request") CustomerCartRequest request);
+    Cart findByUserId(@Param("request") CustomerCartRequest request);
 
     @Query(value = """
             SELECT a.* FROM booking a
