@@ -7,11 +7,15 @@ import com.example.demo.cors.admin.repository.AdminBookingRepository;
 import com.example.demo.cors.admin.services.AdminBookingService;
 import com.example.demo.cors.common.base.PageableObject;
 import com.example.demo.entities.Booking;
+import com.example.demo.infrastructure.contant.Message;
+import com.example.demo.infrastructure.exception.rest.RestApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class AdminBookingServiceImpl implements AdminBookingService {
@@ -31,6 +35,18 @@ public class AdminBookingServiceImpl implements AdminBookingService {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
         Page<AdminBookingResponse> getAllBookingByHomestay = adminBookingRepository.getAllBookingByHomestay(request, pageable);
         return new PageableObject<>(getAllBookingByHomestay);
+    }
+
+    @Override
+    public Booking updateTranCode(AdminBookingRequest request) {
+        Optional<Booking> optional = adminBookingRepository.findById(request.getId());
+        if (!optional.isPresent()) {
+            throw new RestApiException(Message.NOT_EXISTS);
+        }
+        Booking booking = optional.get();
+        booking.setAdminTransactionCode(request.getAdminTrancode());
+        adminBookingRepository.save(booking);
+        return booking;
     }
 
 }

@@ -3,7 +3,6 @@ package com.example.demo.cors.admin.repository;
 import com.example.demo.cors.admin.model.request.AdminHomestayRequest;
 import com.example.demo.entities.Homestay;
 import com.example.demo.repositories.HomestayRepository;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;

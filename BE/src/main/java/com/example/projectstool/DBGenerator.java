@@ -4,6 +4,7 @@ import com.example.demo.entities.Admin;
 import com.example.demo.entities.ApprovalHistory;
 import com.example.demo.entities.Booking;
 import com.example.demo.entities.Cart;
+import com.example.demo.entities.CartDetail;
 import com.example.demo.entities.Comment;
 import com.example.demo.entities.ConvenientHomestay;
 import com.example.demo.entities.ConvenientHomestayType;
@@ -27,6 +28,7 @@ import com.example.demo.infrastructure.contant.role.RoleOwner;
 import com.example.demo.repositories.AdminRepository;
 import com.example.demo.repositories.ApprovalHistoryRepository;
 import com.example.demo.repositories.BookingRepository;
+import com.example.demo.repositories.CartDetailRepository;
 import com.example.demo.repositories.CartRepository;
 import com.example.demo.repositories.CommentRepository;
 import com.example.demo.repositories.ConvenientHomestayRepository;
@@ -90,6 +92,8 @@ public class DBGenerator implements CommandLineRunner {
     private ApprovalHistoryRepository approvalHistoryRepository;
     @Autowired
     private DetailHomestayRepository detailHomestayRepository;
+    @Autowired
+    private CartDetailRepository cartDetailRepository;
 
     public void run(String... args) throws Exception {
 
@@ -212,17 +216,11 @@ public class DBGenerator implements CommandLineRunner {
 
         //cart
         Cart cart1 = new Cart();
-        cart1.setStatus(StatusCart.HOAT_DONG);
-        cart1.setUserId(user1.getId());
-        cart1.setStartDate(1697987691L);
-        cart1.setEndDate(1698620161L);
+        cart1.setUser(user1);
         cartRepository.save(cart1);
 
         Cart cart2 = new Cart();
-        cart2.setUserId(user2.getId());
-        cart2.setStartDate(1697987691L);
-        cart2.setEndDate(1698620161L);
-        cart2.setStatus(StatusCart.HOAT_DONG);
+        cart2.setUser(user2);
         cartRepository.save(cart2);
 
         //homestay
@@ -235,7 +233,6 @@ public class DBGenerator implements CommandLineRunner {
         homestay1.setPoint(5.0);
         homestay1.setPrice(new BigDecimal(1200000));
         homestay1.setNumberPerson(10);
-        homestay1.setCart(cart1);
         homestay1.setRoomNumber(3);
         homestay1.setStartDate(1704042000L);
         homestay1.setEndDate(1732986000L);
@@ -250,7 +247,6 @@ public class DBGenerator implements CommandLineRunner {
         homestay2.setPrice(new BigDecimal(1500000));
         homestay2.setNumberPerson(12);
         homestay2.setStatus(Status.KHONG_HOAT_DONG);
-        homestay2.setCart(cart2);
         homestay2.setRoomNumber(2);
         homestay2.setStartDate(1704042000L);
         homestay2.setEndDate(1732986000L);
@@ -297,6 +293,23 @@ public class DBGenerator implements CommandLineRunner {
         homestay5.setStartDate(1704042000L);
         homestay5.setEndDate(1732986000L);
         homestayRepository.save(homestay5);
+
+        //cart_detail
+        CartDetail cartDetail1 = new CartDetail();
+        cartDetail1.setCart(cart1);
+        cartDetail1.setStatus(StatusCart.HOAT_DONG);
+        cartDetail1.setHomestay(homestay1);
+        cartDetail1.setStartDate(1701463048L);
+        cartDetail1.setEndDate(1733085448L);
+        cartDetailRepository.save(cartDetail1);
+
+        CartDetail cartDetail2 = new CartDetail();
+        cartDetail2.setCart(cart2);
+        cartDetail2.setStatus(StatusCart.HOAT_DONG);
+        cartDetail2.setHomestay(homestay4);
+        cartDetail2.setStartDate(1701463048L);
+        cartDetail2.setEndDate(1733085448L);
+        cartDetailRepository.save(cartDetail2);
 
         //img Homestay
         ImgHomestay imgHomestay1 = new ImgHomestay();
@@ -463,8 +476,6 @@ public class DBGenerator implements CommandLineRunner {
         booking2.setStartDate(1697987691L);
         booking2.setEndDate(1698620161L);
         bookingRepository.save(booking2);
-
-        //cart
 
 
         // approval history
