@@ -135,6 +135,7 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 .username(user.getUsername())
                 .status(user.getStatus())
                 .roleCustomer(user.getRole())
+                .avataUrl(user.getAvatarUrl())
                 .build();
     }
 
@@ -180,6 +181,7 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 .username(user.getUsername())
                 .status(user.getStatus())
                 .roleCustomer(user.getRole())
+                .avataUrl(user.getAvatarUrl())
                 .build();
     }
 
@@ -207,6 +209,7 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 .username(user.getUsername())
                 .status(user.getStatus())
                 .roleCustomer(user.getRole())
+                .avataUrl(user.getAvatarUrl())
                 .build();
     }
 

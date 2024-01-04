@@ -1,5 +1,5 @@
 import { EditTwoTone, EyeOutlined, EyeTwoTone } from "@ant-design/icons";
-import { Input, Row, Select, Table, Typography, Form, Space } from "antd";
+import { Input, Row, Select, Table, Typography, Form, Space, Button, Modal } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { getBooking, getBookingByName, getBookingByNameHomestay, getBookingByPhoneNumber } from "../../../features/admin/adminThunk";
 import { useEffect, useState } from "react";
@@ -39,8 +39,8 @@ function BookingForm() {
     },
     {
       title: 'Số đêm',
-      dataIndex: 'numNight',
-      key: 'numNight'
+      dataIndex: 'numberOfNight',
+      key: 'numberOfNight'
     },
     {
       title: 'Trạng thái',
@@ -67,7 +67,7 @@ function BookingForm() {
           return 'Đặt cọc'
         }
         if (data === 'THANH_TOAN_TRUOC') {
-          return 'Thanh toán'
+          return 'Thanh toán trước'
         }
       }
     },
@@ -77,11 +77,16 @@ function BookingForm() {
       key: 'totalPrice'
     },
     {
+      title: 'Mã giao dịch với chủ homestay',
+      dataIndex: 'adminTransactionCode',
+      key: 'adminTransactionCode'
+    },
+    {
       title: 'Action',
       key: 'action',
       render: (_, record) => (
         <Space size='middle'>
-          <a><EyeTwoTone /></a>
+          <a onClick={() => showBooking(record)}><EyeTwoTone /></a>
           <a><EditTwoTone /></a>
         </Space>
       )
@@ -106,9 +111,11 @@ function BookingForm() {
     }
   ]
   const [selectedStatus, setSelectedStatus] = useState({
-      name: 'Tất cả',
-      value: ''
+    name: 'Tất cả',
+    value: ''
   })
+  const [isViewModal, setIsViewModal] = useState(false)
+  const [viewBooking, setViewBooking] = useState({})
   const handleChangeStatus = (value) => {
     if (value === 1) {
       setSelectedStatus({
@@ -145,21 +152,25 @@ function BookingForm() {
   const searchByPhoneNumber = (value, _e, info) => {
     dispatch(getBookingByPhoneNumber(value));
   }
+  const showBooking = (booking) => {
+    setIsViewModal(true)
+    setViewBooking(booking)
+  }
   useEffect(() => {
     dispatch(getBooking(1));
   }, []);
   const booking = useSelector((state) => state.admin.booking)
-    return(
-  <div style={{ marginTop: '30px' }}>
-          <Title level={2}>Quản trị booking</Title>
+  return (
+    <div style={{ marginTop: '30px' }}>
+      <Title level={2}>Quản trị booking</Title>
       <Title level={4}>Danh mục</Title>
       <Row>
         <Form.Item label="Trạng thái" style={{ float: 'left' }}>
           <Select
             style={{ width: 143 }}
-              options={listFilter.map(filter => ({ value: filter.value, label: filter.name }))}
-              defaultValue={selectedStatus.value}
-              onChange={handleChangeStatus}
+            options={listFilter.map(filter => ({ value: filter.value, label: filter.name }))}
+            defaultValue={selectedStatus.value}
+            onChange={handleChangeStatus}
           />
         </Form.Item>
         <Form.Item label="Tìm kiếm theo tên" style={{ float: 'left', marginLeft: ' 50px' }}>
@@ -167,17 +178,17 @@ function BookingForm() {
             placeholder="Tên homestay"
             allowClear
             size="medium"
-              enterButton="search"
-              onSearch={searchByNameHomestay}
+            enterButton="search"
+            onSearch={searchByNameHomestay}
           />
-          </Form.Item>
-          <Form.Item label="Tìm kiếm theo số điện thoại liên lạc" style={{ float: 'left', marginLeft: ' 20px' }}>
+        </Form.Item>
+        <Form.Item label="Tìm kiếm theo số điện thoại liên lạc" style={{ float: 'left', marginLeft: ' 20px' }}>
           <Search
             placeholder="Số điện thoại"
             allowClear
             size="medium"
-              enterButton="search"
-              onSearch={searchByPhoneNumber}
+            enterButton="search"
+            onSearch={searchByPhoneNumber}
           />
         </Form.Item>
         <Form.Item label="Tìm kiếm theo tên người liên lạc" style={{ float: 'left', marginLeft: ' 0px' }}>
@@ -185,14 +196,57 @@ function BookingForm() {
             placeholder="Tên người liên lạc"
             allowClear
             size="medium"
-              enterButton="search"
-              onSearch={searchByNameBooking}
+            enterButton="search"
+            onSearch={searchByNameBooking}
           />
         </Form.Item>
       </Row>
-          <Table columns={columns} dataSource={booking} />
+      <Table columns={columns} dataSource={booking} />
+
+      <Modal
+        title={<div style={{ fontSize: '22px' }}>Xem thông tin chi tiết booking</div>}
+        open={isViewModal}
+        onCancel={() => setIsViewModal(false)}
+        footer={[
+          <Button key="back" onClick={() => setIsViewModal(false)}>
+            Cancel
+          </Button>,
+        ]}
+        width={1100}
+        style={{ fontSize: '40px' }}
+      >
+        <div style={{ fontSize: 18, fontWeight: 600 }}>
+          <table>
+            <tr>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Tên homestay </div> : {viewBooking?.homestay?.name}</div><br /></td>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Tên chủ homestay </div> : {viewBooking?.homestay?.ownerHomestay?.name}</div><br /></td>
+            </tr>
+            <tr>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Giá            </div> : {viewBooking.totalPrice} (VNĐ)</div><br /></td>
+              <td style={{ width: 500 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Số đêm </div> : {viewBooking.numberOfNight} (Đêm)</div><br /></td>
+            </tr>
+            <tr>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Số phòng</div> : {viewBooking.startDate}</div><br /></td>
+              <td style={{ width: 500 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Chính sách hủy phòng </div> : {viewBooking.endDate}</div><br /></td>
+            </tr>
+            <tr>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}>
+                <div style={{ width: 200 }}>Ngày bắt đầu</div> : {moment(viewBooking.startDate).locale('vi').format('LL')}</div><br /></td>
+              <td style={{ width: 500 }}><div style={{ display: 'flex' }}>
+                <div style={{ width: 200 }}>Ngày kết thúc</div> : {moment(viewBooking.endDate).locale('vi').format('LL')}
+              </div><br /></td>
+            </tr>
+            <tr>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Mã giao dịch </div> : {viewBooking.customerTransactionCode}</div><br /></td>
+              <td style={{ width: 500 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Mã giao dịch với chủ homestay         </div> : {viewBooking.adminTransactionCode}</div><br /></td>
+            </tr>
+          </table>
+          <div style={{ display: 'flex' }}><div style={{ width: 200 }}>Hình thức đặt</div> : {viewBooking.typeBooking === 'DAT_COC'?'Đặt cọc':'Thanh toán trước'}</div><br />
+          <div style={{ display: 'flex' }}><div style={{ width: 200 }}>Trạng thái       </div> : {viewBooking.status}</div><br />
+        </div>
+      </Modal>
     </div>
-    )
+  )
 }
 export default BookingForm
 

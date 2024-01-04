@@ -55,12 +55,12 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
 
     @Override
     @Transactional
-    public Homestay updateHomestays(String id, HomestayownerHomestayRequest request, List<MultipartFile> multipartFiles, List<String> idConvenientHomestay) throws IOException {
+    public Homestay updateHomestays(String id, HomestayownerHomestayRequest request,List<String> idConvenientHomestay) throws IOException {
         Homestay homestay = homestayownerHomestayRepository.findById(id).orElse(null);
         getHomestay(request, homestay);
         Homestay homestay1 = homestayownerHomestayRepository.save(homestay);
         homestayOwnerDetailHomestayReposritory.deleteByHomestay(id);
-        return getImgHomestayAndConvenientHomestay(id,multipartFiles, idConvenientHomestay, homestay1);
+        return getImgHomestayAndConvenientHomestay(id,idConvenientHomestay, homestay1);
     }
 
     @Override
@@ -119,7 +119,6 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
         homestay.setCancellationPolicy(request.getCancellationPolicy());
         homestay.setEmail(request.getEmail());
         homestay.setPhoneNumber(request.getPhonenumber());
-        homestay.setCart(null);
         homestay.setOwnerHomestay(homestayOwnerOwnerHomestayRepository.findById(request.getOwnerHomestay()).orElse(null));
     }
 
@@ -128,6 +127,7 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
         for (MultipartFile image : multipartFiles) {
             ImgHomestay imgHomestay = new ImgHomestay();
             imgHomestay.setHomestay(homestay1);
+
             Map uploadResult = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.asMap("folder", "homestay_images"));
             imgHomestay.setImgUrl(uploadResult.get("url").toString());
             homestayOwnerImgHomestayRepo.save(imgHomestay);
@@ -149,26 +149,8 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
         return homestay1;
     }
 
-    private Homestay getImgHomestayAndConvenientHomestay(String id,List<MultipartFile> multipartFiles, List<String> idConvenientHomestay, Homestay homestay1) throws IOException {
+    private Homestay getImgHomestayAndConvenientHomestay(String id,List<String> idConvenientHomestay, Homestay homestay1) throws IOException {
         Homestay homestay = homestayownerHomestayRepository.findById(id).orElse(null);
-        List<ImgHomestay> existingImages = homestay.getImages();
-        List<ImgHomestay> newImages = new ArrayList<>();
-        if (multipartFiles != null && !multipartFiles.isEmpty()) {
-            homestayOwnerImgHomestayRepo.deleteByHomestay(id);
-            for (MultipartFile image : multipartFiles) {
-                ImgHomestay imgHomestay = new ImgHomestay();
-                imgHomestay.setHomestay(homestay1);
-                Map uploadResult = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.asMap("folder", "homestay_images"));
-                imgHomestay.setImgUrl(uploadResult.get("url").toString());
-                homestayOwnerImgHomestayRepo.save(imgHomestay);
-                newImages.add(imgHomestay);
-            }
-            homestay1.setImages(newImages);
-        }else{
-            if (existingImages != null) {
-                newImages.addAll(existingImages);
-            }
-        }
         List<DetailHomestay> detailHomestays = new ArrayList<>();
         for (String detail : idConvenientHomestay) {
             DetailHomestay detailHomestay = new DetailHomestay();
@@ -178,10 +160,9 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
             homestayOwnerDetailHomestayReposritory.save(detailHomestay);
             detailHomestays.add(detailHomestay);
         }
-        homestay1.setDetailHomestays(detailHomestays);
 
+        homestay1.setDetailHomestays(detailHomestays);
         return homestay1;
     }
-
 
 }

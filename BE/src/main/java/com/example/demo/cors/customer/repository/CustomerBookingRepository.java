@@ -15,7 +15,11 @@ import java.util.Optional;
 public interface CustomerBookingRepository extends BookingRepository {
 
     @Query(value = """
-            SELECT * FROM booking a
+            SELECT a.*, c.* FROM booking a 
+            JOIN [user] b 
+            ON a.user_id = b.id
+            JOIN comment c 
+            ON c.user_id = b.id
             WHERE (a.user_id =:#{#customerBookingRequest.userId})
             AND ((a.status = 1) OR (a.status = 0))
             """, nativeQuery = true)

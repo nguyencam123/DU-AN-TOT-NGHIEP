@@ -16,4 +16,6 @@ public class CustomerCartRequest extends PageableRequest {
 
     private String homestayId;
 
+    private String idCartDetail;
+
 }
