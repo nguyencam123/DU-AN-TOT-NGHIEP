@@ -28,4 +28,5 @@ public class AdminPromotionController {
     public ResponseObject getAll(AdminPromotionRequest adminPromotionRequest){
         return new ResponseObject(adminPromotionService.getAll(adminPromotionRequest));
     }
+
 }
