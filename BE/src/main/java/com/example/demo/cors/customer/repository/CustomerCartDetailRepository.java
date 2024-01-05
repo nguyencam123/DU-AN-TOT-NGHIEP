@@ -20,6 +20,11 @@ public interface CustomerCartDetailRepository extends CartDetailRepository {
             """, nativeQuery = true)
     List<CartDetail> listCartDetail(String idCart);
 
+    @Query(value = """
+           SELECT * FROM cart_detail
+            """, nativeQuery = true)
+    List<CartDetail> getAllCartDetail();
+
     @Modifying
     @Transactional
     @Query(value = """
