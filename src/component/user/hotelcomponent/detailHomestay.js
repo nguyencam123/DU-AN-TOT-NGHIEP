@@ -386,7 +386,32 @@ export const DetailHomestay = () => {
                 height: '150px',
               }}
             >
+<<<<<<< HEAD
               <div style={{ margin: '10px 0px' }}></div>
+=======
+              <div style={{ margin: '10px 0px' }}>
+                <h4
+                  style={{
+                    marginLeft: '15px',
+                    marginTop: '10px',
+                    fontSize: '16px',
+                  }}
+                >
+                  Tiện nghi chính
+                </h4>
+                <div
+                  style={{
+                    marginLeft: '15px',
+                    fontSize: '12px',
+                    fontWeight: '500',
+                  }}
+                >
+                  {detailHomestay?.detailHomestays?.map((items) => (
+                    <div>{items?.convenientHomestay?.name}</div>
+                  ))}
+                </div>
+              </div>
+>>>>>>> 4b70562ab903e61b5d515de0c1b27ccf38822484
             </Col>
             <Col
               span={18}
