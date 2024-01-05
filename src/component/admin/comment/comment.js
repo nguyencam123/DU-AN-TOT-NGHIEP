@@ -1,4 +1,4 @@
-import { Avatar, Button, Form, Input, Modal, Pagination, Rate, Row, Table, Typography } from "antd"
+import { Avatar, Button, Form, Input, Modal, Pagination, Rate, Row, Table, Typography, message } from "antd"
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DeleteOutlined, DeleteTwoTone, EditOutlined, EyeOutlined, UserOutlined } from "@ant-design/icons";
@@ -35,8 +35,11 @@ const Comment = () => {
   const deleteComment = (id) => {
     dispatch(deleteCommentHomestay(id));
     setDeleteConfirm(false)
-    setIsModalOpen(false);
-    dispatch(getAllHomestayByStatus(0));
+    setIsModalOpen(false)
+    message.info(
+      'Xóa thành công',
+      2,
+    )
   }
   const openConfirmDelete = (id) => {
     setDeleteConfirm(true);
@@ -117,6 +120,17 @@ const Comment = () => {
       <Modal title="Đánh giá của khách hàng" width={900} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
         <section style={{ backgroundColor: "#f7f6f6" }}>
           <MDBContainer className="py-5 text-dark" style={{ maxWidth: "1000px" }}>
+            <Row>
+              <Form.Item label="Tìm kiếm theo tên" style={{ float: 'left', marginLeft: ' 50px' }}>
+                <Search
+                  placeholder="Tên user"
+                  allowClear
+                  size="medium"
+                  enterButton="search"
+                  onSearch={onSearchHomestayName}
+                />
+              </Form.Item>
+            </Row>
             <MDBRow className="justify-content-center">
               <MDBCol md="12" lg="10" xl="8">
                 <div className="d-flex justify-content-between align-items-center mb-4">
@@ -153,7 +167,7 @@ const Comment = () => {
                               </span>
                             </MDBTypography>
                             <p className="mb-0">{moment(items.createdDate).fromNow()}</p>
-                            <Button className="mb-0" style={{border : 'none'}} onClick={() => openConfirmDelete(items.id)}><DeleteOutlined /></Button>
+                            <Button className="mb-0" style={{ border: 'none' }} onClick={() => openConfirmDelete(items.id)}><DeleteOutlined /></Button>
 
                           </div>
 
