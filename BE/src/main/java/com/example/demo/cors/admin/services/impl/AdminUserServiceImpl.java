@@ -70,7 +70,7 @@ public class AdminUserServiceImpl implements AdminUserService {
     @Override
     public PageableObject<User> getAllUser(AdminUserRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-        Page<User> res = adminUserRepository.findAll(pageable);
+        Page<User> res = adminUserRepository.getAllUser(pageable,request);
         return new PageableObject<>(res);
     }
 }

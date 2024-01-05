@@ -16,7 +16,8 @@ public interface AdminCommentRepository extends CommentRepository {
             dbo.homestay h ON c.homestay_id = h.id
             JOIN dbo.[user] u ON c.user_id = u.id
             WHERE h.id = :#{#request.homestayId}
-            AND ( :#{#request.userName} IS NULL OR :#{#request.userName} LIKE '' OR  u.name LIKE %:#{#request.userName}% )
+            OR (( :#{#request.userName} IS NULL OR :#{#request.userName} LIKE '' OR  u.name LIKE %:#{#request.userName}% )
+            AND (:#{#request.homestayName} IS NULL OR :#{#request.homestayName} LIKE '' OR  h.name LIKE %:#{#request.homestayName}% ))
             """, nativeQuery = true)
     Page<Comment> getAllComment(Pageable pageable, AdminCommentRequest request);
 }
