@@ -9,7 +9,6 @@ import { EyeOutlined, ReloadOutlined, RotateLeftOutlined, RotateRightOutlined, S
 import moment from 'moment';
 import { aproveHomestay, disAgreeHomestay } from "../../features/admin/adminThunk";
 import TextArea from "antd/es/input/TextArea";
-import { UpdateStatus, UpdateStatusToUpdating } from "../../features/owner_homestay/homestayThunk";
 
 
 const { Title } = Typography;
@@ -43,6 +42,10 @@ function AddProductForm() {
     },
     {
       name: 'Từ chối',
+      value: 3
+    },
+    {
+      name: 'Không hoạt động',
       value: 2
     }
   ]
@@ -67,8 +70,14 @@ function AddProductForm() {
       dispatch(getAllHomestayByStatus(0));
     } else if (value === 2) {
       setSelectedStatus({
-        name: 'Từ chối',
+        name: 'Không hoạt động',
         value: 2
+      })
+      dispatch(getAllHomestayByStatus(2));
+    } else if (value === 3) {
+      setSelectedStatus({
+        name: 'Từ chối',
+        value: 3
       })
       dispatch(getAllHomestayByStatus(2));
     } else {
@@ -201,6 +210,9 @@ function AddProductForm() {
         }
         if (data === 'KHONG_HOAT_DONG') {
           return 'Ngừng hoạt động'
+        }
+        if (data === 'TU_CHOI_DUYET') {
+          return 'Từ chối duyệt'
         }
       }
     },

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { instance } from '../../app/axiosConfig';
-import { fetchProductsFailure } from '../product/productSlide';
+import { fetchProductsFailure, fetchProductsSuccess } from '../product/productSlide';
 import { denineProducts } from '../product/productThunk';
 import { addConvenientFailed, fetchBookingSuccess, fetchConvenientSuccess, fetchConvenientTypeSuccess } from './adminSlice';
 
@@ -114,7 +114,9 @@ export const updateConvenient = (data) => async (dispatch) => {
 
 export const deleteCommentHomestay = (id) => async (dispatch) => {
   try {
-    const response = await instance.delete('http://localhost:8080/api/v3/comment/delete?commentId=' + id);
+    await instance.delete('http://localhost:8080/api/v3/comment/delete?commentId=' + id);
+    const response = await instance.get( '/api/v3/homestay?size=99&statusHomestay=0')
+    dispatch(fetchProductsSuccess(response.data.data.data)) 
   } catch (error) {
     dispatch(addConvenientFailed(error.message));
   }
