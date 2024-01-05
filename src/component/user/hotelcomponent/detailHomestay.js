@@ -46,6 +46,7 @@ import {
   MDBRow,
   MDBTypography,
 } from 'mdb-react-ui-kit'
+import { addShoppingCartThunk } from '../../../features/user/shoppingCartThunk'
 
 const { Header, Content, Footer } = Layout
 
@@ -174,7 +175,7 @@ export const DetailHomestay = () => {
     homestayId: params.id,
   }
   const addShoppingCart = async () => {
-    await dispatch(addShoppingCart(shoppingCart))
+    await dispatch(addShoppingCartThunk(shoppingCart))
     message.info('Thêm vào giỏ hàng thành công!')
   }
   return (
@@ -418,7 +419,7 @@ export const DetailHomestay = () => {
                   }}
                 >
                   {detailHomestay?.detailHomestays?.map((items) => (
-                    <div>{items.convenientHomestay.name}</div>
+                    <div>{items?.convenientHomestay?.name}</div>
                   ))}
                 </div>
               </div>

@@ -172,6 +172,10 @@ export const BookingUser = () => {
       )
       message.info('Đánh giá thành công!')
       setIsLoading(false)
+      setIsRefusalModal(false)
+      setComment('')
+      setFile([])
+      setValue(3)
     }
   }
 

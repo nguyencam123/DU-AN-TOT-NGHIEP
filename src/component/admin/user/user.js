@@ -1,21 +1,25 @@
-import { Avatar, Button, Form, Input, Modal, Pagination, Rate, Row, Table, Typography } from "antd"
+import { Avatar, Button, Form, Input, Modal, Pagination, Rate, Row, Table, Typography, message } from "antd"
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { DeleteOutlined, DeleteTwoTone, EditOutlined, EyeOutlined, UserOutlined } from "@ant-design/icons";
+import { CheckOutlined, CloseOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import { MDBCard, MDBCardBody, MDBCardImage, MDBCol, MDBContainer, MDBIcon, MDBRow, MDBSwitch, MDBTypography } from "mdb-react-ui-kit";
 import { getAllHomestayByHomestayName, getAllHomestayByNameOwner, getAllHomestayByStatus } from "../../../features/product/productThunk";
 import moment from 'moment';
 import { deleteCommentHomestay } from "../../../features/admin/adminThunk";
+import { approveUser, fetchAllUser, refuseUser } from "../../../features/admin/user/userThunk";
 
 const { Title } = Typography
 const { Search } = Input;
 
 const User = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalApprove, setModalApprove] = useState(false);
+  const [modalRefuse, setModalRefuse] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [deleteId, setDeleteId] = useState('');
   const [current, setCurrent] = useState(1);
   const [dataComment, setDataComment] = useState([]);
+  const [userId, setUserId] = useState('');
   const onChangePage = (page) => {
     setCurrent(page);
   };
@@ -23,14 +27,45 @@ const User = () => {
     setIsModalOpen(true);
     setDataComment(record.comment)
   };
+  const showModalAprove = (record) => {
+    setModalApprove(true);
+    setUserId(record.id);
+  };
+  const showModalDenie = (record) => {
+    setModalRefuse(true);
+    setUserId(record.id);
+  };
   const handleOk = () => {
     setIsModalOpen(false);
   };
   const handleCancel = () => {
-    setIsModalOpen(false);
+    setIsModalOpen(false)
+    setModalApprove(false)
+    setModalRefuse(false)
   };
-  const searchOwnerHomestayName = (value, _e, info) => {
-    dispatch(getAllHomestayByNameOwner(0, value));
+  const approvedUser = async () => {
+    message.info(
+      'Đang tiến hành bạn vui lòng đợi một vài giây nhé!',
+      10,
+    )
+    setModalApprove(false)
+    await dispatch(approveUser(userId))
+    message.info(
+      'Mở hoạt động thành công',
+      2,
+    )
+  }
+  const refusedUser = async () => {
+    setModalRefuse(false)
+    message.info(
+      'Đang tiến hành bạn vui lòng đợi một vài giây nhé!',
+      10,
+    )
+    await dispatch(refuseUser(userId))
+    message.info(
+      'Hủy thành công',
+      2,
+    )
   }
   const deleteComment = (id) => {
     dispatch(deleteCommentHomestay(id));
@@ -46,10 +81,11 @@ const User = () => {
   const onSearchHomestayName = (value, _e, info) => {
     dispatch(getAllHomestayByHomestayName(0, value));
   }
-  const products = useSelector((state) => state.product.products);
+  const products = useSelector((state) => state.userAdmin.user.data);
+  console.log(products);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getAllHomestayByStatus(0));
+    dispatch(fetchAllUser());
   }, [])
 
   const columns = [
@@ -59,32 +95,36 @@ const User = () => {
       key: 'name'
     },
     {
-      title: 'Địa chỉ',
-      dataIndex: 'address',
-      key: 'address'
-    },
-    {
-      title: 'Số điện thoại',
-      dataIndex: 'ownerHomestay',
-      key: 'ownerHomestay',
-      render: (data) => {
-        return data.name
-      }
+      title: 'Trạng thái',
+      dataIndex: 'status',
+      key: 'status'
     },
     {
       title: 'Email',
-      dataIndex: 'price',
-      key: 'price',
+      dataIndex: 'email',
+      key: 'email'
+    },
+    {
+      title: 'phoneNumber',
+      dataIndex: 'phoneNumber',
+      key: 'phoneNumber',
     },
     {
       title: 'Xem đánh giá',
       key: 'action',
       align: 'center',
       render: (_, record) => (
-        <a onClick={() => showModal(record)}>
-
-          <EyeOutlined />
-        </a>
+        <>
+          <Button style={{ border: 'none' }} onClick={() => showModal(record)}>
+            <EyeOutlined />
+          </Button>
+          <Button style={{ border: 'none' }} onClick={() => showModalAprove(record)}>
+            <CheckOutlined />
+          </Button>
+          <Button style={{ border: 'none' }} onClick={() => showModalDenie(record)}>
+            <CloseOutlined />
+          </Button>
+        </>
       )
     }
   ];
@@ -143,7 +183,7 @@ const User = () => {
                               </span>
                             </MDBTypography>
                             <p className="mb-0">{moment(items.createdDate).fromNow()}</p>
-                            <Button className="mb-0" style={{border : 'none'}} onClick={() => openConfirmDelete(items.id)}><DeleteOutlined /></Button>
+                            <Button className="mb-0" style={{ border: 'none' }} onClick={() => openConfirmDelete(items.id)}><DeleteOutlined /></Button>
 
                           </div>
 
@@ -170,6 +210,26 @@ const User = () => {
         onOk={() => deleteComment(deleteId)}
       >
         Bạn có chắc chắn muốn xóa comment này !
+      </Modal>
+      <Modal
+        title="Hủy hoạt động tài khoản"
+        open={modalRefuse}
+        okText="Hủy"
+        cancelText="Cancel"
+        onCancel={() => setModalRefuse(false)}
+        onOk={() => refusedUser()}
+      >
+        Bạn có chắc chắn muốn hủy hoạt động tài khoản này này !
+      </Modal>
+      <Modal
+        title="Mở hoạt động tài khoản"
+        open={modalApprove}
+        okText="Ok"
+        cancelText="Cancel"
+        onCancel={() => setModalApprove(false)}
+        onOk={() => approvedUser()}
+      >
+        Bạn có chắc chắn muốn xóa mở hoạt động này !
       </Modal>
     </div>
 
