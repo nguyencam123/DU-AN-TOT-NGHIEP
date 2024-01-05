@@ -39,9 +39,9 @@ export const addHomestay =
 export const EditHomestay =
   (homestay, imgUrl, id, convenient) => async (dispatch) => {
     const formData = new FormData()
-    imgUrl.forEach((imageUrl) => {
-      formData.append('image', imageUrl)
-    })
+    // imgUrl.forEach((imageUrl) => {
+    //   formData.append('image', imageUrl)
+    // })
     formData.append('homestay', JSON.stringify(homestay))
     formData.append('convenient', convenient)
     dispatch(fetchProductsStart())

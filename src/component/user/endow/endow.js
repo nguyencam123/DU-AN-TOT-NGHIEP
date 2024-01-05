@@ -205,11 +205,15 @@ const Endow = () => {
                 )}
               </Row>
               <div style={{ float: 'right', marginTop: 20 }}>
-                <Pagination
-                  current={current}
-                  onChange={onChangePage}
-                  total={productPromotion?.totalPages * 10}
-                />
+                {productPromotion?.data?.length > 0 ? (
+                  <Pagination
+                    current={current}
+                    onChange={onChangePage}
+                    total={productPromotion?.totalPages * 10}
+                  />
+                ) : (
+                  <div />
+                )}
               </div>
             </Content>
           </Layout>

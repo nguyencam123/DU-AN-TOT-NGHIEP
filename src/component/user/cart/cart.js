@@ -58,22 +58,28 @@ export const CartUser = () => {
           <Title level={3}>Xe đẩy hàng của quý khách (1)</Title>
         </div>
         <br />
-        {shoppingcart?.map((items) => {
-          return (
-            <div
-              style={{
-                width: '100%',
-                height: '100%',
-                backgroundColor: 'white',
-                border: '1px solid rgb(213, 217, 226)',
-                padding: 10,
-                borderRadius: 5,
-              }}
-            >
-              <Title level={3}>Xe đẩy hàng của quý khách (1)</Title>
-            </div>
-          )
-        })}
+        {shoppingcart?.length === 0 ? (
+          <div style={{ textAlign: 'center', marginTop: 20 }}>
+            Xe đẩy hàng của bạn đang trống
+          </div>
+        ) : (
+          shoppingcart?.map((items) => {
+            return (
+              <div
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  backgroundColor: 'white',
+                  border: '1px solid rgb(213, 217, 226)',
+                  padding: 10,
+                  borderRadius: 5,
+                }}
+              >
+                <Title level={3}>Xe đẩy hàng của quý khách (1)</Title>
+              </div>
+            )
+          })
+        )}
       </div>
       <div
         style={{

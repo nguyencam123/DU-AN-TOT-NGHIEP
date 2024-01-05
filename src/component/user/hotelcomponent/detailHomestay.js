@@ -15,6 +15,7 @@ import {
   Pagination,
   Modal,
   Carousel,
+  message,
 } from 'antd'
 import {
   ClockCircleTwoTone,
@@ -45,6 +46,7 @@ import {
   MDBRow,
   MDBTypography,
 } from 'mdb-react-ui-kit'
+import { addShoppingCartThunk } from '../../../features/user/shoppingCartThunk'
 
 const { Header, Content, Footer } = Layout
 
@@ -163,6 +165,19 @@ export const DetailHomestay = () => {
   const closeModal = () => {
     setModalVisible(false)
   }
+  /**
+   * shopping cart
+   */
+  const shoppingCart = {
+    userId: userDetail?.data.id,
+    startDate: startDate,
+    endDate: endDate,
+    homestayId: params.id,
+  }
+  const addShoppingCart = async () => {
+    await dispatch(addShoppingCartThunk(shoppingCart))
+    message.info('Thêm vào giỏ hàng thành công!')
+  }
   return (
     <>
       <div
@@ -268,7 +283,7 @@ export const DetailHomestay = () => {
                   Chọn phòng
                 </Button>
                 <Button
-                  // onClick={() => handleBookingHomestay(params.id)}
+                  onClick={addShoppingCart}
                   style={{
                     width: '100%',
                     backgroundColor: 'white',
@@ -386,9 +401,6 @@ export const DetailHomestay = () => {
                 height: '150px',
               }}
             >
-<<<<<<< HEAD
-              <div style={{ margin: '10px 0px' }}></div>
-=======
               <div style={{ margin: '10px 0px' }}>
                 <h4
                   style={{
@@ -411,7 +423,6 @@ export const DetailHomestay = () => {
                   ))}
                 </div>
               </div>
->>>>>>> 4b70562ab903e61b5d515de0c1b27ccf38822484
             </Col>
             <Col
               span={18}
