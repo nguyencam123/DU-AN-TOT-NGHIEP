@@ -47,6 +47,7 @@ public class HomestayOwnerPromotionServiceImpl implements HomestayOwnerPromotion
         if (promotions!=null){
         for (Promotion promotion: promotions){
             promotion.setStatusPromotion(StatusPromotion.KET_THUC);
+            homestayOwnerPromotionRepository.save(promotion);
         }
         }
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());

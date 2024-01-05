@@ -1035,34 +1035,43 @@ const HomeStayProduct = () => {
         </Form>
         <form onSubmit={handleSubmit} style={{ marginTop: 20 }}>
           <div>
-            <div style={{ display: 'flex' }}>
-              <label htmlFor='image' style={{ marginTop: 5 }}>
-                Chọn ảnh(Chọn ít nhất 5 ảnh và tối đa 20 ảnh)
-                <br />
-              </label>
-              <label
-                htmlFor='image'
-                style={{
-                  cursor: 'pointer',
-                  border: '1px solid black',
-                  borderRadius: 8,
-                  padding: '6px 15px 6px 15px',
-                  marginLeft: 10,
-                }}
-              >
-                Chọn tệp
-              </label>
-              <input
-                type='file'
-                id='image'
-                multiple
-                accept='image/*'
-                onChange={handleFileChange}
-                style={{ display: 'none' }}
-              />
-              <div style={{ marginLeft: 8, marginTop: 5 }}>
-                Đã có {selectedImages.length} file được chọn
+            {imghomestay.length <= 20 && (
+              <div style={{ display: 'flex' }}>
+                <label htmlFor='image' style={{ marginTop: 5 }}>
+                  Chọn ảnh(Chọn ít nhất 5 ảnh và tối đa 20 ảnh)
+                  <br />
+                </label>
+                <label
+                  htmlFor='image'
+                  style={{
+                    cursor: 'pointer',
+                    border: '1px solid black',
+                    borderRadius: 8,
+                    padding: '6px 15px 6px 15px',
+                    marginLeft: 10,
+                  }}
+                >
+                  Chọn tệp
+                </label>
+                <input
+                  type='file'
+                  id='image'
+                  multiple
+                  accept='image/*'
+                  onChange={handleFileChange}
+                  style={{ display: 'none' }}
+                />
+                <div style={{ marginLeft: 8, marginTop: 5 }}>
+                  Đã có {selectedImages.length} file được chọn
+                </div>
               </div>
+            )}
+            <div style={{ marginLeft: 8, marginTop: 5 }}>
+              {imghomestay.length > 20 && (
+                <span style={{ color: 'red', marginLeft: 8 }}>
+                  (Bạn đã chọn đủ tối đa 20 ảnh)
+                </span>
+              )}
             </div>
             {isAddFrom == true ? (
               <div>
