@@ -11,13 +11,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AdminCommentRepository extends CommentRepository {
     @Query(value = """
-            SELECT c.*
-            FROM     dbo.comment c INNER JOIN
-            dbo.homestay h ON c.homestay_id = h.id
-            JOIN dbo.[user] u ON c.user_id = u.id
-            WHERE h.id = :#{#request.homestayId}
-            OR (( :#{#request.userName} IS NULL OR :#{#request.userName} LIKE '' OR  u.name LIKE %:#{#request.userName}% )
-            AND (:#{#request.homestayName} IS NULL OR :#{#request.homestayName} LIKE '' OR  h.name LIKE %:#{#request.homestayName}% ))
+            SELECT ROW_NUMBER() OVER(ORDER BY d.created_date DESC) AS stt,d.*
+            FROM     dbo.comment d  
+            JOIN dbo.homestay h ON d.homestay_id = h.id
+            JOIN dbo.[user] u ON d.user_id = u.id
+            WHERE ( ( :#{#request.homestayId} IS NULL OR h.id = :#{#request.homestayId} )
+            AND ( :#{#request.userName} IS NULL OR :#{#request.userName} LIKE '' OR  u.name LIKE %:#{#request.userName}% )
+            AND (:#{#request.homestayName} IS NULL OR :#{#request.homestayName} LIKE '' OR  h.name LIKE %:#{#request.homestayName}% )
+            AND (:#{#request.userId} IS NULL OR u.id = :#{#request.userId}))
             """, nativeQuery = true)
     Page<Comment> getAllComment(Pageable pageable, AdminCommentRequest request);
 }
