@@ -45,6 +45,7 @@ public class AdminBookingServiceImpl implements AdminBookingService {
         }
         Booking booking = optional.get();
         booking.setAdminTransactionCode(request.getAdminTrancode());
+        booking.setCustomerTransactionCode(request.getCustomerTransactionCode());
         adminBookingRepository.save(booking);
         return booking;
     }
