@@ -25,4 +25,6 @@ public class AdminBookingRequest extends PageableRequest {
       Integer statusBooking;
 
       String adminTrancode;
+
+      String customerTransactionCode;
 }
