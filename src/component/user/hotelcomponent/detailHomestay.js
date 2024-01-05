@@ -386,6 +386,9 @@ export const DetailHomestay = () => {
                 height: '150px',
               }}
             >
+<<<<<<< HEAD
+              <div style={{ margin: '10px 0px' }}></div>
+=======
               <div style={{ margin: '10px 0px' }}>
                 <h4
                   style={{
@@ -408,6 +411,7 @@ export const DetailHomestay = () => {
                   ))}
                 </div>
               </div>
+>>>>>>> 4b70562ab903e61b5d515de0c1b27ccf38822484
             </Col>
             <Col
               span={18}
