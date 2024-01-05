@@ -62,7 +62,7 @@ public class AdminApprovalHomestayServiceImpl implements AdminApprovalHomestaySe
             throw new RestApiException(Message.NOT_EXISTS);
         }
         Homestay homestay = optional.get();
-        homestay.setStatus(Status.KHONG_HOAT_DONG);
+        homestay.setStatus(Status.TU_CHOI_DUYET);
         adminHomestayRepository.save(homestay);
 
         ApprovalHistory approvalHistory = new ApprovalHistory();
