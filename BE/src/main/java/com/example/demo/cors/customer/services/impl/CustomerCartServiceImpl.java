@@ -49,7 +49,7 @@ public class CustomerCartServiceImpl implements CustomerCartService {
         if (cart == null) {
             Cart newCart = new Cart();
             newCart.setUser(userRepository.findById(request.getUserId()).get());
-            customerCartRepository.save(cart);
+            customerCartRepository.save(newCart);
 
             CartDetail cartDetail = new CartDetail();
             cartDetail.setCart(newCart);

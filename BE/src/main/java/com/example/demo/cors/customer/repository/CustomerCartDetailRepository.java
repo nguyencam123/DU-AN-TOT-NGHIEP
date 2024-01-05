@@ -31,8 +31,8 @@ public interface CustomerCartDetailRepository extends CartDetailRepository {
             DELETE cd FROM cart_detail cd
             JOIN cart c ON cd.id_cart = c.id
             JOIN [user] u ON c.id_user = u.id
-            WHERE u.id = :#{#request.userId} 
+            WHERE u.id = :#{#userId} 
             """,nativeQuery = true)
-    void deleteAllCart(@Param("request") CustomerCartRequest request);
+    void deleteAllCart(String userId);
 
 }
