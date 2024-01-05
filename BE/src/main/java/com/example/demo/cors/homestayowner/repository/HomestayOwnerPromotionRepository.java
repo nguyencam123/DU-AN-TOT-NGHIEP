@@ -32,9 +32,9 @@ public interface HomestayOwnerPromotionRepository extends PromotionRepository {
     Page<Promotion> getBookingByNameAndStatus(@Param("request") HomestayOwnerPromotionSearchRequest request, Pageable pageable);
 
     @Query(value = """
-        SELECT *
-        FROM Promotion a
-        WHERE DATEDIFF(second, '1970-01-01 00:00:00', GETDATE()) < a.end_date AND a.status_promotion = 0;
+       SELECT *
+       FROM Promotion a
+       WHERE a.end_date / 1000 < DATEDIFF(SECOND, '1970-01-01', GETDATE()) AND a.status_promotion = 0;
     """, nativeQuery = true)
     List<Promotion> findByEndDateLessThanAndStatusPromotion();
 }
