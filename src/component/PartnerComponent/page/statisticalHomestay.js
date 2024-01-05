@@ -56,7 +56,7 @@ const StatisticalHomestay = () => {
   const onChange = (dateString) => {
     setYear(new Date(dateString).getFullYear())
     dispatch(fetchStatisticalByYear(UserID, dateString))
-    dispatch(fetchStatisticalByTop5(UserID, dateString))
+    dispatch(fetchStatisticalByTop5(UserID, new Date(dateString).getFullYear()))
   }
   useEffect(() => {
     dispatch(fetchStatisticalByYear(UserID, year))
@@ -68,7 +68,9 @@ const StatisticalHomestay = () => {
     dispatch(
       getBookingByNameHomestay(UserID, homestayname, namebooking, valueselect),
     )
-  }, [])
+    dispatch(fetchStatisticalByTop5(UserID, currentYear))
+    // console.log(currentYear)
+  }, [currentYear])
 
   const convertDataForChart = (data) => {
     if (!data || data.length === 0) {
@@ -280,7 +282,7 @@ const StatisticalHomestay = () => {
           <div
             style={{
               width: '25%',
-              height: '100%',
+              height: 200,
               backgroundColor: '#321fdb',
               padding: 25,
               marginRight: 60,
@@ -308,7 +310,7 @@ const StatisticalHomestay = () => {
           <div
             style={{
               width: '25%',
-              height: '100%',
+              height: 200,
               backgroundColor: '#3399ff',
               padding: 25,
               marginRight: 60,
@@ -336,7 +338,7 @@ const StatisticalHomestay = () => {
           <div
             style={{
               width: '25%',
-              height: '100%',
+              height: 200,
               backgroundColor: '#f9b115',
               padding: 25,
               marginRight: 60,
@@ -367,7 +369,7 @@ const StatisticalHomestay = () => {
           <div
             style={{
               width: '25%',
-              height: '100%',
+              height: 200,
               backgroundColor: '#e55353',
               padding: 25,
               borderRadius: 8,

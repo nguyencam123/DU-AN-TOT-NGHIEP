@@ -15,6 +15,7 @@ import {
   Pagination,
   Modal,
   Carousel,
+  message,
 } from 'antd'
 import {
   ClockCircleTwoTone,
@@ -163,6 +164,19 @@ export const DetailHomestay = () => {
   const closeModal = () => {
     setModalVisible(false)
   }
+  /**
+   * shopping cart
+   */
+  const shoppingCart = {
+    userId: userDetail?.data.id,
+    startDate: startDate,
+    endDate: endDate,
+    homestayId: params.id,
+  }
+  const addShoppingCart = async () => {
+    await dispatch(addShoppingCart(shoppingCart))
+    message.info('Thêm vào giỏ hàng thành công!')
+  }
   return (
     <>
       <div
@@ -268,7 +282,7 @@ export const DetailHomestay = () => {
                   Chọn phòng
                 </Button>
                 <Button
-                  // onClick={() => handleBookingHomestay(params.id)}
+                  onClick={addShoppingCart}
                   style={{
                     width: '100%',
                     backgroundColor: 'white',
@@ -387,7 +401,6 @@ export const DetailHomestay = () => {
               }}
             >
               <div style={{ margin: '10px 0px' }}>
-<<<<<<< HEAD
                 <h4
                   style={{
                     marginLeft: '15px',
@@ -407,13 +420,6 @@ export const DetailHomestay = () => {
                   {detailHomestay?.detailHomestays?.map((items) => (
                     <div>{items.convenientHomestay.name}</div>
                   ))}
-=======
-                <h4 style={{ marginLeft: '15px', marginTop: '10px', fontSize: '16px' }}>Tiện nghi chính</h4>
-                <div style={{ marginLeft: '15px', fontSize: '12px', fontWeight: '500' }}>
-                  {detailHomestay?.detailHomestays?.map((items) =>
-                    <div>{items?.convenientHomestay?.name}</div>
-                  )}
->>>>>>> 9be06b21ebf90e172712f6102675cdc48525166c
                 </div>
               </div>
             </Col>

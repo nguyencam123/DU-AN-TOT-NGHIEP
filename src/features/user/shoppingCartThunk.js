@@ -16,3 +16,21 @@ export const fetchShoppingCart = (id) => async (dispatch) => {
     dispatch(fetchShoppingCartFail(error.message))
   }
 }
+export const addShoppingCart = (shoppingCart) => async (dispatch) => {
+  dispatch(fetchShoppingCartstart())
+  try {
+    await instance.post('http://localhost:8080/api/v1/cart/add', shoppingCart)
+  } catch (error) {
+    dispatch(fetchShoppingCartFail(error.message))
+  }
+}
+export const deleteShoppingCart = (id) => async (dispatch) => {
+  dispatch(fetchShoppingCartstart())
+  try {
+    await instance.delete(
+      `http://localhost:8080/api/v1/cart/delete-all?idImgHomestay=${id}`,
+    )
+  } catch (error) {
+    dispatch(fetchShoppingCartFail(error.message))
+  }
+}

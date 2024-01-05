@@ -367,7 +367,7 @@ const HomeStayProduct = () => {
     const selectedWardName =
       wards.find((ward) => ward.Id === selectedWard)?.Name || ''
 
-    const newAddress = `${selectedWardName}, ${selectedDistrictName}, ${selectedCityName}, ${addressDetail}`
+    const newAddress = `${addressDetail}, ${selectedWardName}, ${selectedDistrictName}, ${selectedCityName}`
     setaddress(newAddress)
   }
   // Use useEffect to call updateAddress whenever the selectedCity, selectedDistrict, or selectedWard changes
@@ -403,6 +403,7 @@ const HomeStayProduct = () => {
   }
   //validateform
   const [errorFile, setErrorFile] = useState('')
+  const [erorrAddress, setErrorAddress] = useState('')
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Vui lòng nhập tên sản phẩm'),
     price: Yup.number()
@@ -462,14 +463,14 @@ const HomeStayProduct = () => {
     desc: Yup.string()
       .required('vui lòng nhập vào mô tả')
       .max(500, 'Vui lòng nhập ít hơn 500 ký tự'),
-    addressDetail: Yup.string().required('vui lòng nhập địa chỉ chi tiết'),
+    // addressDetail: Yup.string().required('vui lòng nhập địa chỉ chi tiết'),
   })
   const handleSubmitStatus = async (record) => {
     await message.info(
       'Đang tiến hành sửa trạng thái bạn vui lòng đợi một vài giây nhé!',
     )
     await dispatch(UpdateStatus(record.id))
-    dispatch(fetchHomestay())
+    dispatch(fetchHomestay(''))
   }
   /**
    *
@@ -485,40 +486,59 @@ const HomeStayProduct = () => {
       'Đang tiến hành sửa trạng thái bạn vui lòng đợi một vài giây nhé!',
     )
     await dispatch(UpdateStatusToUpdating(record.id))
-    dispatch(fetchHomestay())
+    dispatch(fetchHomestay(''))
   }
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
       await validationSchema.validate(homestay, { abortEarly: false })
-      if (file.length < 5) {
-        setErrorFile('Vui lòng chọn ít nhất 5 file')
-        throw new Yup.ValidationError(
-          'Vui lòng chọn ít nhất 5 file',
-          file,
-          'file',
-        )
+      if (isAddFrom) {
+        // File validation only when isAddFrom is false
+        if (file.length < 5) {
+          setErrorFile('Vui lòng chọn ít nhất 5 file')
+          throw new Yup.ValidationError(
+            'Vui lòng chọn ít nhất 5 file',
+            file,
+            'file',
+          )
+        }
+        if (file.length >= 20) {
+          setErrorFile('Vui lòng chọn dưới 20 file')
+          throw new Yup.ValidationError(
+            'Vui lòng chọn ít nhất 5 file',
+            file,
+            'file',
+          )
+        }
+        const maxSize = 10 * 1024 * 1024 // 5MB
+        if (!file.every((file) => file.size <= maxSize)) {
+          setErrorFile('File phải nhỏ hơn hoặc bằng 5MB')
+          throw new Yup.ValidationError(
+            'File phải nhỏ hơn hoặc bằng 5MB',
+            file,
+            'file',
+          )
+        }
       }
-      if (file.length >= 20) {
-        setErrorFile('Vui lòng chọn dưới 20 file')
-        throw new Yup.ValidationError(
-          'Vui lòng chọn ít nhất 5 file',
-          file,
-          'file',
-        )
+      if (!addressDetail) {
+        setErrorAddress('Vui lòng nhập địa chỉ hoặc chọn địa chỉ')
+        throw new Error('Vui lòng nhập địa chỉ hoặc chọn địa chỉ')
       }
-      const maxSize = 10 * 1024 * 1024 // 5MB
-      if (!file.every((file) => file.size <= maxSize)) {
-        setErrorFile('File phải nhỏ hơn hoặc bằng 5MB')
-        throw new Yup.ValidationError(
-          'File phải nhỏ hơn hoặc bằng 5MB',
-          file,
-          'file',
-        )
+      if (!selectedWard) {
+        setErrorAddress('Vui lòng nhập địa chỉ hoặc chọn địa chỉ')
+        throw new Error('Vui lòng nhập địa chỉ hoặc chọn địa chỉ')
+      }
+      if (!wards) {
+        setErrorAddress('Vui lòng nhập địa chỉ hoặc chọn địa chỉ')
+        throw new Error('Vui lòng nhập địa chỉ hoặc chọn địa chỉ')
+      }
+      if (!selectedDistrict) {
+        setErrorAddress('Vui lòng nhập địa chỉ hoặc chọn địa chỉ')
+        throw new Error('Vui lòng nhập địa chỉ hoặc chọn địa chỉ')
       }
       if (isAddFrom) {
         setIsLoading(true)
-        await message.info(
+        message.info(
           'Đang tiến hành thêm bạn vui lòng đợi một vài giây nhé!',
           5,
         )
@@ -553,9 +573,10 @@ const HomeStayProduct = () => {
         await setIsModalOpen(false)
         message.info('Sửa thành công')
       }
-      dispatch(fetchHomestay())
+      dispatch(fetchHomestay(''))
       setFormErrors({})
       setErrorFile('')
+      setErrorAddress('')
     } catch (errors) {
       const errorObject = {}
       errors.inner.forEach((error) => {
@@ -598,10 +619,10 @@ const HomeStayProduct = () => {
     setFormErrors({})
 
     const addressParts = record.address.split(', ')
-    const selectedWardName = addressParts[0] // Lấy tên phường/xã từ địa chỉ
-    const selectedDistrictName = addressParts[1] // Lấy tên quận/huyện từ địa chỉ
-    const selectedCityName = addressParts[2]
-    setAddressDetail(addressParts[3])
+    const selectedWardName = addressParts[1] // Lấy tên phường/xã từ địa chỉ
+    const selectedDistrictName = addressParts[2] // Lấy tên quận/huyện từ địa chỉ
+    const selectedCityName = addressParts[3]
+    setAddressDetail(addressParts[0])
     const selectedCityData = cities.find(
       (city) => city.Name === selectedCityName,
     )
@@ -953,7 +974,7 @@ const HomeStayProduct = () => {
                     </option>
                   ))}
                 </select>
-                <div style={{ color: 'red' }}>{formErrors.selectedCity}</div>
+                <div style={{ color: 'red' }}>{erorrAddress}</div>
               </div>
               <div style={{ marginRight: 30 }}>
                 <Title level={5}>Quận/Huyện:</Title>
@@ -969,9 +990,7 @@ const HomeStayProduct = () => {
                     </option>
                   ))}
                 </select>
-                <div style={{ color: 'red' }}>
-                  {formErrors.selectedDistrict}
-                </div>
+                <div style={{ color: 'red' }}>{erorrAddress}</div>
               </div>
               <div>
                 <Title level={5}>Phường/Xã:</Title>
@@ -987,7 +1006,7 @@ const HomeStayProduct = () => {
                     </option>
                   ))}
                 </select>
-                <div style={{ color: 'red' }}>{formErrors.selectedWard}</div>
+                <div style={{ color: 'red' }}>{erorrAddress}</div>
               </div>
             </div>
           </Row>
@@ -999,7 +1018,7 @@ const HomeStayProduct = () => {
                 value={addressDetail}
                 onChange={(e) => setAddressDetail(e.target.value)}
               />
-              <div style={{ color: 'red' }}>{formErrors.addressDetail}</div>
+              <div style={{ color: 'red' }}>{erorrAddress}</div>
             </Col>
           </Row>
           <Row gutter={24}>
@@ -1133,22 +1152,24 @@ const HomeStayProduct = () => {
                     ),
                   }}
                 />
-                <Popconfirm
-                  title='Bạn có muốn xóa ảnh này?'
-                  onConfirm={() => handleDeleteImage(imageurl.id, index)}
-                  okText='có'
-                  cancelText='không'
-                  placement='topRight'
-                >
-                  <CloseOutlined
-                    style={{
-                      position: 'absolute',
-                      top: 0,
-                      right: 0,
-                      cursor: 'pointer',
-                    }}
-                  />
-                </Popconfirm>
+                {imghomestay.length > 5 && (
+                  <Popconfirm
+                    title='Bạn có muốn xóa ảnh này?'
+                    onConfirm={() => handleDeleteImage(imageurl.id, index)}
+                    okText='có'
+                    cancelText='không'
+                    placement='topRight'
+                  >
+                    <CloseOutlined
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        right: 0,
+                        cursor: 'pointer',
+                      }}
+                    />
+                  </Popconfirm>
+                )}
               </div>
             ))}
             {isLoadingImg == true ? <Skeleton.Image active /> : ''}
