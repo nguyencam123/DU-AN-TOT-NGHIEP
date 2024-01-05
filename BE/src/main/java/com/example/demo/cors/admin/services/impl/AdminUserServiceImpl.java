@@ -3,6 +3,8 @@ package com.example.demo.cors.admin.services.impl;
 import com.example.demo.cors.admin.model.request.AdminUserRequest;
 import com.example.demo.cors.admin.repository.AdminUserRepository;
 import com.example.demo.cors.admin.services.AdminUserService;
+import com.example.demo.cors.common.base.PageableObject;
+import com.example.demo.entities.ConvenientHomestay;
 import com.example.demo.entities.User;
 import com.example.demo.infrastructure.configemail.Email;
 import com.example.demo.infrastructure.configemail.EmailSender;
@@ -10,6 +12,9 @@ import com.example.demo.infrastructure.contant.Message;
 import com.example.demo.infrastructure.contant.Status;
 import com.example.demo.infrastructure.exception.rest.RestApiException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -60,5 +65,12 @@ public class AdminUserServiceImpl implements AdminUserService {
         emailSender.sendEmail(email.getToEmail(), email.getSubject(), email.getTitleEmail(), email.getBody());
 
         return user;
+    }
+
+    @Override
+    public PageableObject<User> getAllUser(AdminUserRequest request) {
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+        Page<User> res = adminUserRepository.findAll(pageable);
+        return new PageableObject<>(res);
     }
 }
