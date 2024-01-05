@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class DateUtils {
 
@@ -40,10 +41,6 @@ public class DateUtils {
     public static Date truncDate(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
         return cal.getTime();
     }
 
@@ -62,7 +59,6 @@ public class DateUtils {
         if (date == null) {
             return null;
         }
-
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         int year = calendar.get(Calendar.YEAR);
@@ -106,6 +102,19 @@ public class DateUtils {
             throw ex;
         }
     }
+
+    public static long getDaysBetweenDates(long startDateInMillis, long endDateInMillis) {
+        // Chuyển đổi giá trị kiểu long thành đối tượng Date
+        Date startDate = new Date(startDateInMillis);
+        Date endDate = new Date(endDateInMillis);
+
+        // Tính số mili giây giữa hai ngày
+        long differenceInMillis = endDate.getTime() - startDate.getTime();
+
+        // Chuyển đổi mili giây thành ngày và trả về kết quả
+        return TimeUnit.DAYS.convert(differenceInMillis, TimeUnit.MILLISECONDS);
+    }
+
 
     /**
      * @param value Date

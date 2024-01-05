@@ -24,8 +24,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Service
 public class CustomerBookingServiceImpl implements CustomerBookingService {
@@ -68,7 +66,7 @@ public class CustomerBookingServiceImpl implements CustomerBookingService {
         booking.setHomestay(homestay);
         booking.setPromotion(promotion);
         booking.setNote(request.getNote());
-        booking.setStatus(StatusBooking.KHONG_THANH_CONG);
+        booking.setStatus(StatusBooking.CHO_THANH_TOAN);
         booking.setNumberOfNight(request.getNumberOfNight());
         customerBookingRepository.save(booking);
         return booking;
