@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -35,13 +36,13 @@ public class CustomerCartController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseObject deleteCartDetail(@RequestBody CustomerCartRequest request) {
-        return new ResponseObject(customerCartDetailService.deleteCartDetail(request));
+    public ResponseObject deleteCartDetail(@RequestParam("idCartDetail") String idCartDetail) {
+        return new ResponseObject(customerCartDetailService.deleteCartDetail(idCartDetail));
     }
 
     @DeleteMapping("/delete-all")
-    public void deleteAllCartDetail(@RequestBody CustomerCartRequest request) {
-        customerCartDetailService.deleteAllCartDetail(request);
+    public ResponseObject deleteAllCartDetail(@RequestParam("userId") String userId) {
+        return new ResponseObject(customerCartDetailService.deleteAllCartDetail(userId));
     }
 
     @GetMapping("/check-available")
