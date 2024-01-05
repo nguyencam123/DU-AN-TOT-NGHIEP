@@ -31,16 +31,19 @@ function BookingForm() {
     },
     {
       title: 'Ngày đặt',
-      dataIndex: 'createdDate',
-      key: 'createdDate',
+      dataIndex: 'startDate',
+      key: 'startDate',
       render: (data) => {
         return moment(data).locale('vi').format('LL')
       }
     },
     {
-      title: 'Số đêm',
-      dataIndex: 'numberOfNight',
-      key: 'numberOfNight'
+      title: 'Ngày hủy',
+      dataIndex: 'startDate',
+      key: 'startDate',
+      render: (data) => {
+        return moment(data).locale('vi').format('LL')
+      }
     },
     {
       title: 'Trạng thái',
@@ -59,15 +62,15 @@ function BookingForm() {
       }
     },
     {
-      title: 'Hình thức thanh toán',
+      title: 'Phương thức booking',
       dataIndex: 'typeBooking',
-      key: 'phoneNumber',
+      key: 'typeBooking',
       render: (data) => {
         if (data === 'DAT_COC') {
           return 'Đặt cọc'
         }
         if (data === 'THANH_TOAN_TRUOC') {
-          return 'Thanh toán trước'
+          return 'Đã thanh toán'
         }
       }
     },
@@ -77,9 +80,42 @@ function BookingForm() {
       key: 'totalPrice'
     },
     {
+      title: 'Số tiền phải chuyển cho chủ homestay',
+      dataIndex: 'totalPrice',
+      key: 'price',
+      render: (data, record) => {
+        if (record.typeBooking === 'DAT_COC') {
+          return (data - (data-(data * 100/111))*2)
+        }
+        if (record.typeBooking === 'THANH_TOAN_TRUOC') {
+          return (data * 100 / 111)
+        }
+      }
+    },
+    {
+      title: 'Số tiền phải chuyển cho khách hàng',
+      dataIndex: 'totalPrice',
+      key: 'price',
+      render: (data, record) => {
+        if (record.status === 'HUY') {
+          if (record.typeBooking === 'DAT_COC') {
+            return (data - (data - (data * 100 / 111)) * 2)
+          }
+          if (record.typeBooking === 'THANH_TOAN_TRUOC') {
+            return (data * 100 / 111)
+          }
+        }
+      }
+    },
+    {
       title: 'Mã giao dịch với chủ homestay',
       dataIndex: 'adminTransactionCode',
       key: 'adminTransactionCode'
+    },
+    {
+      title: 'Mã giao dịch booking hủy',
+      dataIndex: 'customerTransactionCode',
+      key: 'customerTransactionCode'
     },
     {
       title: 'Action',
@@ -95,7 +131,7 @@ function BookingForm() {
   const listFilter = [
     {
       name: 'Tất cả',
-      value: ''
+      value: '4'
     },
     {
       name: 'Hủy',
@@ -104,15 +140,11 @@ function BookingForm() {
     {
       name: 'Thành công',
       value: 1
-    },
-    {
-      name: 'Không thành công',
-      value: 2
     }
   ]
   const [selectedStatus, setSelectedStatus] = useState({
     name: 'Tất cả',
-    value: ''
+    value: '4'
   })
   const [isViewModal, setIsViewModal] = useState(false)
   const [viewBooking, setViewBooking] = useState({})
@@ -129,17 +161,11 @@ function BookingForm() {
         value: 0
       })
       dispatch(getBooking(0));
-    } else if (value === 2) {
-      setSelectedStatus({
-        name: 'Không thành công',
-        value: 2
-      })
-      dispatch(getBooking(2));
     } else {
-      dispatch(getBooking());
+      dispatch(getBooking(1));
       setSelectedStatus({
         name: 'Tất cả',
-        value: ''
+        value: '4'
       })
     }
   }
@@ -218,6 +244,10 @@ function BookingForm() {
         <div style={{ fontSize: 18, fontWeight: 600 }}>
           <table>
             <tr>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Tên homestay </div> : {viewBooking?.name}</div><br /></td>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Tên chủ homestay </div> : {viewBooking?.phoneNumber}</div><br /></td>
+            </tr>
+            <tr>
               <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Tên homestay </div> : {viewBooking?.homestay?.name}</div><br /></td>
               <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Tên chủ homestay </div> : {viewBooking?.homestay?.ownerHomestay?.name}</div><br /></td>
             </tr>
@@ -226,8 +256,8 @@ function BookingForm() {
               <td style={{ width: 500 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Số đêm </div> : {viewBooking.numberOfNight} (Đêm)</div><br /></td>
             </tr>
             <tr>
-              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Số phòng</div> : {viewBooking.startDate}</div><br /></td>
-              <td style={{ width: 500 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Chính sách hủy phòng </div> : {viewBooking.endDate}</div><br /></td>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Số phòng</div> : {viewBooking.roomNumber}</div><br /></td>
+              <td style={{ width: 500 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Chính sách hủy phòng </div> : {viewBooking?.homestay?.cancellationPolicy}</div><br /></td>
             </tr>
             <tr>
               <td style={{ width: 600 }}><div style={{ display: 'flex' }}>
@@ -241,7 +271,7 @@ function BookingForm() {
               <td style={{ width: 500 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Mã giao dịch với chủ homestay         </div> : {viewBooking.adminTransactionCode}</div><br /></td>
             </tr>
           </table>
-          <div style={{ display: 'flex' }}><div style={{ width: 200 }}>Hình thức đặt</div> : {viewBooking.typeBooking === 'DAT_COC'?'Đặt cọc':'Thanh toán trước'}</div><br />
+          <div style={{ display: 'flex' }}><div style={{ width: 200 }}>Hình thức đặt</div> : {viewBooking.typeBooking === 'DAT_COC' ? 'Đặt cọc' : 'Thanh toán trước'}</div><br />
           <div style={{ display: 'flex' }}><div style={{ width: 200 }}>Trạng thái       </div> : {viewBooking.status}</div><br />
         </div>
       </Modal>

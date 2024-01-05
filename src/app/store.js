@@ -13,6 +13,7 @@ import bookingReducer from '../features/owner_homestay/getbooking/bookingSlice'
 import statisticalReducer from '../features/owner_homestay/statistical/statisticalSlice'
 import statisticalSliceAdmin from '../features/admin/statistical/statisticalSlice'
 import shoppingCartSlice from '../features/user/shoppingCartSlice'
+import userSlice from '../features/admin/user/userSlice'
 const middleware = [...getDefaultMiddleware(), AuthMiddleware]
 
 export const store = configureStore({
@@ -29,6 +30,7 @@ export const store = configureStore({
     statistical: statisticalReducer,
     statisticalAdmin: statisticalSliceAdmin,
     shoppingcart: shoppingCartSlice,
+    userAdmin: userSlice
   },
   middleware: (getDefaultMiddleware) => [...getDefaultMiddleware()],
 })
