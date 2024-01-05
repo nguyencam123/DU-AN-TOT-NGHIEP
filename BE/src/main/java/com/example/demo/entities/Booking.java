@@ -15,6 +15,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "booking")
@@ -69,5 +70,7 @@ public class Booking extends PrimaryEntity {
     private BigDecimal promotionPrice;
 
     private Integer numberOfNight;
+
+    private LocalDate cancellationDate;
 
 }

@@ -24,6 +24,12 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
             "where c.id=:id", nativeQuery = true)
     Page<Booking> getBookingByOwnerHomestay(String id, Pageable pageable);
 
+    @Query(value = "select a.*,((a.total_price) - ((a.total_price) * 11 / 100 )) AS 'TongSoTien' from booking a \n" +
+            "left join  homestay b on a.homestay_id=b.id\n" +
+            "left join owner_homestay c on b.owner_id=c.id\n" +
+            "where c.id=:id", nativeQuery = true)
+    List<Booking> getBooking1ByOwnerHomestay(String id);
+
     @Query(value = """
             SELECT ROW_NUMBER() OVER(ORDER BY b.created_date DESC) AS stt, b.* ,((b.total_price) - ((b.total_price) * 11 / 100)) AS 'TongSoTien'
             FROM booking b
@@ -39,12 +45,14 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
             AND (
                 YEAR(DATEADD(SECOND, b.created_date / 1000, '1970-01-01')) = :#{#request.year}
                 AND (MONTH(DATEADD(SECOND, b.created_date / 1000, '1970-01-01')) = :#{#request.month} OR :#{#request.month} IS NULL OR :#{#request.month} LIKE '')
-			))
+			)
+			AND b.status <> 2
+			)
             """, nativeQuery = true)
     Page<Booking> getAllBooking(@Param("request") HomestayOwnerBookingRequest request, Pageable pageable);
 
     @Query(value = """
-            SELECT ROW_NUMBER() OVER(ORDER BY b.created_date DESC) AS stt, b.* ,((b.total_price) - ((b.total_price) * 11 / 100)) AS 'TongSoTien'
+            SELECT ROW_NUMBER() OVER(ORDER BY b.created_date DESC) AS stt, b.* ,(b.total_price) AS 'TongSoTien'
             FROM booking b
             JOIN dbo.homestay h ON b.homestay_id = h.id 
             JOIN owner_homestay c ON h.owner_id=c.id
@@ -63,7 +71,7 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
     @Query(value = """
             SELECT
                 COUNT(a.id) AS 'DoanhSo',
-                (SUM(a.total_price) - (SUM(a.total_price) * 11 / 100)) AS 'TongSoTien'
+                SUM(a.total_price) AS 'TongSoTien'
             FROM
                 booking a
                 INNER JOIN homestay b ON a.homestay_id = b.id
@@ -82,7 +90,7 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
     @Query(value = """
             SELECT
             COUNT(a.id) AS 'DoanhSo',
-            SUM(a.total_price) - (SUM(a.total_price) * 11 / 100) AS 'TongSoTien'
+            SUM(a.total_price)  AS 'TongSoTien'
             FROM
             booking a
             inner join homestay b on a.homestay_id=b.id
@@ -101,7 +109,7 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
                 b.address,
                 b.room_number AS "roomNumber",
                 COUNT(a.id) AS 'DoanhSo',
-                SUM(a.total_price) - (SUM(a.total_price) * 0.11) AS 'TongSoTien'
+                SUM(a.total_price) AS 'TongSoTien'
                 FROM
                 booking a
                 INNER JOIN homestay b ON a.homestay_id = b.id
