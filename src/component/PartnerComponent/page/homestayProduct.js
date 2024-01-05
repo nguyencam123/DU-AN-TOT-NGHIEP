@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from 'react'
 import {
   Space,
   Typography,
@@ -14,9 +14,10 @@ import {
   Image,
   TimePicker,
   Upload,
-  InputNumber
-} from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
+  InputNumber,
+  Skeleton,
+} from 'antd'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   QuestionCircleOutlined,
   EditOutlined,
@@ -30,112 +31,132 @@ import {
   ZoomInOutlined,
   ReloadOutlined,
   LoadingOutlined,
-  UploadOutlined
-} from '@ant-design/icons';
-import { useState } from 'react';
+  UploadOutlined,
+  CloseOutlined,
+} from '@ant-design/icons'
+import { useState } from 'react'
 import {
   EditHomestay,
   UpdateStatus,
   UpdateStatusToUpdating,
   addHomestay,
-  fetchHomestay
-} from '../../../features/owner_homestay/homestayThunk';
-import { fetchConvenient } from '../../../features/owner_homestay/convenientThunk';
-import { Checkbox, DatePicker, Select } from 'antd';
-import moment from 'moment';
-import 'moment/locale/vi';
-import { fetchProvince } from '../../../features/owner_homestay/region/provinceThunk';
-import axios from 'axios';
-import * as Yup from 'yup';
-import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
-dayjs.extend(customParseFormat);
-const { RangePicker } = DatePicker;
-const { TextArea } = Input;
-const { Option } = Select;
-const { Title } = Typography;
+  fetchHomestay,
+} from '../../../features/owner_homestay/homestayThunk'
+import { fetchConvenient } from '../../../features/owner_homestay/convenientThunk'
+import { Checkbox, DatePicker, Select } from 'antd'
+import moment from 'moment'
+import 'moment/locale/vi'
+import { fetchProvince } from '../../../features/owner_homestay/region/provinceThunk'
+import axios from 'axios'
+import * as Yup from 'yup'
+import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+import {
+  addImgUpload,
+  deleteImg,
+  fetchBaseImg,
+} from '../../../features/owner_homestay/getbooking/bookingThunk'
+dayjs.extend(customParseFormat)
+const { RangePicker } = DatePicker
+const { TextArea } = Input
+const { Option } = Select
+const { Title } = Typography
 
 const HomeStayProduct = () => {
-  const [checkedValues, setCheckedValues] = useState([]);
+  const [checkedValues, setCheckedValues] = useState([])
   const formatCurrency = (value) => {
     // Sử dụng Intl.NumberFormat để định dạng giá trị tiền tệ
     return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
       currency: 'VND',
-    }).format(value);
-  };
+    }).format(value)
+  }
 
   const handleButtonClick = () => {
-    setCheckedValues([]);
-  };
+    setCheckedValues([])
+  }
 
   const handleChange = (values) => {
-    setCheckedValues(values);
-  };
-  const [cities, setCities] = useState([]);
-  const [selectedCity, setSelectedCity] = useState('');
-  const [districts, setDistricts] = useState([]);
-  const [selectedDistrict, setSelectedDistrict] = useState('');
-  const [wards, setWards] = useState([]);
-  const [selectedWard, setSelectedWard] = useState('');
-  const [valueselect, setValueSelect] = useState('');
-  const dateFormat = 'YYYY/MM/DD';
+    setCheckedValues(values)
+  }
+  const [cities, setCities] = useState([])
+  const [selectedCity, setSelectedCity] = useState('')
+  const [districts, setDistricts] = useState([])
+  const [selectedDistrict, setSelectedDistrict] = useState('')
+  const [wards, setWards] = useState([])
+  const [selectedWard, setSelectedWard] = useState('')
+  const [valueselect, setValueSelect] = useState('')
+  const [isLoadingImg, setIsLoadingImg] = useState(false)
+  const dateFormat = 'YYYY/MM/DD'
   const isBeforeToday = (current) => {
-    return current && current.isBefore(moment().startOf('day'));
-  };
+    return current && current.isBefore(moment().startOf('day'))
+  }
   const disabledEndDate = (current) => {
     // Kiểm tra xem ngày hiện tại có trước ngày bắt đầu không
     if (current < startDate) {
-      return true;
+      return true
     }
-    return false; // Bỏ điều kiện không cho chọn ngày lớn hơn ngày hiện tại
-  };
+    return false // Bỏ điều kiện không cho chọn ngày lớn hơn ngày hiện tại
+  }
   const handlePriceChange = (value) => {
     // You can perform any additional formatting or validation here
-    setprice(value);
-  };
+    setprice(value)
+  }
   useEffect(() => {
-    dispatch(fetchHomestay(valueselect));
-    dispatch(fetchConvenient());
+    dispatch(fetchHomestay(valueselect))
+    dispatch(fetchConvenient())
     // dispatch(fetchProvince());
-  }, [valueselect]);
-  const dispatch = useDispatch();
-  const products = useSelector((state) => state.ownerHomestay.homestays);
-  const convenients = useSelector((state) => state.convenient.convenients);
+  }, [valueselect])
+  const dispatch = useDispatch()
+  const products = useSelector((state) => state.ownerHomestay.homestays)
+  const convenients = useSelector((state) => state.convenient.convenients)
+  const imghomestay = useSelector((state) => state.booking.imguploads)
+
   const onChangeConvenients = (checkedValues) => {
-    setconvenient(checkedValues.join(','));
-    setCheckedValues(checkedValues);
+    setconvenient(checkedValues.join(','))
+    setCheckedValues(checkedValues)
     setCheckedList(checkedValues)
-  };
+  }
 
-  const [file, setFile] = useState([]);
-  const [selectedImages, setSelectedImages] = useState([]);
+  const [file, setFile] = useState([])
+  const [selectedImages, setSelectedImages] = useState([])
+  const [idHomestay, setIdHomestay] = useState('')
 
-  const handleFileChange = (event) => {
-    const files = event.target.files;
-    let selectedFile = event.target.files;
-    let fileList = [...selectedFile];
+  const handleFileChange = async (event) => {
+    const files = event.target.files
+    let selectedFile = event.target.files
+    let fileList = [...selectedFile]
     const imagesArray = fileList.map((file) => ({
       name: file.name,
       url: URL.createObjectURL(file),
-    }));
+    }))
 
-    setSelectedImages((prevImages) => [...prevImages, ...imagesArray]);
+    setSelectedImages((prevImages) => [...prevImages, ...imagesArray])
     setFile(fileList)
     const filesArray = Array.from(files).map((file) => ({
       name: file.name,
       size: file.size,
       type: file.type,
-    }));
-  };
+    }))
+    if (!isAddFrom) {
+      setIsLoadingImg(true)
+      message.info(
+        'Đang tiến hành tải ảnh lên máy chủ bạn vui lòng đợi một vài giây nhé!',
+        5,
+      )
+      await dispatch(addImgUpload(idHomestay, fileList))
+      dispatch(fetchBaseImg(idHomestay))
+      setIsLoadingImg(false)
+    }
+  }
 
   const handleRemoveImage = (index) => {
-    const newImages = [...selectedImages];
-    file.splice(index, 1);
-    newImages.splice(index, 1);
-    setSelectedImages(newImages);
+    const newImages = [...selectedImages]
+    file.splice(index, 1)
+    newImages.splice(index, 1)
+    setSelectedImages(newImages)
     // document.getElementById('image').value = null;
-  };
+  }
 
   // const handleFileChange = (e) => {
   //   console.log(e)
@@ -144,74 +165,72 @@ const HomeStayProduct = () => {
   //   // setFile(fileList);
   // };
   //modal
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isViewmodal, setIsviewmodal] = useState(false);
-  const [isAddFrom, setIsAddForm] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isViewmodal, setIsviewmodal] = useState(false)
+  const [isAddFrom, setIsAddForm] = useState(true)
   const showModalView = (record) => {
-    setIsviewmodal(true);
-    setname(record.name);
-    setdesc(record.desc);
-    setprice(record.price);
-    setnumberPerson(record.numberPerson);
-    setaddressView(record.address);
-    setprice(record.price);
-    setstartDate(record.startDate);
-    setendDate(record.endDate);
-    setIamge(record.images);
-    settimeCheckIn(record.timeCheckIn);
-    settimeCheckOut(record.timeCheckOut);
-    setviewEditConvennient(record.detailHomestays);
-    setcancellationPolicy(record.cancellationPolicy);
-    setacreage(record.acreage);
-    setroomNumber(record.roomNumber);
-  };
+    setIsviewmodal(true)
+    setname(record.name)
+    setdesc(record.desc)
+    setprice(record.price)
+    setnumberPerson(record.numberPerson)
+    setaddressView(record.address)
+    setprice(record.price)
+    setstartDate(record.startDate)
+    setendDate(record.endDate)
+    setIamge(record.images)
+    settimeCheckIn(record.timeCheckIn)
+    settimeCheckOut(record.timeCheckOut)
+    setviewEditConvennient(record.detailHomestays)
+    setcancellationPolicy(record.cancellationPolicy)
+    setacreage(record.acreage)
+    setroomNumber(record.roomNumber)
+  }
   const showModal = () => {
-    setIsModalOpen(true);
-    setIsAddForm(true);
-    setname('');
-    setdesc('');
-    setprice(null);
-    setnumberPerson(null);
+    setIsModalOpen(true)
+    setIsAddForm(true)
+    setname('')
+    setdesc('')
+    setprice(null)
+    setnumberPerson(null)
     // setaddress('')
-    setprice(null);
-    setcancellationPolicy(0);
-    setacreage(0);
-    setroomNumber(0);
-    setstartDate(null);
-    setendDate(null);
-    settimeCheckIn(null);
-    settimeCheckOut(null);
-    setSelectedCity('');
-    setSelectedDistrict('');
-    setSelectedWard('');
-    setCheckedValues([]);
+    setprice(null)
+    setcancellationPolicy(0)
+    setacreage(0)
+    setroomNumber(0)
+    setstartDate(null)
+    setendDate(null)
+    settimeCheckIn(null)
+    settimeCheckOut(null)
+    setSelectedCity('')
+    setSelectedDistrict('')
+    setSelectedWard('')
+    setCheckedValues([])
     setFile([])
     setAddressDetail('')
-    const fileInput = document.getElementById('image');
+    const fileInput = document.getElementById('image')
     if (fileInput) {
-      fileInput.value = null;
+      fileInput.value = null
     }
     setSelectedImages([])
-
-
-  };
+  }
   const handleOk = () => {
-    setIsModalOpen(false);
-  };
+    setIsModalOpen(false)
+  }
   const handleCancel = () => {
-    setIsModalOpen(false);
-    setIsviewmodal(false);
-  };
+    setIsModalOpen(false)
+    setIsviewmodal(false)
+  }
   const columns = [
     {
       title: 'Tên homestay',
       dataIndex: 'name',
-      key: 'name'
+      key: 'name',
     },
     {
       title: 'Địa chỉ homestay',
       dataIndex: 'address',
-      key: 'address'
+      key: 'address',
     },
     {
       title: 'Giá homestay',
@@ -220,7 +239,7 @@ const HomeStayProduct = () => {
       align: 'center',
       render(str) {
         return formatCurrency(str)
-      }
+      },
     },
     {
       title: 'Trạng thái của homestay',
@@ -229,13 +248,13 @@ const HomeStayProduct = () => {
       align: 'center',
       render(str) {
         if (str === 'CHO_DUYET') {
-          return 'Chờ duyệt';
+          return 'Chờ duyệt'
         } else if (str === 'HOAT_DONG') {
-          return 'Hoạt động';
+          return 'Hoạt động'
         } else {
-          return 'Ngừng hoạt động';
+          return 'Ngừng hoạt động'
         }
-      }
+      },
     },
     {
       title: 'Action',
@@ -279,94 +298,92 @@ const HomeStayProduct = () => {
             </Popconfirm>
           )}
         </Space>
-      )
-    }
-  ];
+      ),
+    },
+  ]
 
   //
 
   //
-  const [viewEditConvennient, setviewEditConvennient] = useState([]);
-  const [convenientvir, setconvenient] = useState('');
-  const [name, setname] = useState('');
-  const [formErrors, setFormErrors] = useState({});
-  const [acreage, setacreage] = useState(0);
-  const [roomNumber, setroomNumber] = useState(0);
-  const [cancellationPolicy, setcancellationPolicy] = useState(0);
-  const [timeCheckIn, settimeCheckIn] = useState(null);
-  const [addressDetail, setAddressDetail] = useState('');
-  
+  const [viewEditConvennient, setviewEditConvennient] = useState([])
+  const [convenientvir, setconvenient] = useState('')
+  const [name, setname] = useState('')
+  const [formErrors, setFormErrors] = useState({})
+  const [acreage, setacreage] = useState(0)
+  const [roomNumber, setroomNumber] = useState(0)
+  const [cancellationPolicy, setcancellationPolicy] = useState(0)
+  const [timeCheckIn, settimeCheckIn] = useState(null)
+  const [addressDetail, setAddressDetail] = useState('')
 
   const listFilter = [
     {
-        name: 'Tất cả',
-        value: ''
+      name: 'Tất cả',
+      value: '',
     },
     {
-        name: 'Chờ duyệt',
-        value: 1
+      name: 'Chờ duyệt',
+      value: 1,
     },
     {
-        name: 'Hoạt động',
-        value: 0
+      name: 'Hoạt động',
+      value: 0,
     },
     {
-        name: 'Không hoạt động',
-        value: 2
-    }
-]
-const hanhdleSelect = (selectedValue) => {
+      name: 'Không hoạt động',
+      value: 2,
+    },
+  ]
+  const hanhdleSelect = (selectedValue) => {
     setValueSelect(selectedValue) // You can access the selected value here
-};
+  }
 
   const handleTimeChangestart = (time, timeString) => {
-    settimeCheckIn(timeString);
-  };
-  const [timeCheckOut, settimeCheckOut] = useState(null);
+    settimeCheckIn(timeString)
+  }
+  const [timeCheckOut, settimeCheckOut] = useState(null)
   const handleTimeChangeend = (time, timeString) => {
-    settimeCheckOut(timeString);
-  };
-  const [startDate, setstartDate] = useState(null);
+    settimeCheckOut(timeString)
+  }
+  const [startDate, setstartDate] = useState(null)
   const handleDateChangestart = (dates) => {
     // setstartDate(moment(dates).valueOf());
-    setstartDate(dates);
-  };
-  const [endDate, setendDate] = useState(null);
+    setstartDate(dates)
+  }
+  const [endDate, setendDate] = useState(null)
   const handleDateChangeend = (dates) => {
     // setendDate(moment(dates).valueOf());
-    setendDate(dates);
-  };
-  const [desc, setdesc] = useState('');
-  const [price, setprice] = useState(0);
-  const [numberPerson, setnumberPerson] = useState(0);
-  const [address, setaddress] = useState('');
-  const [addressView, setaddressView] = useState('');
+    setendDate(dates)
+  }
+  const [desc, setdesc] = useState('')
+  const [price, setprice] = useState(0)
+  const [numberPerson, setnumberPerson] = useState(0)
+  const [address, setaddress] = useState('')
+  const [addressView, setaddressView] = useState('')
   const updateAddress = () => {
     const selectedCityName =
-      cities.find((city) => city.Id === selectedCity)?.Name || '';
+      cities.find((city) => city.Id === selectedCity)?.Name || ''
     const selectedDistrictName =
-      districts.find((district) => district.Id === selectedDistrict)?.Name ||
-      '';
+      districts.find((district) => district.Id === selectedDistrict)?.Name || ''
     const selectedWardName =
-      wards.find((ward) => ward.Id === selectedWard)?.Name || '';
+      wards.find((ward) => ward.Id === selectedWard)?.Name || ''
 
-    const newAddress = `${selectedWardName}, ${selectedDistrictName}, ${selectedCityName}, ${addressDetail}`;
-    setaddress(newAddress);
-  };
+    const newAddress = `${selectedWardName}, ${selectedDistrictName}, ${selectedCityName}, ${addressDetail}`
+    setaddress(newAddress)
+  }
   // Use useEffect to call updateAddress whenever the selectedCity, selectedDistrict, or selectedWard changes
   useEffect(() => {
-    updateAddress();
-  }, [selectedCity, selectedDistrict, selectedWard, addressDetail]);
+    updateAddress()
+  }, [selectedCity, selectedDistrict, selectedWard, addressDetail])
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
 
-  const [recordid, setRecordid] = useState('');
-  const [image, setIamge] = useState([]);
+  const [recordid, setRecordid] = useState('')
+  const [image, setIamge] = useState([])
   //getuserid
-  const userDetail = JSON.parse(localStorage.getItem('ownerDetail'));
-  const UserID = userDetail?.data.id;
+  const userDetail = JSON.parse(localStorage.getItem('ownerDetail'))
+  const UserID = userDetail?.data.id
   //
-  const parsedAcreage = parseFloat(acreage).toFixed(2);
+  const parsedAcreage = parseFloat(acreage).toFixed(2)
   const homestay = {
     name: name,
     timeCheckIn: timeCheckIn,
@@ -382,8 +399,8 @@ const hanhdleSelect = (selectedValue) => {
     ownerHomestay: UserID,
     roomNumber: parseInt(roomNumber),
     phonenumber: userDetail?.data.phoneNumber,
-    email: userDetail?.data.email
-  };
+    email: userDetail?.data.email,
+  }
   //validateform
   const [errorFile, setErrorFile] = useState('')
   const validationSchema = Yup.object().shape({
@@ -396,9 +413,9 @@ const hanhdleSelect = (selectedValue) => {
       .min(5, 'Vui lòng chọn ít nhất 5 file')
       .max(20, 'Vui lòng chọn tối đa 20 file')
       .test('fileSize', 'File phải nhỏ hơn hoặc bằng 5MB', (value) => {
-        if (!value) return true; // Allow empty array
-        const maxSize = 5 * 1024 * 1024; // 5MB
-        return value.every(file => file.size <= maxSize);
+        if (!value) return true // Allow empty array
+        const maxSize = 5 * 1024 * 1024 // 5MB
+        return value.every((file) => file.size <= maxSize)
       }),
     numberPerson: Yup.number()
       .required('Vui lòng nhập số lượng người')
@@ -407,7 +424,7 @@ const hanhdleSelect = (selectedValue) => {
     address: Yup.string()
       .transform((value) => (value ? value.replace(/,/g, '') : value))
       .test('notEmpty', 'Vui lòng chọn đầy đủ địa chỉ của bạn', (value) => {
-        return value && value.trim().length > 0;
+        return value && value.trim().length > 0
       }),
     timeCheckIn: Yup.string().required('Vui lòng chọn thời gian nhận phòng'),
     timeCheckOut: Yup.string().required('Vui lòng chọn thời gian trả phòng'),
@@ -424,215 +441,248 @@ const hanhdleSelect = (selectedValue) => {
     endDate: Yup.number()
       .typeError('Vui lòng chọn ngày kết thúc')
       .required('Vui lòng chọn ngày kết thúc')
-      .test('endDate', 'Ngày kết thúc phải lớn hơn ngày bắt đầu', function (value) {
-        const { startDate } = this.parent;
+      .test(
+        'endDate',
+        'Ngày kết thúc phải lớn hơn ngày bắt đầu',
+        function (value) {
+          const { startDate } = this.parent
 
-        // Kiểm tra nếu giá trị là số (datelong)
-        if (typeof value === 'number') {
-          return value > startDate;
-        }
+          // Kiểm tra nếu giá trị là số (datelong)
+          if (typeof value === 'number') {
+            return value > startDate
+          }
 
-        return false; // Trả về false nếu không phải là số
-      }),
+          return false // Trả về false nếu không phải là số
+        },
+      ),
     acreage: Yup.number()
       .required('Vui lòng nhập diện tích')
       .typeError('Vui lòng nhập diện tích')
       .positive('diện tích phòng phải lớn hơn 0'),
-    desc: Yup.string().required('vui lòng nhập vào mô tả').max(500, 'Vui lòng nhập ít hơn 500 ký tự'),
-    // addressDetail: Yup.string().required('vui lòng nhập địa chỉ chi tiết')
-  });
+    desc: Yup.string()
+      .required('vui lòng nhập vào mô tả')
+      .max(500, 'Vui lòng nhập ít hơn 500 ký tự'),
+    addressDetail: Yup.string().required('vui lòng nhập địa chỉ chi tiết'),
+  })
   const handleSubmitStatus = async (record) => {
     await message.info(
-      'Đang tiến hành sửa trạng thái bạn vui lòng đợi một vài giây nhé!'
-    );
-    await dispatch(UpdateStatus(record.id));
-    dispatch(fetchHomestay());
-  };
+      'Đang tiến hành sửa trạng thái bạn vui lòng đợi một vài giây nhé!',
+    )
+    await dispatch(UpdateStatus(record.id))
+    dispatch(fetchHomestay())
+  }
+  /**
+   *
+   * @param {delete img} index
+   */
+  const handleDeleteImage = async (id, index) => {
+    await dispatch(deleteImg(id))
+    dispatch(fetchBaseImg(idHomestay))
+    message.info('Xóa ảnh thành công!')
+  }
   const handleSubmitStatusToUpdating = async (record) => {
     await message.info(
-      'Đang tiến hành sửa trạng thái bạn vui lòng đợi một vài giây nhé!'
-    );
-    await dispatch(UpdateStatusToUpdating(record.id));
-    dispatch(fetchHomestay());
-  };
+      'Đang tiến hành sửa trạng thái bạn vui lòng đợi một vài giây nhé!',
+    )
+    await dispatch(UpdateStatusToUpdating(record.id))
+    dispatch(fetchHomestay())
+  }
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
-      await validationSchema.validate(homestay, { abortEarly: false });
+      await validationSchema.validate(homestay, { abortEarly: false })
       if (file.length < 5) {
         setErrorFile('Vui lòng chọn ít nhất 5 file')
-        throw new Yup.ValidationError('Vui lòng chọn ít nhất 5 file', file, 'file');
+        throw new Yup.ValidationError(
+          'Vui lòng chọn ít nhất 5 file',
+          file,
+          'file',
+        )
       }
       if (file.length >= 20) {
         setErrorFile('Vui lòng chọn dưới 20 file')
-        throw new Yup.ValidationError('Vui lòng chọn ít nhất 5 file', file, 'file');
+        throw new Yup.ValidationError(
+          'Vui lòng chọn ít nhất 5 file',
+          file,
+          'file',
+        )
       }
-      const maxSize = 10 * 1024 * 1024; // 5MB
-      if (!file.every(file => file.size <= maxSize)) {
+      const maxSize = 10 * 1024 * 1024 // 5MB
+      if (!file.every((file) => file.size <= maxSize)) {
         setErrorFile('File phải nhỏ hơn hoặc bằng 5MB')
-        throw new Yup.ValidationError('File phải nhỏ hơn hoặc bằng 5MB', file, 'file');
+        throw new Yup.ValidationError(
+          'File phải nhỏ hơn hoặc bằng 5MB',
+          file,
+          'file',
+        )
       }
       if (isAddFrom) {
-        setIsLoading(true);
+        setIsLoading(true)
         await message.info(
-          'Đang tiến hành thêm bạn vui lòng đợi một vài giây nhé!', 5
-        );
-        await dispatch(addHomestay(homestay, file, convenientvir));
-        message.info('Thêm thành công');
-        await setIsLoading(false);
-        await setIsModalOpen(false);
-        setname('');
-        setprice(0);
-        setdesc('');
-        setnumberPerson(0);
-        setcancellationPolicy(0);
-        setnumberPerson(0);
-        setacreage(0);
-        setFile([]);
-        setstartDate(null);
-        setendDate(null);
-        settimeCheckIn(null);
-        settimeCheckOut(null);
-        setSelectedCity('');
-        setSelectedDistrict('');
-        setSelectedWard('');
-        setAddressDetail('');
+          'Đang tiến hành thêm bạn vui lòng đợi một vài giây nhé!',
+          5,
+        )
+        await dispatch(addHomestay(homestay, file, convenientvir))
+        message.info('Thêm thành công')
+        await setIsLoading(false)
+        await setIsModalOpen(false)
+        setname('')
+        setprice(0)
+        setdesc('')
+        setnumberPerson(0)
+        setcancellationPolicy(0)
+        setnumberPerson(0)
+        setacreage(0)
+        setFile([])
+        setstartDate(null)
+        setendDate(null)
+        settimeCheckIn(null)
+        settimeCheckOut(null)
+        setSelectedCity('')
+        setSelectedDistrict('')
+        setSelectedWard('')
+        setAddressDetail('')
       } else {
-        setIsLoading(true);
+        setIsLoading(true)
         await message.info(
-          'Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!', 5
-        );
-        await dispatch(EditHomestay(homestay, file, recordid, convenientvir));
-        await setIsLoading(false);
-        await setIsModalOpen(false);
-        message.info('Sửa thành công');
+          'Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!',
+          5,
+        )
+        await dispatch(EditHomestay(homestay, file, recordid, convenientvir))
+        await setIsLoading(false)
+        await setIsModalOpen(false)
+        message.info('Sửa thành công')
       }
-      dispatch(fetchHomestay());
-      setFormErrors({});
+      dispatch(fetchHomestay())
+      setFormErrors({})
       setErrorFile('')
     } catch (errors) {
-      const errorObject = {};
+      const errorObject = {}
       errors.inner.forEach((error) => {
-        errorObject[error.path] = error.message;
-      });
-      setFormErrors(errorObject);
+        errorObject[error.path] = error.message
+      })
+      setFormErrors(errorObject)
       setIsLoading(false)
     }
-  };
+  }
 
   const handleEditRow = (record) => {
-    setIsModalOpen(true);
-    setIsAddForm(false);
-    setRecordid(record.id);
-    setname(record.name);
-    setdesc(record.desc);
-    setprice(record.price);
-    setnumberPerson(record.numberPerson);
-    setaddress(record.address);
-    setprice(record.price);
-    setstartDate(record.startDate);
-    setendDate(record.endDate);
-    setIamge(record.images);
-    setcancellationPolicy(record.cancellationPolicy);
-    setroomNumber(record.numberPerson);
-    setacreage(record.acreage);
-    settimeCheckIn(record.timeCheckIn);
-    settimeCheckOut(record.timeCheckOut);
-    setconvenient(record.detailHomestays);
+    dispatch(fetchBaseImg(record.id))
+    setIsModalOpen(true)
+    setIsAddForm(false)
+    setRecordid(record.id)
+    setIdHomestay(record.id)
+    setname(record.name)
+    setdesc(record.desc)
+    setprice(record.price)
+    setnumberPerson(record.numberPerson)
+    setaddress(record.address)
+    setprice(record.price)
+    setstartDate(record.startDate)
+    setendDate(record.endDate)
+    setIamge(record.images)
+    setcancellationPolicy(record.cancellationPolicy)
+    setroomNumber(record.numberPerson)
+    setacreage(record.acreage)
+    settimeCheckIn(record.timeCheckIn)
+    settimeCheckOut(record.timeCheckOut)
+    setconvenient(record.detailHomestays)
     setFile([])
-    setviewEditConvennient(record.detailHomestays);
-    const fileInput = document.getElementById('image');
+    setviewEditConvennient(record.detailHomestays)
+    const fileInput = document.getElementById('image')
     if (fileInput) {
-      fileInput.value = null;
+      fileInput.value = null
     }
     setSelectedImages([])
     //
-    setFormErrors({});
+    setFormErrors({})
 
-    const addressParts = record.address.split(', ');
-    const selectedWardName = addressParts[0]; // Lấy tên phường/xã từ địa chỉ
-    const selectedDistrictName = addressParts[1]; // Lấy tên quận/huyện từ địa chỉ
-    const selectedCityName = addressParts[2];
-    setAddressDetail(addressParts[3]);
+    const addressParts = record.address.split(', ')
+    const selectedWardName = addressParts[0] // Lấy tên phường/xã từ địa chỉ
+    const selectedDistrictName = addressParts[1] // Lấy tên quận/huyện từ địa chỉ
+    const selectedCityName = addressParts[2]
+    setAddressDetail(addressParts[3])
     const selectedCityData = cities.find(
-      (city) => city.Name === selectedCityName
-    );
+      (city) => city.Name === selectedCityName,
+    )
     if (selectedCityData) {
-      setSelectedCity(selectedCityData.Id);
+      setSelectedCity(selectedCityData.Id)
     }
 
     if (selectedCityData && selectedDistrictName) {
       const selectedDistrictData = selectedCityData.Districts.find(
-        (district) => district.Name === selectedDistrictName
-      );
+        (district) => district.Name === selectedDistrictName,
+      )
       if (selectedDistrictData) {
-        setDistricts(selectedCityData.Districts);
-        setSelectedDistrict(selectedDistrictData.Id);
+        setDistricts(selectedCityData.Districts)
+        setSelectedDistrict(selectedDistrictData.Id)
       }
     }
 
     if (selectedDistrictName && selectedWardName) {
       const selectedDistrictData = districts.find(
-        (district) => district.Name === selectedDistrictName
-      );
+        (district) => district.Name === selectedDistrictName,
+      )
       if (selectedDistrictData) {
-        setWards(selectedDistrictData.Wards);
+        setWards(selectedDistrictData.Wards)
         const selectedWardData = selectedDistrictData.Wards.find(
-          (ward) => ward.Name === selectedWardName
-        );
+          (ward) => ward.Name === selectedWardName,
+        )
         if (selectedWardData) {
-          setSelectedWard(selectedWardData.Id);
+          setSelectedWard(selectedWardData.Id)
         }
       }
     }
-  };
+  }
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          'https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json'
-        );
-        setCities(response.data);
+          'https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json',
+        )
+        setCities(response.data)
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching data:', error)
       }
-    };
+    }
 
-    fetchData();
-  }, []);
+    fetchData()
+  }, [])
 
   useEffect(() => {
     if (selectedCity) {
-      const selectedCityData = cities.find((city) => city.Id === selectedCity);
+      const selectedCityData = cities.find((city) => city.Id === selectedCity)
       if (selectedCityData) {
-        setDistricts(selectedCityData.Districts);
+        setDistricts(selectedCityData.Districts)
       }
     }
-  }, [selectedCity, cities]);
+  }, [selectedCity, cities])
 
   useEffect(() => {
     if (selectedDistrict) {
       const selectedDistrictData = districts.find(
-        (district) => district.Id === selectedDistrict
-      );
+        (district) => district.Id === selectedDistrict,
+      )
       if (selectedDistrictData) {
-        setWards(selectedDistrictData.Wards);
+        setWards(selectedDistrictData.Wards)
       }
     }
-  }, [selectedDistrict, districts]);
-  const [checkedList, setCheckedList] = useState(null);
+  }, [selectedDistrict, districts])
+  const [checkedList, setCheckedList] = useState(null)
   useEffect(() => {
-    setCheckedList(viewEditConvennient?.map((item) => item.convenientHomestay?.id))
+    setCheckedList(
+      viewEditConvennient?.map((item) => item.convenientHomestay?.id),
+    )
   }, [viewEditConvennient])
-  const [fileList, setFileList] = useState([]);
-  const [uploading, setUploading] = useState(false);
+  const [fileList, setFileList] = useState([])
+  const [uploading, setUploading] = useState(false)
   const handleUpload = () => {
-    const formData = new FormData();
+    const formData = new FormData()
     fileList.forEach((file) => {
-      formData.append('files[]', file);
-    });
-    setUploading(true);
+      formData.append('files[]', file)
+    })
+    setUploading(true)
     // You can use any AJAX library you like
     fetch('https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188', {
       method: 'POST',
@@ -640,30 +690,33 @@ const hanhdleSelect = (selectedValue) => {
     })
       .then((res) => res.json())
       .then(() => {
-        setFileList([]);
-        message.success('upload successfully.');
+        setFileList([])
+        message.success('upload successfully.')
       })
       .catch(() => {
-        message.error('upload failed.');
+        message.error('upload failed.')
       })
       .finally(() => {
-        setUploading(false);
-      });
-  };
+        setUploading(false)
+      })
+  }
 
   return (
     <>
       <Title style={{ marginTop: '20px' }}>Quản lý Homestay</Title>
-      <div style={{ marginBottom: 20, float: 'right',display:'flex' }}>
-        <Form.Item label="Trạng thái" >
+      <div style={{ marginBottom: 20, float: 'right', display: 'flex' }}>
+        <Form.Item label='Trạng thái'>
           <Select
             style={{ width: 143 }}
-            options={listFilter.map(filter => ({ value: filter.value, label: filter.name }))}
+            options={listFilter.map((filter) => ({
+              value: filter.value,
+              label: filter.name,
+            }))}
             defaultValue={listFilter[0].value}
             onChange={hanhdleSelect}
-             />
+          />
         </Form.Item>
-        <Button style={{marginLeft:20}} type='primary' onClick={showModal}>
+        <Button style={{ marginLeft: 20 }} type='primary' onClick={showModal}>
           Thêm mới HomeStay
         </Button>
       </div>
@@ -685,33 +738,33 @@ const hanhdleSelect = (selectedValue) => {
         okButtonProps={
           isLoading
             ? {
-              disabled: true,
-              icon: <LoadingOutlined />,
-              loading: true,
-            }
+                disabled: true,
+                icon: <LoadingOutlined />,
+                loading: true,
+              }
             : {}
         }
         cancelButtonProps={
           isLoading
             ? {
-              disabled: true,
-            }
+                disabled: true,
+              }
             : {}
         }
       >
         <Form
           name='basic'
           labelCol={{
-            span: 8
+            span: 8,
           }}
           wrapperCol={{
-            span: 24
+            span: 24,
           }}
           style={{
-            maxWidth: 800
+            maxWidth: 800,
           }}
           initialValues={{
-            remember: true
+            remember: true,
           }}
           autoComplete='off'
         >
@@ -737,11 +790,13 @@ const hanhdleSelect = (selectedValue) => {
                   style={{ width: 254 }}
                   value={price}
                   onChange={handlePriceChange}
-                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
+                  formatter={(value) =>
+                    `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                  }
                   parser={(value) => {
                     // Remove non-numeric characters and parse as a float
-                    const numericValue = parseFloat(value.replace(/\D/g, ''));
-                    return isNaN(numericValue) ? null : numericValue;
+                    const numericValue = parseFloat(value.replace(/\D/g, ''))
+                    return isNaN(numericValue) ? null : numericValue
                   }}
                   addonAfter='VNĐ'
                 />
@@ -781,7 +836,14 @@ const hanhdleSelect = (selectedValue) => {
                 <DatePicker
                   onChange={handleDateChangestart}
                   style={{ width: '100%' }}
-                  value={startDate ? dayjs(dayjs(startDate).locale('vi').format('YYYY-MM-DD'), 'YYYY-MM-DD') : null}
+                  value={
+                    startDate
+                      ? dayjs(
+                          dayjs(startDate).locale('vi').format('YYYY-MM-DD'),
+                          'YYYY-MM-DD',
+                        )
+                      : null
+                  }
                   disabledDate={isBeforeToday}
                   allowClear={true}
                 />
@@ -793,7 +855,14 @@ const hanhdleSelect = (selectedValue) => {
                 <DatePicker
                   onChange={handleDateChangeend}
                   style={{ width: '100%' }}
-                  value={endDate ? dayjs(dayjs(endDate).locale('vi').format('YYYY-MM-DD'), 'YYYY-MM-DD') : null}
+                  value={
+                    endDate
+                      ? dayjs(
+                          dayjs(endDate).locale('vi').format('YYYY-MM-DD'),
+                          'YYYY-MM-DD',
+                        )
+                      : null
+                  }
                   disabledDate={isBeforeToday}
                   allowClear={true}
                 />
@@ -852,7 +921,7 @@ const hanhdleSelect = (selectedValue) => {
           <Row gutter={24}>
             <Col span={24} style={{ marginLeft: 15 }}>
               <Title level={5}>Tiện ích homestay</Title>
-              <div >
+              <div>
                 <Checkbox.Group
                   options={convenients.map((item) => ({
                     label: item.name,
@@ -948,8 +1017,20 @@ const hanhdleSelect = (selectedValue) => {
         <form onSubmit={handleSubmit} style={{ marginTop: 20 }}>
           <div>
             <div style={{ display: 'flex' }}>
-              <label htmlFor='image' style={{ marginTop: 5 }}>Chọn ảnh(Chọn ít nhất 5 ảnh và tối đa 20 ảnh)<br /></label>
-              <label htmlFor='image' style={{ cursor: 'pointer', border: '1px solid black', borderRadius: 8, padding: '6px 15px 6px 15px', marginLeft: 10 }}>
+              <label htmlFor='image' style={{ marginTop: 5 }}>
+                Chọn ảnh(Chọn ít nhất 5 ảnh và tối đa 20 ảnh)
+                <br />
+              </label>
+              <label
+                htmlFor='image'
+                style={{
+                  cursor: 'pointer',
+                  border: '1px solid black',
+                  borderRadius: 8,
+                  padding: '6px 15px 6px 15px',
+                  marginLeft: 10,
+                }}
+              >
                 Chọn tệp
               </label>
               <input
@@ -960,26 +1041,63 @@ const hanhdleSelect = (selectedValue) => {
                 onChange={handleFileChange}
                 style={{ display: 'none' }}
               />
-              <div style={{ marginLeft: 8, marginTop: 5 }}>Đã có {selectedImages.length} file được chọn</div>
-            </div>
-            <div>
-              {selectedImages.map((image, index) => (
-                <div key={index} style={{ display: 'flex', marginTop: 10, border: '1px solid black', borderRadius: 8, width: '100%', height: 100, padding: 5 }}>
-                  <img src={image.url} alt={`selected-${index}`} style={{ border: '1px solid white', borderRadius: 8 }} />
-                  <div style={{ display: 'flex', justifyContent: 'center' }}>{`File Name: ${image.name}`}</div>
-                  <div style={{ marginLeft: 'auto', display: 'flex', justifyContent: 'center', marginRight: 20 }}>
-                    <DeleteOutlined onClick={() => handleRemoveImage(index)} />
-                  </div>
-                </div>
-              ))}
+              <div style={{ marginLeft: 8, marginTop: 5 }}>
+                Đã có {selectedImages.length} file được chọn
+              </div>
             </div>
             {isAddFrom == true ? (
+              <div>
+                {selectedImages.map((image, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      display: 'flex',
+                      marginTop: 10,
+                      border: '1px solid black',
+                      borderRadius: 8,
+                      width: '100%',
+                      height: 100,
+                      padding: 5,
+                    }}
+                  >
+                    <img
+                      src={image.url}
+                      alt={`selected-${index}`}
+                      style={{ border: '1px solid white', borderRadius: 8 }}
+                    />
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                      }}
+                    >{`File Name: ${image.name}`}</div>
+                    <div
+                      style={{
+                        marginLeft: 'auto',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        marginRight: 20,
+                        marginTop: 30,
+                      }}
+                    >
+                      <DeleteOutlined
+                        onClick={() => handleRemoveImage(index)}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div />
+            )}
+
+            {/* {isAddFrom == true ? (
               ''
             ) : (
               <div style={{ color: 'red' }}>
                 *(lưu ý khi chỉnh sửa chúng tôi sẽ chèn vào ảnh cũ của bạn)
               </div>
-            )}
+            )} */}
           </div>
           <div style={{ color: 'red' }}>{errorFile}</div>
         </form>
@@ -987,51 +1105,56 @@ const hanhdleSelect = (selectedValue) => {
           ''
         ) : (
           <div style={{ marginTop: 10 }}>
-            {image.map((imageurl, index) => (
-              <Image
-                key={index}
-                src={imageurl.imgUrl}
-                alt={`Homestay Image ${index}`}
-                style={{
-                  maxWidth: '200px', // Đảm bảo ảnh không vượt quá chiều rộng của phần tử cha
-                  margin: '0 10px 10px 0' // Thêm khoảng cách giữa các ảnh
-                }}
-                preview={{
-                  toolbarRender: (
-                    _,
-                    {
-                      transform: { scale },
-                      actions: {
-                        onFlipY,
-                        onFlipX,
-                        onRotateLeft,
-                        onRotateRight,
-                        onZoomOut,
-                        onZoomIn
-                      }
-                    }
-                  ) => (
-                    <Space className='toolbar-wrapper'>
-                      <SwapOutlined rotate={90} onClick={onFlipY} />
-                      <SwapOutlined onClick={onFlipX} />
-                      <RotateLeftOutlined onClick={onRotateLeft} />
-                      <RotateRightOutlined onClick={onRotateRight} />
-                      <ZoomOutOutlined
-                        disabled={scale === 1}
-                        onClick={onZoomOut}
-                      />
-                      <ZoomInOutlined
-                        disabled={scale === 50}
-                        onClick={onZoomIn}
-                      />
-                    </Space>
-                  )
-                }}
-              />
+            {imghomestay?.map((imageurl, index) => (
+              <div key={index} style={{ position: 'relative' }}>
+                <Image
+                  src={imageurl.imgUrl}
+                  alt={`Homestay Image ${index}`}
+                  style={{
+                    maxWidth: '200px',
+                    margin: '0 10px 10px 0',
+                  }}
+                  preview={{
+                    toolbarRender: (_, { transform: { scale }, actions }) => (
+                      <Space className='toolbar-wrapper'>
+                        <SwapOutlined rotate={90} onClick={actions.onFlipY} />
+                        <SwapOutlined onClick={actions.onFlipX} />
+                        <RotateLeftOutlined onClick={actions.onRotateLeft} />
+                        <RotateRightOutlined onClick={actions.onRotateRight} />
+                        <ZoomOutOutlined
+                          disabled={scale === 1}
+                          onClick={actions.onZoomOut}
+                        />
+                        <ZoomInOutlined
+                          disabled={scale === 50}
+                          onClick={actions.onZoomIn}
+                        />
+                      </Space>
+                    ),
+                  }}
+                />
+                <Popconfirm
+                  title='Bạn có muốn xóa ảnh này?'
+                  onConfirm={() => handleDeleteImage(imageurl.id, index)}
+                  okText='có'
+                  cancelText='không'
+                  placement='topRight'
+                >
+                  <CloseOutlined
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      right: 0,
+                      cursor: 'pointer',
+                    }}
+                  />
+                </Popconfirm>
+              </div>
             ))}
+            {isLoadingImg == true ? <Skeleton.Image active /> : ''}
           </div>
         )}
-      </Modal >
+      </Modal>
       <Modal
         title={
           <div style={{ fontSize: '22px' }}>Xem thông tin chi tiết homstay</div>
@@ -1062,7 +1185,8 @@ const hanhdleSelect = (selectedValue) => {
             <tr>
               <td style={{ width: 600 }}>
                 <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Giá </div> : {formatCurrency(price)}
+                  <div style={{ width: 200 }}>Giá </div> :{' '}
+                  {formatCurrency(price)}
                 </div>
                 <br />
               </td>
@@ -1147,7 +1271,7 @@ const hanhdleSelect = (selectedValue) => {
                 borderRadius: 10,
                 display: 'flex',
                 justifyContent: 'center',
-                border: '1px solid black'
+                border: '1px solid black',
               }}
             >
               {image.map((imageurl, index) => (
@@ -1157,7 +1281,7 @@ const hanhdleSelect = (selectedValue) => {
                   alt={`Homestay Image ${index}`}
                   style={{
                     maxWidth: '200px', // Đảm bảo ảnh không vượt quá chiều rộng của phần tử cha
-                    margin: '0 10px 10px 0' // Thêm khoảng cách giữa các ảnh
+                    margin: '0 10px 10px 0', // Thêm khoảng cách giữa các ảnh
                   }}
                   preview={{
                     toolbarRender: (
@@ -1170,9 +1294,9 @@ const hanhdleSelect = (selectedValue) => {
                           onRotateLeft,
                           onRotateRight,
                           onZoomOut,
-                          onZoomIn
-                        }
-                      }
+                          onZoomIn,
+                        },
+                      },
                     ) => (
                       <Space className='toolbar-wrapper'>
                         <SwapOutlined rotate={90} onClick={onFlipY} />
@@ -1188,7 +1312,7 @@ const hanhdleSelect = (selectedValue) => {
                           onClick={onZoomIn}
                         />
                       </Space>
-                    )
+                    ),
                   }}
                 />
               ))}
@@ -1198,6 +1322,6 @@ const hanhdleSelect = (selectedValue) => {
       </Modal>
       <Table columns={columns} dataSource={products} rowKey='key' />
     </>
-  );
-};
-export default HomeStayProduct;
+  )
+}
+export default HomeStayProduct

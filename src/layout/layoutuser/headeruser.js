@@ -1,9 +1,9 @@
-import './header.css';
-import 'bootstrap/dist/css/bootstrap.css';
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
+import './header.css'
+import 'bootstrap/dist/css/bootstrap.css'
+import Container from 'react-bootstrap/Container'
+import Nav from 'react-bootstrap/Nav'
+import Navbar from 'react-bootstrap/Navbar'
+import NavDropdown from 'react-bootstrap/NavDropdown'
 import {
   UserOutlined,
   ShoppingCartOutlined,
@@ -12,77 +12,89 @@ import {
   HeartOutlined,
   CommentOutlined,
   StarOutlined,
-  BankOutlined
-} from '@ant-design/icons';
-import { Link } from 'react-router-dom';
-import { logoutUser } from '../../features/user/userThunk';
-import { Avatar, Badge, Input, Button } from 'antd';
-import { useSelector, useDispatch } from 'react-redux';
-import React, { useEffect, useState } from 'react';
-import { Modal, Typography } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import LoginComponent from '../../component/login/Login';
-import iconplane from '../../assets/svg/Iconka-Business-Finance-Plane.512.png';
-import logotravel from '../../assets/svg/Rectangle 3.svg';
-import { MDBIcon } from 'mdb-react-ui-kit';
+  BankOutlined,
+} from '@ant-design/icons'
+import { Link } from 'react-router-dom'
+import { logoutUser } from '../../features/user/userThunk'
+import { Avatar, Badge, Input, Button } from 'antd'
+import { useSelector, useDispatch } from 'react-redux'
+import React, { useEffect, useState } from 'react'
+import { Modal, Typography } from 'antd'
+import { useNavigate } from 'react-router-dom'
+import LoginComponent from '../../component/login/Login'
+import iconplane from '../../assets/svg/Iconka-Business-Finance-Plane.512.png'
+import logotravel from '../../assets/svg/Rectangle 3.svg'
+import { MDBIcon } from 'mdb-react-ui-kit'
 
-const { Title } = Typography;
+const { Title } = Typography
 
 const HeaderUser = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showDropdown, setShowDropdown] = useState(false);
-  const navigate = useNavigate();
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-  const userDetail = JSON.parse(localStorage.getItem('userDetail'));
-  const userId = userDetail?.data.id; const statusUser = JSON.parse(localStorage.getItem('userDetail'))?.success;
-  const dispatch = useDispatch();
-  const [searchVisible, setSearchVisible] = useState(false);
-  const [searchValue, setSearchValue] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [showDropdown, setShowDropdown] = useState(false)
+  const navigate = useNavigate()
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn)
+  const userDetail = JSON.parse(localStorage.getItem('userDetail'))
+  const userId = userDetail?.data.id
+  const statusUser = JSON.parse(localStorage.getItem('userDetail'))?.success
+  const dispatch = useDispatch()
+  const [searchVisible, setSearchVisible] = useState(false)
+  const [searchValue, setSearchValue] = useState('')
 
   const handleSearchClick = () => {
-    setSearchVisible(!searchVisible);
-    setSearchValue('');
-  };
+    setSearchVisible(!searchVisible)
+    setSearchValue('')
+  }
 
   const handleInputChange = (e) => {
-    setSearchValue(e.target.value);
-  };
+    setSearchValue(e.target.value)
+  }
 
   const handleSearch = () => {
-    console.log('Searching for:', searchValue);
-  };
+    console.log('Searching for:', searchValue)
+  }
 
   const showModal = () => {
-    setIsModalOpen(true);
-  };
+    setIsModalOpen(true)
+  }
   const handleOk = () => {
-    setIsModalOpen(false);
-  };
+    setIsModalOpen(false)
+  }
   const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+    setIsModalOpen(false)
+  }
   useEffect(() => {
     if (statusUser) {
-      setIsModalOpen(false);
+      setIsModalOpen(false)
     }
-  }, [statusUser]);
+  }, [statusUser])
   const handleDropdownToggle = () => {
     if (!statusUser) {
-      showModal(); // Redirect to /login if not logged in
+      showModal() // Redirect to /login if not logged in
     } else {
-      setShowDropdown(!showDropdown); // Toggle the dropdown if logged in
+      setShowDropdown(!showDropdown) // Toggle the dropdown if logged in
     }
-  };
+  }
   const logout = () => {
-    dispatch(logoutUser());
-    navigate('/login');
-  };
+    dispatch(logoutUser())
+    navigate('/login')
+  }
   const booking = () => {
-    navigate(`/booking/${userId}`);
-  };
+    navigate(`/booking/${userId}`)
+  }
   const cart = () => {
-    navigate(`/shopingcart/${userId}`);
-  };
+    navigate(`/shopingcart/${userId}`)
+  }
+  const fullName = userDetail?.data.name
+  let lastName = '' // Khai báo ở đây để nó có thể được sử dụng ngoài khối if
+
+  // Kiểm tra xem fullName có tồn tại và không rỗng
+  if (fullName) {
+    // Chia chuỗi thành mảng các phần từ tên
+    const nameParts = fullName.split(' ')
+
+    // Lấy phần tử cuối cùng của mảng (tên)
+    lastName = nameParts[nameParts.length - 1]
+  }
   return (
     <header>
       <Navbar collapseOnSelect expand='lg'>
@@ -143,7 +155,11 @@ const HeaderUser = () => {
                     <span className='cc'>
                       <Badge count={0} showZero>
                         <ShoppingCartOutlined
-                          style={{ color: 'black', fontSize: '26px' }}
+                          style={{
+                            color: 'black',
+                            fontSize: '26px',
+                            marginTop: 5,
+                          }}
                         />
                       </Badge>
                     </span>
@@ -154,10 +170,15 @@ const HeaderUser = () => {
                   <span
                     className='pictureperson'
                     onClick={handleDropdownToggle}
+                    style={{ cursor: 'pointer', display: 'flex' }}
                   >
-                    <UserOutlined
-                      style={{ color: 'black', fontSize: '26px' }}
-                    />
+                    {/* {userDetail?.data.} */}
+                    {userDetail?.data.avataUrl === null ? (
+                      <Avatar icon={<UserOutlined />} />
+                    ) : (
+                      <Avatar src={userDetail?.data.avataUrl} />
+                    )}
+                    <Title level={5}>{lastName}</Title>
                   </span>
                 ) : null}
                 {statusUser ? ( // Render dropdown only if the user is logged in
@@ -167,7 +188,7 @@ const HeaderUser = () => {
                       backgroundColor: '#FFFFFF',
                       width: 200,
                       marginLeft: 'auto',
-                      marginRight: 80
+                      marginRight: 80,
                     }}
                   >
                     <button
@@ -187,22 +208,22 @@ const HeaderUser = () => {
                       <FileDoneOutlined /> Đơn đặt hàng
                     </button>
                     <Link to={'/userComment'}>
-                    <button
-                      type='button'
-                      className='btn btn-primary'
-                      style={{ color: 'black' }}
-                    >
-                      <CommentOutlined /> Nhận xét của tôi
-                    </button>
+                      <button
+                        type='button'
+                        className='btn btn-primary'
+                        style={{ color: 'black' }}
+                      >
+                        <CommentOutlined /> Nhận xét của tôi
+                      </button>
                     </Link>
                     <Link to={'/RulesWhile'}>
                       <button
                         type='button'
                         className='btn btn-primary'
                         style={{ color: 'black' }}
-
                       >
-                        <BankOutlined />Những luật trong khi đặt homestay
+                        <BankOutlined />
+                        Những luật trong khi đặt homestay
                       </button>
                     </Link>
                     <Link to={'/supporteduser'}>
@@ -210,7 +231,6 @@ const HeaderUser = () => {
                         type='button'
                         className='btn btn-primary'
                         style={{ color: 'black', display: 'flex' }}
-
                       >
                         <MDBIcon fas icon='question' style={{ marginTop: 4 }} />
                         &nbsp; Những câu hỏi thắc mắc
@@ -267,6 +287,6 @@ const HeaderUser = () => {
         <LoginComponent />
       </Modal>
     </header>
-  );
-};
-export default HeaderUser;
+  )
+}
+export default HeaderUser

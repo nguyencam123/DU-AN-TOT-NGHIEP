@@ -6,14 +6,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AdminCommentRequest extends PageableRequest {
-    String homestayId;
+public class AdminUserRequest extends PageableRequest {
+
+    String userId;
 
     String userName;
 
-    String homestayName;
-
-    String commentId;
-
-    String userId;
 }

@@ -22,17 +22,28 @@ const Statistical = () => {
   const userDetail = JSON.parse(localStorage.getItem('ownerDetail'));
   const UserID = userDetail?.data.id;
   const currentDate = new Date();
+  const formatCurrency = (value) => {
+    // Sử dụng Intl.NumberFormat để định dạng giá trị tiền tệ
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(value)
+  }
   // Lấy thông tin về tháng và năm từ ngày hiện tại
   const currentMonth = currentDate.getMonth() + 1; // Tháng bắt đầu từ 0
   const currentYear = new Date().getFullYear();
   const currentDateTime = new Date().getDate();
-  const [homestayname, setHomestayName] = useState('')
+  const [statisticalByYear, setStatisticalByYear] = useState([])
   const [namebooking, setNameBooking] = useState('')
   const [valueselect, setValueSelect] = useState('1')
   const [year, setYear] = useState(new Date().getFullYear())
   const onChange = (dateString) => {
-    setYear(dateString)
-    dispatch(fetchStatisticalByYear(UserID, dateString))
+    setYear(new Date(dateString).getFullYear())
+    dispatch(fetchStatisticalByYear(new Date(dateString).getFullYear()))
+    dispatch(fetchStatisticalByYears(new Date(dateString).getFullYear()))
+    dispatch(fetchStatisticalByDay(currentDateTime, currentMonth, new Date(dateString).getFullYear()))
+    dispatch(fetchStatisticalByMonth(currentMonth, new Date(dateString).getFullYear()))
+    dispatch(fetchStatisticalByTop5(new Date(dateString).getFullYear()))
   };
   useEffect(() => {
     dispatch(fetchStatisticalByYear(year))
@@ -51,7 +62,7 @@ const Statistical = () => {
     return data.map((item, index) => ({
       date: getMonthName(index + 1), // Hàm này sẽ cần được định nghĩa để trả về tên tháng dựa trên số thứ tự
       doanhSo: item.doanhSo,
-      tongSoTien: item.tongSoTien,
+      tongSoTien: item.tongSoTien - (item.tongSoTien * 100 / 111),
       type: 'register', // Set a default type or determine it based on your requirements
     }));
   };
@@ -79,10 +90,7 @@ const Statistical = () => {
     xField: 'date',
     yField: 'tongSoTien',
     label: {
-      // 可手动配置 label 数据标签位置
       position: 'middle',
-      // 'top', 'bottom', 'middle',
-      // 配置样式
       style: {
         fill: '#FFFFFF',
         opacity: 0.6,
@@ -94,15 +102,39 @@ const Statistical = () => {
         autoRotate: false,
       },
     },
-    meta: {
-      type: {
-        alias: '类别',
-      },
-      sales: {
-        alias: '销售额',
+    yAxis: {
+      label: {
+        formatter: (value) => formatCurrency(value),
       },
     },
-  };
+    tooltip: {
+      customContent: (title, items) => {
+        const formattedItems = items.map((item) => ({
+          name: item.name,
+          value: formatCurrency(item.value),
+        }))
+
+        return `
+                    <div class="g2-tooltip">
+                        <div class="g2-tooltip-title">${title}</div>
+                        <ul class="g2-tooltip-list">
+                            ${formattedItems
+            .map((item) => `<li class="g2-tooltip-list-item">${item.name}: ${item.value}</li>`)
+            .join('')}
+                        </ul>
+                    </div>
+                `
+      },
+    },
+    meta: {
+      date: {
+        alias: 'Ngày',
+      },
+      tongSoTien: {
+        alias: 'Tổng Số Tiền',
+      },
+    },
+  }
 
 
   // table
@@ -118,16 +150,16 @@ const Statistical = () => {
       key: 'roomNumber'
     },
     {
-      title: 'Doanh số',
+      title: 'Số lượng đặt phòng',
       dataIndex: 'doanhSo',
       key: 'doanhSo'
     },
     {
-      title: 'Tổng số tiền',
+      title: 'Tổng số tiền hoa hồng',
       dataIndex: 'tongSoTien',
       key: 'tongSoTien',
       render(str) {
-        return str + 'VNĐ'
+        return formatCurrency(str - (str * 100 / 111))
       }
     },
     {
@@ -143,23 +175,29 @@ const Statistical = () => {
       <div>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <div style={{ width: '25%', height: 180, backgroundColor: '#321fdb', padding: 25, marginRight: 60, borderRadius: 8 }}>
-            <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={3}> {statisticalByDay.tongSoTien == null ? 0 : statisticalByDay.tongSoTien} VNĐ</Title>
+            <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={3}>
+              {(statisticalByDay.tongSoTien - (statisticalByDay.tongSoTien * 100 / 111)) == null ? 0 : formatCurrency((statisticalByDay.tongSoTien - (statisticalByDay.tongSoTien * 100 / 111)))}
+            </Title>
             <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={5}> Doanh thu ngày hôm nay</Title>
             <img src={imgchart} style={{ width: '100%' }} />
           </div>
           <div style={{ width: '25%', height: 180, backgroundColor: '#3399ff', padding: 25, marginRight: 60, borderRadius: 8 }}>
-            <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={3}> {statisticalByMonth.tongSoTien == null ? 0 : statisticalByMonth.tongSoTien} VNĐ</Title>
+            <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={3}>
+              {(statisticalByMonth.tongSoTien - (statisticalByMonth.tongSoTien * 100 / 111)) == null ? 0 : formatCurrency((statisticalByMonth.tongSoTien - (statisticalByMonth.tongSoTien * 100 / 111)))}
+            </Title>
             <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={5}> Doanh thu tháng này </Title>
             <img src={imgBluechart} style={{ width: '100%' }} />
           </div>
           <div style={{ width: '25%', height: 180, backgroundColor: '#f9b115', padding: 25, marginRight: 60, borderRadius: 8 }}>
-            <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={3}> {statisticalByYears.tongSoTien == null ? 0 : statisticalByYears.tongSoTien} VNĐ</Title>
-            <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={5}> Doanh thu năm nay </Title>
+            <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={3}>
+              {(statisticalByYears.tongSoTien - (statisticalByYears.tongSoTien * 100 / 111)) == null ? 0 : formatCurrency((statisticalByYears.tongSoTien - (statisticalByYears.tongSoTien * 100 / 111)))}
+            </Title>
+            <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={5}> Doanh thu năm {year} </Title>
             <img src={imgyellowchart} style={{ width: '100%', marginTop: 10 }} />
           </div>
           <div style={{ width: '25%', height: 180, backgroundColor: '#e55353', padding: 25, borderRadius: 8 }}>
             <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={3}> {statisticalByYears.doanhSo == null ? 0 : statisticalByYears.doanhSo} lượt</Title>
-            <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={5}>Số lượt đã đặt phòng trong năm</Title>
+            <Title style={{ marginTop: '1px', color: 'white', fontWeight: 600 }} level={5}>Số lượt đã đặt phòng trong năm {year}</Title>
             <img src={imgRedchart} style={{ width: '100%', marginTop: 1 }} />
           </div>
         </div>

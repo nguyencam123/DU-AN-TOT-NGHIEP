@@ -12,6 +12,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AdminBookingRequest extends PageableRequest {
 
+      String id;
+
       String userName;
 
       String homestayName;
@@ -22,4 +24,5 @@ public class AdminBookingRequest extends PageableRequest {
 
       Integer statusBooking;
 
+      String adminTrancode;
 }

@@ -33,7 +33,8 @@ public interface AdminBookingRepository extends BookingRepository {
                     AND ( :#{#request.homestayName} IS NULL OR :#{#request.homestayName} LIKE '' OR h.name LIKE %:#{#request.homestayName}% )
                     AND ( :#{#request.sdtUser} IS NULL OR :#{#request.sdtUser} LIKE '' OR u.phone_number = :#{#request.sdtUser} OR b.phone_number = :#{#request.sdtUser})
                     AND ( :#{#request.nameBooking} IS NULL OR :#{#request.nameBooking} LIKE '' OR b.name LIKE %:#{#request.nameBooking}%)
-                    AND (:#{#request.statusBooking} IS NULL OR b.status = :#{#request.statusBooking}) )
+                    AND (:#{#request.statusBooking} IS NULL OR b.status = :#{#request.statusBooking}) 
+                    AND b.status <> 2)
                     """, nativeQuery = true)
     Page<Booking> getAllBooking(@Param("request") AdminBookingRequest request, Pageable pageable);
 
@@ -52,7 +53,7 @@ public interface AdminBookingRepository extends BookingRepository {
     @Query(value = """
             SELECT
                 COUNT(a.id) AS 'DoanhSo',
-                (SUM(a.total_price) - (SUM(a.total_price) * 11 / 100)) AS 'TongSoTien'
+                SUM(a.total_price) AS 'TongSoTien'
             FROM
                 booking a
                 INNER JOIN homestay b ON a.homestay_id = b.id
@@ -69,7 +70,7 @@ public interface AdminBookingRepository extends BookingRepository {
     @Query(value = """
             SELECT
             COUNT(a.id) AS 'DoanhSo',
-            SUM(a.total_price) - (SUM(a.total_price) * 11 / 100) AS 'TongSoTien'
+            SUM(a.total_price) AS 'TongSoTien'
             FROM
             booking a
             inner join homestay b on a.homestay_id=b.id
@@ -86,7 +87,7 @@ public interface AdminBookingRepository extends BookingRepository {
                 b.address,
                 b.room_number AS "roomNumber",
                 COUNT(a.id) AS 'DoanhSo',
-                SUM(a.total_price) - (SUM(a.total_price) * 0.11) AS 'TongSoTien'
+                SUM(a.total_price) AS 'TongSoTien'
                 FROM
                 booking a
                 INNER JOIN homestay b ON a.homestay_id = b.id

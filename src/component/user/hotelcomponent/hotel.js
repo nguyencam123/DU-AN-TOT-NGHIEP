@@ -144,7 +144,7 @@ const Hotel = () => {
   const handleresetinput = () => {
     setRangeValue(initialValue);
   }
-  const [nameOrAddress, setNameOrAddress] = useState('Hà Nội')
+  const [nameOrAddress, setNameOrAddress] = useState(' ')
   const [numberPerson, setNumberPerson] = useState(1)
   const [roomNumber, setRoomNumber] = useState(1)
   const [convenientvir, setconvenient] = useState('')
@@ -218,7 +218,7 @@ const Hotel = () => {
             <hr />
             <div><h5 style={{ fontSize: 16 }}>Thành phố đia điểm hoặc tên khách sạn</h5>
               <MDBInputGroup className='mb-3' size='lg' noBorder textBefore={<MDBIcon fas icon='search' />}>
-                <input className='form-control' type='text' placeholder='Search' defaultValue={nameLocation || 'Hà Nội'} onChange={(e) => setNameOrAddress(e.target.value)} required />
+                <input className='form-control' type='text' placeholder='Search' defaultValue={nameLocation || ' '} onChange={(e) => setNameOrAddress(e.target.value)} required />
               </MDBInputGroup>
               <div style={{ color: 'red', marginLeft: 30 }}>{notification}</div>
               <div>
@@ -343,7 +343,7 @@ const Hotel = () => {
                               ? <div style={{ fontSize: 22, color: 'rgb(231, 9, 14)' }}>{formatCurrency(item.price - item?.promotion?.value + (item.price - item?.promotion?.value) * 11 / 100)} </div>
                               : <div style={{ fontSize: 22, color: 'rgb(231, 9, 14)' }}>{formatCurrency(item.price + item.price * 11 / 100)} </div>
                             }
-                            <div style={{ fontSize: 12, color: 'rgb(231, 9, 14)' }}>Ngày bạn chọn đã có 10 lượt<br /> đặt</div>
+                            {/* <div style={{ fontSize: 12, color: 'rgb(231, 9, 14)' }}>Ngày bạn chọn đã có 10 lượt<br /> đặt</div> */}
                             <div style={{ fontSize: 22 }}><Button style={{ backgroundColor: 'rgb(231, 9, 14)', color: 'white' }} onClick={() => handleDetailHomestay(item.id)} >Chọn phòng</Button></div>
                           </div>
                         </div>
