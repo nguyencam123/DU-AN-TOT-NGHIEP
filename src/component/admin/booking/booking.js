@@ -185,11 +185,11 @@ function BookingForm() {
     },
     {
       name: 'Hủy',
-      value: 1
+      value: 0
     },
     {
       name: 'Thành công',
-      value: 2
+      value: 1
     }
   ]
   const [selectedStatus, setSelectedStatus] = useState({
@@ -201,18 +201,18 @@ function BookingForm() {
   const [ownerTrancode, setOwnerTrancode] = useState(' ')
   const [viewBooking, setViewBooking] = useState({})
   const handleChangeStatus = (value) => {
-    if (value === 2) {
+    if (value === 1) {
       setSelectedStatus({
         name: 'Thành công',
-        value: 2
-      })
-      dispatch(getBooking(2));
-    } else if (value === 1) {
-      setSelectedStatus({
-        name: 'Hủy',
         value: 1
       })
       dispatch(getBooking(1));
+    } else if (value === 0) {
+      setSelectedStatus({
+        name: 'Hủy',
+        value: 0
+      })
+      dispatch(getBooking(0));
     } else {
       dispatch(getBooking(' '));
       setSelectedStatus({
@@ -308,8 +308,8 @@ function BookingForm() {
         <div style={{ fontSize: 18, fontWeight: 600 }}>
           <table>
             <tr>
-              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Tên homestay </div> : {viewBooking?.name}</div><br /></td>
-              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Tên chủ homestay </div> : {viewBooking?.phoneNumber}</div><br /></td>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Tên người booking </div> : {viewBooking?.name}</div><br /></td>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Số điện thoại </div> : {viewBooking?.phoneNumber}</div><br /></td>
             </tr>
             <tr>
               <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Tên homestay </div> : {viewBooking?.homestay?.name}</div><br /></td>
