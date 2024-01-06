@@ -20,9 +20,9 @@ export const ChangePasswordSlice = async (
   formData.append('address', address)
   formData.append('phoneNumber', phoneNumber)
   formData.append('email', email)
-  imgUrl.forEach((imageUrl) => {
-    formData.append('avataUrl', imageUrl)
-  })
+  // imgUrl.forEach((imageUrl) => {
+  formData.append('avataUrl', imgUrl)
+  // })
   try {
     await instance.put(
       `/api/v2/owner/update-information-owner?id=${id}`,

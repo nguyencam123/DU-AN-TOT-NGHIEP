@@ -37,7 +37,7 @@ const UserComment = () => {
   return (
     <section style={{ padding: '40px 300px 40px 300px' }}>
       <Title level={4}>Các comment của bạn</Title>
-      {userComment?.data.length === 0 ? (
+      {userComment?.data?.length === 0 ? (
         <div style={{ textAlign: 'center', marginTop: 20 }}>
           Bạn chưa có đánh giá nào
         </div>
@@ -162,7 +162,7 @@ const UserComment = () => {
         ))
       )}
       <div style={{ float: 'right', marginTop: 20, marginBottom: 20 }}>
-        {userComment?.data.length === 0 ? (
+        {userComment?.data?.length === 0 ? (
           <div />
         ) : (
           <Pagination

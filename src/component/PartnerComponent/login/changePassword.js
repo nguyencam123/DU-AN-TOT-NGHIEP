@@ -1,5 +1,5 @@
 import React from 'react'
-import { Tabs, Typography, notification } from 'antd'
+import { Tabs, Typography, message, notification } from 'antd'
 import { MDBBtn, MDBCol, MDBInput, MDBRow } from 'mdb-react-ui-kit'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -31,25 +31,22 @@ const ChangePassword = () => {
   }
   const [file, setFile] = useState([])
 
-  const [selectedImages, setSelectedImages] = useState([])
+  const [selectedImage, setSelectedImage] = useState([])
 
   const handleFileChange = (event) => {
-    const files = event.target.files
-    let selectedFile = event.target.files
-    let fileList = [...selectedFile]
-    const imagesArray = fileList.map((file) => ({
-      name: file.name,
-      url: URL.createObjectURL(file),
-    }))
+    const selectedFile = event.target.files[0]
 
-    setSelectedImages((prevImages) => [...prevImages, ...imagesArray])
-    setFile(fileList)
-    const filesArray = Array.from(files).map((file) => ({
-      name: file.name,
-      size: file.size,
-      type: file.type,
-    }))
+    if (selectedFile) {
+      const imageObject = {
+        name: selectedFile.name,
+        url: URL.createObjectURL(selectedFile),
+      }
+
+      setSelectedImage(imageObject)
+      setFile(selectedFile)
+    }
   }
+
   const navigate = useNavigate()
   const openNotification = () => {
     notification.open({
@@ -85,7 +82,7 @@ const ChangePassword = () => {
     email: userDetail?.data.email,
   }
   const handleSubmitchange = async (e) => {
-    console.log(formChangePass)
+    // console.log(formChangePass)
     e.preventDefault()
     if (newpassword !== confirmpassword) {
       openNotificationChangePass()
@@ -96,7 +93,8 @@ const ChangePassword = () => {
       await ChangePasswordByPass(formChangePass)
       openNotification()
     } catch (error) {
-      console.error('Password change failed:', error)
+      message.error('Password change failed:', 5)
+      setLoading(false)
     }
   }
   const handleSubmit = async (e) => {
@@ -118,7 +116,8 @@ const ChangePassword = () => {
       openNotification()
     } catch (error) {
       // Handle the error, show a notification, etc.
-      console.error('Password change failed:', error)
+      message.error('Password change failed:', 5)
+      setLoading(false)
     }
   }
 
@@ -204,17 +203,27 @@ const ChangePassword = () => {
                 style={{ display: 'none' }}
               />
               <div style={{ marginLeft: 8, marginTop: 5 }}>
-                Đã có {selectedImages.length} file được chọn
+                {selectedImage ? (
+                  <div>
+                    <img
+                      src={selectedImage.url}
+                      style={{ width: 50, marginRight: 5 }}
+                    />
+                    {selectedImage.name}
+                  </div>
+                ) : (
+                  'Chưa có file được chọn'
+                )}
               </div>
             </div>
             <br />
             <div style={{ width: '100%' }}>
-              <span style={{ width: 150 }}>Email:</span>
+              <span style={{ width: 150 }}>Email : </span>
               <span>{userDetail?.data.email}</span>
             </div>
             <br />
             <div style={{ width: '100%' }}>
-              <span style={{ width: 150 }}>Số điện thoại :</span>
+              <span style={{ width: 150 }}>Số điện thoại : </span>
               <span>{userDetail?.data.phoneNumber}</span>
             </div>
             <br />
