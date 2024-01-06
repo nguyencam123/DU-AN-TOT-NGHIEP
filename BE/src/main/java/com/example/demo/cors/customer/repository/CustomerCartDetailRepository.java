@@ -38,13 +38,14 @@ public interface CustomerCartDetailRepository extends CartDetailRepository {
     void deleteAllCart(String userId);
 
     @Query(value = """
-            SELECT cd.id, cd.start_date, cd.end_date, cd.status, h.id AS id_homestay, h.name, h.price, h.number_person, h.point, 
-            h.address, h.[desc] AS description, h.email, h.acreage, STRING_AGG(ih.img_url, ', ') AS image, p.value AS promotion_value
+            SELECT cd.id, cd.start_date, cd.end_date, cd.status, h.id AS id_homestay, h.name, h.price, h.number_person, h.point, h.address, 
+            h.[desc] AS description, h.email, h.acreage, STRING_AGG(ih.img_url, ', ') AS image, p.value AS promotion_value, COUNT(cm.id) AS quantity_cmt
                             FROM cart_detail cd
                             JOIN cart c ON c.id = cd.id_cart
                             JOIN homestay h ON h.id =  cd.homestay_id
                             LEFT JOIN img_homestay ih ON h.id = ih.homestay_id
                             LEFT JOIN promotion p ON p.id = h.promotion_id
+                            JOIN comment cm ON cm.homestay_id = h.id 
                             WHERE c.id_user = :#{#request.userId} 
                             GROUP BY cd.id, cd.start_date, cd.end_date, cd.status, h.id, h.name, h.price, h.number_person, h.point, h.address, h.[desc], h.email, h.acreage, p.value
             """, nativeQuery = true)

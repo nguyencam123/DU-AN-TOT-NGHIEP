@@ -47,4 +47,7 @@ public interface CustomerCartDetailResponse extends IsIdentified {
     @Value("#{target.promotion_value}")
     String getValuePromotion();
 
+    @Value("#{target.quantity_cmt}")
+    Integer getQuantityCmt();
+
 }
