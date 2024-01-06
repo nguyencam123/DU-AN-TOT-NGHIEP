@@ -8,6 +8,7 @@ import com.example.demo.cors.admin.services.AdminBookingService;
 import com.example.demo.cors.common.base.PageableObject;
 import com.example.demo.entities.Booking;
 import com.example.demo.infrastructure.contant.Message;
+import com.example.demo.infrastructure.contant.StatusPayInfomation;
 import com.example.demo.infrastructure.exception.rest.RestApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -44,8 +45,15 @@ public class AdminBookingServiceImpl implements AdminBookingService {
             throw new RestApiException(Message.NOT_EXISTS);
         }
         Booking booking = optional.get();
-        booking.setAdminTransactionCode(request.getAdminTrancode());
+        booking.setAdminTransactionCode(request.getAdminTransactionCode());
         booking.setCustomerTransactionCode(request.getCustomerTransactionCode());
+        booking.setCancellTransactionCode(request.getCancellTransactionCode());
+        if(request.getStatusPayInfomation()==0){
+            booking.setStatusPayInfomation(StatusPayInfomation.DA_TT_CHO_USER);
+        }
+        if(request.getStatusPayInfomation()==1){
+            booking.setStatusPayInfomation(StatusPayInfomation.DA_TT_CHO_OWNER);
+        }
         adminBookingRepository.save(booking);
         return booking;
     }
