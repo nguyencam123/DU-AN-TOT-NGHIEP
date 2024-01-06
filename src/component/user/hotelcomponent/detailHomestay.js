@@ -46,7 +46,10 @@ import {
   MDBRow,
   MDBTypography,
 } from 'mdb-react-ui-kit'
-import { addShoppingCartThunk } from '../../../features/user/shoppingCartThunk'
+import {
+  addShoppingCartThunk,
+  fetchShoppingCart,
+} from '../../../features/user/shoppingCartThunk'
 
 const { Header, Content, Footer } = Layout
 
@@ -175,8 +178,13 @@ export const DetailHomestay = () => {
     homestayId: params.id,
   }
   const addShoppingCart = async () => {
-    await dispatch(addShoppingCartThunk(shoppingCart))
-    message.info('Thêm vào giỏ hàng thành công!')
+    if (userDetail?.data.id == null) {
+      message.info('Bạn cần đăng nhập để có thể thêm vào giỏ hàng!')
+    } else {
+      await dispatch(addShoppingCartThunk(shoppingCart))
+      message.info('Thêm vào giỏ hàng thành công!')
+      dispatch(fetchShoppingCart(userDetail?.data.id))
+    }
   }
   return (
     <>

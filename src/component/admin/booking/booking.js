@@ -1,9 +1,12 @@
-import { EditTwoTone, EyeOutlined, EyeTwoTone } from "@ant-design/icons";
-import { Input, Row, Select, Table, Typography, Form, Space, Button, Modal } from "antd";
+import { EyeOutlined, HomeOutlined, UserOutlined } from "@ant-design/icons";
+import { Input, Row, Select, Table, Typography, Form, Space, Button, Modal, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { getBooking, getBookingByName, getBookingByNameHomestay, getBookingByPhoneNumber } from "../../../features/admin/adminThunk";
+import { adminTranCodeBooking, getBooking, getBookingByName, getBookingByNameHomestay, getBookingByPhoneNumber } from "../../../features/admin/adminThunk";
 import { useEffect, useState } from "react";
 import moment from 'moment';
+import dayjs from 'dayjs';
+import 'dayjs/locale/vi';
+dayjs.locale('vi');
 
 
 const { Title } = Typography;
@@ -11,6 +14,24 @@ const { Search } = Input;
 
 
 function BookingForm() {
+
+  const checkDate = (dateCancel, dateStart) => {
+    if (dateStart.getFullYear() >= dateCancel.getFullYear()) {
+      if (dateStart.getMonth() >= dateCancel.getMonth()) {
+        if (dateStart.getDate() >= dateCancel.getDate()) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+  const formatCurrency = (value) => {
+    // Sử dụng Intl.NumberFormat để định dạng giá trị tiền tệ
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(value)
+  }
   const dispatch = useDispatch();
   const columns = [
     {
@@ -39,8 +60,8 @@ function BookingForm() {
     },
     {
       title: 'Ngày hủy',
-      dataIndex: 'startDate',
-      key: 'startDate',
+      dataIndex: 'cancellationDate',
+      key: 'cancellationDate',
       render: (data) => {
         return moment(data).locale('vi').format('LL')
       }
@@ -70,39 +91,67 @@ function BookingForm() {
           return 'Đặt cọc'
         }
         if (data === 'THANH_TOAN_TRUOC') {
-          return 'Đã thanh toán'
+          return 'Đã thanh toán hết'
         }
       }
     },
     {
       title: 'Tổng tiền',
       dataIndex: 'totalPrice',
-      key: 'totalPrice'
+      key: 'totalPrice',
+      render: (data) => {
+        return formatCurrency(data)
+      }
     },
     {
       title: 'Số tiền phải chuyển cho chủ homestay',
       dataIndex: 'totalPrice',
       key: 'price',
       render: (data, record) => {
-        if (record.typeBooking === 'DAT_COC') {
-          return (data - (data-(data * 100/111))*2)
+        if (record.status === 'THANH_CONG') {
+          if (record.typeBooking === 'DAT_COC') {
+            return formatCurrency((data - (data - (data * 100 / 111)) * 2))
+          }
+          if (record.typeBooking === 'THANH_TOAN_TRUOC') {
+            return formatCurrency((data * 100 / 111))
+          }
         }
-        if (record.typeBooking === 'THANH_TOAN_TRUOC') {
-          return (data * 100 / 111)
+        if (record.status === 'HUY') {
+          const checkOutDate = dayjs(record.cancellationDate).add(3, 'day');
+          if (checkDate(new Date(checkOutDate), new Date(record.startDate))) {
+            if (record.typeBooking === 'DAT_COC') {
+              return formatCurrency((data - (data - (data * 100 / 111)) * 2) - ((data * 100 / 111) * 2 * record.homestay.cancellationPolicy) / 100)
+            }
+            if (record.typeBooking === 'THANH_TOAN_TRUOC') {
+              return formatCurrency((data * 100 / 111) - ((data * 100 / 111) * record.homestay.cancellationPolicy) / 100)
+            }
+          } else {
+            if (record.typeBooking === 'DAT_COC') {
+              return formatCurrency((data - (data - (data * 100 / 111)) * 2))
+            }
+            if (record.typeBooking === 'THANH_TOAN_TRUOC') {
+              return formatCurrency((data * 100 / 111))
+            }
+          }
         }
       }
     },
     {
       title: 'Số tiền phải chuyển cho khách hàng',
       dataIndex: 'totalPrice',
-      key: 'price',
+      key: 'totalPrice',
       render: (data, record) => {
         if (record.status === 'HUY') {
-          if (record.typeBooking === 'DAT_COC') {
-            return (data - (data - (data * 100 / 111)) * 2)
-          }
-          if (record.typeBooking === 'THANH_TOAN_TRUOC') {
-            return (data * 100 / 111)
+          const checkOutDate = dayjs(record.cancellationDate).add(3, 'day');
+          if (checkDate(new Date(checkOutDate), new Date(record.startDate))) {
+            if (record.typeBooking === 'DAT_COC') {
+              return formatCurrency((data * 2 * record.homestay.cancellationPolicy) / 100)
+            }
+            if (record.typeBooking === 'THANH_TOAN_TRUOC') {
+              return formatCurrency((data * record.homestay.cancellationPolicy) / 100)
+            }
+          } else {
+            return 'Không hoàn tiền'
           }
         }
       }
@@ -122,8 +171,9 @@ function BookingForm() {
       key: 'action',
       render: (_, record) => (
         <Space size='middle'>
-          <a onClick={() => showBooking(record)}><EyeTwoTone /></a>
-          <a><EditTwoTone /></a>
+          <a onClick={() => showBooking(record)}><EyeOutlined /></a>
+          <a onClick={() => openOwnerTranCode(record)}><HomeOutlined /></a>
+          <a><UserOutlined /></a>
         </Space>
       )
     }
@@ -147,6 +197,8 @@ function BookingForm() {
     value: '4'
   })
   const [isViewModal, setIsViewModal] = useState(false)
+  const [ownerModal, setOwnerModal] = useState(false)
+  const [ownerTrancode, setOwnerTrancode] = useState(' ')
   const [viewBooking, setViewBooking] = useState({})
   const handleChangeStatus = (value) => {
     if (value === 1) {
@@ -158,14 +210,14 @@ function BookingForm() {
     } else if (value === 0) {
       setSelectedStatus({
         name: 'Hủy',
-        value: 0
+        value: 4
       })
       dispatch(getBooking(0));
     } else {
-      dispatch(getBooking(1));
+      dispatch(getBooking(' '));
       setSelectedStatus({
         name: 'Tất cả',
-        value: '4'
+        value: '2'
       })
     }
   }
@@ -182,8 +234,20 @@ function BookingForm() {
     setIsViewModal(true)
     setViewBooking(booking)
   }
+  const openOwnerTranCode = (booking) => {
+    setOwnerModal(true)
+    setViewBooking(booking)
+  }
+  const handleOwnerTranCode = () => {
+    dispatch(adminTranCodeBooking(viewBooking.id, ownerTrancode));
+    setOwnerModal(false)
+    message.info(
+      'Thành công',
+      2,
+    )
+  }
   useEffect(() => {
-    dispatch(getBooking(1));
+    dispatch(getBooking(' '));
   }, []);
   const booking = useSelector((state) => state.admin.booking)
   return (
@@ -274,6 +338,28 @@ function BookingForm() {
           <div style={{ display: 'flex' }}><div style={{ width: 200 }}>Hình thức đặt</div> : {viewBooking.typeBooking === 'DAT_COC' ? 'Đặt cọc' : 'Thanh toán trước'}</div><br />
           <div style={{ display: 'flex' }}><div style={{ width: 200 }}>Trạng thái       </div> : {viewBooking.status}</div><br />
         </div>
+      </Modal>
+
+      <Modal
+        title='Thanh toán cho chủ homestay'
+        open={ownerModal}
+        onOk={() => handleOwnerTranCode()}
+        onCancel={() => setOwnerModal(false)}
+      >
+        <Form>
+          <Form.Item
+            label='Mã giao dịch'
+            name='name'
+            rules={[
+              {
+                required: true,
+                message: 'Vui lòng điền mã giao dịch'
+              }
+            ]}
+          >
+            <Input onChange={(data) => setOwnerTrancode(data.target.value)} />
+          </Form.Item>
+        </Form>
       </Modal>
     </div>
   )

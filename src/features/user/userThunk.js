@@ -8,6 +8,7 @@ import {
 import axios from 'axios'
 import { notification } from 'antd'
 import { updateAxiosToken } from '../../app/axiosConfig'
+import { fetchShoppingCart } from './shoppingCartThunk'
 
 const openNotification = () => {
   notification.open({
@@ -54,6 +55,9 @@ export const loginUser = (username, password) => async (dispatch) => {
       openNotificationlogin()
       dispatch(loginSuccess({ user: accounts, userData: accounts }))
       updateAxiosToken(token)
+      const userDetail = JSON.parse(localStorage.getItem('userDetail'))
+      const userId = userDetail?.data.id
+      dispatch(fetchShoppingCart(userId))
     } else {
       openNotification()
     }
@@ -117,6 +121,9 @@ export const logoutUser = () => (dispatch) => {
   localStorage.removeItem('userDetail')
   localStorage.removeItem('ownerDetail')
   localStorage.removeItem('adminDetail')
+  const userDetail = JSON.parse(localStorage.getItem('userDetail'))
+  const userId = userDetail?.data.id
+  dispatch(fetchShoppingCart(userId))
 }
 
 // Similarly modify loginAdmin and loginpartner functions
