@@ -6,6 +6,7 @@ import { MDBCard, MDBCardBody, MDBCardImage, MDBCol, MDBContainer, MDBIcon, MDBR
 import { getAllHomestayByHomestayName, getAllHomestayByNameOwner, getAllHomestayByStatus } from "../../../features/product/productThunk";
 import moment from 'moment';
 import { deleteCommentHomestay } from "../../../features/admin/adminThunk";
+import { getCommentByHomestay, getCommentByUser } from "../../../features/admin/user/userThunk";
 
 const { Title } = Typography
 const { Search } = Input;
@@ -14,14 +15,17 @@ const Comment = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [deleteId, setDeleteId] = useState('');
+  const [homestayId, setHomestayId] = useState('');
+  const [homestayName, setHomestayName] = useState('');
+  const [ownerName, setOwnerName] = useState('');
   const [current, setCurrent] = useState(1);
-  const [dataComment, setDataComment] = useState([]);
   const onChangePage = (page) => {
     setCurrent(page);
   };
   const showModal = (record) => {
+    dispatch(getCommentByHomestay(record.id))
+    setHomestayId(record.id)
     setIsModalOpen(true);
-    setDataComment(record.comment)
   };
   const handleOk = () => {
     setIsModalOpen(false);
@@ -30,7 +34,8 @@ const Comment = () => {
     setIsModalOpen(false);
   };
   const searchOwnerHomestayName = (value, _e, info) => {
-    dispatch(getAllHomestayByNameOwner(0, value));
+    setOwnerName(value)
+    dispatch(getAllHomestayByNameOwner(0, value, homestayName));
   }
   const deleteComment = (id) => {
     dispatch(deleteCommentHomestay(id));
@@ -47,13 +52,19 @@ const Comment = () => {
   }
 
   const onSearchHomestayName = (value, _e, info) => {
-    dispatch(getAllHomestayByHomestayName(0, value));
+    setHomestayName(value)
+    dispatch(getAllHomestayByHomestayName(0, value, ownerName));
   }
   const products = useSelector((state) => state.product.products);
+  const comment = useSelector((state) => state.userAdmin.comment.data);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAllHomestayByStatus(0));
   }, [])
+
+  const getCommentByUsername = (username) => {
+    dispatch(getCommentByUser(homestayId, username))
+  }
 
   const columns = [
     {
@@ -71,7 +82,7 @@ const Comment = () => {
       dataIndex: 'ownerHomestay',
       key: 'ownerHomestay',
       render: (data) => {
-        return data.name
+        return data?.name
       }
     },
     {
@@ -127,7 +138,7 @@ const Comment = () => {
                   allowClear
                   size="medium"
                   enterButton="search"
-                  onSearch={onSearchHomestayName}
+                  onSearch={getCommentByUsername}
                 />
               </Form.Item>
             </Row>
@@ -135,10 +146,10 @@ const Comment = () => {
               <MDBCol md="12" lg="10" xl="8">
                 <div className="d-flex justify-content-between align-items-center mb-4">
                   <MDBTypography tag="h4" className="text-dark mb-0">
-                    Có tất cả ({dataComment.length}) đánh giá
+                    Có tất cả ({comment?.length}) đánh giá
                   </MDBTypography>
                 </div>
-                {dataComment.map((items) =>
+                {comment?.map((items) =>
                   <MDBCard className="mb-3">
                     <MDBCardBody>
                       <div className="d-flex flex-start">
@@ -177,7 +188,7 @@ const Comment = () => {
                   </MDBCard>
                 )}
                 <div style={{ float: 'right', marginTop: 20 }}>
-                  <Pagination current={current} onChange={onChangePage} total={dataComment.length} />
+                  <Pagination current={current} onChange={onChangePage} total={comment?.length} />
                 </div>
               </MDBCol>
             </MDBRow>

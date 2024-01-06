@@ -6,7 +6,7 @@ import { MDBCard, MDBCardBody, MDBCardImage, MDBCol, MDBContainer, MDBIcon, MDBR
 import { getAllHomestayByHomestayName, getAllHomestayByNameOwner, getAllHomestayByStatus } from "../../../features/product/productThunk";
 import moment from 'moment';
 import { deleteCommentHomestay } from "../../../features/admin/adminThunk";
-import { approveUser, fetchAllUser, refuseUser } from "../../../features/admin/user/userThunk";
+import { approveUser, fetchAllUser, fetchAllUserByName, getCommentByUserId, refuseUser } from "../../../features/admin/user/userThunk";
 
 const { Title } = Typography
 const { Search } = Input;
@@ -18,14 +18,14 @@ const User = () => {
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [deleteId, setDeleteId] = useState('');
   const [current, setCurrent] = useState(1);
-  const [dataComment, setDataComment] = useState([]);
   const [userId, setUserId] = useState('');
   const onChangePage = (page) => {
     setCurrent(page);
   };
   const showModal = (record) => {
+    dispatch(getCommentByUserId(' ', record.id))
+    setUserId(record.id)
     setIsModalOpen(true);
-    setDataComment(record.comment)
   };
   const showModalAprove = (record) => {
     setModalApprove(true);
@@ -78,11 +78,15 @@ const User = () => {
     setDeleteId(id);
   }
 
-  const onSearchHomestayName = (value, _e, info) => {
-    dispatch(getAllHomestayByHomestayName(0, value));
+  const onSearchUsername = (value, _e, info) => {
+    dispatch(fetchAllUserByName(value));
   }
   const products = useSelector((state) => state.userAdmin.user.data);
-  console.log(products);
+  const comment = useSelector((state) => state.userAdmin.comment.data);
+
+  const getCommentByHomestayName = (value, _e, info) => {
+    dispatch(getCommentByUserId(value, userId))
+  };
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchAllUser());
@@ -138,7 +142,7 @@ const User = () => {
             allowClear
             size="medium"
             enterButton="search"
-            onSearch={onSearchHomestayName}
+            onSearch={onSearchUsername}
           />
         </Form.Item>
       </Row>
@@ -149,12 +153,23 @@ const User = () => {
           <MDBContainer className="py-5 text-dark" style={{ maxWidth: "1000px" }}>
             <MDBRow className="justify-content-center">
               <MDBCol md="12" lg="10" xl="8">
+              <Row>
+              <Form.Item label="Tìm kiếm theo tên" style={{ float: 'left', marginLeft: ' 50px' }}>
+                <Search
+                  placeholder="Tên hometsay"
+                  allowClear
+                  size="medium"
+                  enterButton="search"
+                  onSearch={getCommentByHomestayName}
+                />
+              </Form.Item>
+            </Row>
                 <div className="d-flex justify-content-between align-items-center mb-4">
                   <MDBTypography tag="h4" className="text-dark mb-0">
-                    Có tất cả ({dataComment.length}) đánh giá
+                    Có tất cả ({comment?.length}) đánh giá
                   </MDBTypography>
                 </div>
-                {dataComment.map((items) =>
+                {comment?.map((items) =>
                   <MDBCard className="mb-3">
                     <MDBCardBody>
                       <div className="d-flex flex-start">
@@ -182,6 +197,7 @@ const User = () => {
                                 {items.comment}
                               </span>
                             </MDBTypography>
+                            {items.homestay?.name}<br />
                             <p className="mb-0">{moment(items.createdDate).fromNow()}</p>
                             <Button className="mb-0" style={{ border: 'none' }} onClick={() => openConfirmDelete(items.id)}><DeleteOutlined /></Button>
 
@@ -193,7 +209,7 @@ const User = () => {
                   </MDBCard>
                 )}
                 <div style={{ float: 'right', marginTop: 20 }}>
-                  <Pagination current={current} onChange={onChangePage} total={dataComment.length} />
+                  <Pagination current={current} onChange={onChangePage} total={comment?.length} />
                 </div>
               </MDBCol>
             </MDBRow>
