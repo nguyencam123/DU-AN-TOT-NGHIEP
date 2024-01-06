@@ -78,7 +78,7 @@ export const getNumberPersonPoint = (id) => async (dispatch) => {
   try {
     const response = await axios.get(
       'http://localhost:8080/api/v1/comment/number-of-reviewers?homestayId' +
-        id,
+      id,
     )
     dispatch(fetchAvgPointSuccess(response.data.data)) // Lấy dữ liệu từ response.data.data
     // console.log(response.data.data);
@@ -161,15 +161,17 @@ export const getAllHomestayByStatus = (status) => async (dispatch) => {
   }
 }
 
-export const getAllHomestayByNameOwner = (status, name) => async (dispatch) => {
+export const getAllHomestayByNameOwner = (status, name, ownerName) => async (dispatch) => {
   dispatch(fetchProductsStart())
   console.log(1)
   try {
     const response = await instance.get(
       '/api/v3/homestay?size=99&statusHomestay=' +
-        status +
-        '&nameOwner=' +
-        name,
+      status +
+      '&nameOwner=' +
+      name +
+      '&nameHomestay=' +
+      ownerName,
     )
     dispatch(fetchProductsSuccess(response.data.data.data)) // Lấy dữ liệu từ response.data.data
   } catch (error) {
@@ -178,15 +180,15 @@ export const getAllHomestayByNameOwner = (status, name) => async (dispatch) => {
 }
 
 export const getAllHomestayByHomestayName =
-  (status, name) => async (dispatch) => {
+  (status, name, ownerName) => async (dispatch) => {
     dispatch(fetchProductsStart())
-    console.log(1)
     try {
       const response = await instance.get(
         '/api/v3/homestay?size=99&statusHomestay=' +
-          status +
-          '&nameHomestay=' +
-          name,
+        status +
+        '&nameHomestay=' +
+        name + '&nameOwner=' +
+        ownerName,
       )
       dispatch(fetchProductsSuccess(response.data.data.data)) // Lấy dữ liệu từ response.data.data
     } catch (error) {
