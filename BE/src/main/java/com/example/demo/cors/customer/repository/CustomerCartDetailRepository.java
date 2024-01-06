@@ -38,8 +38,9 @@ public interface CustomerCartDetailRepository extends CartDetailRepository {
     void deleteAllCart(String userId);
 
     @Query(value = """
-            SELECT cd.id, cd.start_date, cd.end_date, cd.status, h.id AS id_homestay, h.name, h.price, h.number_person, h.point, h.address, 
-            h.[desc] AS description, h.email, h.acreage, STRING_AGG(ih.img_url, ', ') AS image, p.value AS promotion_value, COUNT(cm.id) AS quantity_cmt
+            SELECT cd.id, cd.start_date, cd.end_date, cd.status, h.id AS id_homestay, h.name, h.price, h.number_person, 
+            h.address, h.[desc] AS description, h.email, h.acreage, STRING_AGG(ih.img_url, ', ') AS image, 
+            p.value AS promotion_value, COUNT(cm.id) AS quantity_cmt, ROUND(AVG(cm.point), 1) AS point
                             FROM cart_detail cd
                             JOIN cart c ON c.id = cd.id_cart
                             JOIN homestay h ON h.id =  cd.homestay_id
@@ -47,7 +48,7 @@ public interface CustomerCartDetailRepository extends CartDetailRepository {
                             LEFT JOIN promotion p ON p.id = h.promotion_id
                             JOIN comment cm ON cm.homestay_id = h.id 
                             WHERE c.id_user = :#{#request.userId} 
-                            GROUP BY cd.id, cd.start_date, cd.end_date, cd.status, h.id, h.name, h.price, h.number_person, h.point, h.address, h.[desc], h.email, h.acreage, p.value
+                            GROUP BY cd.id, cd.start_date, cd.end_date, cd.status, h.id, h.name, h.price, h.number_person, h.address, h.[desc], h.email, h.acreage, p.value
             """, nativeQuery = true)
     Page<CustomerCartDetailResponse> getAllHomestayInCart(Pageable pageable, CustomerCartRequest request);
 
