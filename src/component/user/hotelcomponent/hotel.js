@@ -218,7 +218,7 @@ const Hotel = () => {
             <hr />
             <div><h5 style={{ fontSize: 16 }}>Thành phố đia điểm hoặc tên khách sạn</h5>
               <MDBInputGroup className='mb-3' size='lg' noBorder textBefore={<MDBIcon fas icon='search' />}>
-                <input className='form-control' type='text' placeholder='Search' defaultValue={nameLocation || ' '} onChange={(e) => setNameOrAddress(e.target.value)} required />
+                <input className='form-control' type='text' placeholder='Search' defaultValue={nameLocation || ''} onChange={(e) => setNameOrAddress(e.target.value)} required />
               </MDBInputGroup>
               <div style={{ color: 'red', marginLeft: 30 }}>{notification}</div>
               <div>
