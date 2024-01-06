@@ -77,8 +77,8 @@ function BookingForm() {
         if (data === 'THANH_CONG') {
           return 'Thành công'
         }
-        if (data === 'KHONG_THANH_CONG') {
-          return 'Không thành công'
+        if (data === 'DA_THUE_XONG') {
+          return 'Đã thuê xong'
         }
       }
     },
@@ -210,14 +210,14 @@ function BookingForm() {
     } else if (value === 0) {
       setSelectedStatus({
         name: 'Hủy',
-        value: 4
+        value: 0
       })
       dispatch(getBooking(0));
     } else {
       dispatch(getBooking(' '));
       setSelectedStatus({
         name: 'Tất cả',
-        value: '2'
+        value: '4'
       })
     }
   }
@@ -308,8 +308,8 @@ function BookingForm() {
         <div style={{ fontSize: 18, fontWeight: 600 }}>
           <table>
             <tr>
-              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Tên homestay </div> : {viewBooking?.name}</div><br /></td>
-              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Tên chủ homestay </div> : {viewBooking?.phoneNumber}</div><br /></td>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Tên người booking </div> : {viewBooking?.name}</div><br /></td>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Số điện thoại </div> : {viewBooking?.phoneNumber}</div><br /></td>
             </tr>
             <tr>
               <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Tên homestay </div> : {viewBooking?.homestay?.name}</div><br /></td>
