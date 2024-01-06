@@ -77,8 +77,8 @@ function BookingForm() {
         if (data === 'THANH_CONG') {
           return 'Thành công'
         }
-        if (data === 'KHONG_THANH_CONG') {
-          return 'Không thành công'
+        if (data === 'DA_THUE_XONG') {
+          return 'Đã thuê xong'
         }
       }
     },
@@ -185,11 +185,11 @@ function BookingForm() {
     },
     {
       name: 'Hủy',
-      value: 0
+      value: 1
     },
     {
       name: 'Thành công',
-      value: 1
+      value: 2
     }
   ]
   const [selectedStatus, setSelectedStatus] = useState({
@@ -201,23 +201,23 @@ function BookingForm() {
   const [ownerTrancode, setOwnerTrancode] = useState(' ')
   const [viewBooking, setViewBooking] = useState({})
   const handleChangeStatus = (value) => {
-    if (value === 1) {
+    if (value === 2) {
       setSelectedStatus({
         name: 'Thành công',
+        value: 2
+      })
+      dispatch(getBooking(2));
+    } else if (value === 1) {
+      setSelectedStatus({
+        name: 'Hủy',
         value: 1
       })
       dispatch(getBooking(1));
-    } else if (value === 0) {
-      setSelectedStatus({
-        name: 'Hủy',
-        value: 4
-      })
-      dispatch(getBooking(0));
     } else {
       dispatch(getBooking(' '));
       setSelectedStatus({
         name: 'Tất cả',
-        value: '2'
+        value: '4'
       })
     }
   }
