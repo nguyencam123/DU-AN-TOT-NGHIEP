@@ -135,7 +135,7 @@ const CategoryList = () => {
       message.error('Loại không được trống');
       return false
     }
-    await dispatch(updateConvenient({ idType: typeUpdate, name: nameUpdate, id: idUpdate}))
+    await dispatch(updateConvenient({ idType: typeUpdate, name: nameUpdate, id: idUpdate }))
     await dispatch(getConvenient())
     setIsUpdate(false)
   }
@@ -153,7 +153,7 @@ const CategoryList = () => {
         </Button>
         <Button
           type='primary'
-          style={{ float: 'right', marginBottom: '20px', marginRight : '10px' }}
+          style={{ float: 'right', marginBottom: '20px', marginRight: '10px' }}
           onClick={showTypeModal}
         >
           Thêm loại tiện nghi
@@ -227,7 +227,7 @@ const CategoryList = () => {
         onCancel={handleCancelUpdate}
       >
         <Form>
-        <Form.Item
+          <Form.Item
             label='Tên tiện nghi'
             name='nameUpdate'
             rules={[
@@ -248,7 +248,7 @@ const CategoryList = () => {
               options={listType.map((filter) => ({ value: filter.id, label: filter.name }))}
               value={typeUpdate}
             />
-            </Form.Item>
+          </Form.Item>
         </Form>
       </Modal>
     </>

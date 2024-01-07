@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   user: [],
+  owner: [],
   comment: [],
   loading: false,
   error: null,
@@ -20,6 +21,11 @@ const userSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
+    fetchOwnerSuccess: (state, action) => {
+      state.owner = action.payload;
+      state.loading = false;
+      state.error = null;
+    },
     fetchUserFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
@@ -33,5 +39,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { fetchUserFailure, userStart, fetchUserSuccess,fetchCommentUser } = userSlice.actions;
+export const { fetchUserFailure, userStart, fetchUserSuccess, fetchCommentUser, fetchOwnerSuccess } = userSlice.actions;
 export default userSlice.reducer;
