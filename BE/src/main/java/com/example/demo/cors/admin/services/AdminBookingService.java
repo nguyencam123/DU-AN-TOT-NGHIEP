@@ -14,7 +14,5 @@ public interface AdminBookingService {
 
     Booking updateAdminTranCode(AdminBookingRequest request);
 
-    Booking updateCuttomTranCode(AdminBookingRequest request);
-
     Booking updateCancellTranCode(AdminBookingRequest request);
 }

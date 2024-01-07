@@ -47,22 +47,11 @@ public class AdminBookingServiceImpl implements AdminBookingService {
         }
         Booking booking = optional.get();
         booking.setAdminTransactionCode(request.getAdminTransactionCode());
-        adminBookingRepository.save(booking);
-        return booking;
-    }
-
-    @Override
-    public Booking updateCuttomTranCode(AdminBookingRequest request) {
-        Optional<Booking> optional = adminBookingRepository.findById(request.getId());
-        if (!optional.isPresent()) {
-            throw new RestApiException(Message.NOT_EXISTS);
-        }
-        Booking booking = optional.get();
-        booking.setCustomerTransactionCode(request.getCustomerTransactionCode());
         booking.setStatusPayOwner(StatusPayOwner.DA_TT_CHO_OWNER);
         adminBookingRepository.save(booking);
         return booking;
     }
+
 
     @Override
     public Booking updateCancellTranCode(AdminBookingRequest request) {
