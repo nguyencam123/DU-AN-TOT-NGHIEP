@@ -1,7 +1,7 @@
 import { EyeOutlined, HomeOutlined, UserOutlined } from "@ant-design/icons";
 import { Input, Row, Select, Table, Typography, Form, Space, Button, Modal, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { adminTranCodeBooking, getBooking, getBookingByName, getBookingByNameHomestay, getBookingByPhoneNumber } from "../../../features/admin/adminThunk";
+import { adminTranCodeBooking, getBooking, getBookingByName, getBookingByNameHomestay, getBookingByPhoneNumber, userTranCodeBooking } from "../../../features/admin/adminThunk";
 import { useEffect, useState } from "react";
 import moment from 'moment';
 import dayjs from 'dayjs';
@@ -163,8 +163,8 @@ function BookingForm() {
     },
     {
       title: 'Mã giao dịch booking hủy',
-      dataIndex: 'customerTransactionCode',
-      key: 'customerTransactionCode'
+      dataIndex: 'cancellTransactionCode',
+      key: 'cancellTransactionCode'
     },
     {
       title: 'Action',
@@ -173,7 +173,7 @@ function BookingForm() {
         <Space size='middle'>
           <a onClick={() => showBooking(record)}><EyeOutlined /></a>
           <a onClick={() => openOwnerTranCode(record)}><HomeOutlined /></a>
-          <a><UserOutlined /></a>
+          <a onClick={() => openUserTranCode(record)}><UserOutlined /></a>
         </Space>
       )
     }
@@ -185,11 +185,11 @@ function BookingForm() {
     },
     {
       name: 'Hủy',
-      value: 1
+      value: 0
     },
     {
       name: 'Thành công',
-      value: 2
+      value: 1
     }
   ]
   const [selectedStatus, setSelectedStatus] = useState({
@@ -198,21 +198,25 @@ function BookingForm() {
   })
   const [isViewModal, setIsViewModal] = useState(false)
   const [ownerModal, setOwnerModal] = useState(false)
+  const [userModal, setUserModal] = useState(false)
+
   const [ownerTrancode, setOwnerTrancode] = useState(' ')
+  const [userTrancode, setUserTrancode] = useState(' ')
+
   const [viewBooking, setViewBooking] = useState({})
   const handleChangeStatus = (value) => {
-    if (value === 2) {
+    if (value === 1) {
       setSelectedStatus({
         name: 'Thành công',
-        value: 2
-      })
-      dispatch(getBooking(2));
-    } else if (value === 1) {
-      setSelectedStatus({
-        name: 'Hủy',
         value: 1
       })
       dispatch(getBooking(1));
+    } else if (value === 0) {
+      setSelectedStatus({
+        name: 'Hủy',
+        value: 0
+      })
+      dispatch(getBooking(0));
     } else {
       dispatch(getBooking(' '));
       setSelectedStatus({
@@ -238,9 +242,21 @@ function BookingForm() {
     setOwnerModal(true)
     setViewBooking(booking)
   }
+  const openUserTranCode = (booking) => {
+    setUserModal(true)
+    setViewBooking(booking)
+  }
   const handleOwnerTranCode = () => {
     dispatch(adminTranCodeBooking(viewBooking.id, ownerTrancode));
     setOwnerModal(false)
+    message.info(
+      'Thành công',
+      2,
+    )
+  }
+  const handleUserTranCode = () => {
+    dispatch(userTranCodeBooking(viewBooking.id, userTrancode));
+    setUserModal(false)
     message.info(
       'Thành công',
       2,
@@ -308,8 +324,8 @@ function BookingForm() {
         <div style={{ fontSize: 18, fontWeight: 600 }}>
           <table>
             <tr>
-              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Tên homestay </div> : {viewBooking?.name}</div><br /></td>
-              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Tên chủ homestay </div> : {viewBooking?.phoneNumber}</div><br /></td>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Tên người booking </div> : {viewBooking?.name}</div><br /></td>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Số điện thoại </div> : {viewBooking?.phoneNumber}</div><br /></td>
             </tr>
             <tr>
               <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Tên homestay </div> : {viewBooking?.homestay?.name}</div><br /></td>
@@ -358,6 +374,21 @@ function BookingForm() {
             ]}
           >
             <Input onChange={(data) => setOwnerTrancode(data.target.value)} />
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      <Modal
+        title='Thanh toán cho khách hàng'
+        open={userModal}
+        onOk={() => handleUserTranCode()}
+        onCancel={() => setUserModal(false)}
+      >
+        <Form>
+          <Form.Item
+            label='Mã giao dịch'
+          >
+            <Input onChange={(data) => setUserTrancode(data.target.value)} />
           </Form.Item>
         </Form>
       </Modal>

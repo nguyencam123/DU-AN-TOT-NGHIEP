@@ -8,6 +8,8 @@ import com.example.demo.cors.admin.services.AdminBookingService;
 import com.example.demo.cors.common.base.PageableObject;
 import com.example.demo.entities.Booking;
 import com.example.demo.infrastructure.contant.Message;
+import com.example.demo.infrastructure.contant.StatusPayOwner;
+import com.example.demo.infrastructure.contant.StatusPayUser;
 import com.example.demo.infrastructure.exception.rest.RestApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,16 +40,40 @@ public class AdminBookingServiceImpl implements AdminBookingService {
     }
 
     @Override
-    public Booking updateTranCode(AdminBookingRequest request) {
+    public Booking updateAdminTranCode(AdminBookingRequest request) {
         Optional<Booking> optional = adminBookingRepository.findById(request.getId());
         if (!optional.isPresent()) {
             throw new RestApiException(Message.NOT_EXISTS);
         }
         Booking booking = optional.get();
-        booking.setAdminTransactionCode(request.getAdminTrancode());
-        booking.setCustomerTransactionCode(request.getCustomerTransactionCode());
+        booking.setAdminTransactionCode(request.getAdminTransactionCode());
         adminBookingRepository.save(booking);
         return booking;
     }
 
+    @Override
+    public Booking updateCuttomTranCode(AdminBookingRequest request) {
+        Optional<Booking> optional = adminBookingRepository.findById(request.getId());
+        if (!optional.isPresent()) {
+            throw new RestApiException(Message.NOT_EXISTS);
+        }
+        Booking booking = optional.get();
+        booking.setCustomerTransactionCode(request.getCustomerTransactionCode());
+        booking.setStatusPayOwner(StatusPayOwner.DA_TT_CHO_OWNER);
+        adminBookingRepository.save(booking);
+        return booking;
+    }
+
+    @Override
+    public Booking updateCancellTranCode(AdminBookingRequest request) {
+        Optional<Booking> optional = adminBookingRepository.findById(request.getId());
+        if (!optional.isPresent()) {
+            throw new RestApiException(Message.NOT_EXISTS);
+        }
+        Booking booking = optional.get();
+        booking.setCancellTransactionCode(request.getCancellTransactionCode());
+        booking.setStatusPayUser(StatusPayUser.DA_TT_CHO_USER);
+        adminBookingRepository.save(booking);
+        return booking;
+    }
 }

@@ -3,6 +3,7 @@ import { instance } from '../../app/axiosConfig';
 import { fetchProductsFailure, fetchProductsSuccess } from '../product/productSlide';
 import { denineProducts } from '../product/productThunk';
 import { addConvenientFailed, fetchBookingSuccess, fetchConvenientSuccess, fetchConvenientTypeSuccess } from './adminSlice';
+import { message } from 'antd';
 
 const BASE_URL = '/homestay/get-all?size=999';
 
@@ -42,18 +43,40 @@ export const getConvenientType = () => async (dispatch) => {
 
 export const addConvenient = (data) => async (dispatch) => {
   try {
-    console.log(1);
     const response = await instance.post('http://localhost:8080/api/v3/convenient-homestay/add-convenient', data);
+    message.success('Thêm thành công');
   } catch (error) {
-    await dispatch(addConvenientFailed(error.message));
+    if (error.response && error.response.data && error.response.data.message) {
+      const errorMessage = error.response.data.message;
+      // Do something with the error message, such as displaying it to the user
+      message.error(errorMessage);
+    }
   }
 };
 
 export const addType = (data) => async (dispatch) => {
   try {
     const response = await instance.post('http://localhost:8080/api/v3/convenient-homestay/add-convenient-type', data);
+    message.success('Thêm thành công')
   } catch (error) {
-    dispatch(addConvenientFailed(error.message));
+    if (error.response && error.response.data && error.response.data.message) {
+      const errorMessage = error.response.data.message;
+      // Do something with the error message, such as displaying it to the user
+      message.error(errorMessage);
+    }
+  }
+};
+
+export const updateType = (data) => async (dispatch) => {
+  try {
+    const response = await instance.put('http://localhost:8080/api/v3/convenient-homestay/update-convenient-type', data);
+    message.success('Sửa thành công')
+  } catch (error) {
+    if (error.response && error.response.data && error.response.data.message) {
+      const errorMessage = error.response.data.message;
+      // Do something with the error message, such as displaying it to the user
+      message.error(errorMessage);
+    }
   }
 };
 
@@ -107,8 +130,13 @@ export const getBookingByName = (name) => async (dispatch) => {
 export const updateConvenient = (data) => async (dispatch) => {
   try {
     const response = await instance.put('http://localhost:8080/api/v3/convenient-homestay/update-convenient', data);
+    message.success('Sửa thành công')
   } catch (error) {
-    dispatch(addConvenientFailed(error.message));
+    if (error.response && error.response.data && error.response.data.message) {
+      const errorMessage = error.response.data.message;
+      // Do something with the error message, such as displaying it to the user
+      message.error(errorMessage);
+    }
   }
 };
 
@@ -124,7 +152,17 @@ export const deleteCommentHomestay = (id) => async (dispatch) => {
 
 export const adminTranCodeBooking = (id, code) => async (dispatch) => {
   try {
-    await instance.put(`http://localhost:8080/api/v3/booking/update?id=${id}&adminTrancode=${code}`);
+    await instance.put(`http://localhost:8080/api/v3/booking/update?id=${id}&adminTrancode=${code}&statusPayInfomation=1`);
+    const response = await instance.get('http://localhost:8080/api/v3/booking?size=99&statusBooking=');
+    dispatch(fetchBookingSuccess(response.data.data.data))
+  } catch (error) {
+    dispatch(addConvenientFailed(error.message));
+  }
+};
+
+export const userTranCodeBooking = (id, code) => async (dispatch) => {
+  try {
+    await instance.put(`http://localhost:8080/api/v3/booking/update?id=${id}&cancellTransactionCode=${code}&statusPayInfomation=0`);
     const response = await instance.get('http://localhost:8080/api/v3/booking?size=99&statusBooking=');
     dispatch(fetchBookingSuccess(response.data.data.data))
   } catch (error) {
