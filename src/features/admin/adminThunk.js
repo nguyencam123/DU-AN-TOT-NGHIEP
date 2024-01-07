@@ -152,7 +152,17 @@ export const deleteCommentHomestay = (id) => async (dispatch) => {
 
 export const adminTranCodeBooking = (id, code) => async (dispatch) => {
   try {
-    await instance.put(`http://localhost:8080/api/v3/booking/update?id=${id}&adminTrancode=${code}`);
+    await instance.put(`http://localhost:8080/api/v3/booking/update?id=${id}&adminTrancode=${code}&statusPayInfomation=1`);
+    const response = await instance.get('http://localhost:8080/api/v3/booking?size=99&statusBooking=');
+    dispatch(fetchBookingSuccess(response.data.data.data))
+  } catch (error) {
+    dispatch(addConvenientFailed(error.message));
+  }
+};
+
+export const userTranCodeBooking = (id, code) => async (dispatch) => {
+  try {
+    await instance.put(`http://localhost:8080/api/v3/booking/update?id=${id}&cancellTransactionCode=${code}&statusPayInfomation=0`);
     const response = await instance.get('http://localhost:8080/api/v3/booking?size=99&statusBooking=');
     dispatch(fetchBookingSuccess(response.data.data.data))
   } catch (error) {

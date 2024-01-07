@@ -210,8 +210,13 @@ export const BookingReviewHomestay = () => {
                   <hr style={{ width: '96%', marginLeft: '2%' }} />
                   <div style={{ marginLeft: '10px', marginTop: '10px' }}>
                     <div style={{ lineHeight: '16px', marginTop: '3px' }}><FileTextTwoTone style={{ fontSize: '12px' }} /><b> Chính sách hủy phòng</b></div>
-                    <div style={{ lineHeight: '16px', marginLeft: '17px', }}>Please note that your children might be charged when check-in at the hotel. Please call the hotel before your check-in date for further information.
-                      Vui long luu y, tre em co the bi thu them phi khi nhan phong tai khach san. Vui long lien he khach san truoc khi nhan phong de biet them thong tin chi tiet.</div>
+                    <div style={{ lineHeight: '16px', marginLeft: '17px', }}>
+                      Việc hủy phòng trước ngày{' '}
+                      {moment(detailHomestay.startDate).locale('vi').format('LL')}{' '}
+                      sẽ được hoàn toàn miễn phí. Sau ngày{' '}
+                      {moment(detailHomestay.startDate).locale('vi').format('LL')}{' '}
+                      bạn sẽ phải mất một khoản tiền khi hủy phòng
+                    </div>
                   </div>
                   <hr style={{ width: '96%', marginLeft: '2%' }} />
                   <div style={{ margin: '10px 15px 0px 10px' }}>
