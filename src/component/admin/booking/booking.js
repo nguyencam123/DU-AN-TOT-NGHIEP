@@ -1,7 +1,7 @@
 import { EyeOutlined, HomeOutlined, UserOutlined } from "@ant-design/icons";
 import { Input, Row, Select, Table, Typography, Form, Space, Button, Modal, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { adminTranCodeBooking, getBooking, getBookingByName, getBookingByNameHomestay, getBookingByPhoneNumber, userTranCodeBooking } from "../../../features/admin/adminThunk";
+import { adminTranCodeBooking, getBooking, getBookingByName, getBookingByNameHomestay, getBookingByPhoneNumber, searchBooking, userTranCodeBooking } from "../../../features/admin/adminThunk";
 import { useEffect, useState } from "react";
 import moment from 'moment';
 import dayjs from 'dayjs';
@@ -192,7 +192,43 @@ function BookingForm() {
       value: 1
     }
   ]
+  const listFilterOwner = [
+    {
+      name: 'Tất cả',
+      value: '4'
+    },
+    {
+      name: 'Đã thanh toán',
+      value: 0
+    },
+    {
+      name: 'Chưa thanh toán',
+      value: 1
+    }
+  ]
+  const listFilterUser = [
+    {
+      name: 'Tất cả',
+      value: '4'
+    },
+    {
+      name: 'Đã thanh toán',
+      value: 0
+    },
+    {
+      name: 'Chưa thanh toán',
+      value: 1
+    }
+  ]
   const [selectedStatus, setSelectedStatus] = useState({
+    name: 'Tất cả',
+    value: '4'
+  })
+  const [selectedStatusUser, setSelectedStatusUser] = useState({
+    name: 'Tất cả',
+    value: '4'
+  })
+  const [selectedStatusOwner, setSelectedStatusOnwer] = useState({
     name: 'Tất cả',
     value: '4'
   })
@@ -204,35 +240,93 @@ function BookingForm() {
   const [userTrancode, setUserTrancode] = useState(' ')
 
   const [viewBooking, setViewBooking] = useState({})
+  const [bookingSearch, setBookingSearch] = useState({
+    status: '',
+    homestayName: '',
+    userName: '',
+    statusPayUser: '',
+    statusPayOwner: ''
+  })
+
   const handleChangeStatus = (value) => {
     if (value === 1) {
       setSelectedStatus({
         name: 'Thành công',
         value: 1
       })
-      dispatch(getBooking(1));
+      setBookingSearch({ ...bookingSearch, status: 1 })
+      dispatch(searchBooking(1, bookingSearch.homestayName, bookingSearch.userName, bookingSearch.statusPayUser, bookingSearch.statusPayOwner));
     } else if (value === 0) {
       setSelectedStatus({
         name: 'Hủy',
         value: 0
       })
-      dispatch(getBooking(0));
+      setBookingSearch({ ...bookingSearch, status: 0 })
+      dispatch(searchBooking(0, bookingSearch.homestayName, bookingSearch.userName, bookingSearch.statusPayUser, bookingSearch.statusPayOwner));
     } else {
-      dispatch(getBooking(' '));
+      setBookingSearch({ ...bookingSearch, status: '' })
+      dispatch(searchBooking(' ', bookingSearch.homestayName, bookingSearch.userName, bookingSearch.statusPayUser, bookingSearch.statusPayOwner));
       setSelectedStatus({
         name: 'Tất cả',
         value: '4'
       })
     }
   }
+  const handleChangeStatusUser = (value) => {
+    if (value === 0) {
+      setSelectedStatusUser({
+        name: 'Đã thanh toán',
+        value: 0
+      })
+      setBookingSearch({ ...bookingSearch, statusPayUser: 0 })
+      dispatch(searchBooking(bookingSearch.status, bookingSearch.homestayName, bookingSearch.userName, 0, bookingSearch.statusPayOwner));
+    } else if (value === 1) {
+      setSelectedStatusUser({
+        name: 'Chưa thanh toán',
+        value: 1
+      })
+      setBookingSearch({ ...bookingSearch, statusPayUser: 1 })
+      dispatch(searchBooking(bookingSearch.status, bookingSearch.homestayName, bookingSearch.userName, 1, bookingSearch.statusPayOwner));
+    } else {
+      setBookingSearch({ ...bookingSearch, statusPayUser: '' })
+      dispatch(searchBooking(bookingSearch.status, bookingSearch.homestayName, bookingSearch.userName, '', bookingSearch.statusPayOwner));
+      setSelectedStatusUser({
+        name: 'Tất cả',
+        value: '4'
+      })
+    }
+  }
+  const handleChangeStatusOwner = (value) => {
+    if (value === 0) {
+      setSelectedStatusOnwer({
+        name: 'Đã thanh toán',
+        value: 0
+      })
+      setBookingSearch({ ...bookingSearch, statusPayOwner: 0 })
+      dispatch(searchBooking(bookingSearch.status, bookingSearch.homestayName, bookingSearch.userName, bookingSearch.statusPayUser, 0));
+    } else if (value === 1) {
+      setSelectedStatusOnwer({
+        name: 'Chưa thanh toán',
+        value: 1
+      })
+      setBookingSearch({ ...bookingSearch, statusPayOwner: 1 })
+      dispatch(searchBooking(bookingSearch.status, bookingSearch.homestayName, bookingSearch.userName, bookingSearch.statusPayUser, 1));
+    } else {
+      setBookingSearch({ ...bookingSearch, statusPayOwner: '' })
+      dispatch(searchBooking(bookingSearch.status, bookingSearch.homestayName, bookingSearch.userName, bookingSearch.statusPayUser, ''));
+      setSelectedStatusOnwer({
+        name: 'Tất cả',
+        value: '4'
+      })
+    }
+  }
   const searchByNameHomestay = (value, _e, info) => {
-    dispatch(getBookingByNameHomestay(value));
+    setBookingSearch({ ...bookingSearch, homestayName: value })
+      dispatch(searchBooking(bookingSearch.status, value, bookingSearch.userName, bookingSearch.statusPayUser, bookingSearch.statusPayOwner));
   }
   const searchByNameBooking = (value, _e, info) => {
-    dispatch(getBookingByName(value));
-  }
-  const searchByPhoneNumber = (value, _e, info) => {
-    dispatch(getBookingByPhoneNumber(value));
+    setBookingSearch({ ...bookingSearch, userName: value })
+    dispatch(searchBooking(bookingSearch.status,  bookingSearch.homestayName, value, bookingSearch.statusPayUser, bookingSearch.statusPayOwner));
   }
   const showBooking = (booking) => {
     setIsViewModal(true)
@@ -279,7 +373,23 @@ function BookingForm() {
             onChange={handleChangeStatus}
           />
         </Form.Item>
-        <Form.Item label="Tìm kiếm theo tên" style={{ float: 'left', marginLeft: ' 50px' }}>
+        <Form.Item label="Thanh toán cho chủ" style={{ float: 'left', marginLeft: ' 50px' }}>
+          <Select
+            style={{ width: 143 }}
+            options={listFilterOwner.map(filter => ({ value: filter.value, label: filter.name }))}
+            defaultValue={selectedStatusOwner.value}
+            onChange={handleChangeStatusOwner}
+          />
+        </Form.Item>
+        <Form.Item label="Hoàn tiền" style={{ float: 'left', marginLeft: ' 50px' }}>
+          <Select
+            style={{ width: 143 }}
+            options={listFilterUser.map(filter => ({ value: filter.value, label: filter.name }))}
+            defaultValue={selectedStatusUser.value}
+            onChange={handleChangeStatusUser}
+          />
+        </Form.Item>
+        <Form.Item label="Tìm kiếm theo tên" style={{ float: 'left' }}>
           <Search
             placeholder="Tên homestay"
             allowClear
@@ -288,16 +398,7 @@ function BookingForm() {
             onSearch={searchByNameHomestay}
           />
         </Form.Item>
-        <Form.Item label="Tìm kiếm theo số điện thoại liên lạc" style={{ float: 'left', marginLeft: ' 20px' }}>
-          <Search
-            placeholder="Số điện thoại"
-            allowClear
-            size="medium"
-            enterButton="search"
-            onSearch={searchByPhoneNumber}
-          />
-        </Form.Item>
-        <Form.Item label="Tìm kiếm theo tên người liên lạc" style={{ float: 'left', marginLeft: ' 0px' }}>
+        <Form.Item label="Tìm kiếm theo tên người liên lạc" style={{ float: 'left', marginLeft: ' 20px' }}>
           <Search
             placeholder="Tên người liên lạc"
             allowClear
