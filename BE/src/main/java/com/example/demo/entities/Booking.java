@@ -72,6 +72,7 @@ public class Booking extends PrimaryEntity {
 
     private String cancellTransactionCode;
 
-    private StatusPayInfomation statusPayInfomation;
+    private StatusPayUser statusPayUser;
 
+    private StatusPayOwner statusPayOwner;
 }

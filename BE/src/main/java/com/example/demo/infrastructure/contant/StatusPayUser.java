@@ -1,6 +1,6 @@
 package com.example.demo.infrastructure.contant;
 
-public enum StatusPayInfomation {
+public enum StatusPayUser {
     DA_TT_CHO_USER,
-    DA_TT_CHO_OWNER
+    CHUA_TT_CHO_USER
 }

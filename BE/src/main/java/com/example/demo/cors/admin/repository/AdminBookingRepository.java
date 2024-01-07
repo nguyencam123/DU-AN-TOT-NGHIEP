@@ -34,6 +34,8 @@ public interface AdminBookingRepository extends BookingRepository {
                     AND ( :#{#request.sdtUser} IS NULL OR :#{#request.sdtUser} LIKE '' OR u.phone_number = :#{#request.sdtUser} OR b.phone_number = :#{#request.sdtUser})
                     AND ( :#{#request.nameBooking} IS NULL OR :#{#request.nameBooking} LIKE '' OR b.name LIKE %:#{#request.nameBooking}%)
                     AND (:#{#request.statusBooking} IS NULL OR b.status = :#{#request.statusBooking}) 
+                    AND (:#{#request.statusPayUser} IS NULL OR b.status_pay_user = :#{#request.statusPayUser})
+                    AND (:#{#request.statusPayOwner} IS NULL OR b.status_pay_owner = :#{#request.statusPayOwner})
                     AND (b.status <> 2))
                     """, nativeQuery = true)
     Page<Booking> getAllBooking(@Param("request") AdminBookingRequest request, Pageable pageable);

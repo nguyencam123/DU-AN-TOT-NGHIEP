@@ -12,5 +12,9 @@ public interface AdminBookingService {
 
     PageableObject<AdminBookingResponse> getAllBookingByHomestay(AdminBookingByHomestayRequest request);
 
-    Booking updateTranCode(AdminBookingRequest request);
+    Booking updateAdminTranCode(AdminBookingRequest request);
+
+    Booking updateCuttomTranCode(AdminBookingRequest request);
+
+    Booking updateCancellTranCode(AdminBookingRequest request);
 }
