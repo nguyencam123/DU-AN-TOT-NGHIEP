@@ -252,11 +252,11 @@ export const DetailHomestay = () => {
                   >
                     {formatCurrency(
                       detailHomestay.price -
-                        detailHomestay?.promotion?.value +
-                        ((detailHomestay.price -
-                          detailHomestay?.promotion?.value) *
-                          11) /
-                          100,
+                      detailHomestay?.promotion?.value +
+                      ((detailHomestay.price -
+                        detailHomestay?.promotion?.value) *
+                        11) /
+                      100,
                     )}
                     <span style={{ fontSize: '22' }}> </span>{' '}
                   </div>
@@ -508,7 +508,7 @@ export const DetailHomestay = () => {
                   sẽ được hoàn toàn miễn phí. Sau ngày{' '}
                   {moment(detailHomestay.startDate).locale('vi').format('LL')}{' '}
                   bạn sẽ phải mất một khoản tiền khi hủy phòng
-                </span> 
+                </span>
               </div>
               <hr style={{ width: '96%', marginLeft: '2%' }} />
               <div style={{ marginLeft: '10px', marginTop: '10px' }}>
@@ -539,8 +539,8 @@ export const DetailHomestay = () => {
                       <td>{detailHomestay?.acreage}m2</td>
                     </tr>
                     <tr>
-                      <td>Bữa sáng miễn phí</td>
-                      <td>Có</td>
+                      <td>Số phần trăm tiền bạn nhân được khi hủy phòng</td>
+                      <td>{detailHomestay.cancellationPolicy} %</td>
                     </tr>
                     <tr>
                       <td>Số người</td>
