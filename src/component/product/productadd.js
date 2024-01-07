@@ -150,7 +150,7 @@ function AddProductForm() {
     setSelectedStatus(
       {
         name: 'Từ chối',
-        value: 2
+        value: 3
       }
     );
     dispatch(getAllHomestayByStatus(2));
@@ -213,7 +213,7 @@ function AddProductForm() {
           return 'Chờ duyệt'
         }
         if (data === 'KHONG_HOAT_DONG') {
-          return 'Ngừng hoạt động'
+          return 'Không hoạt động'
         }
         if (data === 'TU_CHOI_DUYET') {
           return 'Từ chối duyệt'
@@ -307,7 +307,7 @@ function AddProductForm() {
           <Button
             key="submit"
             style={{ backgroundColor: 'red', color: 'white' }}
-            disabled={loadingConfirm || viewHomestay.status === 3}
+            disabled={viewHomestay.status !== 'KHONG_HOAT_DONG' ? false : true}
             onClick={handleDenied}
             loading={loadingConfirm}
           >
@@ -318,6 +318,7 @@ function AddProductForm() {
             onClick={handleOk}
             disabled={loadingConfirm}
             loading={loadingConfirm}
+            disabled={viewHomestay.status !== 'KHONG_HOAT_DONG' ? false : true}
           >
             Đồng ý duyệt
           </Button>

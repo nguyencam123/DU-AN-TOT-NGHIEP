@@ -186,7 +186,6 @@ const CategoryList = () => {
             <Select
               style={{ width: 143 }}
               onChange={(data) => handleChangeType(data)}
-              defaultValue={listType[0]?.id}
               options={listType.map((filter) => ({ value: filter.id, label: filter.name }))}
             />
           </Form.Item>

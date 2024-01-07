@@ -232,8 +232,8 @@ export const BookingReviewHomestay = () => {
                           <td>50m2</td>
                         </tr>
                         <tr>
-                          <td>Số tiền bạn nhân được khi hủy phòng</td>
-                          <td>{ detailHomestay.cancellationPolicy} %</td>
+                          <td>Số phần trăm tiền bạn nhân được khi hủy phòng</td>
+                          <td>{detailHomestay.cancellationPolicy} %</td>
                         </tr>
                         <tr>
                           <td>Số người</td>
@@ -267,7 +267,7 @@ export const BookingReviewHomestay = () => {
                   </Col>
                   <Col span={20} push={1} >
                     <div style={{ paddingTop: '15px', fontWeight: '700', fontSize: '16px', color: 'rgb(1, 148, 243)' }}>
-                    Mọi thắc mắc về hóa đơn, vui lòng tham khảo Điều khoản và
+                      Mọi thắc mắc về hóa đơn, vui lòng tham khảo Điều khoản và
                       Điều kiện của TravelVIVU để được giải đáp
                     </div>
                     <hr />
