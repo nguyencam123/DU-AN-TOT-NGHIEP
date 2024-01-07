@@ -1,6 +1,5 @@
 package com.example.demo.cors.customer.services.impl;
 
-import com.example.demo.cors.customer.model.request.CustomerCartRequest;
 import com.example.demo.cors.customer.repository.CustomerCartDetailRepository;
 import com.example.demo.cors.customer.services.CustomerCartDetailService;
 import com.example.demo.infrastructure.exception.rest.RestApiException;

@@ -46,7 +46,7 @@ public interface CustomerCartDetailRepository extends CartDetailRepository {
                             JOIN homestay h ON h.id =  cd.homestay_id
                             LEFT JOIN img_homestay ih ON h.id = ih.homestay_id
                             LEFT JOIN promotion p ON p.id = h.promotion_id
-                            JOIN comment cm ON cm.homestay_id = h.id 
+                            LEFT JOIN comment cm ON cm.homestay_id = h.id 
                             WHERE c.id_user = :#{#request.userId} 
                             GROUP BY cd.id, cd.start_date, cd.end_date, cd.status, h.id, h.name, h.price, h.number_person, h.address, h.[desc], h.email, h.acreage, p.value
             """, nativeQuery = true)
