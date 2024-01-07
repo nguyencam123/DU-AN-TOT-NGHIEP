@@ -322,11 +322,11 @@ function BookingForm() {
   }
   const searchByNameHomestay = (value, _e, info) => {
     setBookingSearch({ ...bookingSearch, homestayName: value })
-      dispatch(searchBooking(bookingSearch.status, value, bookingSearch.userName, bookingSearch.statusPayUser, bookingSearch.statusPayOwner));
+    dispatch(searchBooking(bookingSearch.status, value, bookingSearch.userName, bookingSearch.statusPayUser, bookingSearch.statusPayOwner));
   }
   const searchByNameBooking = (value, _e, info) => {
     setBookingSearch({ ...bookingSearch, userName: value })
-    dispatch(searchBooking(bookingSearch.status,  bookingSearch.homestayName, value, bookingSearch.statusPayUser, bookingSearch.statusPayOwner));
+    dispatch(searchBooking(bookingSearch.status, bookingSearch.homestayName, value, bookingSearch.statusPayUser, bookingSearch.statusPayOwner));
   }
   const showBooking = (booking) => {
     setIsViewModal(true)
@@ -341,6 +341,13 @@ function BookingForm() {
     setViewBooking(booking)
   }
   const handleOwnerTranCode = () => {
+    if (ownerTrancode.trim().length === 0) {
+      message.info(
+        'Mã không được trống',
+        1,
+      )
+      return false
+    }
     dispatch(adminTranCodeBooking(viewBooking.id, ownerTrancode));
     setOwnerModal(false)
     message.info(
@@ -349,6 +356,13 @@ function BookingForm() {
     )
   }
   const handleUserTranCode = () => {
+    if (userTrancode.trim().length === 0) {
+      message.info(
+        'Mã không được trống',
+        1,
+      )
+      return false
+    }
     dispatch(userTranCodeBooking(viewBooking.id, userTrancode));
     setUserModal(false)
     message.info(
