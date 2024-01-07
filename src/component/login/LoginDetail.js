@@ -504,7 +504,12 @@ const LoginDetail = () => {
         }}
       >
         <div style={{ display: 'flex', padding: '0px 15px 0px 20px' }}>
-          <Avatar size={64} icon={<UserOutlined />} />
+          {userDetail?.data?.avataUrl == null ? (
+            <Avatar size={64} icon={<UserOutlined />} />
+          ) : (
+            <Avatar size={64} src={<img src={userDetail?.data?.avataUrl} />} />
+          )}
+
           <Title level={4} style={{ marginLeft: 20, marginTop: 20 }}>
             {namelocal}
           </Title>

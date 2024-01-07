@@ -13,10 +13,29 @@ import {
   MDBRow,
   MDBTypography,
 } from 'mdb-react-ui-kit'
-import { useNavigate } from 'react-router-dom'
-import { Checkbox, Radio, Rate, Typography } from 'antd'
-import { fetchShoppingCart } from '../../../features/user/shoppingCartThunk'
-import { DeleteOutlined, EnvironmentOutlined } from '@ant-design/icons'
+import { Link, useNavigate } from 'react-router-dom'
+import {
+  Button,
+  Checkbox,
+  Popconfirm,
+  Radio,
+  Rate,
+  Typography,
+  message,
+} from 'antd'
+import {
+  deleteAllShoppingCart,
+  deleteShoppingCart,
+  fetchShoppingCart,
+} from '../../../features/user/shoppingCartThunk'
+import {
+  CloseOutlined,
+  DeleteOutlined,
+  EnvironmentOutlined,
+  SearchOutlined,
+} from '@ant-design/icons'
+import moment from 'moment'
+
 const { Title } = Typography
 
 export const CartUser = () => {
@@ -36,12 +55,29 @@ export const CartUser = () => {
 
   const [selectedRadio, setSelectedRadio] = useState([])
   const [selectedRadioData, setSelectedRadioData] = useState([])
+  // const [totalNext, setTotalNext] = useState(0)
   const handleRadioChange = (e) => {
     const index = e.target.value
     setSelectedRadio(index)
     setSelectedRadioData(shoppingcart[index])
   }
-
+  const formatCurrency = (value) => {
+    // Sử dụng Intl.NumberFormat để định dạng giá trị tiền tệ
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(value)
+  }
+  const handleDeleteCart = async (id) => {
+    await dispatch(deleteShoppingCart(id))
+    message.info('Xóa homestay thành công')
+    dispatch(fetchShoppingCart(namelocal))
+  }
+  const handleDeleteAllCart = async () => {
+    await dispatch(deleteAllShoppingCart(namelocal))
+    message.info('Xóa tất cả homestay thành công')
+    dispatch(fetchShoppingCart(namelocal))
+  }
   return (
     <section
       style={{
@@ -64,11 +100,25 @@ export const CartUser = () => {
             border: '1px solid rgb(213, 217, 226)',
             padding: 10,
             borderRadius: 5,
+            display: 'flex',
           }}
         >
           <Title level={3}>
             Xe đẩy hàng của quý khách ({shoppingcart?.length})
           </Title>
+          <div style={{ marginLeft: 'auto' }}>
+            <Popconfirm
+              title='Bạn có muốn xóa tất cả sản phẩm trong giỏ hàng?'
+              onConfirm={() => handleDeleteAllCart()}
+              okText='có'
+              cancelText='không'
+              placement='topRight'
+            >
+              <Button danger icon={<DeleteOutlined />}>
+                Xóa tất cả sản phẩm
+              </Button>
+            </Popconfirm>
+          </div>
         </div>
         <br />
         {shoppingcart?.length === 0 ? (
@@ -79,11 +129,24 @@ export const CartUser = () => {
           shoppingcart?.map((items, index) => {
             const addressArray = items.address.split(',') // Tách chuỗi thành mảng dựa trên dấu phẩy
 
-            // Lấy phần tử thứ tư (index 3) trong mảng
+            const imageUrls = items.image.split(',')
+
+            // Ensure there is at least one image URL
+            const imageUrl = imageUrls?.length > 0 ? imageUrls[0].trim() : ''
             const city = addressArray.length >= 4 ? addressArray[3].trim() : ''
-            const averagePoint =
-              items.comment.reduce((sum, comment) => sum + comment.point, 0) /
-              items.comment.length
+            const averagePoint = items.point
+            const startDate = moment(items.startDate * 1)
+            const endDate = moment(items.endDate * 1)
+
+            // Calculate the difference in days
+            const nightCount = endDate.diff(startDate, 'days')
+            const TotolPrice = formatCurrency(
+              (items.price -
+                items?.valuePromotion +
+                ((items.price - items?.valuePromotion) * 11) / 100) *
+                nightCount,
+            )
+
             return (
               <div
                 style={{
@@ -98,7 +161,7 @@ export const CartUser = () => {
                 key={index}
               >
                 <div style={{ display: 'flex' }}>
-                  <img src={items.images[0].imgUrl} style={{ width: 150 }} />
+                  <img src={imageUrl} style={{ width: 150 }} />
                   <div style={{ marginLeft: 5 }}>
                     <Title
                       level={5}
@@ -169,23 +232,51 @@ export const CartUser = () => {
                       )}
                     </div>
                     <div>
-                      <Title level={5}>
-                        Có {items.comment.length} đánh giá
-                      </Title>
+                      <Title level={5}>Có {items.quantityCmt} đánh giá</Title>
                     </div>
                   </div>
                   <div style={{ marginLeft: 'auto' }}>
-                    <DeleteOutlined />
+                    <Popconfirm
+                      title='Bạn có muốn xóa homestay này khỏi giỏ hàng không?'
+                      onConfirm={() => handleDeleteCart(items.id)}
+                      okText='có'
+                      cancelText='không'
+                      placement='topRight'
+                    >
+                      <DeleteOutlined />
+                    </Popconfirm>
                   </div>
                 </div>
                 <hr />
-                <div>
+                <div style={{ display: 'flex' }}>
                   <Radio.Group
                     onChange={handleRadioChange}
                     value={selectedRadio}
+                    disabled={items.status !== '0'}
                   >
                     <Radio value={index} />
                   </Radio.Group>
+                  <div>
+                    {moment(items.startDate * 1)
+                      .locale('vi')
+                      .format('LL')}
+                    {' - '}
+                    {moment(items.endDate * 1)
+                      .locale('vi')
+                      .format('LL')}{' '}
+                  </div>
+                  <div style={{ marginLeft: 5, display: 'flex' }}>
+                    {items.status !== '0' ? (
+                      <span>Đã hết hạn</span>
+                    ) : (
+                      <>
+                        (<Title level={5}> {nightCount} đêm</Title>)
+                      </>
+                    )}
+                  </div>
+                  <div style={{ marginLeft: 'auto' }}>
+                    <Title level={4}>{TotolPrice}</Title>
+                  </div>
                 </div>
               </div>
             )
@@ -207,17 +298,46 @@ export const CartUser = () => {
             borderRadius: 5,
           }}
         >
-          <Title level={5}>Tổng giá</Title>
-          <span>Chưa chọn món hàng nào</span>
-          <MDBBtn
-            type='submit'
-            className='w-100 mb-4'
-            size='md'
-            style={{ marginTop: 10 }}
-            disabled={loading || selectedRadioData.length === 0}
+          <div style={{ display: 'flex' }}>
+            <Title level={5}>Tổng giá</Title>
+            {selectedRadioData.length === 0 ? (
+              <span>&emsp;Bạn chưa chọn món hàng nào</span>
+            ) : (
+              <div style={{ display: 'flex', marginLeft: 'auto' }}>
+                <Title level={4}>
+                  {formatCurrency(
+                    (selectedRadioData.price -
+                      selectedRadioData?.valuePromotion +
+                      ((selectedRadioData.price -
+                        selectedRadioData?.valuePromotion) *
+                        11) /
+                        100) *
+                      moment(selectedRadioData.endDate * 1).diff(
+                        moment(selectedRadioData.startDate * 1),
+                        'days',
+                      ),
+                  )}
+                </Title>
+              </div>
+            )}
+          </div>
+          <Link
+            to={`/homestay/booking/${selectedRadioData.idHomestay}?startDate=${
+              selectedRadioData.startDate
+            }&endDate=${selectedRadioData.endDate}&numNight=${moment(
+              selectedRadioData.endDate * 1,
+            ).diff(moment(selectedRadioData.startDate * 1), 'days')}`}
           >
-            {loading ? 'Đang lưu...' : 'Tiếp theo'}
-          </MDBBtn>
+            <MDBBtn
+              type='submit'
+              className='w-100 mb-4'
+              size='md'
+              style={{ marginTop: 10 }}
+              disabled={loading || selectedRadioData.length === 0}
+            >
+              {loading ? 'Đang lưu...' : 'Tiếp theo'}
+            </MDBBtn>
+          </Link>
         </div>
       </div>
     </section>
