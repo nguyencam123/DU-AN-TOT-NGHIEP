@@ -1,5 +1,5 @@
 import imgsale from '../../../assets/svg/Rectangle 184.svg'
-import imghd from '../../../assets/img/Screenshot 2023-10-14 212504.png'
+import imghd from '../../../assets/img/z5046976887413_91d68da3af009e6d03f7f2ebe465cb04.jpg'
 import { Layout, Typography, Checkbox, Col, Row, Pagination } from 'antd'
 import {
   MDBCard,
@@ -205,11 +205,15 @@ const Endow = () => {
                 )}
               </Row>
               <div style={{ float: 'right', marginTop: 20 }}>
-                <Pagination
-                  current={current}
-                  onChange={onChangePage}
-                  total={productPromotion?.totalPages * 10}
-                />
+                {productPromotion?.data?.length > 0 ? (
+                  <Pagination
+                    current={current}
+                    onChange={onChangePage}
+                    total={productPromotion?.totalPages * 10}
+                  />
+                ) : (
+                  <div />
+                )}
               </div>
             </Content>
           </Layout>
@@ -226,9 +230,6 @@ const Endow = () => {
             textAlign: 'center',
           }}
         >
-          <div>
-            <Title level={2}>Cách Áp Dụng Phiếu Giảm Giá</Title>
-          </div>
           <div>
             <img src={imghd} style={{ width: '90%' }} />
           </div>

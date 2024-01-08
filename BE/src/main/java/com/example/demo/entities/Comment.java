@@ -43,5 +43,4 @@ public class Comment extends PrimaryEntity {
     @JsonManagedReference
     private List<ImgComment> images;
 
-
 }

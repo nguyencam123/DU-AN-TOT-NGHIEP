@@ -25,6 +25,7 @@ import LoginComponent from '../../component/login/Login'
 import iconplane from '../../assets/svg/Iconka-Business-Finance-Plane.512.png'
 import logotravel from '../../assets/svg/Rectangle 3.svg'
 import { MDBIcon } from 'mdb-react-ui-kit'
+import { fetchShoppingCart } from '../../features/user/shoppingCartThunk'
 
 const { Title } = Typography
 
@@ -33,12 +34,17 @@ const HeaderUser = () => {
   const [showDropdown, setShowDropdown] = useState(false)
   const navigate = useNavigate()
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn)
+  const shoppingcart = useSelector((state) => state.shoppingcart.shoppingCart)
   const userDetail = JSON.parse(localStorage.getItem('userDetail'))
   const userId = userDetail?.data.id
   const statusUser = JSON.parse(localStorage.getItem('userDetail'))?.success
   const dispatch = useDispatch()
   const [searchVisible, setSearchVisible] = useState(false)
   const [searchValue, setSearchValue] = useState('')
+
+  useEffect(() => {
+    dispatch(fetchShoppingCart(userId))
+  }, [])
 
   const handleSearchClick = () => {
     setSearchVisible(!searchVisible)
@@ -121,7 +127,7 @@ const HeaderUser = () => {
                 <strong>Homestay</strong>
               </Link>
               <Link to={'/phieu-giam-gia'} className='textnabar'>
-                <strong>Phiếu giảm giá</strong>
+                <strong>Homestay đang giảm giá</strong>
               </Link>
               <Link to={'/hop-tac'} className='textnabar'>
                 <strong>Hợp tác với chúng tôi</strong>
@@ -153,7 +159,7 @@ const HeaderUser = () => {
                 <Link to='/shopingcart' className='headercart'>
                   <span className='picturecart'>
                     <span className='cc'>
-                      <Badge count={0} showZero>
+                      <Badge count={shoppingcart?.length} showZero>
                         <ShoppingCartOutlined
                           style={{
                             color: 'black',

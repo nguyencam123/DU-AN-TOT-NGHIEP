@@ -57,9 +57,14 @@ const CategoryList = () => {
   const [isUpdate, setIsUpdate] = useState(false);
   const [modalType, setModalType] = useState(false);
   const [convenient, setConvenient] = useState({
-    desc: 'mo ta'
+    name: '',
+    desc: 'mo ta',
+    idType: ''
   });
-  const [convenientType, setConvenientType] = useState({});
+  const [convenientType, setConvenientType] = useState({
+    nameType: '',
+    descType: '',
+  });
   const handleChangeConvenientType = (data) => {
     setConvenientType({ ...convenientType, nameType: data.target.value })
   }
@@ -85,14 +90,25 @@ const CategoryList = () => {
     setModalType(true);
   };
   const convenientAdd = async () => {
+    if (convenient.name.trim().length === 0) {
+      message.error('Tên không được trống');
+      return false
+    }
+    if (convenient.idType.trim().length === 0) {
+      message.error('Loại không được trống');
+      return false
+    }
     await dispatch(addConvenient(convenient));
     await dispatch(getConvenient());
     setIsModalOpen(false)
   };
   const addConvenientType = async () => {
+    if (convenientType.nameType.trim().length === 0) {
+      message.error('Tên không được trống!')
+      return false
+    }
     await dispatch(addType(convenientType));
     await dispatch(getConvenientType());
-    message.info('Thêm thành công');
     setModalType(false);
   };
   const handleCancel = () => {
@@ -111,9 +127,16 @@ const CategoryList = () => {
     setIsUpdate(true)
   }
   const update = async () => {
-    await dispatch(updateConvenient({ idType: typeUpdate, name: nameUpdate, id: idUpdate}))
+    if (nameUpdate.trim().length === 0) {
+      message.error('Tên không được trống');
+      return false
+    }
+    if (typeUpdate.trim().length === 0) {
+      message.error('Loại không được trống');
+      return false
+    }
+    await dispatch(updateConvenient({ idType: typeUpdate, name: nameUpdate, id: idUpdate }))
     await dispatch(getConvenient())
-    message.info('Sửa thành công');
     setIsUpdate(false)
   }
   return (
@@ -130,7 +153,7 @@ const CategoryList = () => {
         </Button>
         <Button
           type='primary'
-          style={{ float: 'right', marginBottom: '20px', marginRight : '10px' }}
+          style={{ float: 'right', marginBottom: '20px', marginRight: '10px' }}
           onClick={showTypeModal}
         >
           Thêm loại tiện nghi
@@ -164,7 +187,6 @@ const CategoryList = () => {
               style={{ width: 143 }}
               onChange={(data) => handleChangeType(data)}
               options={listType.map((filter) => ({ value: filter.id, label: filter.name }))}
-              value={convenient?.name}
             />
           </Form.Item>
         </Form>
@@ -204,7 +226,7 @@ const CategoryList = () => {
         onCancel={handleCancelUpdate}
       >
         <Form>
-        <Form.Item
+          <Form.Item
             label='Tên tiện nghi'
             name='nameUpdate'
             rules={[
@@ -225,7 +247,7 @@ const CategoryList = () => {
               options={listType.map((filter) => ({ value: filter.id, label: filter.name }))}
               value={typeUpdate}
             />
-            </Form.Item>
+          </Form.Item>
         </Form>
       </Modal>
     </>

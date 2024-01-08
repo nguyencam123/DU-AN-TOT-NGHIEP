@@ -112,6 +112,17 @@ export const BookingHomestay = () => {
       `/review/booking/${id}?bookingId=${booking.id}&name=${infoPayment.name}&email=${infoPayment.email}&phoneNumber=${infoPayment.phoneNumber}&startDate=${startDate}&endDate=${endDate}&numNight=${numNight}&totalPrice=${totalPrice}`,
     )
   }
+  const handlecheckBookingHomestay = (id) => {
+    if (infoPayment.phoneNumber.trim().length === 0) {
+      message.info('Số điện thoại không được trống')
+      return false
+    }
+    if (infoPayment.email.trim().length === 0) {
+      message.info('Email không được trống')
+      return false
+    }
+    setModalTyBooking(true)
+  }
 
   return (
     <>
@@ -426,7 +437,7 @@ export const BookingHomestay = () => {
                 <Col span={16}>
                   <div style={{ float: 'right', marginTop: '5px' }}>
                     <Button
-                      onClick={() => setModalTyBooking(true)}
+                      onClick={() => handlecheckBookingHomestay()}
                       style={{
                         color: 'white',
                         fontWeight: '500',

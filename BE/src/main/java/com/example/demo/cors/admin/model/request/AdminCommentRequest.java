@@ -11,5 +11,9 @@ public class AdminCommentRequest extends PageableRequest {
 
     String userName;
 
+    String homestayName;
+
     String commentId;
+
+    String userId;
 }

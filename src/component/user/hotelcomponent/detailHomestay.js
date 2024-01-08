@@ -15,6 +15,7 @@ import {
   Pagination,
   Modal,
   Carousel,
+  message,
 } from 'antd'
 import {
   ClockCircleTwoTone,
@@ -45,6 +46,10 @@ import {
   MDBRow,
   MDBTypography,
 } from 'mdb-react-ui-kit'
+import {
+  addShoppingCartThunk,
+  fetchShoppingCart,
+} from '../../../features/user/shoppingCartThunk'
 
 const { Header, Content, Footer } = Layout
 
@@ -163,6 +168,24 @@ export const DetailHomestay = () => {
   const closeModal = () => {
     setModalVisible(false)
   }
+  /**
+   * shopping cart
+   */
+  const shoppingCart = {
+    userId: userDetail?.data.id,
+    startDate: startDate,
+    endDate: endDate,
+    homestayId: params.id,
+  }
+  const addShoppingCart = async () => {
+    if (userDetail?.data.id == null) {
+      message.info('Bạn cần đăng nhập để có thể thêm vào giỏ hàng!')
+    } else {
+      await dispatch(addShoppingCartThunk(shoppingCart))
+      message.info('Thêm vào giỏ hàng thành công!')
+      dispatch(fetchShoppingCart(userDetail?.data.id))
+    }
+  }
   return (
     <>
       <div
@@ -229,11 +252,11 @@ export const DetailHomestay = () => {
                   >
                     {formatCurrency(
                       detailHomestay.price -
-                        detailHomestay?.promotion?.value +
-                        ((detailHomestay.price -
-                          detailHomestay?.promotion?.value) *
-                          11) /
-                          100,
+                      detailHomestay?.promotion?.value +
+                      ((detailHomestay.price -
+                        detailHomestay?.promotion?.value) *
+                        11) /
+                      100,
                     )}
                     <span style={{ fontSize: '22' }}> </span>{' '}
                   </div>
@@ -268,7 +291,7 @@ export const DetailHomestay = () => {
                   Chọn phòng
                 </Button>
                 <Button
-                  // onClick={() => handleBookingHomestay(params.id)}
+                  onClick={addShoppingCart}
                   style={{
                     width: '100%',
                     backgroundColor: 'white',
@@ -491,14 +514,10 @@ export const DetailHomestay = () => {
               <div style={{ marginLeft: '10px', marginTop: '10px' }}>
                 <div style={{ lineHeight: '16px', marginTop: '3px' }}>
                   <FileTextTwoTone style={{ fontSize: '12px' }} />
-                  <b> Chính sách hủy phòng</b>
+                  <b> Mô tả</b>
                 </div>
                 <div style={{ lineHeight: '16px', marginLeft: '17px' }}>
-                  Please note that your children might be charged when check-in
-                  at the hotel. Please call the hotel before your check-in date
-                  for further information. Vui long luu y, tre em co the bi thu
-                  them phi khi nhan phong tai khach san. Vui long lien he khach
-                  san truoc khi nhan phong de biet them thong tin chi tiet.
+                  {detailHomestay.desc}
                 </div>
               </div>
               <hr style={{ width: '96%', marginLeft: '2%' }} />
@@ -520,8 +539,8 @@ export const DetailHomestay = () => {
                       <td>{detailHomestay?.acreage}m2</td>
                     </tr>
                     <tr>
-                      <td>Bữa sáng miễn phí</td>
-                      <td>Có</td>
+                      <td>Số phần trăm tiền bạn nhân được khi hủy phòng</td>
+                      <td>{detailHomestay.cancellationPolicy} %</td>
                     </tr>
                     <tr>
                       <td>Số người</td>

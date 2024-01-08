@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -30,5 +31,10 @@ public interface CustomerBookingRepository extends BookingRepository {
             WHERE a.id =:bookingId AND a.status = 1
             """, nativeQuery = true)
     Optional<Booking> findByIdAndCancel(@Param("bookingId") String bookingId);
+
+    @Query(value = """
+            SELECT * FROM booking
+            """, nativeQuery = true)
+    List<Booking> getAllBooking();
 
 }

@@ -1,10 +1,7 @@
 package com.example.demo.entities;
 
 import com.example.demo.entities.base.PrimaryEntity;
-import com.example.demo.infrastructure.contant.EntityProperties;
-import com.example.demo.infrastructure.contant.PaymentStatusBooking;
-import com.example.demo.infrastructure.contant.StatusBooking;
-import com.example.demo.infrastructure.contant.TypeBooking;
+import com.example.demo.infrastructure.contant.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -15,6 +12,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "booking")
@@ -70,4 +68,11 @@ public class Booking extends PrimaryEntity {
 
     private Integer numberOfNight;
 
+    private LocalDate cancellationDate;
+
+    private String cancellTransactionCode;
+
+    private StatusPayUser statusPayUser;
+
+    private StatusPayOwner statusPayOwner;
 }

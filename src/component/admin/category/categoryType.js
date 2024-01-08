@@ -14,7 +14,8 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { CheckOutlined, DeleteOutlined, DeleteTwoTone, EditOutlined, EditTwoTone, QuestionCircleOutlined } from '@ant-design/icons';
 import { useState } from 'react';
-import { addConvenient, addType, getConvenient, getConvenientType } from '../../../features/admin/adminThunk';
+import { addConvenient, addType, getConvenient, getConvenientType, updateType } from '../../../features/admin/adminThunk';
+import { update } from 'react-spring';
 const { Title } = Typography;
 
 const CategoryType = () => {
@@ -24,7 +25,7 @@ const CategoryType = () => {
       dataIndex: 'name',
     },
     {
-      title: 'Loại',
+      title: 'Mô tả',
       dataIndex: 'desc'
     },
     {
@@ -32,7 +33,7 @@ const CategoryType = () => {
       key: 'action',
       render: (_, record) => (
         <Space size='middle'>
-          <a onClick={() => updateConvenient(record)}><EditTwoTone /></a>
+          <a onClick={() => showUpdateTypeModal(record)}><EditTwoTone /></a>
         </Space>
       )
     }
@@ -44,11 +45,12 @@ const CategoryType = () => {
     dispatch(getConvenientType());
   }, []);
   const listType = useSelector((state) => state.admin.categoryType)
-  console.log(listType);
   const [modalType, setModalType] = useState(false);
-  const [convenientUpdate, setConvenientUpdate] = useState({
-    desc: 'mo ta'
-  });
+  const [modalTypeUpdate, setModalTypeUpdate] = useState(false);
+  const [idUpdate, setIdUpdate] = useState('');
+  const [nameUpdate, setNameUpdate] = useState('');
+  const [descUpdate, setDescUpdate] = useState('');
+
   const [convenientType, setConvenientType] = useState({
     nameType: '',
     descType: ''
@@ -59,21 +61,45 @@ const CategoryType = () => {
   const handleChangeDesc = (data) => {
     setConvenientType({ ...convenientType, descType: data.target.value })
   }
+  const handleChangeNameUpdate = (data) => {
+    setNameUpdate(data.target.value)
+  }
+  const handleChangeDescUpdate = (data) => {
+    setDescUpdate(data.target.value)
+  }
   const showTypeModal = () => {
     setModalType(true);
   };
+  const showUpdateTypeModal = (value) => {
+    setNameUpdate(value.name)
+    setIdUpdate(value.id)
+    setDescUpdate(value.desc)
+    setModalTypeUpdate(true);
+  };
 
   const addConvenientType = async () => {
+    if (convenientType.nameType.trim().length === 0) {
+      message.error('Tên không được trống');
+      return false
+    }
     await dispatch(addType(convenientType));
     await dispatch(getConvenientType());
-    message.info('Thêm thành công');
     setModalType(false);
+  };
+  const updateConvenientType = async () => {
+    if (nameUpdate.trim().length === 0) {
+      message.error('Tên không được trống');
+      return false
+    }
+    await dispatch(updateType({ id: idUpdate, nameType: nameUpdate, descType: descUpdate }));
+    await dispatch(getConvenientType());
+    setModalTypeUpdate(false);
   };
   const handleTypeModalCancel = () => {
     setModalType(false);
+    setModalTypeUpdate(false)
   };
-  const updateConvenient = (data) => {
-  }
+
   return (
     <>
       <div style={{ marginTop: '30px' }}>
@@ -112,6 +138,25 @@ const CategoryType = () => {
             name='type'
           >
             <Input value={convenientType.descType} onChange={(data) => handleChangeDesc(data)} />
+          </Form.Item>
+        </Form>
+      </Modal>
+      <Modal
+        title='Sửa loại tiện nghi'
+        open={modalTypeUpdate}
+        onOk={updateConvenientType}
+        onCancel={handleTypeModalCancel}
+      >
+        <Form>
+          <Form.Item
+            label='Tên loại tiện nghi'
+          >
+            <Input value={nameUpdate} onChange={(data) => handleChangeNameUpdate(data)} />
+          </Form.Item>
+          <Form.Item
+            label='Mô tả loại tiện nghi'
+          >
+            <Input value={descUpdate} onChange={(data) => handleChangeDescUpdate(data)} />
           </Form.Item>
         </Form>
       </Modal>

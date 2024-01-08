@@ -210,8 +210,13 @@ export const BookingReviewHomestay = () => {
                   <hr style={{ width: '96%', marginLeft: '2%' }} />
                   <div style={{ marginLeft: '10px', marginTop: '10px' }}>
                     <div style={{ lineHeight: '16px', marginTop: '3px' }}><FileTextTwoTone style={{ fontSize: '12px' }} /><b> Chính sách hủy phòng</b></div>
-                    <div style={{ lineHeight: '16px', marginLeft: '17px', }}>Please note that your children might be charged when check-in at the hotel. Please call the hotel before your check-in date for further information.
-                      Vui long luu y, tre em co the bi thu them phi khi nhan phong tai khach san. Vui long lien he khach san truoc khi nhan phong de biet them thong tin chi tiet.</div>
+                    <div style={{ lineHeight: '16px', marginLeft: '17px', }}>
+                      Việc hủy phòng trước ngày{' '}
+                      {moment(detailHomestay.startDate).locale('vi').format('LL')}{' '}
+                      sẽ được hoàn toàn miễn phí. Sau ngày{' '}
+                      {moment(detailHomestay.startDate).locale('vi').format('LL')}{' '}
+                      bạn sẽ phải mất một khoản tiền khi hủy phòng
+                    </div>
                   </div>
                   <hr style={{ width: '96%', marginLeft: '2%' }} />
                   <div style={{ margin: '10px 15px 0px 10px' }}>
@@ -227,8 +232,8 @@ export const BookingReviewHomestay = () => {
                           <td>50m2</td>
                         </tr>
                         <tr>
-                          <td>Bữa sáng miễn phí</td>
-                          <td>Có</td>
+                          <td>Số phần trăm tiền bạn nhân được khi hủy phòng</td>
+                          <td>{detailHomestay.cancellationPolicy} %</td>
                         </tr>
                         <tr>
                           <td>Số người</td>
@@ -247,24 +252,12 @@ export const BookingReviewHomestay = () => {
                 <Row>
                   <Col span={10}>
                     <div style={{ padding: '20px 0px 5px 20px', fontSize: '18px', fontWeight: '700' }}>
-                      Đơn giá
-                    </div>
-                  </Col>
-                  <Col span={8} push={4}>
-                    <div style={{ padding: '20px 0px 5px 20px', fontSize: '18px', fontWeight: '700', float: 'right' }}>
-                      {formatCurrency(detailHomestay.price + detailHomestay.price * 11 / 100)}
-                    </div>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col span={10}>
-                    <div style={{ padding: '20px 0px 5px 20px', fontSize: '18px', fontWeight: '700' }}>
                       Thành tiền
                     </div>
                   </Col>
                   <Col span={8} push={4}>
                     <div style={{ padding: '20px 0px 5px 20px', fontSize: '18px', fontWeight: '700', float: 'right' }}>
-                      {formatCurrency((detailHomestay.price + detailHomestay.price * 11 / 100) * numNight)}
+                      {formatCurrency(totalPrice)}
                     </div>
                   </Col>
                 </Row>
@@ -274,8 +267,8 @@ export const BookingReviewHomestay = () => {
                   </Col>
                   <Col span={20} push={1} >
                     <div style={{ paddingTop: '15px', fontWeight: '700', fontSize: '16px', color: 'rgb(1, 148, 243)' }}>
-                      Thuế và phí là các khoản được TravelVIVU chuyển trả cho khách sạn. Mọi thắc mắc về thuế và hóa đơn,
-                      vui lòng tham khảo Điều khoản và Điều kiện của TravelVIVU để được giải đáp
+                      Mọi thắc mắc về hóa đơn, vui lòng tham khảo Điều khoản và
+                      Điều kiện của TravelVIVU để được giải đáp
                     </div>
                     <hr />
                   </Col>
@@ -288,7 +281,7 @@ export const BookingReviewHomestay = () => {
                   </Col>
                   <Col span={8} push={4}>
                     <div style={{ fontWeight: '600', fontSize: '18px', float: 'right' }}>
-                      {formatCurrency((detailHomestay.price + detailHomestay.price * 11 / 100) * numNight)}
+                      {formatCurrency(totalPrice)}
                     </div>
                   </Col>
                 </Row>

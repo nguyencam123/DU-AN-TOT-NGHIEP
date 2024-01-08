@@ -5,6 +5,7 @@ import {
   CommentOutlined,
   DesktopOutlined,
   FileOutlined,
+  HomeOutlined,
   PieChartOutlined,
   TeamOutlined,
   UserOutlined,
@@ -18,6 +19,7 @@ import { useSelector } from 'react-redux';
 import Statistical from '../../component/admin/statistical/statistical';
 import Comment from '../../component/admin/comment/comment';
 import User from '../../component/admin/user/user';
+import Owner from '../../component/admin/owner/owner';
 const { Header, Content, Sider } = Layout;
 
 
@@ -38,6 +40,8 @@ const items = [
   { label: 'Đánh giá của khách hàng', key: '5', icon: <CommentOutlined />, route: 'admin/comment', component: <Comment /> },
   { label: 'Thống kê', key: '6', icon: <AreaChartOutlined />, route: 'admin/statistical', component: <Statistical /> },
   { label: 'Tài khoản', key: '7', icon: <UserOutlined />, route: 'admin/owner', component: <User /> },
+  { label: 'Tài khoản chủ homestay', key: '8', icon: <HomeOutlined />, route: 'admin/ownerHomestay', component: <Owner /> },
+
 
 
 ];

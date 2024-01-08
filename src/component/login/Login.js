@@ -70,7 +70,7 @@ function LoginComponent() {
                             <Title level={2}>Đăng nhập</Title>
                             <Title level={4}>Để đảm bảo an toàn, xin vui lòng đăng nhập để truy cập vào thông tin</Title><br />
                         </div>
-                        <MDBInput wrapperClass='mb-4' label='Email' id='formControlLg' type='email' size="lg" value={username}
+                        <MDBInput wrapperClass='mb-4' label='Tài khoản' id='formControlLg' type='email' size="lg" value={username}
                             onChange={(e) => setUsername(e.target.value)} />
                         <MDBInput wrapperClass='mb-4' label='Mật khẩu' id='formControlLg' type='password' size="lg" value={password}
                             onChange={(e) => setPassword(e.target.value)} />

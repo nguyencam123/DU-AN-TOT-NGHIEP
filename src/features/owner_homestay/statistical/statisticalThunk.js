@@ -64,7 +64,7 @@ export const fetchStatisticalByTop5 =
     const yearValue = new Date(year).getFullYear()
     try {
       const response = await instance.get(
-        `/api/v2/statictical/top5?idOwnerHomestay=${idOwnerHomestay}&year=${yearValue}&size=5`,
+        `/api/v2/statictical/top5?idOwnerHomestay=${idOwnerHomestay}&year=${year}&size=5`,
       )
       dispatch(fetchStatisticalByTop5Success(response.data.data)) // Lấy dữ liệu từ response.data.data
     } catch (error) {

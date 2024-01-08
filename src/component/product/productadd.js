@@ -25,6 +25,8 @@ function AddProductForm() {
     name: 'Chờ duyệt',
     value: 1
   });
+  const [homestayName, setHomestayName] = useState('');
+  const [ownerName, setOwnerName] = useState(' ');
   //
 
   const listFilter = [
@@ -79,7 +81,7 @@ function AddProductForm() {
         name: 'Từ chối',
         value: 3
       })
-      dispatch(getAllHomestayByStatus(2));
+      dispatch(getAllHomestayByStatus(3));
     } else {
       dispatch(getAllHomestay());
       setSelectedStatus({
@@ -148,7 +150,7 @@ function AddProductForm() {
     setSelectedStatus(
       {
         name: 'Từ chối',
-        value: 2
+        value: 3
       }
     );
     dispatch(getAllHomestayByStatus(2));
@@ -164,11 +166,13 @@ function AddProductForm() {
     console.log(e.target.value);
   }
   const searchOwnerHomestayName = (value, _e, info) => {
-    dispatch(getAllHomestayByNameOwner(selectedStatus.value, value));
+    setOwnerName(value)
+    dispatch(getAllHomestayByNameOwner(selectedStatus.value, homestayName, value));
   }
 
   const onSearchHomestayName = (value, _e, info) => {
-    dispatch(getAllHomestayByHomestayName(selectedStatus.value, value));
+    setHomestayName(value)
+    dispatch(getAllHomestayByHomestayName(selectedStatus.value, value, ownerName));
   }
   const handleSubmitStatusToUpdating = async (record) => {
     const data = {
@@ -209,7 +213,7 @@ function AddProductForm() {
           return 'Chờ duyệt'
         }
         if (data === 'KHONG_HOAT_DONG') {
-          return 'Ngừng hoạt động'
+          return 'Không hoạt động'
         }
         if (data === 'TU_CHOI_DUYET') {
           return 'Từ chối duyệt'
@@ -303,7 +307,7 @@ function AddProductForm() {
           <Button
             key="submit"
             style={{ backgroundColor: 'red', color: 'white' }}
-            disabled={loadingConfirm || viewHomestay.status === 3}
+            disabled={viewHomestay.status !== 'KHONG_HOAT_DONG' ? false : true}
             onClick={handleDenied}
             loading={loadingConfirm}
           >
@@ -314,6 +318,7 @@ function AddProductForm() {
             onClick={handleOk}
             disabled={loadingConfirm}
             loading={loadingConfirm}
+            disabled={viewHomestay.status !== 'KHONG_HOAT_DONG' ? false : true}
           >
             Đồng ý duyệt
           </Button>
@@ -325,6 +330,7 @@ function AddProductForm() {
           <table>
             <tr>
               <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Tên homestay </div> : {viewHomestay.name}</div><br /></td>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Tên chủ homestay </div> : {viewHomestay?.ownerHomestay?.name}</div><br /></td>
             </tr>
             <tr>
               <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Giá            </div> : {viewHomestay.price} (VNĐ)</div><br /></td>
@@ -346,11 +352,14 @@ function AddProductForm() {
               </div><br /></td>
             </tr>
             <tr>
-              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Tên homestay </div> : {viewHomestay.name}</div><br /></td>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Diện tích </div> : {viewHomestay.acreage} (m2)</div><br /></td>
               <td style={{ width: 500 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Mô tả          </div> : {viewHomestay.desc}</div><br /></td>
             </tr>
+            <tr>
+              <td style={{ width: 600 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Email </div> : {viewHomestay?.ownerHomestay?.email}</div><br /></td>
+              <td style={{ width: 500 }}><div style={{ display: 'flex' }}><div style={{ width: 200 }}>Số điện thoại          </div> : {viewHomestay?.ownerHomestay?.phoneNumber}</div><br /></td>
+            </tr>
           </table>
-          <div style={{ display: 'flex' }}><div style={{ width: 200 }}>Diện tích phòng</div> : {viewHomestay.acreage} (m2)</div><br />
           <div style={{ display: 'flex' }}><div style={{ width: 200 }}>Địa chỉ        </div> : {viewHomestay.address}</div><br />
           <div style={{ width: 1000 }}>Mô tả  : {viewHomestay.desc}</div><br />
           <div>Ảnh homstay :<br />

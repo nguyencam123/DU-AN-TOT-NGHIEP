@@ -3,6 +3,7 @@ package com.example.demo.cors.customer.services.impl;
 import com.example.demo.cors.common.base.PageableObject;
 import com.example.demo.cors.customer.model.request.CustomerBookingRequest;
 import com.example.demo.cors.customer.model.request.CustomerCartRequest;
+import com.example.demo.cors.customer.model.response.CustomerCartDetailResponse;
 import com.example.demo.cors.customer.repository.CustomerCartDetailRepository;
 import com.example.demo.cors.customer.repository.CustomerCartRepository;
 import com.example.demo.cors.customer.repository.CustomerHomestayRepository;
@@ -10,7 +11,6 @@ import com.example.demo.cors.customer.services.CustomerCartService;
 import com.example.demo.entities.Booking;
 import com.example.demo.entities.Cart;
 import com.example.demo.entities.CartDetail;
-import com.example.demo.entities.Homestay;
 import com.example.demo.infrastructure.contant.StatusCart;
 import com.example.demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +33,11 @@ public class CustomerCartServiceImpl implements CustomerCartService {
     private CustomerHomestayRepository homestayRepository;
     @Autowired
     private CustomerCartDetailRepository customerCartDetailRepository;
-    @Autowired
-    private CustomerHomestayRepository customerHomestayRepository;
 
     @Override
-    public PageableObject<Homestay> getAllHomestayInCart(CustomerCartRequest request) {
+    public PageableObject<CustomerCartDetailResponse> getAllHomestayInCart(CustomerCartRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-        Page<Homestay> res = customerHomestayRepository.getAllHomestayInCart(pageable, request);
+        Page<CustomerCartDetailResponse> res = customerCartDetailRepository.getAllHomestayInCart(pageable, request);
         return new PageableObject<>(res);
     }
 
@@ -49,7 +47,7 @@ public class CustomerCartServiceImpl implements CustomerCartService {
         if (cart == null) {
             Cart newCart = new Cart();
             newCart.setUser(userRepository.findById(request.getUserId()).get());
-            customerCartRepository.save(cart);
+            customerCartRepository.save(newCart);
 
             CartDetail cartDetail = new CartDetail();
             cartDetail.setCart(newCart);

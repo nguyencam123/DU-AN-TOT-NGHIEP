@@ -10,4 +10,6 @@ public class AdminUserRequest extends PageableRequest {
 
     String userId;
 
+    String userName;
+
 }

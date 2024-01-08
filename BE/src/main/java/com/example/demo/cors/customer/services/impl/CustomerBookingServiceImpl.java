@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Service
 public class CustomerBookingServiceImpl implements CustomerBookingService {
@@ -65,7 +66,7 @@ public class CustomerBookingServiceImpl implements CustomerBookingService {
         booking.setHomestay(homestay);
         booking.setPromotion(promotion);
         booking.setNote(request.getNote());
-        booking.setStatus(StatusBooking.KHONG_THANH_CONG);
+        booking.setStatus(StatusBooking.CHO_THANH_TOAN);
         booking.setNumberOfNight(request.getNumberOfNight());
         customerBookingRepository.save(booking);
         return booking;
@@ -88,7 +89,7 @@ public class CustomerBookingServiceImpl implements CustomerBookingService {
         Booking booking = findForUpdate(id);
 
         booking.setNote(request.getNote());
-
+        booking.setCancellationDate(LocalDate.now());
         booking.setStatus(StatusBooking.HUY);
 
         Email email = new Email();

@@ -6,34 +6,29 @@ import { MDBCard, MDBCardBody, MDBCardImage, MDBCol, MDBContainer, MDBIcon, MDBR
 import { getAllHomestayByHomestayName, getAllHomestayByNameOwner, getAllHomestayByStatus } from "../../../features/product/productThunk";
 import moment from 'moment';
 import { deleteCommentHomestay } from "../../../features/admin/adminThunk";
-import { approveUser, fetchAllUser, fetchAllUserByName, getCommentByUserId, refuseUser } from "../../../features/admin/user/userThunk";
+import { approveOwner, approveUser, fetchAllOwner, fetchAllOwnerByName, fetchAllUser, fetchAllUserByName, getCommentByUserId, refuseOwner, refuseUser } from "../../../features/admin/user/userThunk";
 
 const { Title } = Typography
 const { Search } = Input;
 
-const User = () => {
+const Owner = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalApprove, setModalApprove] = useState(false);
   const [modalRefuse, setModalRefuse] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [deleteId, setDeleteId] = useState('');
   const [current, setCurrent] = useState(1);
-  const [userId, setUserId] = useState('');
+  const [ownerHomestayId, setOwnerHomestayId] = useState('');
   const onChangePage = (page) => {
     setCurrent(page);
   };
-  const showModal = (record) => {
-    dispatch(getCommentByUserId(' ', record.id))
-    setUserId(record.id)
-    setIsModalOpen(true);
-  };
   const showModalAprove = (record) => {
     setModalApprove(true);
-    setUserId(record.id);
+    setOwnerHomestayId(record.id);
   };
   const showModalDenie = (record) => {
     setModalRefuse(true);
-    setUserId(record.id);
+    setOwnerHomestayId(record.id);
   };
   const handleOk = () => {
     setIsModalOpen(false);
@@ -49,7 +44,7 @@ const User = () => {
       10,
     )
     setModalApprove(false)
-    await dispatch(approveUser(userId))
+    await dispatch(approveOwner(ownerHomestayId))
     message.info(
       'Mở hoạt động thành công',
       2,
@@ -61,7 +56,7 @@ const User = () => {
       'Đang tiến hành bạn vui lòng đợi một vài giây nhé!',
       10,
     )
-    await dispatch(refuseUser(userId))
+    await dispatch(refuseOwner(ownerHomestayId))
     message.info(
       'Hủy thành công',
       2,
@@ -79,17 +74,17 @@ const User = () => {
   }
 
   const onSearchUsername = (value, _e, info) => {
-    dispatch(fetchAllUserByName(value));
+    dispatch(fetchAllOwnerByName(value));
   }
-  const products = useSelector((state) => state.userAdmin.user.data);
+  const products = useSelector((state) => state.userAdmin.owner.data);
   const comment = useSelector((state) => state.userAdmin.comment.data);
 
   const getCommentByHomestayName = (value, _e, info) => {
-    dispatch(getCommentByUserId(value, userId))
+    dispatch(getCommentByUserId(value, ownerHomestayId))
   };
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(fetchAllUser());
+    dispatch(fetchAllOwner());
   }, [])
 
   const columns = [
@@ -119,9 +114,6 @@ const User = () => {
       align: 'center',
       render: (_, record) => (
         <>
-          <Button style={{ border: 'none' }} onClick={() => showModal(record)}>
-            <EyeOutlined />
-          </Button>
           <Button style={{ border: 'none' }} onClick={() => showModalAprove(record)}>
             <CheckOutlined />
           </Button>
@@ -134,11 +126,11 @@ const User = () => {
   ];
   return (
     <div style={{ marginTop: '20px' }}>
-      <Title level={2}>Quản trị tài khoản khách hàng</Title>
+      <Title level={2}>Quản trị tài khoản chủ homestay</Title>
       <Row>
         <Form.Item label="Tìm kiếm theo tên" style={{ float: 'left', marginLeft: ' 50px' }}>
           <Search
-            placeholder="Tên khách hàng"
+            placeholder="Tên khách chủ homestay"
             allowClear
             size="medium"
             enterButton="search"
@@ -251,4 +243,4 @@ const User = () => {
 
   )
 }
-export default User
+export default Owner
