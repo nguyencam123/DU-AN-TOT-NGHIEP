@@ -71,6 +71,7 @@ public class SecurityConfiguration {
 
     private  static final String[] All_GET={
             "/api/v1/convenient-homestay/**",
+            "/api/v1/convenient-homestay-type",
             "/api/v1/homestay/**",
             "/api/v1/homestay",
             "/api/v1/img-comment/**",
