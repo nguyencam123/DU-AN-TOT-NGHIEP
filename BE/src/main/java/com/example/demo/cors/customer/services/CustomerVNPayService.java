@@ -1,14 +1,18 @@
 package com.example.demo.cors.customer.services;
 
-import com.example.demo.cors.customer.model.request.CustomerVNPayRequest;
+import com.example.demo.cors.customer.model.request.CustomerBookingRequest;
+import com.example.demo.entities.Booking;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.io.UnsupportedEncodingException;
 
 public interface CustomerVNPayService {
 
-    String customerVNPay(CustomerVNPayRequest customerVNPayRequest, HttpServletRequest request) throws UnsupportedEncodingException;
+    Booking saveBooking(CustomerBookingRequest request);
 
-    Integer orderReturn(HttpServletRequest request);
+    String customerVNPay(CustomerBookingRequest customerBookingRequest, HttpServletRequest request) throws UnsupportedEncodingException;
+
+    Boolean orderReturn(HttpServletRequest request);
+
 
 }

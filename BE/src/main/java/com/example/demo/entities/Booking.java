@@ -70,7 +70,7 @@ public class Booking extends PrimaryEntity {
 
     private LocalDate cancellationDate;
 
-    private String cancellTransactionCode;
+    private String cancelTransactionCode;
 
     private StatusPayUser statusPayUser;
 

@@ -1,11 +1,11 @@
 package com.example.demo.cors.customer.controller;
 
 import com.example.demo.cors.common.base.ResponseObject;
-import com.example.demo.cors.customer.model.request.CustomerVNPayRequest;
+import com.example.demo.cors.customer.model.request.CustomerBookingRequest;
 import com.example.demo.cors.customer.services.CustomerVNPayService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,12 +21,17 @@ public class CustomerPaymentController {
     private CustomerVNPayService customerVNPayService;
 
     @PostMapping("/vnpay")
-    public ResponseObject paymentWithVNPay(@RequestBody CustomerVNPayRequest customerVNPayRequest, HttpServletRequest request) {
+    public ResponseObject paymentWithVNPay(@RequestBody CustomerBookingRequest customerBookingRequest, HttpServletRequest request) {
         try {
-            return new ResponseObject(customerVNPayService.customerVNPay(customerVNPayRequest, request));
+            return new ResponseObject(customerVNPayService.customerVNPay(customerBookingRequest, request));
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @GetMapping("/booking-return")
+    public ResponseObject paymentSuccess(HttpServletRequest request) {
+        return new ResponseObject(customerVNPayService.orderReturn(request));
     }
 
 }

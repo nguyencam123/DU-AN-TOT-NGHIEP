@@ -3,6 +3,7 @@ package com.example.demo.cors.customer.controller;
 import com.example.demo.cors.common.base.ResponseObject;
 import com.example.demo.cors.customer.model.request.CustomerBookingRequest;
 import com.example.demo.cors.customer.services.CustomerBookingService;
+import com.example.demo.cors.customer.services.CustomerVNPayService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -25,6 +26,8 @@ public class CustomerBookingController {
 
     @Autowired
     private CustomerBookingService customerBookingService;
+    @Autowired
+    private CustomerVNPayService customerVNPayService;
 
     @GetMapping()
     public ResponseObject getBookingByUser(CustomerBookingRequest customerBookingRequest) {
@@ -33,7 +36,7 @@ public class CustomerBookingController {
 
     @PostMapping("/create")
     public ResponseObject createBooking(@RequestBody CustomerBookingRequest customerBookingRequest) {
-        return new ResponseObject(customerBookingService.saveBooking(customerBookingRequest));
+        return new ResponseObject(customerVNPayService.saveBooking(customerBookingRequest));
     }
 
     @PutMapping("/update")
