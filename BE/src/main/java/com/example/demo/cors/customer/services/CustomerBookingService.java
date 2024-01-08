@@ -8,8 +8,6 @@ public interface CustomerBookingService {
 
     PageableObject<Booking> getBookingByUser(CustomerBookingRequest request);
 
-    Booking saveBooking(CustomerBookingRequest request);
-
     Booking updateBooking(CustomerBookingRequest request);
 
     Booking cancel(String id, CustomerBookingRequest request);
