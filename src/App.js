@@ -32,6 +32,7 @@ import ForgortPasswordUser from './component/login/forgotPassword';
 import RulesWhile from './component/user/siderheader/ruleswhile';
 import SupportedUser from './component/user/siderheader/supporteduser';
 import UserComment from './component/user/siderheader/userComment';
+import { BookingFailed } from './component/user/hotelcomponent/bookingFailed';
 
 function App() {
   //map component user
@@ -57,7 +58,9 @@ function App() {
     { path: 'changePasswordUser', element: <ForgortPasswordUser /> },
     { path: 'RulesWhile', element: <RulesWhile /> },
     { path: 'supporteduser', element: <SupportedUser /> },
-    {path:'userComment',element:<UserComment/>}
+    { path: 'userComment', element: <UserComment /> },
+    { path: 'failedBooking', element: <BookingFailed /> },
+
   ];
   useEffect(() => {
     window.scrollTo(0, 0); // Cuộn lên đầu trang khi path thay đổi
