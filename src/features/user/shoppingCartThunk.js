@@ -28,7 +28,17 @@ export const deleteShoppingCart = (id) => async (dispatch) => {
   dispatch(fetchShoppingCartstart())
   try {
     await instance.delete(
-      `http://localhost:8080/api/v1/cart/delete-all?idImgHomestay=${id}`,
+      `http://localhost:8080/api/v1/cart/delete?idCartDetail=${id}`,
+    )
+  } catch (error) {
+    dispatch(fetchShoppingCartFail(error.message))
+  }
+}
+export const deleteAllShoppingCart = (id) => async (dispatch) => {
+  dispatch(fetchShoppingCartstart())
+  try {
+    await instance.delete(
+      `http://localhost:8080/api/v1/cart/delete-all?userId=${id}`,
     )
   } catch (error) {
     dispatch(fetchShoppingCartFail(error.message))

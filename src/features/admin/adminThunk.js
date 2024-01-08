@@ -89,6 +89,19 @@ export const getBooking = (status) => async (dispatch) => {
     dispatch(addConvenientFailed(error.message));
   }
 };
+
+export const searchBooking = (status, homestayName, userName, statusPayUser, statusPayOwner) => async (dispatch) => {
+  try {
+    const response = await instance.get(
+      'http://localhost:8080/api/v3/booking?size=99&statusBooking='
+      + status + '&homestayName=' + homestayName + '&userName=' + userName + '&statusPayUser=' + statusPayUser + '&statusPayOwner=' + statusPayOwner
+    );
+    dispatch(fetchBookingSuccess(response.data.data.data)); // Lấy dữ liệu từ response.data.data
+
+  } catch (error) {
+    dispatch(addConvenientFailed(error.message));
+  }
+};
 export const getBookingByNameHomestay = (name) => async (dispatch) => {
   try {
     const response = await instance.get('http://localhost:8080/api/v3/booking?size=99&homestayName=' + name);
@@ -152,7 +165,7 @@ export const deleteCommentHomestay = (id) => async (dispatch) => {
 
 export const adminTranCodeBooking = (id, code) => async (dispatch) => {
   try {
-    await instance.put(`http://localhost:8080/api/v3/booking/update?id=${id}&adminTrancode=${code}&statusPayInfomation=1`);
+    await instance.put(`http://localhost:8080/api/v3/booking/update-admin-trancode?id=${id}&adminTransactionCode=${code}`);
     const response = await instance.get('http://localhost:8080/api/v3/booking?size=99&statusBooking=');
     dispatch(fetchBookingSuccess(response.data.data.data))
   } catch (error) {
@@ -162,7 +175,7 @@ export const adminTranCodeBooking = (id, code) => async (dispatch) => {
 
 export const userTranCodeBooking = (id, code) => async (dispatch) => {
   try {
-    await instance.put(`http://localhost:8080/api/v3/booking/update?id=${id}&cancellTransactionCode=${code}&statusPayInfomation=0`);
+    await instance.put(`http://localhost:8080/api/v3/booking/update-cancell-trancode?id=${id}&cancellTransactionCode=${code}`);
     const response = await instance.get('http://localhost:8080/api/v3/booking?size=99&statusBooking=');
     dispatch(fetchBookingSuccess(response.data.data.data))
   } catch (error) {

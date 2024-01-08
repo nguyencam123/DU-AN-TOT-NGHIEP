@@ -127,7 +127,7 @@ const HeaderUser = () => {
                 <strong>Homestay</strong>
               </Link>
               <Link to={'/phieu-giam-gia'} className='textnabar'>
-                <strong>homestay đang giảm giá</strong>
+                <strong>Homestay đang giảm giá</strong>
               </Link>
               <Link to={'/hop-tac'} className='textnabar'>
                 <strong>Hợp tác với chúng tôi</strong>

@@ -30,11 +30,6 @@ public class AdminBookingController {
         return new ResponseObject(adminBookingService.updateAdminTranCode(adminBookingRequest));
     }
 
-    @PutMapping("/update-owner-trancode")
-    public ResponseObject updateOwnerCode(final AdminBookingRequest adminBookingRequest) {
-        return new ResponseObject(adminBookingService.updateCuttomTranCode(adminBookingRequest));
-    }
-
     @PutMapping("/update-cancell-trancode")
     public ResponseObject updateCancellCode(final AdminBookingRequest adminBookingRequest) {
         return new ResponseObject(adminBookingService.updateCancellTranCode(adminBookingRequest));
