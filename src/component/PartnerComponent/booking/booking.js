@@ -64,7 +64,7 @@ const Booking = () => {
     const selectedMonth = date ? date.format('MM') : '' // Format the selected date to get only the month
     const selectedYear = date ? date.format('YYYY') : ''
     setSerchMonth(selectedMonth)
-    setSerchYear(selectedYear)
+    // setSerchYear(selectedYear)
   }
   const onChangeyear = (date, dateString) => {
     const selectedYear = date ? date.year() : '' // Extract the year from the date object
@@ -306,9 +306,9 @@ const Booking = () => {
         <div style={{ marginLeft: 30 }}>
           <Form.Item
             label='Tìm kiếm theo tháng và năm'
-            style={{ float: 'left', marginLeft: ' 50px' }}
+            style={{ float: 'left', marginLeft: '50px' }}
           >
-            <DatePicker onChange={onChangeMonth} picker='month' />
+            <DatePicker onChange={onChangeMonth} picker='month' format='MM' />
           </Form.Item>
           <Form.Item
             label='Tìm kiếm theo năm'
