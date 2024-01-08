@@ -51,6 +51,8 @@ public class Booking extends PrimaryEntity {
     @JoinColumn(name = "homestay_id")
     private Homestay homestay;
 
+    private PaymentMethod paymentMethod;
+
     private TypeBooking typeBooking;
 
     @Nationalized

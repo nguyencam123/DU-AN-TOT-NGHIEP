@@ -12,7 +12,7 @@ public class CustomerBookingRequest extends PageableRequest {
 
     private String userId;
 
-    private String totalPrice;
+    private Double totalPrice;
 
     private Long startDate;
 
@@ -40,5 +40,7 @@ public class CustomerBookingRequest extends PageableRequest {
     private TypeBooking typeBooking;
 
     private Integer numberOfNight;
+
+    private String description;
 
 }
