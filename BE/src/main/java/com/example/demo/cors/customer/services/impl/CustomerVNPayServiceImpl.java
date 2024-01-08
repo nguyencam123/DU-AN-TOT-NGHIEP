@@ -8,8 +8,8 @@ import com.example.demo.entities.Booking;
 import com.example.demo.entities.Homestay;
 import com.example.demo.entities.Promotion;
 import com.example.demo.infrastructure.configpayment.VNPayConfig;
+import com.example.demo.infrastructure.contant.PaymentMethod;
 import com.example.demo.infrastructure.contant.StatusBooking;
-import com.example.demo.infrastructure.contant.TypeBooking;
 import com.example.demo.infrastructure.exception.rest.RestApiException;
 import com.example.demo.repositories.PromotionRepository;
 import com.example.demo.repositories.UserRepository;
@@ -66,6 +66,7 @@ public class CustomerVNPayServiceImpl implements CustomerVNPayService {
         booking.setNote(request.getNote());
         booking.setStatus(StatusBooking.CHO_THANH_TOAN);
         booking.setNumberOfNight(request.getNumberOfNight());
+        booking.setPaymentMethod(PaymentMethod.VN_PAY);
         customerBookingRepository.save(booking);
         return booking;
     }
@@ -125,7 +126,7 @@ public class CustomerVNPayServiceImpl implements CustomerVNPayService {
         String vnp_SecureHash = VNPayConfig.hmacSHA512(VNPayConfig.secretKey, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
         String paymentUrl = VNPayConfig.vnp_PayUrl + "?" + queryUrl;
-        System.err.println("id" + request.getParameter("vnp_OrderInfo"));
+        System.err.println("stt " + request.getParameter("vnp_TransactionStatus"));
         return paymentUrl;
     }
 
