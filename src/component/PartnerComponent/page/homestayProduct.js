@@ -1074,6 +1074,13 @@ const HomeStayProduct = () => {
               )}
             </div>
             {isAddFrom == true ? (
+              <span />
+            ) : (
+              <div style={{ color: 'red' }}>
+                Ảnh sẽ được cập nhật ngay khi bạn tải ảnh lên hoặc xóa ảnh đi
+              </div>
+            )}
+            {isAddFrom == true ? (
               <div>
                 {selectedImages.map((image, index) => (
                   <div

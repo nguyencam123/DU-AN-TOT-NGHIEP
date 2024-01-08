@@ -201,7 +201,7 @@ const Register = () => {
                   </MDBCol>
                   <MDBCol col='6'>
                     <div style={{ display: 'flex' }}>
-                      Ngày sinh &ensp;
+                      <span style={{ marginTop: 4 }}>Ngày sinh &ensp;</span>
                       <DatePicker
                         style={{ width: '86%', height: 36 }}
                         dateFormat='dd/MM/yyyy'
