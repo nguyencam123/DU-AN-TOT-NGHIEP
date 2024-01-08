@@ -107,7 +107,9 @@ const PartnerRegister = () => {
       }
     }
   }
-
+  const isBeforeToday = (current) => {
+    return current && current.isAfter(moment().startOf('day'))
+  }
   return (
     <MDBContainer fluid style={{ width: '60%' }}>
       <MDBCard
@@ -209,6 +211,7 @@ const PartnerRegister = () => {
                     dateFormat='dd/MM/yyyy'
                     required
                     onChange={handleDateChangestart}
+                    disabledDate={isBeforeToday}
                   />
                 </div>
               </MDBCol>

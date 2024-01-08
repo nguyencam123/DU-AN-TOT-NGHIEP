@@ -93,7 +93,9 @@ const Register = () => {
       }
     }
   }
-
+  const isBeforeToday = (current) => {
+    return current && current.isAfter(moment().startOf('day'))
+  }
   return (
     <MDBContainer fluid className='p-4'>
       <MDBRow>
@@ -205,6 +207,7 @@ const Register = () => {
                         dateFormat='dd/MM/yyyy'
                         required
                         onChange={handleDateChangestart}
+                        disabledDate={isBeforeToday}
                       />
                     </div>
                   </MDBCol>

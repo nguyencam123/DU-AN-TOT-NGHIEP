@@ -11,6 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CustomerConvenientHomestayServiceImpl implements CustomerConvenientHomestayService {
 
@@ -22,6 +24,11 @@ public class CustomerConvenientHomestayServiceImpl implements CustomerConvenient
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
         Page<ConvenientHomestay> res = customerConvenientHomestayRepository.findAll(pageable);
         return new PageableObject<>(res);
+    }
+
+    @Override
+    public List<ConvenientHomestay> getAllByConvenientType(CustomerConvenientHomestayRequest request) {
+        return customerConvenientHomestayRepository.getAllConvenientHomestayType(request);
     }
 
 }

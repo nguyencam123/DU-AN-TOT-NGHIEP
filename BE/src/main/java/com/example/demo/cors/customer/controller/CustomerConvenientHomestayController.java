@@ -23,4 +23,8 @@ public class CustomerConvenientHomestayController {
         return new ResponseObject(customerConvenientHomestayService.getAllConvenient(request));
     }
 
+    @GetMapping("/get-by-convenient-type")
+    public ResponseObject getAllByConvenientType(CustomerConvenientHomestayRequest request) {
+        return new ResponseObject(customerConvenientHomestayService.getAllByConvenientType(request));
+    }
 }
