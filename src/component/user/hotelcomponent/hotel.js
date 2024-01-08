@@ -86,7 +86,7 @@ const Hotel = () => {
     // dispatch(getProducts(current - 1));
     dispatch(getAllConvinentHomestay())
   }, [])
-  const onChange = (key) => {}
+  const onChange = (key) => { }
   const formatCurrency = (value) => {
     // Sử dụng Intl.NumberFormat để định dạng giá trị tiền tệ
     return new Intl.NumberFormat('vi-VN', {
@@ -646,11 +646,14 @@ const Hotel = () => {
                           </div>
                           <div style={{}}>
                             <div style={{ fontSize: 16 }}>
-                              <del>
-                                {formatCurrency(
-                                  item.price + (item.price * 11) / 100,
-                                )}{' '}
-                              </del>
+                              {items?.promotion === null ?
+                                <del>
+                                  {formatCurrency(
+                                    item.price + (item.price * 11) / 100,
+                                  )}{' '}
+                                </del>
+                                : ' '
+                              }
                             </div>
                             {item?.promotion?.value ? (
                               <div
@@ -661,10 +664,10 @@ const Hotel = () => {
                               >
                                 {formatCurrency(
                                   item.price -
-                                    item?.promotion?.value +
-                                    ((item.price - item?.promotion?.value) *
-                                      11) /
-                                      100,
+                                  item?.promotion?.value +
+                                  ((item.price - item?.promotion?.value) *
+                                    11) /
+                                  100,
                                 )}{' '}
                               </div>
                             ) : (
