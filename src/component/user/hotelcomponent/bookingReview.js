@@ -3,7 +3,7 @@ import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progres
 import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, InfoCircleTwoTone, StarTwoTone } from '@ant-design/icons'
 import { Form, Table } from 'react-bootstrap';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { addBooking, getOneProduct, getPayment } from '../../../features/product/productThunk';
+import { addBooking, getOneProduct, getPayment, getPaymentPayPal } from '../../../features/product/productThunk';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import logovnpay from '../../../assets/svg/Rectangle 20.svg';
@@ -49,7 +49,9 @@ export const BookingReviewHomestay = () => {
   const dispatch = useDispatch();
   const detailHomestay = useSelector((state) => state.product.productDetails)
   const payment = useSelector((state) => state.product.payment)
+  const paypal = useSelector((state) => state.product.paypal)
   const [isModalOpen, setIsModalOpen] = useState(false)
+
 
   const handleBooking = () => {
     setIsModalOpen(true)
@@ -67,6 +69,7 @@ export const BookingReviewHomestay = () => {
       userId: userDetail?.data?.id
     }
     dispatch(getPayment(bookingDataGet));
+    dispatch(getPaymentPayPal(bookingDataGet));
   }
 
   return (
@@ -344,7 +347,7 @@ export const BookingReviewHomestay = () => {
           <a href={payment}>
             <img src={logovnpay} className='imgThanhToan' />
           </a>
-          <a style={{marginLeft:'10px'}}>
+          <a onClick={() => console.log(paypal)} style={{marginLeft:'10px'}}>
             <img src={paypalImg} style={{ width: '87px', height: '48px' }} className='imgThanhToanPaypal' />
           </a>
         </div>
