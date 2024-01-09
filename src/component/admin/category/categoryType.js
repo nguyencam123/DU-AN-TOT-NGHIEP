@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from 'react'
 import {
   Space,
   Typography,
@@ -9,14 +9,27 @@ import {
   Form,
   Input,
   Select,
-  message
-} from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
-import { CheckOutlined, DeleteOutlined, DeleteTwoTone, EditOutlined, EditTwoTone, QuestionCircleOutlined } from '@ant-design/icons';
-import { useState } from 'react';
-import { addConvenient, addType, getConvenient, getConvenientType, updateType } from '../../../features/admin/adminThunk';
-import { update } from 'react-spring';
-const { Title } = Typography;
+  message,
+} from 'antd'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  CheckOutlined,
+  DeleteOutlined,
+  DeleteTwoTone,
+  EditOutlined,
+  EditTwoTone,
+  QuestionCircleOutlined,
+} from '@ant-design/icons'
+import { useState } from 'react'
+import {
+  addConvenient,
+  addType,
+  getConvenient,
+  getConvenientType,
+  updateType,
+} from '../../../features/admin/adminThunk'
+import { update } from 'react-spring'
+const { Title } = Typography
 
 const CategoryType = () => {
   const columns = [
@@ -26,35 +39,37 @@ const CategoryType = () => {
     },
     {
       title: 'Mô tả',
-      dataIndex: 'desc'
+      dataIndex: 'desc',
     },
     {
-      title: 'Action',
+      title: 'Hành động',
       key: 'action',
       render: (_, record) => (
         <Space size='middle'>
-          <a onClick={() => showUpdateTypeModal(record)}><EditTwoTone /></a>
+          <a onClick={() => showUpdateTypeModal(record)}>
+            <EditTwoTone />
+          </a>
         </Space>
-      )
-    }
-  ];
+      ),
+    },
+  ]
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(getConvenient());
-    dispatch(getConvenientType());
-  }, []);
+    dispatch(getConvenient())
+    dispatch(getConvenientType())
+  }, [])
   const listType = useSelector((state) => state.admin.categoryType)
-  const [modalType, setModalType] = useState(false);
-  const [modalTypeUpdate, setModalTypeUpdate] = useState(false);
-  const [idUpdate, setIdUpdate] = useState('');
-  const [nameUpdate, setNameUpdate] = useState('');
-  const [descUpdate, setDescUpdate] = useState('');
+  const [modalType, setModalType] = useState(false)
+  const [modalTypeUpdate, setModalTypeUpdate] = useState(false)
+  const [idUpdate, setIdUpdate] = useState('')
+  const [nameUpdate, setNameUpdate] = useState('')
+  const [descUpdate, setDescUpdate] = useState('')
 
   const [convenientType, setConvenientType] = useState({
     nameType: '',
-    descType: ''
-  });
+    descType: '',
+  })
   const handleChangeConvenientType = (data) => {
     setConvenientType({ ...convenientType, nameType: data.target.value })
   }
@@ -68,37 +83,39 @@ const CategoryType = () => {
     setDescUpdate(data.target.value)
   }
   const showTypeModal = () => {
-    setModalType(true);
-  };
+    setModalType(true)
+  }
   const showUpdateTypeModal = (value) => {
     setNameUpdate(value.name)
     setIdUpdate(value.id)
     setDescUpdate(value.desc)
-    setModalTypeUpdate(true);
-  };
+    setModalTypeUpdate(true)
+  }
 
   const addConvenientType = async () => {
     if (convenientType.nameType.trim().length === 0) {
-      message.error('Tên không được trống');
+      message.error('Tên không được trống')
       return false
     }
-    await dispatch(addType(convenientType));
-    await dispatch(getConvenientType());
-    setModalType(false);
-  };
+    await dispatch(addType(convenientType))
+    await dispatch(getConvenientType())
+    setModalType(false)
+  }
   const updateConvenientType = async () => {
     if (nameUpdate.trim().length === 0) {
-      message.error('Tên không được trống');
+      message.error('Tên không được trống')
       return false
     }
-    await dispatch(updateType({ id: idUpdate, nameType: nameUpdate, descType: descUpdate }));
-    await dispatch(getConvenientType());
-    setModalTypeUpdate(false);
-  };
-  const handleTypeModalCancel = () => {
-    setModalType(false);
+    await dispatch(
+      updateType({ id: idUpdate, nameType: nameUpdate, descType: descUpdate }),
+    )
+    await dispatch(getConvenientType())
     setModalTypeUpdate(false)
-  };
+  }
+  const handleTypeModalCancel = () => {
+    setModalType(false)
+    setModalTypeUpdate(false)
+  }
 
   return (
     <>
@@ -127,17 +144,20 @@ const CategoryType = () => {
             rules={[
               {
                 required: true,
-                message: 'Vui lòng điền tên'
-              }
+                message: 'Vui lòng điền tên',
+              },
             ]}
           >
-            <Input value={convenientType.nameType} onChange={(data) => handleChangeConvenientType(data)} />
+            <Input
+              value={convenientType.nameType}
+              onChange={(data) => handleChangeConvenientType(data)}
+            />
           </Form.Item>
-          <Form.Item
-            label='Mô tả loại tiện nghi'
-            name='type'
-          >
-            <Input value={convenientType.descType} onChange={(data) => handleChangeDesc(data)} />
+          <Form.Item label='Mô tả loại tiện nghi' name='type'>
+            <Input
+              value={convenientType.descType}
+              onChange={(data) => handleChangeDesc(data)}
+            />
           </Form.Item>
         </Form>
       </Modal>
@@ -148,19 +168,21 @@ const CategoryType = () => {
         onCancel={handleTypeModalCancel}
       >
         <Form>
-          <Form.Item
-            label='Tên loại tiện nghi'
-          >
-            <Input value={nameUpdate} onChange={(data) => handleChangeNameUpdate(data)} />
+          <Form.Item label='Tên loại tiện nghi'>
+            <Input
+              value={nameUpdate}
+              onChange={(data) => handleChangeNameUpdate(data)}
+            />
           </Form.Item>
-          <Form.Item
-            label='Mô tả loại tiện nghi'
-          >
-            <Input value={descUpdate} onChange={(data) => handleChangeDescUpdate(data)} />
+          <Form.Item label='Mô tả loại tiện nghi'>
+            <Input
+              value={descUpdate}
+              onChange={(data) => handleChangeDescUpdate(data)}
+            />
           </Form.Item>
         </Form>
       </Modal>
     </>
-  );
-};
-export default CategoryType;
+  )
+}
+export default CategoryType
