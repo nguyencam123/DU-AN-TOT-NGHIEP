@@ -79,6 +79,9 @@ function BookingForm() {
       dataIndex: 'cancellationDate',
       key: 'cancellationDate',
       render: (data) => {
+        if (data === null) {
+          return ''
+        }
         return moment(data).locale('vi').format('LL')
       },
     },
@@ -194,8 +197,8 @@ function BookingForm() {
     },
     {
       title: 'Mã giao dịch booking hủy',
-      dataIndex: 'cancellTransactionCode',
-      key: 'cancellTransactionCode',
+      dataIndex: 'cancelTransactionCode',
+      key: 'cancelTransactionCode',
     },
     {
       title: 'Hành động',

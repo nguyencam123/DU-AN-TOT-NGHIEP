@@ -1,8 +1,9 @@
 package com.example.demo.infrastructure.contant;
 
 public enum StatusBooking {
-    HUY,
-    THANH_CONG,
-    CHO_THANH_TOAN,
-    DA_THUE_XONG
+    HUY, // 0
+    THANH_CONG, // 1
+    CHO_THANH_TOAN, // 2
+    DA_THUE_XONG // 3
+
 }

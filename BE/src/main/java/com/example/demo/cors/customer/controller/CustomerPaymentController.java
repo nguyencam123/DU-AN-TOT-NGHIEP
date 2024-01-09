@@ -42,12 +42,12 @@ public class CustomerPaymentController {
     }
 
     @PostMapping("/paypal")
-    public String paymentWithPaypal(@RequestBody CustomerBookingRequest customerBookingRequest) {
+    public ResponseObject paymentWithPaypal(@RequestBody CustomerBookingRequest customerBookingRequest) {
         try {
             Payment payment = customerPaypalService.createPayment(customerBookingRequest);
             for (Links link : payment.getLinks()) {
                 if (link.getRel().equals("approval_url")) {
-                    return link.getHref();
+                    return new ResponseObject(link.getHref());
                 }
             }
         } catch (PayPalRESTException e) {
