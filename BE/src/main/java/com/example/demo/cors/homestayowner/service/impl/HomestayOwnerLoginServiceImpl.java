@@ -111,6 +111,9 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         ownerHomestay.setPhoneNumber(request.getPhoneNumber());
         ownerHomestay.setEmail(request.getEmail());
         ownerHomestay.setUsername(request.getUsername());
+        ownerHomestay.setBirthday(request.getBirthday());
+        ownerHomestay.setGender(request.getGender());
+        ownerHomestay.setAddress(request.getAddress());
         ownerHomestay.setPassword(passwordEncoder.encode(request.getPassword()));
         ownerHomestay.setStatus(Status.CHO_DUYET);
         ownerHomestay.setRole(RoleOwner.OWNER);
