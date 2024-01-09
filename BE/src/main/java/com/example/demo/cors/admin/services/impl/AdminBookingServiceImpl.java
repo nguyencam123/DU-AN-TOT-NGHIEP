@@ -60,7 +60,7 @@ public class AdminBookingServiceImpl implements AdminBookingService {
             throw new RestApiException(Message.NOT_EXISTS);
         }
         Booking booking = optional.get();
-        booking.setCancellTransactionCode(request.getCancellTransactionCode());
+        booking.setCancelTransactionCode(request.getCancellTransactionCode());
         booking.setStatusPayUser(StatusPayUser.DA_TT_CHO_USER);
         adminBookingRepository.save(booking);
         return booking;

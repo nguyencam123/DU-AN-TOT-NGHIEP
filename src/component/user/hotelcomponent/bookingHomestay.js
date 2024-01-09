@@ -31,6 +31,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import moment from 'moment'
 
+
 const { Header, Content, Footer } = Layout
 
 export const BookingHomestay = () => {
@@ -58,6 +59,8 @@ export const BookingHomestay = () => {
   const [modalTypeBooking, setModalTyBooking] = useState(false)
   const detailHomestay = useSelector((state) => state.product.productDetails)
   const [totalPrice, setTotalPrice] = useState(0)
+  const [typeBooking, setTypeBooking] = useState(1)
+
   const navigate = useNavigate()
   const onChangeName = (e) => {
     setInfoPayment({ ...infoPayment, name: e.target.value })
@@ -101,7 +104,7 @@ export const BookingHomestay = () => {
         numberOfNight: numNight
       }
       setTotalPrice(bookingData.totalPrice)
-      dispatch(addBooking(bookingData))
+      setTypeBooking(type)
     } else {
       message.info('Bạn vui lòng đăng nhập trước khi đặt homestay')
     }
@@ -109,16 +112,36 @@ export const BookingHomestay = () => {
   const handleReviewBookingHomestay = (id) => {
     // Chuyển đến trang review với dữ liệu infoPayment trên URL
     navigate(
-      `/review/booking/${id}?bookingId=${booking.id}&name=${infoPayment.name}&email=${infoPayment.email}&phoneNumber=${infoPayment.phoneNumber}&startDate=${startDate}&endDate=${endDate}&numNight=${numNight}&totalPrice=${totalPrice}`,
+      `/review/booking/${id}?name=${infoPayment.name}&email=${infoPayment.email}&phoneNumber=${infoPayment.phoneNumber}
+      &startDate=${startDate}&endDate=${endDate}&numNight=${numNight}&totalPrice=${totalPrice}&homestayId=${detailHomestay.id}
+      &idPromotion=${detailHomestay?.promotion?.id || ''}&typeBooking=${typeBooking}`,
     )
   }
+  const isValidEmail = (email) => {
+    return /\S+@\S+\.\S+/.test(email);
+  }
+  function isVietnamesePhoneNumberValid(number) {
+    return /(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b/.test(number);
+  }
   const handlecheckBookingHomestay = (id) => {
+    if (infoPayment.name.trim().length === 0) {
+      message.info('Số điện thoại không được trống')
+      return false
+    }
     if (infoPayment.phoneNumber.trim().length === 0) {
       message.info('Số điện thoại không được trống')
       return false
     }
     if (infoPayment.email.trim().length === 0) {
       message.info('Email không được trống')
+      return false
+    }
+    if (!isValidEmail(infoPayment.email)) {
+      message.info('Email không đúng định dạng')
+      return false
+    }
+    if (!isVietnamesePhoneNumberValid(infoPayment.phoneNumber)) {
+      message.info('Số điện thoại không đúng định dạng')
       return false
     }
     setModalTyBooking(true)
@@ -201,7 +224,7 @@ export const BookingHomestay = () => {
                       onChange={(e) => onChangePhoneNumber(e)}
                     />
                     <Form.Text className='text-muted'>
-                      VD : 09683741834
+                      VD : 0968374183
                     </Form.Text>
                   </Form.Group>
                   <Form.Group className='mb-3' controlId='Email'>

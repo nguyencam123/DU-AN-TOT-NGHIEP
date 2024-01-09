@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface AdminHomestayRepository extends HomestayRepository {
 
@@ -20,5 +22,11 @@ public interface AdminHomestayRepository extends HomestayRepository {
             AND ( :#{#request.nameOwner} IS NULL OR oh.name LIKE '' OR oh.name LIKE %:#{#request.nameOwner}% ) )
             """, nativeQuery = true)
     Page<Homestay> getAllHomestay(Pageable pageable, @Param("request") AdminHomestayRequest request);
+
+    @Query(value = """
+            SELECT * FROM homestay 
+            WHERE status = 0
+            """, nativeQuery = true)
+    List<Homestay> getAllHomsestayByAdmin();
 
 }

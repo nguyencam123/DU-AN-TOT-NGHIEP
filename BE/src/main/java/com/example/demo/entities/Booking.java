@@ -51,6 +51,8 @@ public class Booking extends PrimaryEntity {
     @JoinColumn(name = "homestay_id")
     private Homestay homestay;
 
+    private PaymentMethod paymentMethod;
+
     private TypeBooking typeBooking;
 
     @Nationalized
@@ -70,7 +72,7 @@ public class Booking extends PrimaryEntity {
 
     private LocalDate cancellationDate;
 
-    private String cancellTransactionCode;
+    private String cancelTransactionCode;
 
     private StatusPayUser statusPayUser;
 

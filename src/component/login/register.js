@@ -93,7 +93,9 @@ const Register = () => {
       }
     }
   }
-
+  const isBeforeToday = (current) => {
+    return current && current.isAfter(moment().startOf('day'))
+  }
   return (
     <MDBContainer fluid className='p-4'>
       <MDBRow>
@@ -199,12 +201,13 @@ const Register = () => {
                   </MDBCol>
                   <MDBCol col='6'>
                     <div style={{ display: 'flex' }}>
-                      Ngày sinh &ensp;
+                      <span style={{ marginTop: 4 }}>Ngày sinh &ensp;</span>
                       <DatePicker
                         style={{ width: '86%', height: 36 }}
                         dateFormat='dd/MM/yyyy'
                         required
                         onChange={handleDateChangestart}
+                        disabledDate={isBeforeToday}
                       />
                     </div>
                   </MDBCol>
