@@ -15,7 +15,7 @@ import java.util.Map;
 public class PaypalConfig {
 
     public static String successUrl = "http://localhost:3000/successBooking";
-    public static String cancelUrl = "http://localhost:3000/";
+    public static String cancelUrl = "http://localhost:3000";
     public static String currency = "USD";
     public static String method = "Paypal";
 
