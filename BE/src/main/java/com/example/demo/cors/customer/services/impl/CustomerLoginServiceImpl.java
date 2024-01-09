@@ -104,6 +104,9 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         user.setCode(code);
         user.setName(request.getName());
         user.setPhoneNumber(request.getPhoneNumber());
+        user.setBirthday(request.getBirthday());
+        user.setGender(request.getGender());
+        user.setAddress(request.getAddress());
         user.setEmail(request.getEmail());
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
