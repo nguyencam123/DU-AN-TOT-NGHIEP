@@ -9,7 +9,6 @@ import com.example.demo.cors.customer.services.CustomerHomestayService;
 import com.example.demo.entities.DetailHomestay;
 import com.example.demo.entities.Homestay;
 import com.example.demo.entities.User;
-import jakarta.validation.OverridesAttribute;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -58,6 +57,7 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
                     }
                 }
             }
+
             for (DetailHomestay detailHomestay : lists) {
                 for (Homestay homestay : homestayList) {
                     if (detailHomestay.getHomestay().getId().equals(homestay.getId())) {
@@ -81,7 +81,6 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
                         && (homestay.getPrice().compareTo(request.getPriceMin()) > 0)
                         && (homestay.getPrice().compareTo(request.getPriceMax()) < 0)
                 ) {
-                    res.clear();
                     res.add(homestay);
                 }
             }
@@ -95,7 +94,6 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
                             && (homestay.getPrice().compareTo(request.getPriceMin()) > 0)
                             && (homestay.getPrice().compareTo(request.getPriceMax()) < 0)
                     ) {
-                        res.clear();
                         res.add(homestay);
                     }
             }

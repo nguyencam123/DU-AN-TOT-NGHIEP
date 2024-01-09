@@ -33,4 +33,4 @@ public interface CustomerHomestayRepository extends HomestayRepository {
             """, nativeQuery = true)
     List<Homestay> findAllBetweenDate(CustomerHomestayRequest customerHomestayRequest);
 
-}
+}   
