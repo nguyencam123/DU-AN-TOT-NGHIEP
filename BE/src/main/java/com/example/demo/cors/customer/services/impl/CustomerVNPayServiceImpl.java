@@ -94,7 +94,6 @@ public class CustomerVNPayServiceImpl implements CustomerVNPayService {
         vnp_Params.put("vnp_OrderType", "Thanh toan hoa don");
         vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrl);
         vnp_Params.put("vnp_TxnRef", VNPayConfig.getRandomNumber(6));
-        vnp_Params.put("vnp_TransactionNo", VNPayConfig.getRandomNumber(10));
         vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
 
         List fieldList = new ArrayList(vnp_Params.keySet());
@@ -126,7 +125,6 @@ public class CustomerVNPayServiceImpl implements CustomerVNPayService {
         String vnp_SecureHash = VNPayConfig.hmacSHA512(VNPayConfig.secretKey, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
         String paymentUrl = VNPayConfig.vnp_PayUrl + "?" + queryUrl;
-        System.err.println("stt " + request.getParameter("vnp_TransactionStatus"));
         return paymentUrl;
     }
 
