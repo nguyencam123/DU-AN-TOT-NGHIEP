@@ -489,7 +489,10 @@ function AddProductForm() {
             <div style={{ width: 200 }}>Địa chỉ </div> : {viewHomestay.address}
           </div>
           <br />
-          <div style={{ width: 1000 }}>Mô tả : {viewHomestay.desc}</div>
+
+          <div style={{ display: 'flex' }}>
+            <div style={{ width: 200 }}>Mô tả </div> : {viewHomestay.desc}
+          </div>
           <br />
           <div>
             Ảnh homstay :<br />

@@ -208,6 +208,7 @@ const HomeStayProduct = () => {
     setCheckedValues([])
     setFile([])
     setAddressDetail('')
+    setviewEditConvennient([])
     const fileInput = document.getElementById('image')
     if (fileInput) {
       fileInput.value = null
@@ -405,11 +406,15 @@ const HomeStayProduct = () => {
   const [errorFile, setErrorFile] = useState('')
   const [erorrAddress, setErrorAddress] = useState('')
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Vui lòng nhập tên sản phẩm'),
+    name: Yup.string()
+      .trim() // Remove leading and trailing whitespaces
+      .min(1, 'Vui lòng nhập ít nhất một ký tự cho tên sản phẩm')
+      .required('Vui lòng nhập tên sản phẩm'),
     price: Yup.number()
       .required('Vui lòng nhập giá sản phẩm')
       .typeError('Vui lòng nhập giá sản phẩm')
-      .positive('Giá phải là số dương'),
+      .positive('Giá phải là số dương')
+      .min(1000, 'Giá sản phẩm phải lớn hơn 1000'),
     file: Yup.array()
       .min(5, 'Vui lòng chọn ít nhất 5 file')
       .max(20, 'Vui lòng chọn tối đa 20 file')
@@ -1285,8 +1290,11 @@ const HomeStayProduct = () => {
           </table>
           <div style={{ display: 'flex' }}>
             <div style={{ width: 200 }}>Tiện ích </div> :{' '}
-            {viewEditConvennient.map((items) => (
-              <div> {items.convenientHomestay?.name},</div>
+            {viewEditConvennient.map((items, index) => (
+              <React.Fragment key={index}>
+                <div>{items.convenientHomestay?.name}</div>
+                {index !== viewEditConvennient.length - 1 && <span>,</span>}
+              </React.Fragment>
             ))}
           </div>
           <br />
