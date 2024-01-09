@@ -105,7 +105,7 @@ const HeaderUser = () => {
     <header>
       <Navbar collapseOnSelect expand='lg'>
         <Container>
-          <Navbar.Brand href='https://html.design/preview/?theme=timups'>
+          <Navbar.Brand>
             {/* <div className="parent-box">
                             <div className="box-fly-icon">
                                 <div className="parent-plane-icon"><img className="plane-icon" src={iconplane} style={{ color: 'white' }} /></div>
@@ -160,7 +160,7 @@ const HeaderUser = () => {
                   <span className='picturecart'>
                     <span className='cc'>
                       <Badge count={shoppingcart?.length} showZero>
-                        <ShoppingCartOutlined
+                        <HeartOutlined
                           style={{
                             color: 'black',
                             fontSize: '26px',
@@ -211,7 +211,7 @@ const HeaderUser = () => {
                       style={{ color: 'black' }}
                       onClick={booking}
                     >
-                      <FileDoneOutlined /> Đơn đặt hàng
+                      <FileDoneOutlined /> Homestay bạn thuê
                     </button>
                     <Link to={'/userComment'}>
                       <button
