@@ -33,6 +33,7 @@ import RulesWhile from './component/user/siderheader/ruleswhile';
 import SupportedUser from './component/user/siderheader/supporteduser';
 import UserComment from './component/user/siderheader/userComment';
 import { BookingFailed } from './component/user/hotelcomponent/bookingFailed';
+import { BookingSuccessVnpay } from './component/user/hotelcomponent/bookingSuccesVnpay';
 
 function App() {
   //map component user
@@ -60,6 +61,7 @@ function App() {
     { path: 'supporteduser', element: <SupportedUser /> },
     { path: 'userComment', element: <UserComment /> },
     { path: 'failedBooking', element: <BookingFailed /> },
+    { path: 'bookingSuccess', element: <BookingSuccessVnpay /> }
 
   ];
   useEffect(() => {
