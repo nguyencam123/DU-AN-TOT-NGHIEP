@@ -53,7 +53,7 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
         } else {
             for (DetailHomestay detailHomestay : detailHomestayList) {
                 for (String convenientHomestay : convenientHomestayList) {
-                    if (detailHomestay.getConvenientHomestay().getId().equals(convenientHomestay)) {
+                    if (detailHomestay.getConvenientHomestay().getId().contains(convenientHomestay)) {
                         lists.add(detailHomestay);
                     }
                 }
@@ -81,6 +81,7 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
                         && (homestay.getPrice().compareTo(request.getPriceMin()) > 0)
                         && (homestay.getPrice().compareTo(request.getPriceMax()) < 0)
                 ) {
+                    res.clear();
                     res.add(homestay);
                 }
             }
@@ -94,13 +95,16 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
                             && (homestay.getPrice().compareTo(request.getPriceMin()) > 0)
                             && (homestay.getPrice().compareTo(request.getPriceMax()) < 0)
                     ) {
+                        res.clear();
                         res.add(homestay);
                     }
             }
         }
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-        Page<Homestay> res1 = new PageImpl<>(res, pageable, res.size());
-        return new PageableObject<>(res1);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), res.size());
+        List<Homestay> res1 = res.subList(start, end);
+        return new PageableObject<>(new PageImpl<>(res1, pageable, res1.size()));
     }
 
     @Override
