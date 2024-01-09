@@ -347,7 +347,7 @@ export const BookingReviewHomestay = () => {
           <a href={payment}>
             <img src={logovnpay} className='imgThanhToan' />
           </a>
-          <a onClick={() => console.log(paypal)} style={{marginLeft:'10px'}}>
+          <a href={paypal} style={{marginLeft:'10px'}}>
             <img src={paypalImg} style={{ width: '87px', height: '48px' }} className='imgThanhToanPaypal' />
           </a>
         </div>

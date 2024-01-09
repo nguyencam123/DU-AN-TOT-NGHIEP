@@ -25,7 +25,7 @@ public class VNPayConfig {
     public static String vnp_BankCode = "";
     public static String vnp_CurrCode = "VND";
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "http://localhost:3000/successBooking";
+    public static String vnp_ReturnUrl = "http://localhost:3000/bookingSuccess";
     public static String vnp_TmnCode = "5XP59BXC";
     public static String secretKey = "SPZJHDMKAOZGHKEFPNJCHONYJEGNAOFA";
 
