@@ -27,7 +27,7 @@ public class HomestayOwnerHomestayConventer implements Converter<String, Homesta
             validateLongField(jsonNode, "endDate");
             validateField(jsonNode, "desc", 2000);
             validateField(jsonNode, "address", 300);
-            validateIntField(jsonNode, "price");
+            validateIntField(jsonNode, "price",-1,1000);
             validateIntField(jsonNode, "numberPerson");
             validateField(jsonNode, "ownerHomestay", -1);
 
@@ -36,6 +36,14 @@ public class HomestayOwnerHomestayConventer implements Converter<String, Homesta
             e.printStackTrace();
         }
         return null;
+    }
+
+    private void validateIntField(JsonNode jsonNode, String fieldName, int maxLength, int minValue) {
+        String fieldValue = jsonNode.get(fieldName).textValue();
+        String trimmedValue = fieldValue.trim();
+        if (fieldValue.isEmpty() || fieldValue.length() > maxLength || !fieldValue.equals(trimmedValue) || (fieldName.equals("price") && Integer.parseInt(fieldValue) <= minValue)) {
+            throw new RestApiException("Trường '" + fieldName + "' không hợp lệ");
+        }
     }
 
     private void validateField(JsonNode jsonNode, String fieldName, int maxLength) {
@@ -54,7 +62,7 @@ public class HomestayOwnerHomestayConventer implements Converter<String, Homesta
 
     private void validateLongField(JsonNode jsonNode, String fieldName) {
         if (!jsonNode.has(fieldName) || !jsonNode.get(fieldName).isLong()) {
-            throw new RestApiException("Trường '" + fieldName + "' bị trống hoặc không phải kiểu số nguyên dài (long)");
+            throw new RestApiException("Trường '" + fieldName + "' bị trống");
         }
     }
 }
