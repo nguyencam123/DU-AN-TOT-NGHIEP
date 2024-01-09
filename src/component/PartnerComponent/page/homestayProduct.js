@@ -257,7 +257,7 @@ const HomeStayProduct = () => {
       },
     },
     {
-      title: 'Action',
+      title: 'Hành động',
       key: 'action',
       render: (_, record) => (
         <Space size='middle'>
