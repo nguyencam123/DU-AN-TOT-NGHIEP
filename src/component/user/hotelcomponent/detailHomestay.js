@@ -100,30 +100,32 @@ export const DetailHomestay = () => {
     if (index === 2) {
       return false
     }
-    return (
-      <Col key={index} span={6} style={{ marginRight: '70px' }}>
-        <div
-          style={{
-            minHeight: '80px',
-            width: '270px',
-            marginLeft: '15px',
-            marginBottom: '15px',
-            paddingLeft: '5px',
-            fontSize: '12px',
-            fontWeight: '500',
-            boxShadow: '0px 2px 5px rgba(3,18,26,0.15)',
-            borderRadius: '5px',
-          }}
-        >
-          <div style={{ marginBottom: '5px', paddingTop: '5px' }}>
-            {comment?.user.name}
+    if (comment?.point >= 4) {
+      return (
+        <Col key={index} span={6} style={{ marginRight: '70px' }}>
+          <div
+            style={{
+              minHeight: '80px',
+              width: '270px',
+              marginLeft: '15px',
+              marginBottom: '15px',
+              paddingLeft: '5px',
+              fontSize: '12px',
+              fontWeight: '500',
+              boxShadow: '0px 2px 5px rgba(3,18,26,0.15)',
+              borderRadius: '5px',
+            }}
+          >
+            <div style={{ marginBottom: '5px', paddingTop: '5px' }}>
+              {comment?.user.name}
+            </div>
+            <div style={{ width: '250px', wordWrap: 'break-word' }}>
+              {comment?.comment}
+            </div>
           </div>
-          <div style={{ width: '250px', wordWrap: 'break-word' }}>
-            {comment?.comment}
-          </div>
-        </div>
-      </Col>
-    )
+        </Col>
+      )
+    }
   })
   const calculatePercentage = (point, totalPoints) => {
     return (point / totalPoints) * 100
