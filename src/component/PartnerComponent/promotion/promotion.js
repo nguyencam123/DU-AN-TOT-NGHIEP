@@ -325,7 +325,10 @@ const Promotion = () => {
     homestay: checkedValues,
   }
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Vui lòng nhập tên khuyến mãi'),
+    name: Yup.string()
+      .trim() // Remove leading and trailing whitespaces
+      .min(1, 'Vui lòng nhập ít nhất một ký tự cho tên sản phẩm')
+      .required('Vui lòng nhập tên khuyến mãi'),
     value: Yup.number()
       .required('Vui lòng nhập số tiền giảm')
       .typeError('Vui lòng nhập số tiền giảm')

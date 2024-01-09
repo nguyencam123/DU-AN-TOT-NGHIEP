@@ -113,8 +113,7 @@ export const BookingHomestay = () => {
     // Chuyển đến trang review với dữ liệu infoPayment trên URL
     navigate(
       `/review/booking/${id}?name=${infoPayment.name}&email=${infoPayment.email}&phoneNumber=${infoPayment.phoneNumber}
-      &startDate=${startDate}&endDate=${endDate}&numNight=${numNight}&totalPrice=${totalPrice}&homestayId=${detailHomestay.id}
-      &idPromotion=${detailHomestay?.promotion?.id || ''}&typeBooking=${typeBooking}`,
+      &startDate=${startDate}&endDate=${endDate}&numNight=${numNight}&totalPrice=${totalPrice}&homestayId=${detailHomestay.id}&idPromotion=${detailHomestay?.promotion?.id || ''}&typeBooking=${typeBooking}`
     )
   }
   const isValidEmail = (email) => {

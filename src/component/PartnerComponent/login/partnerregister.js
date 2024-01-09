@@ -103,7 +103,7 @@ const PartnerRegister = () => {
         // Xử lý lỗi từ request
         setIsLoading(false)
         console.error('Error during registration:', error)
-        message.error(error.response.data.message)
+        message.error(error.response.data.message, 5)
       }
     }
   }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progress, Space, Modal } from 'antd';
+import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progress, Space, Modal, message } from 'antd';
 import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, InfoCircleTwoTone, StarTwoTone } from '@ant-design/icons'
 import { Form, Table } from 'react-bootstrap';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -53,13 +53,12 @@ export const BookingReviewHomestay = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
 
-  const handleBooking = () => {
-    setIsModalOpen(true)
+  const handleBooking = async () => {
     const bookingDataGet = {
       totalPrice: totalPrice,
       email: email,
       endDate: endDate,
-      homestayId: homestayId,
+      homestayId: detailHomestay.id,
       idPromotion: idPromotion,
       name: name,
       numberOfNight: numNight,
@@ -69,7 +68,9 @@ export const BookingReviewHomestay = () => {
       userId: userDetail?.data?.id
     }
     dispatch(getPayment(bookingDataGet));
-    dispatch(getPaymentPayPal(bookingDataGet));
+    message.info('Bạn vui lòng đợi một lúc!',1)
+    await dispatch(getPaymentPayPal(bookingDataGet));
+    setIsModalOpen(true)
   }
 
   return (
