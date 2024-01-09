@@ -199,11 +199,11 @@ export const BookingUser = () => {
         }}
       >
         <div style={{ marginTop: '30px' }}>
-          <Title level={2}>Homestay bạn đã đặt</Title>
+          <Title level={2}>Homestay bạn đã và đang thuê</Title>
           <Title level={4}>Danh mục</Title>
           {booking.length === 0 ? (
             <div style={{ textAlign: 'center', marginTop: 20 }}>
-              Bạn chưa có đơn đặt hàng nào.
+              Bạn chưa thuê homestay nào.
             </div>
           ) : (
             booking.map((booking) => {
