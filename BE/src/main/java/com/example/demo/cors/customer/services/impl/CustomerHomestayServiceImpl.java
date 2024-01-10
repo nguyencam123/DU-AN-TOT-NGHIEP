@@ -17,7 +17,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class CustomerHomestayServiceImpl implements CustomerHomestayService {
@@ -52,7 +54,7 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
         } else {
             for (DetailHomestay detailHomestay : detailHomestayList) {
                 for (String convenientHomestay : convenientHomestayList) {
-                    if (detailHomestay.getConvenientHomestay().getId().contains(convenientHomestay)) {
+                    if (detailHomestay.getConvenientHomestay().getId().equals(convenientHomestay)) {
                         lists.add(detailHomestay);
                     }
                 }
@@ -73,6 +75,7 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
     public PageableObject<Homestay> findAllBetweenDate(CustomerHomestayRequest request) {
         List<Homestay> res = new ArrayList<>();
         List<Homestay> lists = customerHomestayRepository.findAllBetweenDate(request);
+        Set<Homestay> uniqueHomestays = new HashSet<>();
         if (getHomestayByConvenient(request.getConvenientHomestayList(), lists) == null) {
             for (Homestay homestay : lists) {
                 if ((homestay.getName().contains(request.getNameOrAddress()) || homestay.getAddress().contains(request.getNameOrAddress()))
@@ -81,7 +84,7 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
                         && (homestay.getPrice().compareTo(request.getPriceMin()) > 0)
                         && (homestay.getPrice().compareTo(request.getPriceMax()) < 0)
                 ) {
-                    res.add(homestay);
+                    uniqueHomestays.add(homestay);
                 }
             }
         } else {
@@ -94,10 +97,12 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
                             && (homestay.getPrice().compareTo(request.getPriceMin()) > 0)
                             && (homestay.getPrice().compareTo(request.getPriceMax()) < 0)
                     ) {
-                        res.add(homestay);
+                        uniqueHomestays.add(homestay);
                     }
             }
         }
+        res.addAll(uniqueHomestays);
+
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), res.size());
