@@ -6,6 +6,8 @@ import com.example.demo.cors.customer.model.request.CustomerPasswordRequest;
 import com.example.demo.cors.customer.model.request.CustomerRequest;
 import com.example.demo.cors.customer.model.request.CustomerUserPassRequest;
 import com.example.demo.cors.customer.model.response.CustomerAuthenticationReponse;
+import com.example.demo.cors.customer.repository.CustomerAdminRepository;
+import com.example.demo.cors.customer.repository.CustomerHomestayOwnerRepository;
 import com.example.demo.cors.customer.repository.CustomerLoginRepository;
 import com.example.demo.cors.customer.repository.CustomerTokenRepository;
 import com.example.demo.cors.customer.services.CustomerLoginService;
@@ -39,6 +41,12 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
     private CustomerLoginRepository customerLoginRepository;
 
     @Autowired
+    private CustomerAdminRepository customerAdminRepository;
+
+    @Autowired
+    private CustomerHomestayOwnerRepository customerHomestayOwnerRepository;
+
+    @Autowired
     private CustomerTokenRepository customerTokenRepository;
 
     @Autowired
@@ -63,6 +71,18 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         customerLoginRepository.save(user);
     }
 
+    private boolean usernameExistsInAdmin(String username) {
+        return customerAdminRepository.existsByUsername(username);
+    }
+
+    private boolean usernameExistsInOwnerHomestay(String username) {
+        return customerHomestayOwnerRepository.existsByUsername(username);
+    }
+
+    private boolean usernameExistsInUser(String username) {
+        return customerLoginRepository.existsByUsername(username);
+    }
+
     @Override
     public CustomerAuthenticationReponse CustomerRegister(CustomerRequest request) {
         if (isNullOrEmpty(request.getUsername())) {
@@ -80,8 +100,8 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         if (isNullOrEmpty(request.getPassword())) {
             throw new RestApiException("Password không được để trống");
         }
-        if (customerLoginRepository.existsByUsername(request.getUsername())) {
-            throw new RestApiException("Tên tài khoản đã tồn tại");
+        if (usernameExistsInAdmin(request.getUsername()) || usernameExistsInUser(request.getUsername()) || usernameExistsInOwnerHomestay(request.getUsername())){
+            throw new RestApiException(" Username đã được sử dụng");
         }
         if (customerLoginRepository.existsByEmail(request.getEmail())) {
             throw new RestApiException("Email đã tồn tại");
@@ -231,7 +251,7 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         if (isNullOrEmpty(request.getEmail())) {
             throw new RestApiException("Email không được để trống");
         }
-        if (customerLoginRepository.existsByUsername(request.getUsername()) && ! customer.getUsername().equals(request.getUsername())) {
+        if ((usernameExistsInAdmin(request.getUsername()) || usernameExistsInUser(request.getUsername()) || usernameExistsInOwnerHomestay(request.getUsername())) && ! customer.getUsername().equals(request.getUsername())) {
             throw new RestApiException("Tên tài khoản đã tồn tại");
         }
         if (customerLoginRepository.existsByEmail(request.getEmail()) && !customer.getEmail().equals(request.getEmail())) {
@@ -246,7 +266,7 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         }
         String emails=request.getEmail();
         if (!isValidEmail(emails)){
-            throw new RestApiException("Email phải đúng định dạng @.gmail.com");
+            throw new RestApiException("Email phải đúng định dạng");
         }
         customer.setName(request.getName());
         customer.setBirthday(request.getBirthday());
