@@ -9,7 +9,6 @@ import com.example.demo.cors.customer.services.CustomerHomestayService;
 import com.example.demo.entities.DetailHomestay;
 import com.example.demo.entities.Homestay;
 import com.example.demo.entities.User;
-import jakarta.validation.OverridesAttribute;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -53,11 +52,12 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
         } else {
             for (DetailHomestay detailHomestay : detailHomestayList) {
                 for (String convenientHomestay : convenientHomestayList) {
-                    if (detailHomestay.getConvenientHomestay().getId().equals(convenientHomestay)) {
+                    if (detailHomestay.getConvenientHomestay().getId().contains(convenientHomestay)) {
                         lists.add(detailHomestay);
                     }
                 }
             }
+
             for (DetailHomestay detailHomestay : lists) {
                 for (Homestay homestay : homestayList) {
                     if (detailHomestay.getHomestay().getId().equals(homestay.getId())) {
@@ -99,8 +99,10 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
             }
         }
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-        Page<Homestay> res1 = new PageImpl<>(res, pageable, res.size());
-        return new PageableObject<>(res1);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), res.size());
+        List<Homestay> res1 = res.subList(start, end);
+        return new PageableObject<>(new PageImpl<>(res1, pageable, res1.size()));
     }
 
     @Override
