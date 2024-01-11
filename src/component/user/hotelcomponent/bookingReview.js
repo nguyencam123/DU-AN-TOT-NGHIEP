@@ -3,7 +3,7 @@ import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progres
 import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, InfoCircleTwoTone, StarTwoTone } from '@ant-design/icons'
 import { Form, Table } from 'react-bootstrap';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { addBooking, getOneProduct, getPayment, getPaymentPayPal } from '../../../features/product/productThunk';
+import { addBooking, checkBooking, getOneProduct, getPayment, getPaymentPayPal } from '../../../features/product/productThunk';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import logovnpay from '../../../assets/svg/Rectangle 20.svg';
@@ -50,10 +50,16 @@ export const BookingReviewHomestay = () => {
   const detailHomestay = useSelector((state) => state.product.productDetails)
   const payment = useSelector((state) => state.product.payment)
   const paypal = useSelector((state) => state.product.paypal)
+  const bookingCheck = useSelector((state) => state.product.check)
+
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-
   const handleBooking = async () => {
+    dispatch(checkBooking(detailHomestay.id, startDate, endDate));
+    if (bookingCheck === true) {
+      message.info('Đã có người thuê homestay trong khoảng thời gian trước bạn', 1)
+      return false
+    }
     const bookingDataGet = {
       totalPrice: totalPrice,
       email: email,
