@@ -34,6 +34,7 @@ import SupportedUser from './component/user/siderheader/supporteduser';
 import UserComment from './component/user/siderheader/userComment';
 import { BookingFailed } from './component/user/hotelcomponent/bookingFailed';
 import { BookingSuccessVnpay } from './component/user/hotelcomponent/bookingSuccesVnpay';
+import { DetailHomestayBooking } from './component/user/hotelcomponent/detailBookingHomestay';
 
 function App() {
   //map component user
@@ -61,8 +62,8 @@ function App() {
     { path: 'supporteduser', element: <SupportedUser /> },
     { path: 'userComment', element: <UserComment /> },
     { path: 'failedBooking', element: <BookingFailed /> },
-    { path: 'bookingSuccess', element: <BookingSuccessVnpay /> }
-
+    { path: 'bookingSuccess', element: <BookingSuccessVnpay /> },
+    { path: 'booking/homestay/detail/:id', element: <DetailHomestayBooking /> }
   ];
   useEffect(() => {
     window.scrollTo(0, 0); // Cuộn lên đầu trang khi path thay đổi
