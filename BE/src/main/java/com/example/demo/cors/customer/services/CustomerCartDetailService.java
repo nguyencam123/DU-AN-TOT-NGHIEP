@@ -6,4 +6,6 @@ public interface CustomerCartDetailService {
 
     Boolean deleteAllCartDetail(String userId);
 
+    Boolean cartDetailBooked();
+
 }

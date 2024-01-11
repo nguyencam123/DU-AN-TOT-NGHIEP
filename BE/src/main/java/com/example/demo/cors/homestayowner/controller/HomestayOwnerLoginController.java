@@ -59,7 +59,7 @@ public class HomestayOwnerLoginController {
             createResetPasswordToken.resetPasswordWithToken(id, newPassword);
             return new ResponseObject("Mật khẩu đã được đặt lại thành công.");
         } else {
-            return new ResponseObject("id không hợp lệ hoặc không có");
+            return new ResponseObject("Id không hợp lệ hoặc không có");
         }
     }
 
