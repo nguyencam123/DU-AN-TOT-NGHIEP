@@ -110,7 +110,7 @@ const HeaderUser = () => {
             type='button'
             className='btn btn-primary'
             style={{
-              color: 'black',
+              color: 'white',
               width: 240,
               textAlign: 'justify',
               display: 'flex',
@@ -129,7 +129,7 @@ const HeaderUser = () => {
           type='button'
           className='btn btn-primary'
           style={{
-            color: 'black',
+            color: 'white',
             width: 240,
             textAlign: 'justify',
             display: 'flex',
@@ -149,7 +149,7 @@ const HeaderUser = () => {
             type='button'
             className='btn btn-primary'
             style={{
-              color: 'black',
+              color: 'white',
               width: 240,
               textAlign: 'justify',
               display: 'flex',
@@ -169,7 +169,7 @@ const HeaderUser = () => {
             type='button'
             className='btn btn-primary'
             style={{
-              color: 'black',
+              color: 'white',
               display: 'flex',
               width: 240,
             }}
@@ -188,7 +188,7 @@ const HeaderUser = () => {
             type='button'
             className='btn btn-primary'
             style={{
-              color: 'black',
+              color: 'white',
               width: 240,
               textAlign: 'justify',
               display: 'flex',
@@ -207,7 +207,7 @@ const HeaderUser = () => {
           type='button'
           className='btn btn-primary'
           style={{
-            color: 'black',
+            color: 'white',
             width: 240,
             textAlign: 'justify',
             display: 'flex',
