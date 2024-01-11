@@ -22,14 +22,14 @@ public interface CustomerHomestayRepository extends HomestayRepository {
 
     @Query(value = """
             SELECT a.* FROM homestay a
-            WHERE (a.status = 0)    
+            WHERE (a.status = 0)
             AND (a.start_date <=:#{#customerHomestayRequest.dateFrom} AND a.end_date >=:#{#customerHomestayRequest.dateTo})
             AND a.id
-            NOT IN (SELECT b.homestay_id FROM booking b 
+            NOT IN (SELECT b.homestay_id FROM booking b
             WHERE (b.status = 1)
-            AND (:#{#customerHomestayRequest.dateFrom} BETWEEN b.start_date AND b.end_date
-            OR :#{#customerHomestayRequest.dateTo} BETWEEN b.start_date AND b.end_date
-            OR (b.start_date >=:#{#customerHomestayRequest.dateFrom} AND b.end_date <=:#{#customerHomestayRequest.dateTo})))
+            AND (:#{#customerHomestayRequest.dateFrom} > b.start_date AND b.end_date >:#{#customerHomestayRequest.dateFrom}
+            OR :#{#customerHomestayRequest.dateTo} > b.start_date AND b.end_date > :#{#customerHomestayRequest.dateTo}
+            OR (b.start_date >= :#{#customerHomestayRequest.dateFrom} AND b.end_date <= :#{#customerHomestayRequest.dateTo})))
             """, nativeQuery = true)
     List<Homestay> findAllBetweenDate(CustomerHomestayRequest customerHomestayRequest);
 
