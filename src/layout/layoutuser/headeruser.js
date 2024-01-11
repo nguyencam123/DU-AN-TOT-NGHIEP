@@ -13,10 +13,11 @@ import {
   CommentOutlined,
   StarOutlined,
   BankOutlined,
+  LogoutOutlined,
 } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 import { logoutUser } from '../../features/user/userThunk'
-import { Avatar, Badge, Input, Button } from 'antd'
+import { Avatar, Badge, Input, Button, Dropdown } from 'antd'
 import { useSelector, useDispatch } from 'react-redux'
 import React, { useEffect, useState } from 'react'
 import { Modal, Typography } from 'antd'
@@ -101,6 +102,125 @@ const HeaderUser = () => {
     // Lấy phần tử cuối cùng của mảng (tên)
     lastName = nameParts[nameParts.length - 1]
   }
+  const items = [
+    {
+      label: (
+        <Link to='/user/propreties' style={{ textDecoration: 'none' }}>
+          <button
+            type='button'
+            className='btn btn-primary'
+            style={{
+              color: 'white',
+              width: 240,
+              textAlign: 'justify',
+              display: 'flex',
+            }}
+          >
+            <UserOutlined style={{ marginTop: 3 }} />
+            &nbsp;Hồ sơ của tôi
+          </button>
+        </Link>
+      ),
+      key: '0',
+    },
+    {
+      label: (
+        <button
+          type='button'
+          className='btn btn-primary'
+          style={{
+            color: 'white',
+            width: 240,
+            textAlign: 'justify',
+            display: 'flex',
+          }}
+          onClick={booking}
+        >
+          <FileDoneOutlined style={{ marginTop: 3 }} />
+          &ensp; Homestay đã thuê
+        </button>
+      ),
+      key: '1',
+    },
+    {
+      label: (
+        <Link to={'/userComment'}>
+          <button
+            type='button'
+            className='btn btn-primary'
+            style={{
+              color: 'white',
+              width: 240,
+              textAlign: 'justify',
+              display: 'flex',
+            }}
+          >
+            <CommentOutlined style={{ marginTop: 3 }} />
+            &ensp; Nhận xét của tôi
+          </button>
+        </Link>
+      ),
+      key: '2',
+    },
+    {
+      label: (
+        <Link to={'/RulesWhile'}>
+          <button
+            type='button'
+            className='btn btn-primary'
+            style={{
+              color: 'white',
+              display: 'flex',
+              width: 240,
+            }}
+          >
+            <BankOutlined style={{ marginTop: 3 }} />
+            &ensp;Quy tắc khi đặt homestay
+          </button>
+        </Link>
+      ),
+      key: '3',
+    },
+    {
+      label: (
+        <Link to={'/supporteduser'}>
+          <button
+            type='button'
+            className='btn btn-primary'
+            style={{
+              color: 'white',
+              width: 240,
+              textAlign: 'justify',
+              display: 'flex',
+            }}
+          >
+            <MDBIcon fas icon='question' style={{ marginTop: 3 }} />
+            &nbsp; Những câu hỏi thắc mắc
+          </button>
+        </Link>
+      ),
+      key: '4',
+    },
+    {
+      label: (
+        <button
+          type='button'
+          className='btn btn-primary'
+          style={{
+            color: 'white',
+            width: 240,
+            textAlign: 'justify',
+            display: 'flex',
+          }}
+          onClick={logout}
+        >
+          <LogoutOutlined style={{ marginTop: 3 }} />
+          &ensp; Đăng xuất
+        </button>
+      ),
+      key: '5',
+    },
+  ]
   return (
     <header>
       <Navbar collapseOnSelect expand='lg'>
@@ -160,7 +280,7 @@ const HeaderUser = () => {
                   <span className='picturecart'>
                     <span className='cc'>
                       <Badge count={shoppingcart?.length} showZero>
-                        <HeartOutlined
+                        <ShoppingCartOutlined
                           style={{
                             color: 'black',
                             fontSize: '26px',
@@ -173,88 +293,26 @@ const HeaderUser = () => {
                 </Link>
                 &emsp;
                 {statusUser ? (
-                  <span
-                    className='pictureperson'
-                    onClick={handleDropdownToggle}
-                    style={{ cursor: 'pointer', display: 'flex' }}
+                  <Dropdown
+                    menu={{
+                      items,
+                    }}
+                    trigger={['click']}
                   >
-                    {/* {userDetail?.data.} */}
-                    {userDetail?.data.avataUrl === null ? (
-                      <Avatar icon={<UserOutlined />} />
-                    ) : (
-                      <Avatar src={userDetail?.data.avataUrl} />
-                    )}
-                    <Title level={5}>{lastName}</Title>
-                  </span>
+                    <div style={{ display: 'flex', cursor: 'pointer' }}>
+                      {userDetail?.data.avataUrl === null ? (
+                        <Avatar icon={<UserOutlined />} />
+                      ) : (
+                        <Avatar src={userDetail?.data.avataUrl} />
+                      )}
+                      <Title style={{ marginTop: 5 }} level={5}>
+                        &ensp;{lastName}
+                      </Title>
+                    </div>
+                  </Dropdown>
                 ) : null}
                 {statusUser ? ( // Render dropdown only if the user is logged in
-                  <div
-                    className={`dropdown-menu ${showDropdown ? 'show' : ''}`}
-                    style={{
-                      backgroundColor: '#FFFFFF',
-                      width: 200,
-                      marginLeft: 'auto',
-                      marginRight: 80,
-                    }}
-                  >
-                    <button
-                      type='button'
-                      className='btn btn-primary'
-                      style={{ color: 'black' }}
-                      onClick={logout}
-                    >
-                      <UserOutlined /> Đăng xuất
-                    </button>
-                    <button
-                      type='button'
-                      className='btn btn-primary'
-                      style={{ color: 'black' }}
-                      onClick={booking}
-                    >
-                      <FileDoneOutlined /> Homestay bạn thuê
-                    </button>
-                    <Link to={'/userComment'}>
-                      <button
-                        type='button'
-                        className='btn btn-primary'
-                        style={{ color: 'black' }}
-                      >
-                        <CommentOutlined /> Nhận xét của tôi
-                      </button>
-                    </Link>
-                    <Link to={'/RulesWhile'}>
-                      <button
-                        type='button'
-                        className='btn btn-primary'
-                        style={{ color: 'black' }}
-                      >
-                        <BankOutlined />
-                        Những luật trong khi đặt homestay
-                      </button>
-                    </Link>
-                    <Link to={'/supporteduser'}>
-                      <button
-                        type='button'
-                        className='btn btn-primary'
-                        style={{ color: 'black', display: 'flex' }}
-                      >
-                        <MDBIcon fas icon='question' style={{ marginTop: 4 }} />
-                        &nbsp; Những câu hỏi thắc mắc
-                      </button>
-                    </Link>
-                    <Link
-                      to='/user/propreties'
-                      style={{ textDecoration: 'none' }}
-                    >
-                      <button
-                        type='button'
-                        className='btn btn-primary'
-                        style={{ color: 'black' }}
-                      >
-                        Hồ sơ của tôi
-                      </button>
-                    </Link>
-                  </div>
+                  <span />
                 ) : (
                   <div>
                     {' '}

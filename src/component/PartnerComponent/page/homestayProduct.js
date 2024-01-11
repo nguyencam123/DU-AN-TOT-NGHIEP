@@ -717,10 +717,10 @@ const HomeStayProduct = () => {
       .then((res) => res.json())
       .then(() => {
         setFileList([])
-        message.success('upload successfully.')
+        message.success('Upload successfully.')
       })
       .catch(() => {
-        message.error('upload failed.')
+        message.error('Upload failed.')
       })
       .finally(() => {
         setUploading(false)

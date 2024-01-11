@@ -496,13 +496,13 @@ function AddProductForm() {
           <br />
           <div style={{ display: 'flex' }}>
             <div style={{ width: 200 }}>Tiện nghi :</div>
-          </div>
-          {viewHomestay?.detailHomestays?.map((items, index) => (
+            {viewHomestay?.detailHomestays?.map((items, index) => (
             <React.Fragment key={index}>
-              <div>{items.convenientHomestay?.name}</div>
-              {index !== viewHomestay?.detailHomestays.length - 1 && <span>,</span>}
+              <p>{items.convenientHomestay?.name}</p>
+              {index !== viewHomestay?.detailHomestays.length - 1 && <span>, </span>}
             </React.Fragment>
           ))}
+          </div>
           <br />
           <div>
             Ảnh homstay :<br />
