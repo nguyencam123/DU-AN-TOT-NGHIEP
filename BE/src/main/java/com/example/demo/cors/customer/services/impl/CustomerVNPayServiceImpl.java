@@ -2,6 +2,7 @@ package com.example.demo.cors.customer.services.impl;
 
 import com.example.demo.cors.customer.model.request.CustomerBookingRequest;
 import com.example.demo.cors.customer.repository.CustomerBookingRepository;
+import com.example.demo.cors.customer.repository.CustomerCartDetailRepository;
 import com.example.demo.cors.customer.repository.CustomerHomestayRepository;
 import com.example.demo.cors.customer.services.CustomerVNPayService;
 import com.example.demo.entities.Booking;
@@ -43,6 +44,8 @@ public class CustomerVNPayServiceImpl implements CustomerVNPayService {
     private PromotionRepository promotionRepository;
     @Autowired
     private CustomerBookingRepository customerBookingRepository;
+    @Autowired
+    private CustomerCartDetailRepository customerCartDetailRepository;
 
     @Override
     public Booking saveBooking(CustomerBookingRequest request) {
@@ -156,10 +159,9 @@ public class CustomerVNPayServiceImpl implements CustomerVNPayService {
         Booking booking = customerBookingRepository.findById((String) fields.get("vnp_OrderInfo")).orElse(null);
         if (signValue.equals(vnp_SecureHash)) {
             if ("00".equals(request.getParameter("vnp_TransactionStatus"))) {
-                if (booking != null && booking.getStatus() == StatusBooking.CHO_THANH_TOAN) {
-                    booking.setStatus(StatusBooking.THANH_CONG);
-                    customerBookingRepository.save(booking);
-                }
+                booking.setStatus(StatusBooking.THANH_CONG);
+                customerBookingRepository.save(booking);
+                customerCartDetailRepository.deleteByHomestayId(booking.getHomestay().getId(), booking.getUser().getId());
                 return true;
             }
         }
