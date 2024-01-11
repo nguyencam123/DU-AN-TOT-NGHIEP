@@ -41,9 +41,12 @@ dayjs.locale('vi')
 const { Title } = Typography
 const { Search } = Input
 
+
 const desc = ['Tệ', 'Không hài lòng', 'Bình thường', 'Hài lòng', 'Tuyệt vời']
 
 export const BookingUser = () => {
+  const navigate = useNavigate()
+
   const formatCurrency = (value) => {
     // Sử dụng Intl.NumberFormat để định dạng giá trị tiền tệ
     return new Intl.NumberFormat('vi-VN', {
@@ -101,7 +104,7 @@ export const BookingUser = () => {
   }
   const showModalView = (booking) => {
     setBookingDeatil(booking)
-    setIsviewmodal(true)
+    navigate(`/booking/homestay/detail/${booking.homestay.id}`)
   }
   const showModalComment = (booking) => {
     setBookingDeatil(booking)
@@ -397,187 +400,6 @@ export const BookingUser = () => {
         </div>
       </div>
 
-      <Modal
-        title={
-          <div style={{ fontSize: '22px' }}>Xem thông tin chi tiết homstay</div>
-        }
-        open={isViewmodal}
-        onCancel={handleCancel}
-        onOk={handleCancel}
-        width={1100}
-        style={{ fontSize: '40px' }}
-      >
-        <div style={{ fontSize: 18, fontWeight: 600 }}>
-          <table>
-            <tr>
-              <td style={{ width: 600 }}>
-                <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Tên homestay </div> :{' '}
-                  {bookingDeatil?.homestay?.name}
-                </div>
-                <br />
-              </td>
-              <td style={{ width: 500 }}>
-                <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Diện tích phòng</div> :{' '}
-                  {bookingDeatil?.homestay?.acreage} (m2)
-                </div>
-                <br />
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: 600 }}>
-                <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Giá </div> :{' '}
-                  {bookingDeatil?.homestay?.price} (VNĐ)
-                </div>
-                <br />
-              </td>
-              <td style={{ width: 500 }}>
-                <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Số lượng người </div> :{' '}
-                  {bookingDeatil?.homestay?.numberPerson} (Người)
-                </div>
-                <br />
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: 600 }}>
-                <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Số phòng</div> :{' '}
-                  {bookingDeatil?.homestay?.roomNumber}
-                </div>
-                <br />
-              </td>
-              <td style={{ width: 500 }}>
-                <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Chính sách hủy phòng </div> :{' '}
-                  {bookingDeatil?.homestay?.cancellationPolicy}
-                </div>
-                <br />
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: 600 }}>
-                <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Thời gian nhận phòng </div> :{' '}
-                  {bookingDeatil?.homestay?.timeCheckIn}
-                </div>
-                <br />
-              </td>
-              <td style={{ width: 500 }}>
-                <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Thời gian trả phòng </div> :{' '}
-                  {bookingDeatil?.homestay?.timeCheckOut}
-                </div>
-                <br />
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: 600 }}>
-                <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Ngày bắt đầu</div> :{' '}
-                  {moment(bookingDeatil?.homestay?.startDate)
-                    .locale('vi')
-                    .format('LL')}
-                </div>
-                <br />
-              </td>
-              <td style={{ width: 500 }}>
-                <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Ngày kết thúc</div> :{' '}
-                  {moment(bookingDeatil?.homestay?.endDate)
-                    .locale('vi')
-                    .format('LL')}
-                </div>
-                <br />
-              </td>
-            </tr>
-          </table>
-          <div style={{ display: 'flex' }}>
-            <div style={{ width: 200 }}>Tiện ích </div> :{' '}
-            {bookingDeatil?.homestay?.detailHomestays?.map((items) => (
-              <div> {items.convenientHomestay?.name},</div>
-            ))}
-          </div>
-          <br />
-          <div style={{ display: 'flex' }}>
-            <div style={{ width: 200 }}>Mô tả </div> :{' '}
-            {bookingDeatil?.homestay?.desc}
-          </div>
-          <br />
-          <div style={{ display: 'flex' }}>
-            <div style={{ width: 200 }}>Địa chỉ </div> :{' '}
-            {bookingDeatil?.homestay?.address}
-          </div>
-          <br />
-          {Date.now() >= calculateDate(bookingDeatil?.createdDate) ? (
-            <div style={{ display: 'flex' }}>
-              <div style={{ width: 200 }}>Số điện thoại liên lạc </div> :{' '}
-              {bookingDeatil?.homestay?.ownerHomestay?.phoneNumber}
-            </div>
-          ) : (
-            ''
-          )}
-          <div>
-            Ảnh homstay :<br />
-            <div
-              style={{
-                width: 1030,
-                padding: 20,
-                flexWrap: 'wrap',
-                borderRadius: 10,
-                display: 'flex',
-                justifyContent: 'center',
-                border: '1px solid black',
-              }}
-            >
-              {bookingDeatil?.homestay?.images?.map((imageurl, index) => (
-                <Image
-                  key={index}
-                  src={imageurl.imgUrl}
-                  alt={`Homestay Image ${index}`}
-                  style={{
-                    maxWidth: '200px', // Đảm bảo ảnh không vượt quá chiều rộng của phần tử cha
-                    margin: '0 10px 10px 0', // Thêm khoảng cách giữa các ảnh
-                  }}
-                  preview={{
-                    toolbarRender: (
-                      _,
-                      {
-                        transform: { scale },
-                        actions: {
-                          onFlipY,
-                          onFlipX,
-                          onRotateLeft,
-                          onRotateRight,
-                          onZoomOut,
-                          onZoomIn,
-                        },
-                      },
-                    ) => (
-                      <Space className='toolbar-wrapper'>
-                        <SwapOutlined rotate={90} onClick={onFlipY} />
-                        <SwapOutlined onClick={onFlipX} />
-                        <RotateLeftOutlined onClick={onRotateLeft} />
-                        <RotateRightOutlined onClick={onRotateRight} />
-                        <ZoomOutOutlined
-                          disabled={scale === 1}
-                          onClick={onZoomOut}
-                        />
-                        <ZoomInOutlined
-                          disabled={scale === 50}
-                          onClick={onZoomIn}
-                        />
-                      </Space>
-                    ),
-                  }}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      </Modal>
       <Modal
         title='Hủy Homestay'
         open={isRefusalModal}
