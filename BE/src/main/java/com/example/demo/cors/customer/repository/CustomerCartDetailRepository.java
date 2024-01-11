@@ -65,6 +65,6 @@ public interface CustomerCartDetailRepository extends CartDetailRepository {
             		AND b.homestay_id = cd.homestay_id
             );
             """,nativeQuery = true)
-    List<CartDetail> cartdDetailBooked();
+    List<CartDetail> cartDetailBooked();
 
 }
