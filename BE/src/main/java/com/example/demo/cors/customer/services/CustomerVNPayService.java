@@ -14,5 +14,4 @@ public interface CustomerVNPayService {
 
     Boolean orderReturn(HttpServletRequest request);
 
-
 }

@@ -2,9 +2,13 @@ package com.example.demo.cors.customer.services.impl;
 
 import com.example.demo.cors.customer.repository.CustomerCartDetailRepository;
 import com.example.demo.cors.customer.services.CustomerCartDetailService;
+import com.example.demo.entities.CartDetail;
+import com.example.demo.infrastructure.contant.StatusCart;
 import com.example.demo.infrastructure.exception.rest.RestApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class CustomerCartDetailServiceImpl implements CustomerCartDetailService {
@@ -20,13 +24,26 @@ public class CustomerCartDetailServiceImpl implements CustomerCartDetailService 
         } else {
             throw new RestApiException("Cart detail khong ton tai!");
         }
-
     }
 
     @Override
     public Boolean deleteAllCartDetail(String userId) {
         customerCartDetailRepository.deleteAllCart(userId);
         return true;
+    }
+
+    @Override
+    public Boolean cartDetailBooked() {
+        List<CartDetail> cartDetailList = customerCartDetailRepository.cartDetailBooked();
+        if(cartDetailList.size() != 0){
+            for (CartDetail cartDetail : cartDetailList) {
+                cartDetail.setStatus(StatusCart.KHONG_HOAT_DONG);
+                customerCartDetailRepository.save(cartDetail);
+            }
+            return true;
+        }else {
+            throw new RestApiException("Khong co cart detail!");
+        }
     }
 
 }
