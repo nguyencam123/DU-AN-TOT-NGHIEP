@@ -175,7 +175,6 @@ export const CartUser = () => {
                       {items.name}
                     </Title>
                     <div style={{ display: 'flex' }}>
-                      <EnvironmentOutlined style={{ marginTop: 4 }} />
                       <Title
                         level={5}
                         style={{
@@ -183,8 +182,10 @@ export const CartUser = () => {
                           whiteSpace: 'nowrap',
                           textOverflow: 'ellipsis',
                           marginLeft: 5,
+                          display: 'flex',
                         }}
                       >
+                        <EnvironmentOutlined style={{ marginTop: 4 }} />
                         {city}
                       </Title>
                     </div>
