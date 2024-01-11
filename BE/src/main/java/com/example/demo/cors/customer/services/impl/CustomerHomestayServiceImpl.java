@@ -9,7 +9,6 @@ import com.example.demo.cors.customer.services.CustomerHomestayService;
 import com.example.demo.entities.DetailHomestay;
 import com.example.demo.entities.Homestay;
 import com.example.demo.entities.User;
-import jakarta.validation.OverridesAttribute;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -18,7 +17,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class CustomerHomestayServiceImpl implements CustomerHomestayService {
@@ -58,6 +59,7 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
                     }
                 }
             }
+
             for (DetailHomestay detailHomestay : lists) {
                 for (Homestay homestay : homestayList) {
                     if (detailHomestay.getHomestay().getId().equals(homestay.getId())) {
@@ -73,6 +75,7 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
     public PageableObject<Homestay> findAllBetweenDate(CustomerHomestayRequest request) {
         List<Homestay> res = new ArrayList<>();
         List<Homestay> lists = customerHomestayRepository.findAllBetweenDate(request);
+        Set<Homestay> uniqueHomestays = new HashSet<>();
         if (getHomestayByConvenient(request.getConvenientHomestayList(), lists) == null) {
             for (Homestay homestay : lists) {
                 if ((homestay.getName().contains(request.getNameOrAddress()) || homestay.getAddress().contains(request.getNameOrAddress()))
@@ -81,7 +84,7 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
                         && (homestay.getPrice().compareTo(request.getPriceMin()) > 0)
                         && (homestay.getPrice().compareTo(request.getPriceMax()) < 0)
                 ) {
-                    res.add(homestay);
+                    uniqueHomestays.add(homestay);
                 }
             }
         } else {
@@ -94,13 +97,17 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
                             && (homestay.getPrice().compareTo(request.getPriceMin()) > 0)
                             && (homestay.getPrice().compareTo(request.getPriceMax()) < 0)
                     ) {
-                        res.add(homestay);
+                        uniqueHomestays.add(homestay);
                     }
             }
         }
+        res.addAll(uniqueHomestays);
+
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-        Page<Homestay> res1 = new PageImpl<>(res, pageable, res.size());
-        return new PageableObject<>(res1);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), res.size());
+        List<Homestay> res1 = res.subList(start, end);
+        return new PageableObject<>(new PageImpl<>(res1, pageable, res1.size()));
     }
 
     @Override

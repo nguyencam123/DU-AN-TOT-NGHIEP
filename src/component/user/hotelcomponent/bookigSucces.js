@@ -20,8 +20,8 @@ export const BookingSuccess = () => {
     dispatch(updateBooking(bookingId));
   }, []);
   const info = urlParams.get('vnp_OrderInfo');
-  const bookingId = info?.substring(info.indexOf('=') + 1);
-  message.info(bookingId)
+  const bookingId = urlParams.get('bookingId');
+
 
   const handleBooking = () => {
     navigate(`/booking/${userID}`)

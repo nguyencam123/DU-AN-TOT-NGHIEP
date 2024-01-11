@@ -60,7 +60,7 @@ public class ApplicationConfig1 {
     }
 
     @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+    AuthenticationManager authenticationManager(@org.jetbrains.annotations.NotNull AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
 

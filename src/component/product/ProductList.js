@@ -201,7 +201,7 @@ function ProductList() {
                     </div>
                 </Carousel>
             </section> */}
-            <section style={{ marginTop: 30 }}>
+            {/* <section style={{ marginTop: 30 }}>
                 <div style={{ justifyContent: 'center', textAlign: 'center' }}>
                     <Title level={2}>Tiếng lành đồn xa</Title>
                 </div>
@@ -228,7 +228,7 @@ function ProductList() {
                         </div>
                     </div>
                 </div>
-            </section>
+            </section> */}
             <br /><br />
             <section style={{ marginBottom: 100 }}>
                 <div style={{ textAlign: 'center' }}><Title level={2}>Những chỗ nghỉ nổi bật dành cho quý khách:</Title></div>

@@ -16,11 +16,6 @@ export const BookingSuccessVnpay = () => {
     navigate('/')
   }
 
-  useEffect(() => {
-    if (responseCode === '00') {
-      dispatch(updateBooking(bookingId));
-    }
-  }, []);
   const info = urlParams.get('vnp_OrderInfo');
   const responseCode = urlParams.get('vnp_ResponseCode');
   const bookingId = info?.substring(info.indexOf('=') + 1);

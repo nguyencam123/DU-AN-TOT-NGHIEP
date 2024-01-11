@@ -15,4 +15,6 @@ public interface AdminUserRepository extends UserRepository {
             WHERE ( :#{#request.userName} IS NULL OR u.name LIKE '' OR u.name LIKE %:#{#request.userName}% )
             """, nativeQuery = true)
     Page<User> getAllUser(Pageable pageable, AdminUserRequest request);
+
+    boolean existsByUsername(String username);
 }

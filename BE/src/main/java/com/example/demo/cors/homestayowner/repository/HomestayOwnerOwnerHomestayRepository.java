@@ -23,10 +23,10 @@ public interface HomestayOwnerOwnerHomestayRepository extends OwnerHomestayRepos
 
        boolean existsByPhoneNumber(String phonenumber);
 
-       boolean existsByName(String name);
-
        @Query(value ="select b.* from token a\n" +
                "right join owner_homestay b on a.owner_id=b.id \n" +
                "where a.token=:token",nativeQuery = true)
        OwnerHomestay findOwnerByToken(String token);
+
+
 }
