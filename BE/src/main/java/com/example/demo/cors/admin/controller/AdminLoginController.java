@@ -6,12 +6,12 @@ import com.example.demo.cors.admin.model.request.AdminUserPasswordRequest;
 import com.example.demo.cors.admin.model.response.AdminLoginResponse;
 import com.example.demo.cors.admin.services.AdminLoginService;
 import com.example.demo.cors.common.base.ResponseObject;
-import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayOwnerOwnerHomestayRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController

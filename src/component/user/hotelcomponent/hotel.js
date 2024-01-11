@@ -93,7 +93,7 @@ const Hotel = () => {
     setCheckInDate(dateFix.valueOf())
     calculateCheckOutDate()
   }, [])
-  const onChange = (key) => { }
+  const onChange = (key) => {}
   const formatCurrency = (value) => {
     // Sử dụng Intl.NumberFormat để định dạng giá trị tiền tệ
     return new Intl.NumberFormat('vi-VN', {
@@ -176,7 +176,7 @@ const Hotel = () => {
   const handleresetinput = () => {
     setRangeValue(initialValue)
   }
-  const [nameOrAddress, setNameOrAddress] = useState(' ')
+  const [nameOrAddress, setNameOrAddress] = useState('Hà Nội')
   const [numberPerson, setNumberPerson] = useState(1)
   const [roomNumber, setRoomNumber] = useState(1)
   const [convenientvir, setconvenient] = useState('')
@@ -359,7 +359,7 @@ const Hotel = () => {
                   className='form-control'
                   type='text'
                   placeholder='Search'
-                  defaultValue={nameLocation || ''}
+                  defaultValue={nameLocation || 'Hà Nội'}
                   onChange={(e) => setNameOrAddress(e.target.value)}
                   required
                 />
@@ -659,18 +659,18 @@ const Hotel = () => {
                           </div>
                           <div style={{}}>
                             <div style={{ fontSize: 16 }}>
-                              {item?.promotion?.value ?
-                                (
+                              {item?.promotion?.statusPromotion ==
+                              'HOAT_DONG' ? (
                                 <del>
                                   {formatCurrency(
                                     item.price + (item.price * 11) / 100,
                                   )}{' '}
-                                  </del>
-                                )
-                                : ' '
-                              }
+                                </del>
+                              ) : (
+                                ' '
+                              )}
                             </div>
-                            {item?.promotion?.value ? (
+                            {item?.promotion?.statusPromotion == 'HOAT_DONG' ? (
                               <div
                                 style={{
                                   fontSize: 22,
@@ -679,10 +679,10 @@ const Hotel = () => {
                               >
                                 {formatCurrency(
                                   item.price -
-                                  item?.promotion?.value +
-                                  ((item.price - item?.promotion?.value) *
-                                    11) /
-                                  100,
+                                    item?.promotion?.value +
+                                    ((item.price - item?.promotion?.value) *
+                                      11) /
+                                      100,
                                 )}{' '}
                               </div>
                             ) : (

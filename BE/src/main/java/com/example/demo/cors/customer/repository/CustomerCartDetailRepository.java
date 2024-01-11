@@ -52,4 +52,19 @@ public interface CustomerCartDetailRepository extends CartDetailRepository {
             """, nativeQuery = true)
     Page<CustomerCartDetailResponse> getAllHomestayInCart(Pageable pageable, CustomerCartRequest request);
 
+    @Query(value = """
+            SELECT cd.*
+            FROM cart_detail cd
+            WHERE cd.[status] = 0
+            AND EXISTS (
+            	SELECT 1
+            	FROM booking b
+            	WHERE b.[status] = 1
+            		AND (b.[start_date] <= cd.[start_date] AND b.end_date >= cd.[start_date])
+            		OR (b.end_date >= cd.end_date AND b.[start_date] <= cd.end_date)
+            		AND b.homestay_id = cd.homestay_id
+            );
+            """,nativeQuery = true)
+    List<CartDetail> cartDetailBooked();
+
 }

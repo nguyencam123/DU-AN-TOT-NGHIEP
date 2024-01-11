@@ -57,10 +57,10 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (password.length < 8 || username.length < 8) {
-      alert('Mật khẩu và tài khoản phải có ít nhất 8 ký tự')
+      message.info('Mật khẩu và tài khoản phải có ít nhất 8 ký tự', 5)
       return
     } else if (phoneNumber.toString().length !== 10) {
-      alert('Số điện thoại phải có đúng 10 số')
+      message.info('Số điện thoại phải có đúng 10 số', 5)
       return
     } else {
       setIsLoading(true)
