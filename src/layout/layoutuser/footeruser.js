@@ -18,6 +18,8 @@ import {
 } from '@ant-design/icons';
 import logotravel from '../../assets/svg/Rectangle 16.svg';
 import logovnpay from '../../assets/svg/Rectangle 20.svg';
+import logoPaypal from '../../assets/img/PAYPAL.jpg';
+
 export default function FooterUser() {
   return (
     <MDBFooter style={{ backgroundColor: 'white', overflowX: 'hidden', width: '100%' }}>
@@ -204,6 +206,7 @@ export default function FooterUser() {
                   <span>
                     <MDBIcon icon='home' className='me-2' />
                     <img src={logovnpay} className='imgThanhToan' />
+                    <img style={{ height: '48px', width: '87px', marginLeft: '5px' }} src={logoPaypal} className='imgThanhToan' />
                   </span>
                 </p>
               </div>

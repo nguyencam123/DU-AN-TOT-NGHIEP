@@ -494,6 +494,16 @@ function AddProductForm() {
             <div style={{ width: 200 }}>Mô tả </div> : {viewHomestay.desc}
           </div>
           <br />
+          <div style={{ display: 'flex' }}>
+            <div style={{ width: 200 }}>Tiện nghi :</div>
+          </div>
+          {viewHomestay?.detailHomestays?.map((items, index) => (
+            <React.Fragment key={index}>
+              <div>{items.convenientHomestay?.name}</div>
+              {index !== viewHomestay?.detailHomestays.length - 1 && <span>,</span>}
+            </React.Fragment>
+          ))}
+          <br />
           <div>
             Ảnh homstay :<br />
             <div
