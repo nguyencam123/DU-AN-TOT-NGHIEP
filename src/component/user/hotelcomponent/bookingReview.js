@@ -8,6 +8,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import logovnpay from '../../../assets/svg/Rectangle 20.svg';
 import paypalImg from '../../../assets/img/PAYPAL.jpg';
+import dayjs from 'dayjs'
+import 'dayjs/locale/vi'
+dayjs.locale('vi')
 
 
 const { Header, Content, Footer } = Layout;
@@ -243,9 +246,9 @@ export const BookingReviewHomestay = () => {
                     <div style={{ lineHeight: '16px', marginTop: '3px' }}><FileTextTwoTone style={{ fontSize: '12px' }} /><b> Chính sách hủy phòng</b></div>
                     <div style={{ lineHeight: '16px', marginLeft: '17px', }}>
                       Việc hủy phòng trước ngày{' '}
-                      {moment(detailHomestay.startDate).locale('vi').format('LL')}{' '}
+                      {moment(dayjs(startDate.valueOf())).add(2, 'day').locale('vi').format('LL')}{' '}
                       sẽ được hoàn toàn miễn phí. Sau ngày{' '}
-                      {moment(detailHomestay.startDate).locale('vi').format('LL')}{' '}
+                      {moment(dayjs(startDate.valueOf())).add(2, 'day').locale('vi').format('LL')}{' '}
                       bạn sẽ phải mất một khoản tiền khi hủy phòng
                     </div>
                   </div>

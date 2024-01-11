@@ -304,7 +304,7 @@ export const BookingHomestay = () => {
                   </Col>
                   <Col span={8} push={1}>
                     <div style={{ fontWeight: '500' }}>
-                      {detailHomestay.numberPerson} phòng
+                      {detailHomestay.roomNumber} phòng
                     </div>
                   </Col>
                 </Row>

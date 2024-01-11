@@ -104,7 +104,7 @@ export const CartUser = () => {
           }}
         >
           <Title level={3}>
-            Xe đẩy hàng của quý khách ({shoppingcart?.length})
+            Homestay bạn đã lưu ({shoppingcart?.length})
           </Title>
           <div style={{ marginLeft: 'auto' }}>
             <Popconfirm

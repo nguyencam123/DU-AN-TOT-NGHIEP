@@ -50,6 +50,9 @@ import {
   addShoppingCartThunk,
   fetchShoppingCart,
 } from '../../../features/user/shoppingCartThunk'
+import dayjs from 'dayjs'
+import 'dayjs/locale/vi'
+dayjs.locale('vi')
 
 const { Header, Content, Footer } = Layout
 
@@ -221,11 +224,7 @@ export const DetailHomestay = () => {
           </Row>
           <Row style={{ marginTop: '10px' }}>
             <Col span={8}>
-              <EnvironmentOutlined
-                style={{ fontSize: '10px', alignItems: 'center' }}
-              />
               <span style={{ fontSize: '12px', marginTop: '3px' }}>
-                {detailHomestay.address}
               </span>
               <div
                 style={{
@@ -234,7 +233,10 @@ export const DetailHomestay = () => {
                   marginTop: '10px',
                 }}
               >
-                Tổng số phòng của homestay: {detailHomestay.numberPerson}
+                <EnvironmentOutlined
+                  style={{ fontSize: '10px', alignItems: 'center' }}
+                />
+                {detailHomestay.address}
               </div>
             </Col>
             <Col span={6} push={10}>
@@ -290,7 +292,7 @@ export const DetailHomestay = () => {
                     marginRight: 10,
                   }}
                 >
-                  Chọn phòng
+                  Chọn Homestay
                 </Button>
                 <Button
                   onClick={addShoppingCart}
@@ -506,9 +508,9 @@ export const DetailHomestay = () => {
                 </div>
                 <span style={{ lineHeight: '12px', marginLeft: '17px' }}>
                   Việc hủy phòng trước ngày{' '}
-                  {moment(detailHomestay.startDate).locale('vi').format('LL')}{' '}
+                  {moment(dayjs(startDate.valueOf())).add(2, 'day').locale('vi').format('LL')}{' '}
                   sẽ được hoàn toàn miễn phí. Sau ngày{' '}
-                  {moment(detailHomestay.startDate).locale('vi').format('LL')}{' '}
+                  {moment(dayjs(startDate.valueOf())).add(2, 'day').locale('vi').format('LL')}{' '}
                   bạn sẽ phải mất một khoản tiền khi hủy phòng
                 </span>
               </div>
@@ -547,6 +549,10 @@ export const DetailHomestay = () => {
                     <tr>
                       <td>Số người</td>
                       <td>{detailHomestay?.numberPerson}</td>
+                    </tr>
+                    <tr>
+                      <td>Số phòng</td>
+                      <td>{detailHomestay?.roomNumber}</td>
                     </tr>
                   </tbody>
                 </Table>
