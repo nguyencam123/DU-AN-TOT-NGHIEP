@@ -646,7 +646,8 @@ const Hotel = () => {
                           </div>
                           <div style={{}}>
                             <div style={{ fontSize: 16 }}>
-                              {items?.promotion === null ? (
+                              {item?.promotion?.statusPromotion ==
+                              'HOAT_DONG' ? (
                                 <del>
                                   {formatCurrency(
                                     item.price + (item.price * 11) / 100,
@@ -656,7 +657,7 @@ const Hotel = () => {
                                 ' '
                               )}
                             </div>
-                            {item?.promotion?.value ? (
+                            {item?.promotion?.statusPromotion == 'HOAT_DONG' ? (
                               <div
                                 style={{
                                   fontSize: 22,

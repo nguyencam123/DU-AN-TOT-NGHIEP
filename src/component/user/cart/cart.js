@@ -114,7 +114,8 @@ export const CartUser = () => {
               cancelText='không'
               placement='topRight'
             >
-              <Button danger icon={<DeleteOutlined />}>
+              <Button style={{ display: 'flex' }}>
+                <DeleteOutlined style={{ marginTop: 5 }} />
                 Xóa tất cả sản phẩm
               </Button>
             </Popconfirm>
@@ -174,7 +175,7 @@ export const CartUser = () => {
                       {items.name}
                     </Title>
                     <div style={{ display: 'flex' }}>
-                      <EnvironmentOutlined style={{ marginBottom: 2 }} />
+                      <EnvironmentOutlined style={{ marginTop: 4 }} />
                       <Title
                         level={5}
                         style={{
@@ -301,7 +302,7 @@ export const CartUser = () => {
           <div style={{ display: 'flex' }}>
             <Title level={5}>Tổng giá</Title>
             {selectedRadioData.length === 0 ? (
-              <span>&emsp;Bạn chưa chọn món hàng nào</span>
+              <span>&emsp;Bạn chưa chọn homestay nào</span>
             ) : (
               <div style={{ display: 'flex', marginLeft: 'auto' }}>
                 <Title level={4}>
