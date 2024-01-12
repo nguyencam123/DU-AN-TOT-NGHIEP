@@ -77,4 +77,7 @@ public class Booking extends PrimaryEntity {
     private StatusPayUser statusPayUser;
 
     private StatusPayOwner statusPayOwner;
+
+    private BigDecimal refundPrice;
+
 }

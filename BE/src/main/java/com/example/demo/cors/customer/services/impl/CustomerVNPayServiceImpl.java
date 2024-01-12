@@ -70,6 +70,7 @@ public class CustomerVNPayServiceImpl implements CustomerVNPayService {
         booking.setStatus(StatusBooking.CHO_THANH_TOAN);
         booking.setNumberOfNight(request.getNumberOfNight());
         booking.setPaymentMethod(PaymentMethod.VN_PAY);
+        booking.setRefundPrice(new BigDecimal(0));
         customerBookingRepository.save(booking);
         return booking;
     }

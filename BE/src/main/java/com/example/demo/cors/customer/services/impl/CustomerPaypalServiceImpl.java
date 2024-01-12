@@ -70,6 +70,7 @@ public class CustomerPaypalServiceImpl implements CustomerPaypalService {
         booking.setNote(customerBookingRequest.getNote());
         booking.setStatus(StatusBooking.CHO_THANH_TOAN);
         booking.setNumberOfNight(customerBookingRequest.getNumberOfNight());
+        booking.setRefundPrice(new BigDecimal(0));
         customerBookingRepository.save(booking);
 
         Amount amount = new Amount();
