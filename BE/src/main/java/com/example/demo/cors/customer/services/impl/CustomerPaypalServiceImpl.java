@@ -91,8 +91,8 @@ public class CustomerPaypalServiceImpl implements CustomerPaypalService {
         payment.setIntent("SALE");
         payment.setPayer(payer);
         payment.setTransactions(transactionList);
-        RedirectUrls redirectUrls = new RedirectUrls();
 
+        RedirectUrls redirectUrls = new RedirectUrls();
         redirectUrls.setCancelUrl(PaypalConfig.cancelUrl);
         redirectUrls.setReturnUrl(PaypalConfig.successUrl + "?bookingId=" + booking.getId());
         payment.setRedirectUrls(redirectUrls);
