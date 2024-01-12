@@ -244,7 +244,7 @@ export const DetailHomestay = () => {
                 <div style={{ fontSize: '12px', marginBottom: '0' }}>
                   Giá mỗi phòng mỗi đêm từ
                 </div>
-                {detailHomestay?.promotion?.value ? (
+                {detailHomestay?.promotion?.statusPromotion === 'HOAT_DONG' ? (
                   <div
                     style={{
                       fontSize: '24',

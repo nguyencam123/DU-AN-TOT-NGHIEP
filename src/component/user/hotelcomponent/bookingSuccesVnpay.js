@@ -4,7 +4,7 @@ import { Content, Footer } from "antd/es/layout/layout"
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
-import { addBooking, updateBooking } from "../../../features/product/productThunk"
+import { addBooking, checkBooked, updateBooking } from "../../../features/product/productThunk"
 
 export const BookingSuccessVnpay = () => {
   const dispatch = useDispatch();
@@ -21,6 +21,7 @@ export const BookingSuccessVnpay = () => {
   const bookingId = info?.substring(info.indexOf('=') + 1);
 
   useEffect(() => {
+    dispatch(checkBooked(bookingId));
     if (responseCode === '00') {
       dispatch(updateBooking(bookingId));
     }
