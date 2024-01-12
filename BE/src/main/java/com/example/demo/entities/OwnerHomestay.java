@@ -61,6 +61,12 @@ public class OwnerHomestay extends PrimaryEntity implements UserDetails {
 
     private RoleOwner role;
 
+    private String nameBank;
+
+    private String nameAccount;
+
+    private String numberAccount;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return role.getAuthorities();

@@ -70,6 +70,7 @@ public class CustomerPaypalServiceImpl implements CustomerPaypalService {
         booking.setNote(customerBookingRequest.getNote());
         booking.setStatus(StatusBooking.CHO_THANH_TOAN);
         booking.setNumberOfNight(customerBookingRequest.getNumberOfNight());
+        booking.setRefundPrice(new BigDecimal(0));
         customerBookingRepository.save(booking);
 
         Amount amount = new Amount();
@@ -91,8 +92,8 @@ public class CustomerPaypalServiceImpl implements CustomerPaypalService {
         payment.setIntent("SALE");
         payment.setPayer(payer);
         payment.setTransactions(transactionList);
-        RedirectUrls redirectUrls = new RedirectUrls();
 
+        RedirectUrls redirectUrls = new RedirectUrls();
         redirectUrls.setCancelUrl(PaypalConfig.cancelUrl);
         redirectUrls.setReturnUrl(PaypalConfig.successUrl + "?bookingId=" + booking.getId());
         payment.setRedirectUrls(redirectUrls);
