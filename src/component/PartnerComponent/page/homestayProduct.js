@@ -743,7 +743,7 @@ const HomeStayProduct = () => {
           />
         </Form.Item>
         <Button style={{ marginLeft: 20 }} type='primary' onClick={showModal}>
-          Thêm mới HomeStay
+          Thêm mới Homestay
         </Button>
       </div>
       <Modal

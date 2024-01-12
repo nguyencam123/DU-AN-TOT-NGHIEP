@@ -1,5 +1,12 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { Avatar, Tabs, Typography, message, notification } from 'antd'
+import {
+  Avatar,
+  DatePicker,
+  Tabs,
+  Typography,
+  message,
+  notification,
+} from 'antd'
 import {
   UserOutlined,
   FileProtectOutlined,
@@ -36,10 +43,10 @@ const LoginDetail = () => {
   const [password, setpassword] = useState('')
   const [identificationNumber, setidentificationNumber] = useState('')
   const [loading, setLoading] = useState(false)
-
   const handleDateChangestart = (dates) => {
-    setbirthday(moment(dates).valueOf())
+    setidentificationNumber(dates.valueOf())
   }
+
   const [newpassword, setnewpassword] = useState('')
   const [confirmpassword, setconfirmpassword] = useState('')
   const formChangePass = {
@@ -154,7 +161,9 @@ const LoginDetail = () => {
         setLoading(false) // Set loading to false if the request fails
       })
   }
-
+  const isBeforeToday = (current) => {
+    return current && current.isAfter(moment().startOf('day'))
+  }
   const [activeTab, setActiveTab] = useState('1')
   const items = [
     {
@@ -258,7 +267,7 @@ const LoginDetail = () => {
                 defaultValue={dataUser.data?.phoneNumber}
                 onChange={(e) => setphoneNumber(e.target.value)}
               />
-              <MDBInput
+              {/* <MDBInput
                 wrapperClass='mb-4'
                 label='Ngày sinh'
                 id='birthday'
@@ -275,7 +284,27 @@ const LoginDetail = () => {
                     : null
                 }
                 onChange={(e) => setidentificationNumber(e.target.value)}
+              /> */}
+              <DatePicker
+                label='Ngày sinh'
+                id='birthday'
+                type='date'
+                required
+                defaultValue={
+                  dataUser.data?.birthday
+                    ? dayjs(
+                        dayjs(dataUser.data?.birthday)
+                          .locale('vi')
+                          .format('YYYY-MM-DD'),
+                        'YYYY-MM-DD',
+                      )
+                    : null
+                }
+                onChange={handleDateChangestart}
+                style={{ width: '100%', marginBottom: 15 }}
+                disabledDate={isBeforeToday}
               />
+
               <MDBRow>
                 <MDBCol col='6'>
                   Giới tính &emsp;&emsp;

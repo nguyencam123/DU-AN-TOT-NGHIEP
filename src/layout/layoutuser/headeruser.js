@@ -137,7 +137,7 @@ const HeaderUser = () => {
           onClick={booking}
         >
           <FileDoneOutlined style={{ marginTop: 3 }} />
-          &ensp; Homestay đã thuê
+          &ensp;Homestay đã thuê
         </button>
       ),
       key: '1',
@@ -156,7 +156,7 @@ const HeaderUser = () => {
             }}
           >
             <CommentOutlined style={{ marginTop: 3 }} />
-            &ensp; Nhận xét của tôi
+            &ensp;Đánh giá của tôi
           </button>
         </Link>
       ),
@@ -195,7 +195,7 @@ const HeaderUser = () => {
             }}
           >
             <MDBIcon fas icon='question' style={{ marginTop: 3 }} />
-            &nbsp; Những câu hỏi thắc mắc
+            &ensp;Những câu hỏi thắc mắc
           </button>
         </Link>
       ),
@@ -215,7 +215,7 @@ const HeaderUser = () => {
           onClick={logout}
         >
           <LogoutOutlined style={{ marginTop: 3 }} />
-          &ensp; Đăng xuất
+          &ensp;Đăng xuất
         </button>
       ),
       key: '5',

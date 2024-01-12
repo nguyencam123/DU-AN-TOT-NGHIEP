@@ -186,7 +186,7 @@ const Hotel = () => {
   }
 
   const handleSearch = () => {
-    console.log(checkInDate.valueOf() + '' + calculateCheckOutDate().valueOf());
+    console.log(checkInDate.valueOf() + '' + calculateCheckOutDate().valueOf())
     if (nameOrAddress == '') {
       setNotification('Vui lòng nhập tên hoặc địa chỉ')
     } else {
@@ -222,6 +222,27 @@ const Hotel = () => {
       ),
     )
   }, [checkInDate, nameLocation])
+  // const groupedConvenient = convenient.reduce((acc, item) => {
+  //   const typeName = item.convenientHomestayType.name
+
+  //   const typePrefix = typeName.match(/^Type \d+/)
+
+  //   const key = typePrefix ? typePrefix[0] : typeName
+
+  //   acc[key] = acc[key] || []
+
+  //   acc[key].push(item)
+
+  //   return acc
+  // }, {})
+
+  // // Map the grouped items to display
+  // const mappedConvenient = Object.entries(groupedConvenient).map(
+  //   ([title, items]) => ({
+  //     title,
+  //     items,
+  //   }),
+  // )
 
   const text = (
     <section>
