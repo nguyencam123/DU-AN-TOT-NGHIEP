@@ -234,8 +234,8 @@ public class DBGenerator implements CommandLineRunner {
         homestay1.setPrice(new BigDecimal(1200000));
         homestay1.setNumberPerson(10);
         homestay1.setRoomNumber(3);
-        homestay1.setStartDate(1704042000L);
-        homestay1.setEndDate(1732986000L);
+        homestay1.setStartDate(1705025273L);
+        homestay1.setEndDate(1735610873L);
         homestayRepository.save(homestay1);
 
         Homestay homestay2 = new Homestay();
@@ -248,8 +248,8 @@ public class DBGenerator implements CommandLineRunner {
         homestay2.setNumberPerson(12);
         homestay2.setStatus(Status.KHONG_HOAT_DONG);
         homestay2.setRoomNumber(2);
-        homestay2.setStartDate(1704042000L);
-        homestay2.setEndDate(1732986000L);
+        homestay2.setStartDate(1705025273L);
+        homestay2.setEndDate(1735610873L);
         homestayRepository.save(homestay2);
 
         Homestay homestay3 = new Homestay();
@@ -262,8 +262,8 @@ public class DBGenerator implements CommandLineRunner {
         homestay3.setNumberPerson(8);
         homestay3.setStatus(Status.KHONG_HOAT_DONG);
         homestay3.setRoomNumber(4);
-        homestay3.setStartDate(1704042000L);
-        homestay3.setEndDate(1732986000L);
+        homestay3.setStartDate(1705025273L);
+        homestay3.setEndDate(1735610873L);
         homestayRepository.save(homestay3);
 
         Homestay homestay4 = new Homestay();
@@ -276,8 +276,8 @@ public class DBGenerator implements CommandLineRunner {
         homestay4.setNumberPerson(12);
         homestay4.setStatus(Status.KHONG_HOAT_DONG);
         homestay4.setRoomNumber(2);
-        homestay4.setStartDate(1704042000L);
-        homestay4.setEndDate(1732986000L);
+        homestay4.setStartDate(1705025273L);
+        homestay4.setEndDate(1735610873L);
         homestayRepository.save(homestay4);
 
         Homestay homestay5 = new Homestay();
@@ -290,8 +290,8 @@ public class DBGenerator implements CommandLineRunner {
         homestay5.setNumberPerson(10);
         homestay5.setStatus(Status.KHONG_HOAT_DONG);
         homestay5.setRoomNumber(5);
-        homestay5.setStartDate(1704042000L);
-        homestay5.setEndDate(1732986000L);
+        homestay5.setStartDate(1705025273L);
+        homestay5.setEndDate(1735610873L);
         homestayRepository.save(homestay5);
 
         //cart_detail
@@ -299,16 +299,16 @@ public class DBGenerator implements CommandLineRunner {
         cartDetail1.setCart(cart1);
         cartDetail1.setStatus(StatusCart.HOAT_DONG);
         cartDetail1.setHomestay(homestay1);
-        cartDetail1.setStartDate(1701463048L);
-        cartDetail1.setEndDate(1733085448L);
+        cartDetail1.setStartDate(1706148473L);
+        cartDetail1.setEndDate(1706321273L);
         cartDetailRepository.save(cartDetail1);
 
         CartDetail cartDetail2 = new CartDetail();
         cartDetail2.setCart(cart2);
         cartDetail2.setStatus(StatusCart.HOAT_DONG);
         cartDetail2.setHomestay(homestay4);
-        cartDetail2.setStartDate(1701463048L);
-        cartDetail2.setEndDate(1733085448L);
+        cartDetail2.setStartDate(1706148473L);
+        cartDetail2.setEndDate(1706321273L);
         cartDetailRepository.save(cartDetail2);
 
         //img Homestay
@@ -463,8 +463,8 @@ public class DBGenerator implements CommandLineRunner {
         booking1.setTotalPrice(new BigDecimal(1200000));
         booking1.setPromotion(promotion1);
         booking1.setHomestay(homestay1);
-        booking1.setStartDate(1697987691L);
-        booking1.setEndDate(1698620161L);
+        booking1.setStartDate(1705716473L);
+        booking1.setEndDate(1705975673L);
         booking1.setStatus(StatusBooking.THANH_CONG);
         bookingRepository.save(booking1);
 
@@ -473,8 +473,8 @@ public class DBGenerator implements CommandLineRunner {
         booking2.setTotalPrice(new BigDecimal(1200000));
         booking2.setHomestay(homestay2);
         booking2.setStatus(StatusBooking.THANH_CONG);
-        booking2.setStartDate(1697987691L);
-        booking2.setEndDate(1698620161L);
+        booking2.setStartDate(1705198073L);
+        booking2.setEndDate(1705543673L);
         bookingRepository.save(booking2);
 
 

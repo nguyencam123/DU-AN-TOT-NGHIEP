@@ -2,6 +2,7 @@ package com.example.demo.entities;
 
 import com.example.demo.entities.base.PrimaryEntity;
 import com.example.demo.infrastructure.contant.EntityProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -23,6 +24,7 @@ public class ConvenientHomestay extends PrimaryEntity {
 
     @ManyToOne
     @JoinColumn(name = "convenient_homestay_type_id")
+    @JsonIgnoreProperties("convenientHomestays")
     private ConvenientHomestayType convenientHomestayType;
 
     @Column(length = EntityProperties.LENGTH_NOTE, name = "[desc]")
