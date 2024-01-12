@@ -58,18 +58,24 @@ public class User extends PrimaryEntity implements UserDetails {
 
     private RoleCustomer role;
 
+    private String nameBank;
+
+    private String nameAccount;
+
+    private String numberAccount;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return role.getAuthorities();
     }
 
     @Override
-    public String getUsername(){
+    public String getUsername() {
         return username;
     }
 
     @Override
-    public String getPassword(){
+    public String getPassword() {
         return password;
     }
 
