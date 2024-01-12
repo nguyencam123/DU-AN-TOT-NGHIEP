@@ -102,6 +102,10 @@ const HomeStayProduct = () => {
     // You can perform any additional formatting or validation here
     setprice(value)
   }
+  const handlePriceChangeWeb = (value) => {
+    // You can perform any additional formatting or validation here
+    setprice(value*100/111)
+  }
   useEffect(() => {
     dispatch(fetchHomestay(valueselect))
     dispatch(fetchConvenient())
@@ -347,13 +351,22 @@ const HomeStayProduct = () => {
   }
   const [startDate, setstartDate] = useState(null)
   const handleDateChangestart = (dates) => {
-    // setstartDate(moment(dates).valueOf());
-    setstartDate(dates)
+    const dateFix = new Date(dates)
+    dateFix.setHours('00')
+    dateFix.setMinutes('00')
+    dateFix.setSeconds('00')
+    dateFix.setMilliseconds('000')
+    setstartDate(dateFix.valueOf())
   }
   const [endDate, setendDate] = useState(null)
   const handleDateChangeend = (dates) => {
     // setendDate(moment(dates).valueOf());
-    setendDate(dates)
+    const dateFix = new Date(dates)
+    dateFix.setHours('00')
+    dateFix.setMinutes('00')
+    dateFix.setSeconds('00')
+    dateFix.setMilliseconds('000')
+    setendDate(dateFix.valueOf())
   }
   const [desc, setdesc] = useState('')
   const [price, setprice] = useState(0)
@@ -743,13 +756,13 @@ const HomeStayProduct = () => {
           />
         </Form.Item>
         <Button style={{ marginLeft: 20 }} type='primary' onClick={showModal}>
-          Thêm mới HomeStay
+          Thêm mới Homestay
         </Button>
       </div>
       <Modal
         title={
           isAddFrom == true ? (
-            <div style={{ fontSize: 24 }}>Thêm homstay </div>
+            <div style={{ fontSize: 24 }}>Thêm homestay </div>
           ) : (
             <div style={{ fontSize: 24 }}>Sửa homestay</div>
           )
@@ -829,6 +842,34 @@ const HomeStayProduct = () => {
               </Form.Item>
             </Col>
           </Row>
+          <Row gutter={24} style={{ marginLeft: 1 }}>
+            {/* Trường thứ nhất */}
+            <Col span={12}>
+            </Col>
+            {/* Trường thứ hai */}
+            <Col span={12}>
+              <Form.Item
+                label={<Title level={5}>Giá trên web</Title>}
+                validateStatus={formErrors.price ? 'error' : ''}
+                help={formErrors.price}
+              >
+                <InputNumber
+                  style={{ width: 254 }}
+                  value={price}
+                  onChange={handlePriceChangeWeb}
+                  formatter={() =>
+                    `${price + price*11/100}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                  }
+                  parser={(value) => {
+                    // Remove non-numeric characters and parse as a float
+                    const numericValue = parseFloat(value.replace(/\D/g, ''))
+                    return isNaN(numericValue) ? null : numericValue
+                  }}
+                  addonAfter='VNĐ'
+                />
+              </Form.Item>
+            </Col>
+          </Row>
           <Row gutter={24} style={{ marginLeft: 3 }}>
             <Col span={12}>
               <Form.Item
@@ -852,6 +893,7 @@ const HomeStayProduct = () => {
                   value={acreage}
                   onChange={(e) => setacreage(e.target.value)}
                   addonAfter='m2'
+                  defaultValue='0.0'
                 />
               </Form.Item>
             </Col>
