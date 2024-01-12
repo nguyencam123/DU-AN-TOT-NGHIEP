@@ -165,6 +165,16 @@ export const updateBooking = (bookingId) => async (dispatch) => {
     dispatch(fetchProductsFailure(error.message))
   }
 }
+export const checkBooked = () => async (dispatch) => {
+  try {
+    const response = await instance.put(
+      'http://localhost:8080/api/v1/cart/check-booked',
+    )
+    // console.log(response.data.data);
+  } catch (error) {
+  }
+}
+
 
 export const getAllHomestay = () => async (dispatch) => {
   dispatch(fetchProductsStart())
