@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -60,6 +61,15 @@ public class ScheduledUtil {
                 adminHomestayRepository.save(homestay);
             }
         }
+    }
+
+    @Scheduled(cron = "0 0 0 * * *")
+    public void schedeledCheck() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(1705164928000L);
+        // Cộng thêm 1 ngày
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        System.err.println(calendar.getTimeInMillis());
     }
 
 }
