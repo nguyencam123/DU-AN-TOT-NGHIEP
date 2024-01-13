@@ -29,6 +29,12 @@ public class CustomerRequest {
 
     private Status status;
 
+    private String nameBack;
+
+    private String nameAccount;
+
+    private String numberAccount;
+
     private MultipartFile avatar;
 
 }
