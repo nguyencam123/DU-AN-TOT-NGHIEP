@@ -425,7 +425,7 @@ export const BookingUser = () => {
       >
         <Form>
           <Form.Item
-            label='Lý do từ chối'
+            label='Lý do hủy'
             name='node'
             validateStatus={formErrors ? 'error' : ''}
             help={formErrors}

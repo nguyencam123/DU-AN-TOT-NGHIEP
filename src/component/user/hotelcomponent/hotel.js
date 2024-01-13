@@ -85,6 +85,13 @@ const Hotel = () => {
   useEffect(() => {
     // dispatch(getProducts(current - 1));
     dispatch(getAllConvinentHomestay())
+    const dateFix = new Date(today)
+    dateFix.setHours('00')
+    dateFix.setMinutes('00')
+    dateFix.setSeconds('00')
+    dateFix.setMilliseconds('000')
+    setCheckInDate(dateFix.valueOf())
+    calculateCheckOutDate()
   }, [])
   const onChange = (key) => {}
   const formatCurrency = (value) => {
@@ -98,7 +105,12 @@ const Hotel = () => {
   const [checkInDate, setCheckInDate] = useState(today)
   const [numNights, setNumNights] = useState(1)
   const handleCheckInChange = (date) => {
-    setCheckInDate(date)
+    const dateFix = new Date(date)
+    dateFix.setHours('00')
+    dateFix.setMinutes('00')
+    dateFix.setSeconds('00')
+    dateFix.setMilliseconds('000')
+    setCheckInDate(dateFix.valueOf())
   }
   const handleNumNightsChange = (value) => {
     setNumNights(value)
@@ -174,6 +186,7 @@ const Hotel = () => {
   }
 
   const handleSearch = () => {
+    console.log(checkInDate.valueOf() + '' + calculateCheckOutDate().valueOf());
     if (nameOrAddress == '') {
       setNotification('Vui lòng nhập tên hoặc địa chỉ')
     } else {
@@ -403,7 +416,7 @@ const Hotel = () => {
                     onClick={handleSearch}
                   >
                     <SearchOutlined />
-                    Tìm khách sạn
+                    Tìm Homestay
                   </Button>
                 </div>
               </div>
@@ -646,7 +659,8 @@ const Hotel = () => {
                           </div>
                           <div style={{}}>
                             <div style={{ fontSize: 16 }}>
-                              {items?.promotion === null ? (
+                              {item?.promotion?.statusPromotion ==
+                              'HOAT_DONG' ? (
                                 <del>
                                   {formatCurrency(
                                     item.price + (item.price * 11) / 100,
@@ -656,7 +670,7 @@ const Hotel = () => {
                                 ' '
                               )}
                             </div>
-                            {item?.promotion?.value ? (
+                            {item?.promotion?.statusPromotion == 'HOAT_DONG' ? (
                               <div
                                 style={{
                                   fontSize: 22,
@@ -692,7 +706,7 @@ const Hotel = () => {
                                 }}
                                 onClick={() => handleDetailHomestay(item.id)}
                               >
-                                Chọn phòng
+                                Chọn homestay
                               </Button>
                             </div>
                           </div>

@@ -25,16 +25,17 @@ import { useEffect, useState } from 'react'
 import moment from 'moment'
 import dayjs from 'dayjs'
 import 'dayjs/locale/vi'
+import { date } from 'yup'
 dayjs.locale('vi')
 
 const { Title } = Typography
 const { Search } = Input
 
 function BookingForm() {
-  const checkDate = (dateCancel, dateStart) => {
-    if (dateStart.getFullYear() >= dateCancel.getFullYear()) {
-      if (dateStart.getMonth() >= dateCancel.getMonth()) {
-        if (dateStart.getDate() >= dateCancel.getDate()) {
+  const checkDate = (dateCancel, dateCreate) => {
+    if (dateCancel.getFullYear() <= dateCreate.getFullYear()) {
+      if (dateCancel.getMonth() <= dateCreate.getMonth()) {
+        if (dateCancel.getDate() <= dateCreate.getDate()) {
           return true
         }
       }
@@ -68,8 +69,8 @@ function BookingForm() {
     },
     {
       title: 'Ngày đặt',
-      dataIndex: 'startDate',
-      key: 'startDate',
+      dataIndex: 'createdDate',
+      key: 'createdDate',
       render: (data) => {
         return moment(data).locale('vi').format('LL')
       },
@@ -136,8 +137,8 @@ function BookingForm() {
           }
         }
         if (record.status === 'HUY') {
-          const checkOutDate = dayjs(record.cancellationDate).add(3, 'day')
-          if (checkDate(new Date(checkOutDate), new Date(record.startDate))) {
+          const checkOutDate = dayjs(record.createdDate).add(1, 'day')
+          if (checkDate(new Date(record.cancellationDate), new Date(checkOutDate))) {
             if (record.typeBooking === 'DAT_COC') {
               return formatCurrency(
                 data -
@@ -172,8 +173,8 @@ function BookingForm() {
       key: 'totalPrice',
       render: (data, record) => {
         if (record.status === 'HUY') {
-          const checkOutDate = dayjs(record.cancellationDate).add(3, 'day')
-          if (checkDate(new Date(checkOutDate), new Date(record.startDate))) {
+          const checkOutDate = dayjs(record.createdDate).add(1, 'day')
+          if (checkDate(new Date(record.cancellationDate), new Date(checkOutDate))) {
             if (record.typeBooking === 'DAT_COC') {
               return formatCurrency(
                 (data * 2 * record.homestay.cancellationPolicy) / 100,
