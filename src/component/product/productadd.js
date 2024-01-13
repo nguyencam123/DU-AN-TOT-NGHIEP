@@ -415,8 +415,8 @@ function AddProductForm() {
               </td>
               <td style={{ width: 500 }}>
                 <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Chính sách hủy phòng </div> :{' '}
-                  {viewHomestay.cancellationPolicy}
+                  <div style={{ width: 200 }}>Số điện thoại </div> :{' '}
+                  {viewHomestay?.ownerHomestay?.phoneNumber}
                 </div>
                 <br />
               </td>
@@ -476,13 +476,6 @@ function AddProductForm() {
                 </div>
                 <br />
               </td>
-              <td style={{ width: 500 }}>
-                <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Số điện thoại </div> :{' '}
-                  {viewHomestay?.ownerHomestay?.phoneNumber}
-                </div>
-                <br />
-              </td>
             </tr>
           </table>
           <div style={{ display: 'flex' }}>
@@ -495,13 +488,15 @@ function AddProductForm() {
           </div>
           <br />
           <div style={{ display: 'flex' }}>
-            <div style={{ width: 200 }}>Tiện nghi :</div>
+            <div style={{ width: 200 }}>Tiện nghi </div>:
             {viewHomestay?.detailHomestays?.map((items, index) => (
-            <React.Fragment key={index}>
-              <p>{items.convenientHomestay?.name}</p>
-              {index !== viewHomestay?.detailHomestays.length - 1 && <span>, </span>}
-            </React.Fragment>
-          ))}
+              <React.Fragment key={index}>
+                <p>{items.convenientHomestay?.name}</p>
+                {index !== viewHomestay?.detailHomestays.length - 1 && (
+                  <span>, </span>
+                )}
+              </React.Fragment>
+            ))}
           </div>
           <br />
           <div>
