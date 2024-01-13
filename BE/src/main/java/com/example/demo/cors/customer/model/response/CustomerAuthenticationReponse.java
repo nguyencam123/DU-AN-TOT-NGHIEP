@@ -32,6 +32,12 @@ public class CustomerAuthenticationReponse {
 
     private String avataUrl;
 
+    private String nameBack;
+
+    private String nameAccount;
+
+    private String numberAccount;
+
     private Status status;
 
     private RoleCustomer roleCustomer;
