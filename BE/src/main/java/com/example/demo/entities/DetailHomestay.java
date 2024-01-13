@@ -23,4 +23,5 @@ public class DetailHomestay extends PrimaryEntity {
     @ManyToOne
     @JoinColumn(name = "convenient_homestay_id")
     private ConvenientHomestay convenientHomestay;
+
 }

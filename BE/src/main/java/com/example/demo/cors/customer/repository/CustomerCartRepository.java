@@ -24,9 +24,9 @@ public interface CustomerCartRepository extends CartRepository {
             SELECT a.* FROM booking a
             WHERE (a.status = 1)
             AND (a.homestay_id =:#{#customerBookingRequest.homestayId})
-            AND (:#{#customerHomestayRequest.dateFrom} > a.start_date AND a.end_date >:#{#customerHomestayRequest.dateFrom}
-            OR :#{#customerHomestayRequest.dateTo} > a.start_date AND a.end_date > :#{#customerHomestayRequest.dateTo}
-            OR (a.start_date >= :#{#customerHomestayRequest.dateFrom} AND a.end_date <= :#{#customerHomestayRequest.dateTo})))
+            AND (:#{#customerBookingRequest.startDate} > a.start_date AND a.end_date >:#{#customerBookingRequest.startDate}
+            OR :#{#customerBookingRequest.endDate} > a.start_date AND a.end_date > :#{#customerBookingRequest.endDate}
+            OR (a.start_date >= :#{#customerBookingRequest.startDate} AND a.end_date <= :#{#customerBookingRequest.endDate}))
             """, nativeQuery = true)
     List<Booking> getOneBooking(CustomerBookingRequest customerBookingRequest);
 

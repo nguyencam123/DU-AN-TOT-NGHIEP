@@ -615,10 +615,8 @@ const Hotel = () => {
                             <Title
                               style={{
                                 fontSize: 16,
-                                whiteSpace: 'nowrap',
-                                overflow: 'hidden',
                                 textOverflow: 'ellipsis',
-                                width: 250,
+                                width: 300,
                                 marginTop: 3,
                               }}
                             >
