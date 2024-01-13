@@ -6,6 +6,7 @@ import com.example.demo.infrastructure.contant.StatusPromotion;
 import com.example.demo.repositories.PromotionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -37,4 +38,5 @@ public interface HomestayOwnerPromotionRepository extends PromotionRepository {
        WHERE a.end_date / 1000 < DATEDIFF(SECOND, '1970-01-01', GETDATE()) AND a.status_promotion = 0;
     """, nativeQuery = true)
     List<Promotion> findByEndDateLessThanAndStatusPromotion();
+
 }

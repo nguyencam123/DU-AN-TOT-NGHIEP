@@ -9,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface HomestayOwnerHomestayRepository extends HomestayRepository {
 
@@ -24,4 +26,9 @@ public interface HomestayOwnerHomestayRepository extends HomestayRepository {
             "left join convenient_homestay c on b.convenient_homestay_id=c.id\n" +
             "where c.id=:id and a.status=1; ", nativeQuery = true)
     Page<HomestayOwnerHomestayReponse> getHomestayByConvient(String id, Pageable pageable);
+
+    @Query(value = """
+                select a.* from homestay a where a.promotion_id=:id
+    """, nativeQuery = true)
+    List<Homestay> getHomestayByPromotion(String id);
 }

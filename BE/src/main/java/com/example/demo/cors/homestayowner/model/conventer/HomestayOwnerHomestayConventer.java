@@ -28,9 +28,6 @@ public class HomestayOwnerHomestayConventer implements Converter<String, Homesta
             if (!jsonNode.has("acreage") || jsonNode.get("acreage").isNull()) {
                 throw new RestApiException("Trường 'acreage' bị trống");
             }
-            if (!jsonNode.has("cancellationPolicy") || jsonNode.get("cancellationPolicy").isNull()) {
-                throw new RestApiException("Trường 'cancellationPolicy' bị trống");
-            }
             if (!jsonNode.has("roomNumber") || !(jsonNode.get("roomNumber").isInt() && jsonNode.get("roomNumber").asInt() > 0) || jsonNode.get("roomNumber").isNull()) {
                 throw new RestApiException("Trường 'roomNumber' bị trống");
             }
