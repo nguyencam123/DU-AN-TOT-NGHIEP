@@ -133,6 +133,9 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         ownerHomestay.setUsername(request.getUsername());
         ownerHomestay.setBirthday(request.getBirthday());
         ownerHomestay.setGender(request.getGender());
+        ownerHomestay.setNameBank(request.getNameBack());
+        ownerHomestay.setNameAccount(request.getNameAccount());
+        ownerHomestay.setNumberAccount(request.getNumberAccount());
         ownerHomestay.setAddress(request.getAddress());
         ownerHomestay.setPassword(passwordEncoder.encode(request.getPassword()));
         ownerHomestay.setStatus(Status.CHO_DUYET);
@@ -157,6 +160,9 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                 .phoneNumber(ownerHomestay.getPhoneNumber())
                 .email(ownerHomestay.getEmail())
                 .username(ownerHomestay.getUsername())
+                .nameBack(ownerHomestay.getNameBank())
+                .nameAccount(ownerHomestay.getNameAccount())
+                .numberAccount(ownerHomestay.getNumberAccount())
                 .status(ownerHomestay.getStatus())
                 .roleOwner(ownerHomestay.getRole())
                 .avataUrl(ownerHomestay.getAvatarUrl())
@@ -202,6 +208,9 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                 .gender(ownerHomestay.getGender())
                 .address(ownerHomestay.getAddress())
                 .phoneNumber(ownerHomestay.getPhoneNumber())
+                .nameBack(ownerHomestay.getNameBank())
+                .nameAccount(ownerHomestay.getNameAccount())
+                .numberAccount(ownerHomestay.getNumberAccount())
                 .email(ownerHomestay.getEmail())
                 .username(ownerHomestay.getUsername())
                 .status(ownerHomestay.getStatus())
@@ -232,6 +241,9 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                 .gender(ownerHomestay.getGender())
                 .address(ownerHomestay.getAddress())
                 .phoneNumber(ownerHomestay.getPhoneNumber())
+                .nameBack(ownerHomestay.getNameBank())
+                .nameAccount(ownerHomestay.getNameAccount())
+                .numberAccount(ownerHomestay.getNumberAccount())
                 .email(ownerHomestay.getEmail())
                 .username(ownerHomestay.getUsername())
                 .status(ownerHomestay.getStatus())
@@ -268,6 +280,9 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         ownerHomestay.setBirthday(request.getBirthday());
         ownerHomestay.setGender(request.getGender());
         ownerHomestay.setAddress(request.getAddress());
+        ownerHomestay.setNameBank(request.getNameBack());
+        ownerHomestay.setNameAccount(request.getNameAccount());
+        ownerHomestay.setNumberAccount(request.getNumberAccount());
         ownerHomestay.setPhoneNumber(request.getPhoneNumber());
         ownerHomestay.setEmail(request.getEmail());
         ownerHomestay.setUsername(request.getUsername());
@@ -293,6 +308,9 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                 .gender(ownerHomestay.getGender())
                 .address(ownerHomestay.getAddress())
                 .phoneNumber(ownerHomestay.getPhoneNumber())
+                .nameBack(ownerHomestay.getNameBank())
+                .nameAccount(ownerHomestay.getNameAccount())
+                .numberAccount(ownerHomestay.getNumberAccount())
                 .avataUrl(ownerHomestay.getAvatarUrl())
                 .email(ownerHomestay.getEmail())
                 .username(ownerHomestay.getUsername())
