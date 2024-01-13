@@ -224,8 +224,7 @@ export const DetailHomestay = () => {
           </Row>
           <Row style={{ marginTop: '10px' }}>
             <Col span={8}>
-              <span style={{ fontSize: '12px', marginTop: '3px' }}>
-              </span>
+              <span style={{ fontSize: '12px', marginTop: '3px' }}></span>
               <div
                 style={{
                   fontSize: '18px',
@@ -256,11 +255,11 @@ export const DetailHomestay = () => {
                   >
                     {formatCurrency(
                       detailHomestay.price -
-                      detailHomestay?.promotion?.value +
-                      ((detailHomestay.price -
-                        detailHomestay?.promotion?.value) *
-                        11) /
-                      100,
+                        detailHomestay?.promotion?.value +
+                        ((detailHomestay.price -
+                          detailHomestay?.promotion?.value) *
+                          11) /
+                          100,
                     )}
                     <span style={{ fontSize: '22' }}> </span>{' '}
                   </div>
@@ -508,9 +507,15 @@ export const DetailHomestay = () => {
                 </div>
                 <span style={{ lineHeight: '12px', marginLeft: '17px' }}>
                   Việc hủy phòng trước ngày{' '}
-                  {moment(dayjs(startDate.valueOf())).add(2, 'day').locale('vi').format('LL')}{' '}
+                  {moment(dayjs(startDate.valueOf()))
+                    .add(2, 'day')
+                    .locale('vi')
+                    .format('LL')}{' '}
                   sẽ được hoàn toàn miễn phí. Sau ngày{' '}
-                  {moment(dayjs(startDate.valueOf())).add(2, 'day').locale('vi').format('LL')}{' '}
+                  {moment(dayjs(startDate.valueOf()))
+                    .add(2, 'day')
+                    .locale('vi')
+                    .format('LL')}{' '}
                   bạn sẽ phải mất một khoản tiền khi hủy phòng
                 </span>
               </div>

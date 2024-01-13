@@ -102,6 +102,10 @@ const HomeStayProduct = () => {
     // You can perform any additional formatting or validation here
     setprice(value)
   }
+  const handlePriceChangeWeb = (value) => {
+    // You can perform any additional formatting or validation here
+    setprice((value * 100) / 111)
+  }
   useEffect(() => {
     dispatch(fetchHomestay(valueselect))
     dispatch(fetchConvenient())
@@ -234,7 +238,7 @@ const HomeStayProduct = () => {
       key: 'address',
     },
     {
-      title: 'Giá homestay',
+      title: 'Giá thuê homestay 1 đêm',
       dataIndex: 'price',
       key: 'price',
       align: 'center',
@@ -347,13 +351,22 @@ const HomeStayProduct = () => {
   }
   const [startDate, setstartDate] = useState(null)
   const handleDateChangestart = (dates) => {
-    // setstartDate(moment(dates).valueOf());
-    setstartDate(dates)
+    const dateFix = new Date(dates)
+    dateFix.setHours('00')
+    dateFix.setMinutes('00')
+    dateFix.setSeconds('00')
+    dateFix.setMilliseconds('000')
+    setstartDate(dateFix.valueOf())
   }
   const [endDate, setendDate] = useState(null)
   const handleDateChangeend = (dates) => {
     // setendDate(moment(dates).valueOf());
-    setendDate(dates)
+    const dateFix = new Date(dates)
+    dateFix.setHours('00')
+    dateFix.setMinutes('00')
+    dateFix.setSeconds('00')
+    dateFix.setMilliseconds('000')
+    setendDate(dateFix.valueOf())
   }
   const [desc, setdesc] = useState('')
   const [price, setprice] = useState(0)
@@ -389,7 +402,7 @@ const HomeStayProduct = () => {
     name: name,
     timeCheckIn: timeCheckIn,
     timeCheckOut: timeCheckOut,
-    cancellationPolicy: parseFloat(cancellationPolicy),
+    // cancellationPolicy: parseFloat(cancellationPolicy),
     startDate: startDate?.valueOf(),
     endDate: endDate?.valueOf(),
     desc: desc,
@@ -743,13 +756,13 @@ const HomeStayProduct = () => {
           />
         </Form.Item>
         <Button style={{ marginLeft: 20 }} type='primary' onClick={showModal}>
-          Thêm mới HomeStay
+          Thêm mới Homestay
         </Button>
       </div>
       <Modal
         title={
           isAddFrom == true ? (
-            <div style={{ fontSize: 24 }}>Thêm homstay </div>
+            <div style={{ fontSize: 24 }}>Thêm homestay </div>
           ) : (
             <div style={{ fontSize: 24 }}>Sửa homestay</div>
           )
@@ -827,8 +840,16 @@ const HomeStayProduct = () => {
                   addonAfter='VNĐ'
                 />
               </Form.Item>
+              {price !== null && (
+                <span style={{ marginLeft: 15 }}>
+                  Giá thực tế được đăng trên website{' '}
+                  {formatCurrency(price + (price * 11) / 100)}
+                  <br />
+                </span>
+              )}
             </Col>
           </Row>
+
           <Row gutter={24} style={{ marginLeft: 3 }}>
             <Col span={12}>
               <Form.Item
@@ -852,6 +873,7 @@ const HomeStayProduct = () => {
                   value={acreage}
                   onChange={(e) => setacreage(e.target.value)}
                   addonAfter='m2'
+                  defaultValue='0.0'
                 />
               </Form.Item>
             </Col>
@@ -921,7 +943,7 @@ const HomeStayProduct = () => {
             </Col>
           </Row>
           <Row gutter={24} style={{ marginLeft: 4, marginTop: 20 }}>
-            <Col span={12}>
+            {/* <Col span={12}>
               <Title level={5}>Chính sách hủy phòng:</Title>
               <Input
                 style={{ width: '67%', float: 'right' }}
@@ -931,7 +953,7 @@ const HomeStayProduct = () => {
               <div style={{ color: 'red', marginTop: 35 }}>
                 {formErrors.cancellationPolicy}
               </div>
-            </Col>
+            </Col> */}
             <Col span={12}>
               <Title level={5}>Số phòng:</Title>
               <Input
@@ -1227,15 +1249,15 @@ const HomeStayProduct = () => {
             <tr>
               <td style={{ width: 600 }}>
                 <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Giá </div> :{' '}
+                  <div style={{ width: 200 }}>Giá trên mỗi đêm</div> :{' '}
                   {formatCurrency(price)}
                 </div>
                 <br />
               </td>
-              <td style={{ width: 500 }}>
+              <td style={{ width: 600 }}>
                 <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Số lượng người </div> :{' '}
-                  {numberPerson} (Người)
+                  <div style={{ width: 200 }}>Giá thực tế được đăng</div> :{' '}
+                  {formatCurrency(price + (price * 11) / 100)}
                 </div>
                 <br />
               </td>
@@ -1247,10 +1269,17 @@ const HomeStayProduct = () => {
                 </div>
                 <br />
               </td>
-              <td style={{ width: 500 }}>
+              {/* <td style={{ width: 500 }}>
                 <div style={{ display: 'flex' }}>
                   <div style={{ width: 200 }}>Chính sách hủy phòng </div> :{' '}
                   {cancellationPolicy}
+                </div>
+                <br />
+              </td> */}
+              <td style={{ width: 500 }}>
+                <div style={{ display: 'flex' }}>
+                  <div style={{ width: 200 }}>Số lượng người </div> :{' '}
+                  {numberPerson} (Người)
                 </div>
                 <br />
               </td>
@@ -1288,6 +1317,7 @@ const HomeStayProduct = () => {
               </td>
             </tr>
           </table>
+
           <div style={{ display: 'flex' }}>
             <div style={{ width: 200 }}>Tiện ích </div> :{' '}
             {viewEditConvennient.map((items, index) => (

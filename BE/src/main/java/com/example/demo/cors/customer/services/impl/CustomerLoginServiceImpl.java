@@ -158,6 +158,9 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 .username(user.getUsername())
                 .status(user.getStatus())
                 .roleCustomer(user.getRole())
+                .nameAccount(user.getNameAccount())
+                .nameBack(user.getNameBank())
+                .numberAccount(user.getNumberAccount())
                 .avataUrl(user.getAvatarUrl())
                 .build();
     }
@@ -202,6 +205,9 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 .phoneNumber(user.getPhoneNumber())
                 .email(user.getEmail())
                 .username(user.getUsername())
+                .nameAccount(user.getNameAccount())
+                .nameBack(user.getNameBank())
+                .numberAccount(user.getNumberAccount())
                 .status(user.getStatus())
                 .roleCustomer(user.getRole())
                 .avataUrl(user.getAvatarUrl())
@@ -230,6 +236,9 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 .phoneNumber(user.getPhoneNumber())
                 .email(user.getEmail())
                 .username(user.getUsername())
+                .nameAccount(user.getNameAccount())
+                .nameBack(user.getNameBank())
+                .numberAccount(user.getNumberAccount())
                 .status(user.getStatus())
                 .roleCustomer(user.getRole())
                 .avataUrl(user.getAvatarUrl())
@@ -274,6 +283,9 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         customer.setAddress(request.getAddress());
         customer.setPhoneNumber(request.getPhoneNumber());
         customer.setEmail(request.getEmail());
+        customer.setNameBank(request.getNameBack());
+        customer.setNameAccount(request.getNameAccount());
+        customer.setNumberAccount(request.getNumberAccount());
         customer.setUsername(request.getUsername());
         if(request.getAvatar()!=null && request.getAvatar().getBytes().length > 0) {
             customer.setAvatarUrl(cloudinary.uploader()
@@ -298,6 +310,9 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 .email(customer.getEmail())
                 .avataUrl(customer.getAvatarUrl())
                 .username(customer.getUsername())
+                .nameAccount(customer.getNameAccount())
+                .nameBack(customer.getNameBank())
+                .numberAccount(customer.getNumberAccount())
                 .status(customer.getStatus())
                 .roleCustomer(customer.getRole())
                 .build();

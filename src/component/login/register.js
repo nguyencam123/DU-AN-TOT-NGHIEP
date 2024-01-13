@@ -30,7 +30,7 @@ const Register = () => {
   const [password, setpassword] = useState('')
   const [identificationNumber, setidentificationNumber] = useState('')
   const handleDateChangestart = (dates) => {
-    setbirthday(moment(dates).valueOf())
+    setbirthday(dates.valueOf())
   }
   const [api, contextHolder] = notification.useNotification()
   const openNotification = () => {

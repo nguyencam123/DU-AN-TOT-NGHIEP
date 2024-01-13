@@ -39,7 +39,7 @@ const HomePartner = () => {
             width: 500, height: 230, backgroundColor: 'white',
             borderRadius: 15, boxShadow: '0 0 3px 3px #ACAEB1', marginRight: 30, padding: '30px 30px 0px 30px'
           }}>
-            <Title level={3} >HomeStay</Title>
+            <Title level={3} >Homestay</Title>
             <p>Những căn nhà nhỏ được trang trí thành một không gian lưu trú riêng biệt dành cho khách</p>
             <Link to={"/hop-tac/login"}>
               <MDBBtn style={{ top: 30 }}>Đăng nhập để cộng tác với chúng tôi</MDBBtn>

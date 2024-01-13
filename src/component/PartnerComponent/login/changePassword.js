@@ -1,9 +1,9 @@
 import React from 'react'
-import { Tabs, Typography, message, notification } from 'antd'
+import { DatePicker, Tabs, Typography, message, notification } from 'antd'
 import { MDBBtn, MDBCol, MDBInput, MDBRow } from 'mdb-react-ui-kit'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-
+import dayjs from 'dayjs'
 import moment from 'moment'
 import {
   ChangePasswordByPass,
@@ -19,7 +19,7 @@ const ChangePassword = () => {
   const namelocal = userDetail?.data.name
   const idowner = userDetail?.data.id
   const [name, setname] = useState(namelocal)
-  const [birthday, setbirthday] = useState(856345)
+  const [birthday, setbirthday] = useState('')
   const [gender, setgender] = useState(true)
   const [address, setaddress] = useState(userDetail?.data.address)
   const [password, setpassword] = useState('')
@@ -27,7 +27,7 @@ const ChangePassword = () => {
   const [confirmpassword, setconfirmpassword] = useState('')
   const [loading, setLoading] = useState(false)
   const handleDateChangestart = (dates) => {
-    setbirthday(moment(dates).valueOf())
+    setbirthday(dates.valueOf())
   }
   const [file, setFile] = useState([])
 
@@ -46,7 +46,9 @@ const ChangePassword = () => {
       setFile(selectedFile)
     }
   }
-
+  const isBeforeToday = (current) => {
+    return current && current.isAfter(moment().startOf('day'))
+  }
   const navigate = useNavigate()
   const openNotification = () => {
     notification.open({
@@ -103,7 +105,7 @@ const ChangePassword = () => {
       setLoading(true)
       await ChangePasswordSlice(
         userDetail?.data.username,
-        1234567890,
+        birthday || userDetail.data?.birthday.valueOf(),
         name,
         gender,
         address,
@@ -154,8 +156,28 @@ const ChangePassword = () => {
                 />
               </MDBCol>
             </MDBRow>
+            <div style={{ display: 'flex', marginBottom: 10 }}>
+              <span>Ngày sinh &ensp;</span>
+              <DatePicker
+                style={{ width: '44.5%', height: 36 }}
+                dateFormat='dd/MM/yyyy'
+                required
+                onChange={handleDateChangestart}
+                disabledDate={isBeforeToday}
+                defaultValue={
+                  userDetail.data?.birthday
+                    ? dayjs(
+                        dayjs(userDetail.data?.birthday)
+                          .locale('vi')
+                          .format('YYYY-MM-DD'),
+                        'YYYY-MM-DD',
+                      )
+                    : null
+                }
+              />
+            </div>
             <MDBRow>
-              <MDBCol col='6'>
+              <MDBCol col='3'>
                 Giới tính &emsp;&emsp;
                 <label>
                   <input
@@ -181,6 +203,7 @@ const ChangePassword = () => {
                 </label>
               </MDBCol>
             </MDBRow>
+
             <br />
             <div style={{ display: 'flex' }}>
               <label
@@ -309,7 +332,7 @@ const ChangePassword = () => {
   return (
     <div>
       <Title level={3}>Cài đặt</Title>
-      <Tabs defaultActiveKey='1' items={items} onChange={onChange} />;
+      <Tabs defaultActiveKey='1' items={items} onChange={onChange} />
     </div>
   )
 }
