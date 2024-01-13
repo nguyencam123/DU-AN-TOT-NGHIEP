@@ -167,7 +167,7 @@ export const updateBooking = (bookingId) => async (dispatch) => {
 }
 export const checkBooked = () => async (dispatch) => {
   try {
-    const response = await instance.put(
+    const response = await instance.get(
       'http://localhost:8080/api/v1/cart/check-booked',
     )
     // console.log(response.data.data);
