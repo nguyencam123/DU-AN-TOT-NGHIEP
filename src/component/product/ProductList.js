@@ -25,6 +25,7 @@ import dayjs from 'dayjs';
 import { DatePicker, Space } from 'antd';
 import { fetchSearchProducts } from '../../features/product/searchProductThunk';
 import { Link } from 'react-router-dom';
+import { updateAxiosToken } from '../../app/axiosConfig';
 const { Search } = Input;
 const { Title } = Typography
 const { RangePicker } = DatePicker;
@@ -95,8 +96,11 @@ function ProductList() {
     const handleTabChange = (key) => {
         setCurrentLocation(key);
     };
+    const storedToken = JSON.parse(localStorage.getItem('userDetail'))?.data
+    ?.token
     useEffect(() => {
         setNameOrAddress(items.find((item) => item.key === currentLocation))
+        updateAxiosToken(storedToken)
     }, [currentLocation])
     useEffect(() => {
         // Set checkInDate to tomorrow

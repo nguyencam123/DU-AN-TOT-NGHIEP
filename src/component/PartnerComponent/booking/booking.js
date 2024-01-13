@@ -171,7 +171,7 @@ const Booking = () => {
     EmailNguoiDat: item.user.email,
     TenNguoiDat: item.user.name,
     SoDienThoaiNguoiDat: item.user.phoneNumber,
-    TongTien: formatCurrency(item.totalPrice),
+    TongTien: formatCurrency((item.totalPrice * 100) / 111),
   }))
 
   const importAndAppendData = (data) => {

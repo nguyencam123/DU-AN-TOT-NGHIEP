@@ -104,7 +104,7 @@ const HomeStayProduct = () => {
   }
   const handlePriceChangeWeb = (value) => {
     // You can perform any additional formatting or validation here
-    setprice(value*100/111)
+    setprice((value * 100) / 111)
   }
   useEffect(() => {
     dispatch(fetchHomestay(valueselect))
@@ -238,7 +238,7 @@ const HomeStayProduct = () => {
       key: 'address',
     },
     {
-      title: 'Giá homestay',
+      title: 'Giá thuê homestay 1 đêm',
       dataIndex: 'price',
       key: 'price',
       align: 'center',
@@ -402,7 +402,7 @@ const HomeStayProduct = () => {
     name: name,
     timeCheckIn: timeCheckIn,
     timeCheckOut: timeCheckOut,
-    cancellationPolicy: parseFloat(cancellationPolicy),
+    // cancellationPolicy: parseFloat(cancellationPolicy),
     startDate: startDate?.valueOf(),
     endDate: endDate?.valueOf(),
     desc: desc,
@@ -849,34 +849,7 @@ const HomeStayProduct = () => {
               )}
             </Col>
           </Row>
-          <Row gutter={24} style={{ marginLeft: 1 }}>
-            {/* Trường thứ nhất */}
-            <Col span={12}>
-            </Col>
-            {/* Trường thứ hai */}
-            <Col span={12}>
-              <Form.Item
-                label={<Title level={5}>Giá trên web</Title>}
-                validateStatus={formErrors.price ? 'error' : ''}
-                help={formErrors.price}
-              >
-                <InputNumber
-                  style={{ width: 254 }}
-                  value={price}
-                  onChange={handlePriceChangeWeb}
-                  formatter={() =>
-                    `${price + price*11/100}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-                  }
-                  parser={(value) => {
-                    // Remove non-numeric characters and parse as a float
-                    const numericValue = parseFloat(value.replace(/\D/g, ''))
-                    return isNaN(numericValue) ? null : numericValue
-                  }}
-                  addonAfter='VNĐ'
-                />
-              </Form.Item>
-            </Col>
-          </Row>
+
           <Row gutter={24} style={{ marginLeft: 3 }}>
             <Col span={12}>
               <Form.Item
@@ -970,7 +943,7 @@ const HomeStayProduct = () => {
             </Col>
           </Row>
           <Row gutter={24} style={{ marginLeft: 4, marginTop: 20 }}>
-            <Col span={12}>
+            {/* <Col span={12}>
               <Title level={5}>Chính sách hủy phòng:</Title>
               <Input
                 style={{ width: '67%', float: 'right' }}
@@ -980,7 +953,7 @@ const HomeStayProduct = () => {
               <div style={{ color: 'red', marginTop: 35 }}>
                 {formErrors.cancellationPolicy}
               </div>
-            </Col>
+            </Col> */}
             <Col span={12}>
               <Title level={5}>Số phòng:</Title>
               <Input
@@ -1276,14 +1249,14 @@ const HomeStayProduct = () => {
             <tr>
               <td style={{ width: 600 }}>
                 <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Giá </div> :{' '}
+                  <div style={{ width: 200 }}>Giá trên mỗi đêm</div> :{' '}
                   {formatCurrency(price)}
                 </div>
                 <br />
               </td>
               <td style={{ width: 600 }}>
                 <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Giá thực tế</div> :{' '}
+                  <div style={{ width: 200 }}>Giá thực tế được đăng</div> :{' '}
                   {formatCurrency(price + (price * 11) / 100)}
                 </div>
                 <br />
@@ -1296,10 +1269,17 @@ const HomeStayProduct = () => {
                 </div>
                 <br />
               </td>
-              <td style={{ width: 500 }}>
+              {/* <td style={{ width: 500 }}>
                 <div style={{ display: 'flex' }}>
                   <div style={{ width: 200 }}>Chính sách hủy phòng </div> :{' '}
                   {cancellationPolicy}
+                </div>
+                <br />
+              </td> */}
+              <td style={{ width: 500 }}>
+                <div style={{ display: 'flex' }}>
+                  <div style={{ width: 200 }}>Số lượng người </div> :{' '}
+                  {numberPerson} (Người)
                 </div>
                 <br />
               </td>
@@ -1332,15 +1312,6 @@ const HomeStayProduct = () => {
                 <div style={{ display: 'flex' }}>
                   <div style={{ width: 200 }}>Ngày kết thúc</div> :{' '}
                   {moment(endDate).locale('vi').format('LL')}
-                </div>
-                <br />
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: 500 }}>
-                <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Số lượng người </div> :{' '}
-                  {numberPerson} (Người)
                 </div>
                 <br />
               </td>

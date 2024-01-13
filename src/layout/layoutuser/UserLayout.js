@@ -24,6 +24,8 @@ const UserLayout = ({ children }) => {
       '/homestay/booking',
       '/review/booking',
       '/booking',
+      '/shopingcart',
+      '/userComment',
     ]
 
     const currentPath = window.location.pathname

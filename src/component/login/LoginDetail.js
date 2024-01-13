@@ -33,12 +33,12 @@ const LoginDetail = () => {
   const userDetail = JSON.parse(localStorage.getItem('userDetail'))
   const namelocal = userDetail?.data.name
   const dataUser = useSelector((state) => state.user.userData)
-  const [name, setname] = useState(dataUser.data?.name)
+  const [name, setname] = useState(dataUser?.data?.name)
   const [birthday, setbirthday] = useState(856345)
   const [gender, setgender] = useState(true)
-  const [address, setaddress] = useState(dataUser.data?.address)
-  const [phoneNumber, setphoneNumber] = useState(dataUser.data?.phoneNumber)
-  const [email, setemail] = useState(dataUser.data?.email)
+  const [address, setaddress] = useState(dataUser?.data?.address)
+  const [phoneNumber, setphoneNumber] = useState(dataUser?.data?.phoneNumber)
+  const [email, setemail] = useState(dataUser?.data?.email)
   const [username, setusername] = useState('')
   const [password, setpassword] = useState('')
   const [identificationNumber, setidentificationNumber] = useState('')
@@ -236,7 +236,7 @@ const LoginDetail = () => {
                     id='name'
                     type='text'
                     onChange={(e) => setname(e.target.value)}
-                    defaultValue={dataUser.data?.name}
+                    defaultValue={dataUser?.data?.name}
                     required
                   />
                 </MDBCol>
@@ -247,7 +247,7 @@ const LoginDetail = () => {
                     id='address'
                     type='text'
                     required
-                    defaultValue={dataUser.data?.address}
+                    defaultValue={dataUser?.data?.address}
                     onChange={(e) => setaddress(e.target.value)}
                   />
                 </MDBCol>
@@ -258,7 +258,7 @@ const LoginDetail = () => {
                 label='Email'
                 id='email'
                 type='email'
-                defaultValue={dataUser.data?.email}
+                defaultValue={dataUser?.data?.email}
                 onChange={(e) => setemail(e.target.value)}
               />
               <MDBInput
@@ -267,7 +267,7 @@ const LoginDetail = () => {
                 id='phoneNumber'
                 type='number'
                 required
-                defaultValue={dataUser.data?.phoneNumber}
+                defaultValue={dataUser?.data?.phoneNumber}
                 onChange={(e) => setphoneNumber(e.target.value)}
               />
               {/* <MDBInput
@@ -277,9 +277,9 @@ const LoginDetail = () => {
                 type='date'
                 required
                 defaultValue={
-                  dataUser.data?.birthday
+                  dataUser?.data?.birthday
                     ? dayjs(
-                        dayjs(dataUser.data?.birthday)
+                        dayjs(dataUser?.data?.birthday)
                           .locale('vi')
                           .format('YYYY-MM-DD'),
                         'YYYY-MM-DD',
@@ -294,9 +294,9 @@ const LoginDetail = () => {
                 type='date'
                 required
                 defaultValue={
-                  dataUser.data?.birthday
+                  dataUser?.data?.birthday
                     ? dayjs(
-                        dayjs(dataUser.data?.birthday)
+                        dayjs(dataUser?.data?.birthday)
                           .locale('vi')
                           .format('YYYY-MM-DD'),
                         'YYYY-MM-DD',
