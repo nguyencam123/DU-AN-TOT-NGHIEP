@@ -127,7 +127,10 @@ const LoginDetail = () => {
     formData.append('address', address)
     formData.append('phoneNumber', phoneNumber)
     formData.append('email', email)
-    formData.append('birthday', new Date(identificationNumber).valueOf())
+    formData.append(
+      'birthday',
+      identificationNumber || dataUser.data?.birthday.valueOf(),
+    )
     formData.append('username', dataUser?.data?.username)
     formData.append('avatar', file)
     message.info('Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!', 5)

@@ -36,7 +36,7 @@ const Headerpartner = () => {
           ) : (
             ''
           )}
-          {nameUser}
+          &nbsp;{nameUser}
           <div style={{ cursor: 'pointer' }} onClick={logout}>
             (Đăng xuất)
           </div>

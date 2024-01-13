@@ -419,13 +419,15 @@ const StatisticalHomestay = () => {
             Top 5 homestay có doanh thu cao nhất trong năm {year}
           </Title>
 
-          <Button
-            style={{ marginLeft: 'auto' }}
-            type='primary'
-            onClick={exportExcel}
-          >
-            Xuất file thống kê đặt phòng
-          </Button>
+          {statisticalByTop5.length > 0 && (
+            <Button
+              style={{ marginLeft: 'auto' }}
+              type='primary'
+              onClick={exportExcel}
+            >
+              Xuất file thống kê đặt phòng
+            </Button>
+          )}
         </div>
         <Table columns={columns} dataSource={statisticalByTop5} />
       </div>

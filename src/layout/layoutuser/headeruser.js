@@ -292,7 +292,7 @@ const HeaderUser = () => {
                   </span>
                 </Link>
                 &emsp;
-                {statusUser ? (
+                {isLoggedIn ? (
                   <Dropdown
                     menu={{
                       items,
@@ -306,12 +306,12 @@ const HeaderUser = () => {
                         <Avatar src={userDetail?.data.avataUrl} />
                       )}
                       <Title style={{ marginTop: 5 }} level={5}>
-                        &ensp;{lastName}
+                        &nbsp;{lastName}
                       </Title>
                     </div>
                   </Dropdown>
                 ) : null}
-                {statusUser ? ( // Render dropdown only if the user is logged in
+                {isLoggedIn ? ( // Render dropdown only if the user is logged in
                   <span />
                 ) : (
                   <div>

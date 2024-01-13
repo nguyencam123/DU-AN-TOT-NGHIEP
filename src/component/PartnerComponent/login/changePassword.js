@@ -19,7 +19,7 @@ const ChangePassword = () => {
   const namelocal = userDetail?.data.name
   const idowner = userDetail?.data.id
   const [name, setname] = useState(namelocal)
-  const [birthday, setbirthday] = useState(856345)
+  const [birthday, setbirthday] = useState('')
   const [gender, setgender] = useState(true)
   const [address, setaddress] = useState(userDetail?.data.address)
   const [password, setpassword] = useState('')
@@ -105,7 +105,7 @@ const ChangePassword = () => {
       setLoading(true)
       await ChangePasswordSlice(
         userDetail?.data.username,
-        birthday,
+        birthday || userDetail.data?.birthday.valueOf(),
         name,
         gender,
         address,

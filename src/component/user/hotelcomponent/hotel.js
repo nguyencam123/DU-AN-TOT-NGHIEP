@@ -290,13 +290,20 @@ const Hotel = () => {
     >
       <div>
         <div>
-          <Checkbox.Group
-            options={convenient.map((item) => ({
-              label: item.name,
-              value: item.id,
-            }))}
-            onChange={onChangeConvenients}
-          />
+          {convenient?.map((items) => (
+            <div style={{ marginBottom: 10 }}>
+              {items.name}
+              <br />
+
+              <Checkbox.Group
+                options={items.convenientHomestays.map((item) => ({
+                  label: item.name,
+                  value: item.id,
+                }))}
+                onChange={onChangeConvenients}
+              />
+            </div>
+          ))}
         </div>
       </div>
     </div>

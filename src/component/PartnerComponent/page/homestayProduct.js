@@ -827,6 +827,13 @@ const HomeStayProduct = () => {
                   addonAfter='VNĐ'
                 />
               </Form.Item>
+              {price !== null && (
+                <span style={{ marginLeft: 15 }}>
+                  Giá thực tế được đăng trên website{' '}
+                  {formatCurrency(price + (price * 11) / 100)}
+                  <br />
+                </span>
+              )}
             </Col>
           </Row>
           <Row gutter={24} style={{ marginLeft: 3 }}>
@@ -1232,10 +1239,10 @@ const HomeStayProduct = () => {
                 </div>
                 <br />
               </td>
-              <td style={{ width: 500 }}>
+              <td style={{ width: 600 }}>
                 <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Số lượng người </div> :{' '}
-                  {numberPerson} (Người)
+                  <div style={{ width: 200 }}>Giá thực tế</div> :{' '}
+                  {formatCurrency(price + (price * 11) / 100)}
                 </div>
                 <br />
               </td>
@@ -1287,7 +1294,17 @@ const HomeStayProduct = () => {
                 <br />
               </td>
             </tr>
+            <tr>
+              <td style={{ width: 500 }}>
+                <div style={{ display: 'flex' }}>
+                  <div style={{ width: 200 }}>Số lượng người </div> :{' '}
+                  {numberPerson} (Người)
+                </div>
+                <br />
+              </td>
+            </tr>
           </table>
+
           <div style={{ display: 'flex' }}>
             <div style={{ width: 200 }}>Tiện ích </div> :{' '}
             {viewEditConvennient.map((items, index) => (

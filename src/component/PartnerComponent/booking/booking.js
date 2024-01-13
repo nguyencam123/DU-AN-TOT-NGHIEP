@@ -257,16 +257,18 @@ const Booking = () => {
   return (
     <div style={{ marginTop: '20px' }}>
       <Title level={2}>Quản trị đặt phòng</Title>
-      <div style={{ display: 'flex', marginBottom: 15 }}>
-        <Title level={4}>Danh mục</Title>
-        <Button
-          style={{ marginLeft: 'auto' }}
-          type='primary'
-          onClick={exportExcel}
-        >
-          Xuất file thống kê đặt phòng
-        </Button>
-      </div>
+      {formattedData.length > 0 && (
+        <div style={{ display: 'flex', marginBottom: 15 }}>
+          <Title level={4}>Danh mục</Title>
+          <Button
+            style={{ marginLeft: 'auto' }}
+            type='primary'
+            onClick={exportExcel}
+          >
+            Xuất file thống kê đặt phòng
+          </Button>
+        </div>
+      )}
       <Row>
         <Form.Item label='Trạng thái' style={{ float: 'left' }}>
           <Select
