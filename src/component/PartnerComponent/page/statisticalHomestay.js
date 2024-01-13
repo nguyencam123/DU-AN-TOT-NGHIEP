@@ -116,7 +116,7 @@ const StatisticalHomestay = () => {
   const convertedData = convertDataForChart(statistical)
   const formattedData = convertedData.map((item) => ({
     date: item.date,
-    tongSoTien: parseInt(item.tongSoTien),
+    tongSoTien: parseInt((item.tongSoTien * 100) / 111),
   }))
 
   const config = {
@@ -195,7 +195,7 @@ const StatisticalHomestay = () => {
       dataIndex: 'tongSoTien',
       key: 'tongSoTien',
       render(str) {
-        return formatCurrency(str)
+        return formatCurrency((str * 100) / 111)
       },
     },
     {
@@ -267,7 +267,7 @@ const StatisticalHomestay = () => {
     const wb = XLSX.utils.book_new()
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1')
     // Save the workbook to a file
-    XLSX.writeFile(wb, `Thống_kê_doanh_thu_TravelViVu_${today}.xlsx`)
+    XLSX.writeFile(wb, `Thống_kê_top_5_doanh_thu_TravelViVu_${today}.xlsx`)
   }
 
   // Example usage
@@ -296,7 +296,9 @@ const StatisticalHomestay = () => {
               {' '}
               {statisticalByDay.tongSoTien == null
                 ? 0
-                : formatCurrency(statisticalByDay.tongSoTien)}{' '}
+                : formatCurrency(
+                    (statisticalByDay.tongSoTien * 100) / 111,
+                  )}{' '}
             </Title>
             <Title
               style={{ marginTop: '1px', color: 'white', fontWeight: 600 }}
@@ -324,7 +326,9 @@ const StatisticalHomestay = () => {
               {' '}
               {statisticalByMonth.tongSoTien == null
                 ? 0
-                : formatCurrency(statisticalByMonth.tongSoTien)}{' '}
+                : formatCurrency(
+                    (statisticalByMonth.tongSoTien * 100) / 111,
+                  )}{' '}
             </Title>
             <Title
               style={{ marginTop: '1px', color: 'white', fontWeight: 600 }}
@@ -352,7 +356,9 @@ const StatisticalHomestay = () => {
               {' '}
               {statisticalByYears?.tongSoTien == null
                 ? 0
-                : formatCurrency(statisticalByYears?.tongSoTien)}{' '}
+                : formatCurrency(
+                    (statisticalByYears?.tongSoTien * 100) / 111,
+                  )}{' '}
             </Title>
             <Title
               style={{ marginTop: '1px', color: 'white', fontWeight: 600 }}
@@ -419,13 +425,15 @@ const StatisticalHomestay = () => {
             Top 5 homestay có doanh thu cao nhất trong năm {year}
           </Title>
 
-          <Button
-            style={{ marginLeft: 'auto' }}
-            type='primary'
-            onClick={exportExcel}
-          >
-            Xuất file thống kê đặt phòng
-          </Button>
+          {statisticalByTop5.length > 0 && (
+            <Button
+              style={{ marginLeft: 'auto' }}
+              type='primary'
+              onClick={exportExcel}
+            >
+              Xuất file thống kê top 5 doanh thu
+            </Button>
+          )}
         </div>
         <Table columns={columns} dataSource={statisticalByTop5} />
       </div>

@@ -30,7 +30,7 @@ const HeaderAdmin = () => {
       </Title>
       <div className='layout-login' style={{ marginLeft: 'auto' }}>
         <Title level={5} style={{ color: 'white', display: 'flex' }}>
-          {nameUser}{' '}
+          &nbsp;{nameUser}{' '}
           <div style={{ cursor: 'pointer' }} onClick={logout}>
             (Đăng xuất)
           </div>
