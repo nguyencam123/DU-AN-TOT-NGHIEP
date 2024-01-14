@@ -32,10 +32,10 @@ const { Title } = Typography
 const { Search } = Input
 
 function BookingForm() {
-  const checkDate = (dateCancel, dateCreate) => {
-    if (dateCancel.getFullYear() <= dateCreate.getFullYear()) {
-      if (dateCancel.getMonth() <= dateCreate.getMonth()) {
-        if (dateCancel.getDate() <= dateCreate.getDate()) {
+  const checkDate = (dateCancel, dateStart) => {
+    if (dateCancel.getFullYear() <= dateStart.getFullYear()) {
+      if (dateCancel.getMonth() <= dateStart.getMonth()) {
+        if (dateCancel.getDate() < dateStart.getDate()) {
           return true
         }
       }
@@ -69,8 +69,8 @@ function BookingForm() {
     },
     {
       title: 'Ngày đặt',
-      dataIndex: 'createdDate',
-      key: 'createdDate',
+      dataIndex: 'startDate',
+      key: 'startDate',
       render: (data) => {
         return moment(data).locale('vi').format('LL')
       },
@@ -137,8 +137,8 @@ function BookingForm() {
           }
         }
         if (record.status === 'HUY') {
-          const checkOutDate = dayjs(record.createdDate).add(1, 'day')
-          if (checkDate(new Date(record.cancellationDate), new Date(checkOutDate))) {
+          const checkOutDate = dayjs(record.cancellationDate).add(1, 'day')
+          if (checkDate(new Date(checkOutDate), new Date(record.startDate))) {
             if (record.typeBooking === 'DAT_COC') {
               return formatCurrency(
                 data -
@@ -169,27 +169,30 @@ function BookingForm() {
     },
     {
       title: 'Số tiền phải chuyển cho khách hàng',
-      dataIndex: 'totalPrice',
-      key: 'totalPrice',
-      render: (data, record) => {
-        if (record.status === 'HUY') {
-          const checkOutDate = dayjs(record.createdDate).add(1, 'day')
-          if (checkDate(new Date(record.cancellationDate), new Date(checkOutDate))) {
-            if (record.typeBooking === 'DAT_COC') {
-              return formatCurrency(
-                (data * 2 * record.homestay.cancellationPolicy) / 100,
-              )
-            }
-            if (record.typeBooking === 'THANH_TOAN_TRUOC') {
-              return formatCurrency(
-                (data * record.homestay.cancellationPolicy) / 100,
-              )
-            }
-          } else {
-            return 'Không hoàn tiền'
-          }
-        }
+      dataIndex: 'refundPrice',
+      key: 'refundPrice',
+      render: (data) => {
+        return formatCurrency(data)
       },
+      // render: (data, record) => {
+      //   if (record.status === 'HUY') {
+      //     const checkOutDate = dayjs(record.createdDate).add(1, 'day')
+      //     if (checkDate(new Date(record.cancellationDate), new Date(checkOutDate))) {
+      //       if (record.typeBooking === 'DAT_COC') {
+      //         return formatCurrency(
+      //           (data * 2 * record.homestay.cancellationPolicy) / 100,
+      //         )
+      //       }
+      //       if (record.typeBooking === 'THANH_TOAN_TRUOC') {
+      //         return formatCurrency(
+      //           (data * record.homestay.cancellationPolicy) / 100,
+      //         )
+      //       }
+      //     } else {
+      //       return 'Không hoàn tiền'
+      //     }
+      //   }
+      // },
     },
     {
       title: 'Mã giao dịch với chủ homestay',

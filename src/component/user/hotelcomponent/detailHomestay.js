@@ -508,10 +508,8 @@ export const DetailHomestay = () => {
                 </div>
                 <span style={{ lineHeight: '12px', marginLeft: '17px' }}>
                   Việc hủy phòng trước ngày{' '}
-                  {moment(dayjs(startDate.valueOf())).add(2, 'day').locale('vi').format('LL')}{' '}
-                  sẽ được hoàn toàn miễn phí. Sau ngày{' '}
-                  {moment(dayjs(startDate.valueOf())).add(2, 'day').locale('vi').format('LL')}{' '}
-                  bạn sẽ phải mất một khoản tiền khi hủy phòng
+                  {moment(dayjs(startDate.valueOf())).add(-1, 'day').locale('vi').format('LL')}{' '}
+                  sẽ được hoàn toàn miễn phí.
                 </span>
               </div>
               <hr style={{ width: '96%', marginLeft: '2%' }} />
