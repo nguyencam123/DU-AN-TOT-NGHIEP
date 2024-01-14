@@ -34,17 +34,17 @@ const LoginDetail = () => {
   const userDetail = JSON.parse(localStorage.getItem('userDetail'))
   const namelocal = userDetail?.data.name
   const dataUser = useSelector((state) => state.user.userData)
-  const [name, setname] = useState(dataUser?.data?.name)
+  const [name, setname] = useState(userDetail?.data?.name)
   const [birthday, setbirthday] = useState(856345)
   const [gender, setgender] = useState(true)
-  const [address, setaddress] = useState(dataUser?.data?.address)
-  const [phoneNumber, setphoneNumber] = useState(dataUser?.data?.phoneNumber)
-  const [email, setemail] = useState(dataUser?.data?.email)
+  const [address, setaddress] = useState(userDetail?.data?.address)
+  const [phoneNumber, setphoneNumber] = useState(userDetail?.data?.phoneNumber)
+  const [email, setemail] = useState(userDetail?.data?.email)
   const [username, setusername] = useState('')
-  const [numberBank, setNumberBank] = useState(dataUser?.data?.nameAccount)
-  const [nameBank, setNameBank] = useState(dataUser?.data?.nameBack)
+  const [numberBank, setNumberBank] = useState(userDetail?.data?.numberAccount)
+  const [nameBank, setNameBank] = useState(userDetail?.data?.nameBack)
   const [nameAccountBank, setNameAccountBank] = useState(
-    dataUser?.data?.nameAccount,
+    userDetail?.data?.nameAccount,
   )
   const [password, setpassword] = useState('')
   const [identificationNumber, setidentificationNumber] = useState('')
