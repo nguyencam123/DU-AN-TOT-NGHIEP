@@ -138,7 +138,7 @@ const Endow = () => {
                     const promotionValue = items.promotion?.value
 
                     if (
-                      items.promotion !== null &&
+                      items.promotion?.statusPromotion === 'HOAT_DONG' &&
                       startDate < currentDate &&
                       currentDate < endDate &&
                       ((priceFilter.under100k && promotionValue < 100000) ||

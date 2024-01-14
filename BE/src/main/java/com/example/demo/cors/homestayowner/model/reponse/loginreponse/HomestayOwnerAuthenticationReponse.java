@@ -33,6 +33,12 @@ public class HomestayOwnerAuthenticationReponse {
 
     private String username;
 
+    private String nameBack;
+
+    private String nameAccount;
+
+    private String numberAccount;
+
     private String avataUrl;
 
     private Status status;

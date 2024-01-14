@@ -61,9 +61,9 @@ export const getAllConvinentHomestay = () => async (dispatch) => {
   dispatch(fetchProductsStart())
   try {
     const response = await axios.get(
-      'http://localhost:8080/api/v1/convenient-homestay?size=99',
+      'http://localhost:8080/api/v1/convenient-homestay-type?size=99',
     )
-    dispatch(fetchConvenientsSuccess(response.data.data.data)) // Lấy dữ liệu từ response.data.data
+    dispatch(fetchConvenientsSuccess(response.data.data)) // Lấy dữ liệu từ response.data.data
   } catch (error) {
     dispatch(fetchProductsFailure(error.message))
   }

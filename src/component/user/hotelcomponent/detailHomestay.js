@@ -224,8 +224,7 @@ export const DetailHomestay = () => {
           </Row>
           <Row style={{ marginTop: '10px' }}>
             <Col span={8}>
-              <span style={{ fontSize: '12px', marginTop: '3px' }}>
-              </span>
+              <span style={{ fontSize: '12px', marginTop: '3px' }}></span>
               <div
                 style={{
                   fontSize: '18px',

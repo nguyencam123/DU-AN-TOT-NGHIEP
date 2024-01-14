@@ -67,6 +67,7 @@ public interface CustomerCartDetailRepository extends CartDetailRepository {
             """, nativeQuery = true)
     List<CartDetail> cartDetailBooked();
 
+    @Transactional
     @Query(value = """
             DELETE cd FROM cart_detail cd
                 JOIN cart c ON cd.id_cart = c.id

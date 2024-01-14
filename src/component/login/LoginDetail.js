@@ -1,5 +1,12 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { Avatar, Tabs, Typography, message, notification } from 'antd'
+import {
+  Avatar,
+  DatePicker,
+  Tabs,
+  Typography,
+  message,
+  notification,
+} from 'antd'
 import {
   UserOutlined,
   FileProtectOutlined,
@@ -26,20 +33,20 @@ const LoginDetail = () => {
   const userDetail = JSON.parse(localStorage.getItem('userDetail'))
   const namelocal = userDetail?.data.name
   const dataUser = useSelector((state) => state.user.userData)
-  const [name, setname] = useState(dataUser.data?.name)
+  const [name, setname] = useState(dataUser?.data?.name)
   const [birthday, setbirthday] = useState(856345)
   const [gender, setgender] = useState(true)
-  const [address, setaddress] = useState(dataUser.data?.address)
-  const [phoneNumber, setphoneNumber] = useState(dataUser.data?.phoneNumber)
-  const [email, setemail] = useState(dataUser.data?.email)
+  const [address, setaddress] = useState(dataUser?.data?.address)
+  const [phoneNumber, setphoneNumber] = useState(dataUser?.data?.phoneNumber)
+  const [email, setemail] = useState(dataUser?.data?.email)
   const [username, setusername] = useState('')
   const [password, setpassword] = useState('')
   const [identificationNumber, setidentificationNumber] = useState('')
   const [loading, setLoading] = useState(false)
-
   const handleDateChangestart = (dates) => {
-    setbirthday(moment(dates).valueOf())
+    setidentificationNumber(dates.valueOf())
   }
+
   const [newpassword, setnewpassword] = useState('')
   const [confirmpassword, setconfirmpassword] = useState('')
   const formChangePass = {
@@ -120,7 +127,10 @@ const LoginDetail = () => {
     formData.append('address', address)
     formData.append('phoneNumber', phoneNumber)
     formData.append('email', email)
-    formData.append('birthday', new Date(identificationNumber).valueOf())
+    formData.append(
+      'birthday',
+      identificationNumber || dataUser.data?.birthday.valueOf(),
+    )
     formData.append('username', dataUser?.data?.username)
     formData.append('avatar', file)
     message.info('Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!', 5)
@@ -154,7 +164,9 @@ const LoginDetail = () => {
         setLoading(false) // Set loading to false if the request fails
       })
   }
-
+  const isBeforeToday = (current) => {
+    return current && current.isAfter(moment().startOf('day'))
+  }
   const [activeTab, setActiveTab] = useState('1')
   const items = [
     {
@@ -224,7 +236,7 @@ const LoginDetail = () => {
                     id='name'
                     type='text'
                     onChange={(e) => setname(e.target.value)}
-                    defaultValue={dataUser.data?.name}
+                    defaultValue={dataUser?.data?.name}
                     required
                   />
                 </MDBCol>
@@ -235,7 +247,7 @@ const LoginDetail = () => {
                     id='address'
                     type='text'
                     required
-                    defaultValue={dataUser.data?.address}
+                    defaultValue={dataUser?.data?.address}
                     onChange={(e) => setaddress(e.target.value)}
                   />
                 </MDBCol>
@@ -246,7 +258,7 @@ const LoginDetail = () => {
                 label='Email'
                 id='email'
                 type='email'
-                defaultValue={dataUser.data?.email}
+                defaultValue={dataUser?.data?.email}
                 onChange={(e) => setemail(e.target.value)}
               />
               <MDBInput
@@ -255,19 +267,19 @@ const LoginDetail = () => {
                 id='phoneNumber'
                 type='number'
                 required
-                defaultValue={dataUser.data?.phoneNumber}
+                defaultValue={dataUser?.data?.phoneNumber}
                 onChange={(e) => setphoneNumber(e.target.value)}
               />
-              <MDBInput
+              {/* <MDBInput
                 wrapperClass='mb-4'
                 label='Ngày sinh'
                 id='birthday'
                 type='date'
                 required
                 defaultValue={
-                  dataUser.data?.birthday
+                  dataUser?.data?.birthday
                     ? dayjs(
-                        dayjs(dataUser.data?.birthday)
+                        dayjs(dataUser?.data?.birthday)
                           .locale('vi')
                           .format('YYYY-MM-DD'),
                         'YYYY-MM-DD',
@@ -275,7 +287,27 @@ const LoginDetail = () => {
                     : null
                 }
                 onChange={(e) => setidentificationNumber(e.target.value)}
+              /> */}
+              <DatePicker
+                label='Ngày sinh'
+                id='birthday'
+                type='date'
+                required
+                defaultValue={
+                  dataUser?.data?.birthday
+                    ? dayjs(
+                        dayjs(dataUser?.data?.birthday)
+                          .locale('vi')
+                          .format('YYYY-MM-DD'),
+                        'YYYY-MM-DD',
+                      )
+                    : null
+                }
+                onChange={handleDateChangestart}
+                style={{ width: '100%', marginBottom: 15 }}
+                disabledDate={isBeforeToday}
               />
+
               <MDBRow>
                 <MDBCol col='6'>
                   Giới tính &emsp;&emsp;
