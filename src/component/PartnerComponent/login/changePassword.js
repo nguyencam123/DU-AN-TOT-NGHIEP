@@ -355,25 +355,28 @@ const ChangePassword = () => {
           <MDBInput
             wrapperClass='mb-4'
             label='Số tài khoản'
-            id='password'
-            type='password'
+            id='numberBank'
+            type='numberBank'
             required
+            defaultValue={userDetail?.data?.numberAccount}
             onChange={(e) => setNumberBank(e.target.value)}
           />
           <MDBInput
             wrapperClass='mb-4'
             label='Tên ngân hàng'
-            id='newpassword'
-            type='password'
+            id='nameBank'
+            type='nameBank'
             required
+            defaultValue={userDetail?.data?.nameBack}
             onChange={(e) => setNameBank(e.target.value)}
           />
           <MDBInput
             wrapperClass='mb-4'
             label='Tên tài khoản'
-            id='confirmpassword'
-            type='password'
+            id='nameAccount'
+            type='nameAccount'
             required
+            defaultValue={userDetail?.data?.nameAccount}
             onChange={(e) => setNameAccountBank(e.target.value)}
           />
           <MDBBtn
