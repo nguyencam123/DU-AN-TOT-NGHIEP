@@ -5,6 +5,8 @@ import {
   adminloginSuccess,
   loginSuccess,
   logout,
+  logoutAdmin,
+  logoutOwner,
   partnerloginSuccess,
 } from '../features/user/userSlice'
 import { instance } from './axiosConfig'
@@ -24,7 +26,7 @@ export const checkToken = (token) => async (dispatch) => {
     }
   } catch (error) {
     console.error('Error checking token:', error)
-    dispatch(logout())
+    dispatch(logoutOwner())
   }
 }
 export const checkTokenAdmin = (token) => async (dispatch) => {
@@ -35,13 +37,13 @@ export const checkTokenAdmin = (token) => async (dispatch) => {
     )
     const data = response?.data
     if (data.success) {
-      dispatch(adminloginSuccess({ partner: data, partnerData: data }))
+      dispatch(adminloginSuccess({ admin: data, adminData: data }))
     } else {
       localStorage.removeItem('adminDetail')
     }
   } catch (error) {
     console.error('Error checking token:', error)
-    dispatch(logout())
+    dispatch(logoutAdmin())
   }
 }
 export const checkTokenUser = (token) => async (dispatch) => {
@@ -58,6 +60,6 @@ export const checkTokenUser = (token) => async (dispatch) => {
     }
   } catch (error) {
     console.error('Error checking token:', error)
-    dispatch(logout())
+    dispatch(logoutUser())
   }
 }
