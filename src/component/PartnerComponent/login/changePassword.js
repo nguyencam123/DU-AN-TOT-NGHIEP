@@ -25,6 +25,9 @@ const ChangePassword = () => {
   const [password, setpassword] = useState('')
   const [newpassword, setnewpassword] = useState('')
   const [confirmpassword, setconfirmpassword] = useState('')
+  const [numberBank, setNumberBank] = useState('')
+  const [nameBank, setNameBank] = useState('')
+  const [nameAccountBank, setNameAccountBank] = useState('')
   const [loading, setLoading] = useState(false)
   const handleDateChangestart = (dates) => {
     setbirthday(dates.valueOf())
@@ -84,6 +87,22 @@ const ChangePassword = () => {
     email: userDetail?.data.email,
   }
   const handleSubmitchange = async (e) => {
+    // console.log(formChangePass)
+    e.preventDefault()
+    if (newpassword !== confirmpassword) {
+      openNotificationChangePass()
+      return
+    }
+    try {
+      // Assuming ChangePasswordByPass function takes an object with a 'password' property
+      await ChangePasswordByPass(formChangePass)
+      openNotification()
+    } catch (error) {
+      message.error('Password change failed:', 5)
+      setLoading(false)
+    }
+  }
+  const handleSubmitBankAccount = async (e) => {
     // console.log(formChangePass)
     e.preventDefault()
     if (newpassword !== confirmpassword) {
@@ -326,6 +345,46 @@ const ChangePassword = () => {
             <Title level={5}>{userDetail?.data.email}</Title>
           </div>
         </div>
+      ),
+    },
+    {
+      key: '4',
+      label: 'Thông tin tài khoản ngân hàng',
+      children: (
+        <form>
+          <MDBInput
+            wrapperClass='mb-4'
+            label='Số tài khoản'
+            id='password'
+            type='password'
+            required
+            onChange={(e) => setNumberBank(e.target.value)}
+          />
+          <MDBInput
+            wrapperClass='mb-4'
+            label='Tên ngân hàng'
+            id='newpassword'
+            type='password'
+            required
+            onChange={(e) => setNameBank(e.target.value)}
+          />
+          <MDBInput
+            wrapperClass='mb-4'
+            label='Tên tài khoản'
+            id='confirmpassword'
+            type='password'
+            required
+            onChange={(e) => setNameAccountBank(e.target.value)}
+          />
+          <MDBBtn
+            className='w-100 mb-4'
+            size='md'
+            style={{ marginTop: 10 }}
+            onClick={handleSubmitBankAccount}
+          >
+            Cập nhật tài khoản ngân hàng
+          </MDBBtn>
+        </form>
       ),
     },
   ]

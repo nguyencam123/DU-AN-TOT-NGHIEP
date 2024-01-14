@@ -13,6 +13,7 @@ import {
   LogoutOutlined,
   BellOutlined,
   RedoOutlined,
+  BankOutlined,
 } from '@ant-design/icons'
 import { useState } from 'react'
 import { MDBBtn, MDBCol, MDBInput, MDBRow } from 'mdb-react-ui-kit'
@@ -40,6 +41,9 @@ const LoginDetail = () => {
   const [phoneNumber, setphoneNumber] = useState(dataUser?.data?.phoneNumber)
   const [email, setemail] = useState(dataUser?.data?.email)
   const [username, setusername] = useState('')
+  const [numberBank, setNumberBank] = useState('')
+  const [nameBank, setNameBank] = useState('')
+  const [nameAccountBank, setNameAccountBank] = useState('')
   const [password, setpassword] = useState('')
   const [identificationNumber, setidentificationNumber] = useState('')
   const [loading, setLoading] = useState(false)
@@ -381,6 +385,56 @@ const LoginDetail = () => {
               </MDBBtn>
             </form>
           </div>
+        </div>
+      ),
+    },
+    {
+      key: '6',
+      label: (
+        <div style={{ display: 'flex' }}>
+          <BankOutlined style={{ fontSize: 25 }} />
+          <Title level={5} style={{ marginTop: 2 }}>
+            Thông tin tài khoản
+          </Title>
+        </div>
+      ),
+      children: (
+        <div>
+          <Title level={3}>Cập nhật thông tin tài khoản ngân hàng</Title>
+          <form>
+            <MDBInput
+              wrapperClass='mb-4'
+              label='Số tài khoản'
+              id='numberBank'
+              type='numberBank'
+              required
+              onChange={(e) => setNumberBank(e.target.value)}
+            />
+            <MDBInput
+              wrapperClass='mb-4'
+              label='Tên ngân hàng'
+              id='nameBank'
+              type='nameBank'
+              required
+              onChange={(e) => setNameBank(e.target.value)}
+            />
+            <MDBInput
+              wrapperClass='mb-4'
+              label='Tên tài khoản'
+              id='nameAccountBank'
+              type='nameAccountBank'
+              required
+              onChange={(e) => setNameAccountBank(e.target.value)}
+            />
+            <MDBBtn
+              className='w-100 mb-4'
+              size='md'
+              style={{ marginTop: 10 }}
+              onClick={handleSubmitchange}
+            >
+              Cập nhật thông tin tài khoản ngân hàng
+            </MDBBtn>
+          </form>
         </div>
       ),
     },

@@ -123,6 +123,10 @@ export const BookingHomestay = () => {
     return /(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b/.test(number);
   }
   const handlecheckBookingHomestay = (id) => {
+    if (userDetail.data.numberAccount === undefined) {
+      message.info('Vui lòng cập nhật tài khoản ngân hàng của bạn tại "hồ sơ của tôi"!')
+      return false
+    }
     if (infoPayment.name.trim().length === 0) {
       message.info('Số điện thoại không được trống')
       return false
