@@ -35,14 +35,18 @@ public class CustomerCartDetailServiceImpl implements CustomerCartDetailService 
     @Override
     public Boolean cartDetailBooked() {
         List<CartDetail> cartDetailList = customerCartDetailRepository.cartDetailBooked();
-        if(cartDetailList.size() != 0){
-            for (CartDetail cartDetail : cartDetailList) {
-                cartDetail.setStatus(StatusCart.KHONG_HOAT_DONG);
-                customerCartDetailRepository.save(cartDetail);
+        if (!cartDetailList.isEmpty()) {
+            try {
+                for (CartDetail cartDetail : cartDetailList) {
+                    cartDetail.setStatus(StatusCart.KHONG_HOAT_DONG);
+                    customerCartDetailRepository.save(cartDetail);
+                }
+                return true;
+            } catch (Exception e) {
+                throw new RestApiException("Lỗi khi cập nhật trạng thái cart detail!");
             }
-            return true;
-        }else {
-            throw new RestApiException("Khong co cart detail!");
+        } else {
+            return false;
         }
     }
 

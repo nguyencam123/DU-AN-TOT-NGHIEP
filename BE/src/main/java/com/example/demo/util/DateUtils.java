@@ -168,4 +168,16 @@ public class DateUtils {
         return instant.atZone(zoneId).toLocalDate();
     }
 
+    public static String getDateFromLongMilis(long milis) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyy");
+        String formattedDate = dateFormat.format(milis);
+        int i = formattedDate.indexOf("-");
+        if (i != -1) {
+            // Trả về phần trước dấu "-"
+            return formattedDate.substring(0, i);
+        } else {
+            // Nếu không có dấu "-", trả về chuỗi ban đầu
+            return formattedDate;
+        }
+    }
 }
