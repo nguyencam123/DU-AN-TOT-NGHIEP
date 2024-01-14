@@ -408,6 +408,7 @@ const LoginDetail = () => {
               id='numberBank'
               type='numberBank'
               required
+              defaultValue={userDetail?.data?.numberAccount}
               onChange={(e) => setNumberBank(e.target.value)}
             />
             <MDBInput
@@ -416,6 +417,7 @@ const LoginDetail = () => {
               id='nameBank'
               type='nameBank'
               required
+              defaultValue={userDetail?.data?.nameBack}
               onChange={(e) => setNameBank(e.target.value)}
             />
             <MDBInput
@@ -424,6 +426,7 @@ const LoginDetail = () => {
               id='nameAccountBank'
               type='nameAccountBank'
               required
+              defaultValue={userDetail?.data?.nameAccount}
               onChange={(e) => setNameAccountBank(e.target.value)}
             />
             <MDBBtn
