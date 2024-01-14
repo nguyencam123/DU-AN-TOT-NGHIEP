@@ -119,13 +119,17 @@ public class HomestayOwnerPromotionServiceImpl implements HomestayOwnerPromotion
         if (homestayOwnerPromotionRepository.existsByName(request.getName()) && !promotion.getName().equals(request.getName())) {
             throw new RestApiException("Tên đã được sử dụng");
         }
-
         promotion.setName(request.getName());
         promotion.setStartDate(request.getStartDate());
         promotion.setEndDate(request.getEndDate());
         promotion.setType(request.getType());
         promotion.setValue(request.getValue());
         Promotion promotion1=homestayOwnerPromotionRepository.save(promotion);
+        List<Homestay> homestayList=homestayOwnerHomestayRepository.getHomestayByPromotion(idPromotion);
+        for (Homestay homestay: homestayList){
+            homestay.setPromotion(null);
+            homestayOwnerHomestayRepository.save(homestay);
+        }
         for (String homestay: request.getHomestay()){
             Homestay homestay1=homestayOwnerHomestayRepository.findById(homestay).orElse(null);
             homestay1.setPromotion(promotion1);
