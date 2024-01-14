@@ -659,6 +659,26 @@ function BookingForm() {
               </td>
             </tr>
             <tr>
+              <td style={{ width: 1200 }}>
+                <div style={{ display: 'flex' }}>
+                  <div style={{ width: 200 }}>Thông tin tài khoản ngân hàng của chủ homestay </div> :{' '}
+                  {viewBooking.homestay?.ownerHomestay?.numberAccount}{' '}{viewBooking.homestay?.ownerHomestay?.nameBank}{' '}
+                  {viewBooking.homestay?.ownerHomestay?.nameAccount}
+                </div>
+                <br />
+              </td>
+            </tr>
+            <tr>
+              <td style={{ width: 1200 }}>
+                <div style={{ display: 'flex' }}>
+                  <div style={{ width: 200 }}>Thông tin tài khoản ngân hàng của khách hàng </div> :{' '}
+                  {viewBooking.user?.numberAccount}{' '}{viewBooking.user?.nameBank}{' '}
+                  {viewBooking.user?.nameAccount}
+                </div>
+                <br />
+              </td>
+            </tr>
+            <tr>
               <td style={{ width: 600 }}>
                 <div style={{ display: 'flex' }}>
                   <div style={{ width: 200 }}>Mã giao dịch </div> :{' '}

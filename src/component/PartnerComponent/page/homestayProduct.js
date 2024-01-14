@@ -191,6 +191,10 @@ const HomeStayProduct = () => {
     setroomNumber(record.roomNumber)
   }
   const showModal = () => {
+    if (userDetail.data.numberAccount == undefined) {
+      message.info('Hãy cập nhật tài khoản ngân hàng của bạn tại "Quản lý tài khoản -> Thông tin tài khoản ngân hàng"')
+      return false
+    }
     setIsModalOpen(true)
     setIsAddForm(true)
     setname('')
@@ -451,10 +455,6 @@ const HomeStayProduct = () => {
       .required('Vui lòng nhập số phòng')
       .typeError('Vui lòng nhập số phòng')
       .positive('Số lượng phòng phải lớn hơn 0'),
-    cancellationPolicy: Yup.number()
-      .required('Vui lòng nhập số chính sách ủy phòng')
-      .typeError('Vui lòng nhập số chính sách ủy phòng')
-      .positive('Số lượng chính sách ủy phòng phải lớn hơn 0'),
     // province: Yup.string().required('Vui lòng chọn thành phố homestay'),
     startDate: Yup.number().required('Vui lòng chọn ngày bắt đầu'),
     endDate: Yup.number()
@@ -770,7 +770,7 @@ const HomeStayProduct = () => {
         open={isModalOpen}
         onCancel={handleCancel}
         width={900}
-        okText={isAddFrom == true ? 'Thêm homstay' : 'Sửa homestay'}
+        okText={isAddFrom == true ? 'Thêm homestay' : 'Sửa homestay'}
         cancelText='Hủy'
         onOk={handleSubmit}
         maskClosable={false}
