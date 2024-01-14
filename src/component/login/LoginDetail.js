@@ -41,9 +41,11 @@ const LoginDetail = () => {
   const [phoneNumber, setphoneNumber] = useState(dataUser?.data?.phoneNumber)
   const [email, setemail] = useState(dataUser?.data?.email)
   const [username, setusername] = useState('')
-  const [numberBank, setNumberBank] = useState('')
-  const [nameBank, setNameBank] = useState('')
-  const [nameAccountBank, setNameAccountBank] = useState('')
+  const [numberBank, setNumberBank] = useState(dataUser?.data?.nameAccount)
+  const [nameBank, setNameBank] = useState(dataUser?.data?.nameBack)
+  const [nameAccountBank, setNameAccountBank] = useState(
+    dataUser?.data?.nameAccount,
+  )
   const [password, setpassword] = useState('')
   const [identificationNumber, setidentificationNumber] = useState('')
   const [loading, setLoading] = useState(false)
@@ -136,7 +138,61 @@ const LoginDetail = () => {
       identificationNumber || dataUser.data?.birthday.valueOf(),
     )
     formData.append('username', dataUser?.data?.username)
-    formData.append('avatar', file)
+    if (file.length > 0) {
+      formData.append('avatar', file)
+    }
+    message.info('Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!', 5)
+    instance
+      .put(
+        `http://localhost:8080/api/v1/customer/update-information-customer?id=${userDetail?.data.id}`,
+        formData,
+      )
+      .then((response) => {
+        setLoading(false) // Set loading to false after a successful request
+        message.info(
+          'Sửa thông tin thành công những thay đổi sẽ được áp dụng cho lần đăng nhập tới!',
+          5,
+        )
+      })
+      .catch((error) => {
+        // console.error('Error:', error)
+
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          const errorMessage = error.response.data.message
+          //   console.error('Error Message:', errorMessage)
+
+          // Do something with the error message, such as displaying it to the user
+          message.error(errorMessage, 5)
+        }
+
+        setLoading(false) // Set loading to false if the request fails
+      })
+  }
+  const handleSubmitBank = (e) => {
+    e.preventDefault()
+    setLoading(true) // Set loading to true when submitting
+
+    const formData = new FormData()
+    formData.append('name', name)
+    formData.append('gender', gender)
+    formData.append('address', address)
+    formData.append('phoneNumber', phoneNumber)
+    formData.append('email', email)
+    formData.append(
+      'birthday',
+      identificationNumber || dataUser.data?.birthday.valueOf(),
+    )
+    formData.append('username', dataUser?.data?.username)
+    if (file.length > 0) {
+      formData.append('avatar', file)
+    }
+    formData.append('nameBack', nameBank)
+    formData.append('nameAccount', nameAccountBank)
+    formData.append('numberAccount', numberBank)
     message.info('Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!', 5)
     instance
       .put(
@@ -433,7 +489,7 @@ const LoginDetail = () => {
               className='w-100 mb-4'
               size='md'
               style={{ marginTop: 10 }}
-              onClick={handleSubmitchange}
+              onClick={handleSubmitBank}
             >
               Cập nhật thông tin tài khoản ngân hàng
             </MDBBtn>
@@ -570,7 +626,7 @@ const LoginDetail = () => {
           style={{ color: 'black' }}
           onClick={logout}
         >
-          <UserOutlined /> Đăng xuất
+          <LogoutOutlined /> Đăng xuất
         </button>
       ),
     },
