@@ -32,10 +32,10 @@ const { Title } = Typography
 const { Search } = Input
 
 function BookingForm() {
-  const checkDate = (dateCancel, dateCreate) => {
-    if (dateCancel.getFullYear() <= dateCreate.getFullYear()) {
-      if (dateCancel.getMonth() <= dateCreate.getMonth()) {
-        if (dateCancel.getDate() <= dateCreate.getDate()) {
+  const checkDate = (dateCancel, dateStart) => {
+    if (dateCancel.getFullYear() <= dateStart.getFullYear()) {
+      if (dateCancel.getMonth() <= dateStart.getMonth()) {
+        if (dateCancel.getDate() < dateStart.getDate()) {
           return true
         }
       }
@@ -71,6 +71,14 @@ function BookingForm() {
       title: 'Ngày đặt',
       dataIndex: 'createdDate',
       key: 'createdDate',
+      render: (data) => {
+        return moment(data).locale('vi').format('LL')
+      },
+    },
+    {
+      title: 'Ngày checkin',
+      dataIndex: 'startDate',
+      key: 'startDate',
       render: (data) => {
         return moment(data).locale('vi').format('LL')
       },
@@ -137,23 +145,22 @@ function BookingForm() {
           }
         }
         if (record.status === 'HUY') {
-          const checkOutDate = dayjs(record.createdDate).add(1, 'day')
-          if (checkDate(new Date(record.cancellationDate), new Date(checkOutDate))) {
+          if (record.refundPrice !== 0) {
             if (record.typeBooking === 'DAT_COC') {
               return formatCurrency(
                 data -
-                  (data - (data * 100) / 111) * 2 -
-                  (((data * 100) / 111) *
-                    2 *
-                    record.homestay.cancellationPolicy) /
-                    100,
+                (data - (data * 100) / 111) * 2 -
+                (((data * 100) / 111) *
+                  2 *
+                  100) /
+                100,
               )
             }
             if (record.typeBooking === 'THANH_TOAN_TRUOC') {
               return formatCurrency(
                 (data * 100) / 111 -
-                  (((data * 100) / 111) * record.homestay.cancellationPolicy) /
-                    100,
+                (((data * 100) / 111) * 100) /
+                100,
               )
             }
           } else {
@@ -169,27 +176,30 @@ function BookingForm() {
     },
     {
       title: 'Số tiền phải chuyển cho khách hàng',
-      dataIndex: 'totalPrice',
-      key: 'totalPrice',
-      render: (data, record) => {
-        if (record.status === 'HUY') {
-          const checkOutDate = dayjs(record.createdDate).add(1, 'day')
-          if (checkDate(new Date(record.cancellationDate), new Date(checkOutDate))) {
-            if (record.typeBooking === 'DAT_COC') {
-              return formatCurrency(
-                (data * 2 * record.homestay.cancellationPolicy) / 100,
-              )
-            }
-            if (record.typeBooking === 'THANH_TOAN_TRUOC') {
-              return formatCurrency(
-                (data * record.homestay.cancellationPolicy) / 100,
-              )
-            }
-          } else {
-            return 'Không hoàn tiền'
-          }
-        }
+      dataIndex: 'refundPrice',
+      key: 'refundPrice',
+      render: (data) => {
+        return formatCurrency(data)
       },
+      // render: (data, record) => {
+      //   if (record.status === 'HUY') {
+      //     const checkOutDate = dayjs(record.createdDate).add(1, 'day')
+      //     if (checkDate(new Date(record.cancellationDate), new Date(checkOutDate))) {
+      //       if (record.typeBooking === 'DAT_COC') {
+      //         return formatCurrency(
+      //           (data * 2 * record.homestay.cancellationPolicy) / 100,
+      //         )
+      //       }
+      //       if (record.typeBooking === 'THANH_TOAN_TRUOC') {
+      //         return formatCurrency(
+      //           (data * record.homestay.cancellationPolicy) / 100,
+      //         )
+      //       }
+      //     } else {
+      //       return 'Không hoàn tiền'
+      //     }
+      //   }
+      // },
     },
     {
       title: 'Mã giao dịch với chủ homestay',
@@ -651,6 +661,26 @@ function BookingForm() {
                 <div style={{ display: 'flex' }}>
                   <div style={{ width: 200 }}>Ngày kết thúc</div> :{' '}
                   {moment(viewBooking.endDate).locale('vi').format('LL')}
+                </div>
+                <br />
+              </td>
+            </tr>
+            <tr>
+              <td style={{ width: 1200 }}>
+                <div style={{ display: 'flex' }}>
+                  <div style={{ width: 200 }}>Thông tin tài khoản ngân hàng của chủ homestay </div> :{' '}
+                  {viewBooking.homestay?.ownerHomestay?.numberAccount}{' '}{viewBooking.homestay?.ownerHomestay?.nameBank}{' '}
+                  {viewBooking.homestay?.ownerHomestay?.nameAccount}
+                </div>
+                <br />
+              </td>
+            </tr>
+            <tr>
+              <td style={{ width: 1200 }}>
+                <div style={{ display: 'flex' }}>
+                  <div style={{ width: 200 }}>Thông tin tài khoản ngân hàng của khách hàng </div> :{' '}
+                  {viewBooking.user?.numberAccount}{' '}{viewBooking.user?.nameBank}{' '}
+                  {viewBooking.user?.nameAccount}
                 </div>
                 <br />
               </td>
