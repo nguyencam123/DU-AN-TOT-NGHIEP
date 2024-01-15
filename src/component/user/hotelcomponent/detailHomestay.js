@@ -255,11 +255,11 @@ export const DetailHomestay = () => {
                   >
                     {formatCurrency(
                       detailHomestay.price -
-                      detailHomestay?.promotion?.value +
-                      ((detailHomestay.price -
-                        detailHomestay?.promotion?.value) *
-                        11) /
-                      100,
+                        detailHomestay?.promotion?.value +
+                        ((detailHomestay.price -
+                          detailHomestay?.promotion?.value) *
+                          11) /
+                          100,
                     )}
                     <span style={{ fontSize: '22' }}> </span>{' '}
                   </div>
@@ -507,7 +507,7 @@ export const DetailHomestay = () => {
                 </div>
                 <span style={{ lineHeight: '12px', marginLeft: '17px' }}>
                   Việc hủy phòng trước ngày{' '}
-                  {moment(dayjs(startDate.valueOf())).add(-1, 'day').locale('vi').format('LL')}{' '}
+                  {moment(detailHomestay.startDate).locale('vi').format('LL')}
                   sẽ được hoàn toàn miễn phí.
                 </span>
               </div>

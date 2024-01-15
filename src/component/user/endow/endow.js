@@ -43,16 +43,17 @@ const Endow = () => {
     }).format(value)
   }
   useEffect(() => {
-    // Set checkInDate to tomorrow
-    const tomorrow = new Date()
-    tomorrow.setDate(tomorrow.getDate() + 1)
-    setCheckInDate(tomorrow)
+    // Set checkInDate to 0h ngày hôm nay
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    setCheckInDate(today)
 
-    // Set checkOutDate to the day after tomorrow
-    const dayAfterTomorrow = new Date()
-    dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 10)
-    setCheckOutDate(dayAfterTomorrow)
+    // Set checkOutDate to 23h59p ngày hôm nay
+    const endOfDay = new Date()
+    endOfDay.setHours(23, 59, 59, 999)
+    setCheckOutDate(endOfDay)
   }, [])
+
   useEffect(() => {
     dispatch(
       fetchSearchProductsForPromotion(
