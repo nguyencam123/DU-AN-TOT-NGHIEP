@@ -309,8 +309,13 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         }else{
             homestayownerOwnerHomestayRepository.save(ownerHomestay);
         }
+        var jwtToken = jwtService.generateToken(ownerHomestay);
+        var refreshToken = jwtService.generateRefreshToken(ownerHomestay);
+        revokeAllUserTokens(ownerHomestay);
+        saveUserToken(ownerHomestay, jwtToken);
 
         return HomestayOwnerAuthenticationReponse.builder()
+                .token(jwtToken)
                 .code(ownerHomestay.getCode())
                 .id(ownerHomestay.getId())
                 .name(ownerHomestay.getName())
