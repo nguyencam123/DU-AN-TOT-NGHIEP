@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -30,7 +29,7 @@ public class ScheduledUtil {
     @Scheduled(cron = "0 0 0 * * *")
     public void scheduledCheckStatusCart() {
         List<CartDetail> cartDetailList = customerCartDetailRepository.getAllCartDetail();
-        Long currentTime = DateUtils.truncDate(new Date()).getTime() / 1000;
+        Long currentTime = DateUtils.truncDate(new Date()).getTime();
         for (CartDetail cartDetail : cartDetailList) {
             if (cartDetail.getEndDate() < currentTime) {
                 cartDetail.setStatus(StatusCart.KHONG_HOAT_DONG);
@@ -54,22 +53,13 @@ public class ScheduledUtil {
     @Scheduled(cron = "0 0 0 * * *")
     public void scheduledChangeStatusHomestay() {
         List<Homestay> listHomestays = adminHomestayRepository.getAllHomsestayByAdmin();
-        Long currentTime = DateUtils.truncDate(new Date()).getTime() / 1000;
+        Long currentTime = DateUtils.truncDate(new Date()).getTime();
         for (Homestay homestay : listHomestays) {
             if (homestay.getEndDate() < currentTime) {
                 homestay.setStatus(Status.KHONG_HOAT_DONG);
                 adminHomestayRepository.save(homestay);
             }
         }
-    }
-
-    @Scheduled(cron = "0 0 0 * * *")
-    public void schedeledCheck() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(1705164928000L);
-        // Cộng thêm 1 ngày
-        calendar.add(Calendar.DAY_OF_MONTH, 1);
-        System.err.println(calendar.getTimeInMillis());
     }
 
 }

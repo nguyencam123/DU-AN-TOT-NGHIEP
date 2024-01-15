@@ -189,7 +189,7 @@ public class DBGenerator implements CommandLineRunner {
         ownerHomestay1.setCode("OH01");
         ownerHomestay1.setName("Nguyen Quoc Cuong");
         ownerHomestay1.setPhoneNumber("0987654321");
-        ownerHomestay1.setEmail("cuongnguyen.nd2015@gmail.com");
+        ownerHomestay1.setEmail("cuongnguyen@gmail.com");
         ownerHomestay1.setUsername("cuongnguyen.nd2015@gmail.com");
         ownerHomestay1.setPassword("12345678");
         ownerHomestay1.setGender(true);

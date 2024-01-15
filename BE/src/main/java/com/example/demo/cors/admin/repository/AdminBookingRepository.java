@@ -68,7 +68,7 @@ public interface AdminBookingRepository extends BookingRepository {
     @Query(value = """
             SELECT
             COUNT(a.id) AS 'DoanhSo',
-            SUM(b.total_price - b.refund_price) AS 'TongSoTien'
+            SUM(a.total_price - a.refund_price) AS 'TongSoTien'
             FROM
             booking a
             inner join homestay b on a.homestay_id=b.id
@@ -85,7 +85,7 @@ public interface AdminBookingRepository extends BookingRepository {
                 b.address,
                 b.room_number AS "roomNumber",
                 COUNT(a.id) AS 'DoanhSo',
-                SUM(b.total_price - b.refund_price) AS 'TongSoTien'
+                SUM(a.total_price - a.refund_price) AS 'TongSoTien'
                 FROM
                 booking a
                 INNER JOIN homestay b ON a.homestay_id = b.id

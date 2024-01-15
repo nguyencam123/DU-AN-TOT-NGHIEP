@@ -14,6 +14,7 @@ import com.example.demo.infrastructure.contant.StatusBooking;
 import com.example.demo.infrastructure.exception.rest.RestApiException;
 import com.example.demo.repositories.PromotionRepository;
 import com.example.demo.repositories.UserRepository;
+import com.example.demo.util.DateUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,6 +59,7 @@ public class CustomerVNPayServiceImpl implements CustomerVNPayService {
         BigDecimal totalPrice = new BigDecimal(request.getTotalPrice());
         booking.setTypeBooking(request.getTypeBooking());
         booking.setUser(userRepository.findById(request.getUserId()).get());
+        booking.setCode("HD" + DateUtils.getCurrentDateAsString() + VNPayConfig.getRandomNumber(4));
         booking.setTotalPrice(totalPrice);
         booking.setStartDate(request.getStartDate());
         booking.setEndDate(request.getEndDate());

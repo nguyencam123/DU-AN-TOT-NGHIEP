@@ -39,7 +39,9 @@ const PartnerRegister = () => {
   const [email, setemail] = useState('')
   const [username, setusername] = useState('')
   const [password, setpassword] = useState('')
-  const [identificationNumber, setidentificationNumber] = useState('')
+  const [numberBank, setNumberBank] = useState(0)
+  const [nameBank, setNameBank] = useState(0)
+  const [nameAccountBank, setNameAccountBank] = useState('')
   const handleDateChangestart = (dates) => {
     setbirthday(dates.valueOf())
   }
@@ -63,7 +65,9 @@ const PartnerRegister = () => {
     email: email,
     username: username,
     password: password,
-    // identificationNumber: identificationNumber,
+    nameBack: nameBank,
+    nameAccount: nameAccountBank,
+    numberAccount: numberBank,
     point: 9,
   }
   const handleSubmit = async (e) => {
@@ -184,6 +188,30 @@ const PartnerRegister = () => {
               type='phoneNumber'
               required
               onChange={(e) => setphoneNumber(e.target.value)}
+            />
+            <MDBInput
+              wrapperClass='mb-4'
+              label='Số tài khoản'
+              id='numberBank'
+              type='numberBank'
+              required
+              onChange={(e) => setNumberBank(e.target.value)}
+            />
+            <MDBInput
+              wrapperClass='mb-4'
+              label='Tên ngân hàng'
+              id='nameBank'
+              type='nameBank'
+              required
+              onChange={(e) => setNameBank(e.target.value)}
+            />
+            <MDBInput
+              wrapperClass='mb-4'
+              label='Tên tài khoản'
+              id='nameAccount'
+              type='nameAccount'
+              required
+              onChange={(e) => setNameAccountBank(e.target.value)}
             />
             <MDBRow>
               <MDBCol col='6'>
