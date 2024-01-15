@@ -1318,7 +1318,7 @@ const HomeStayProduct = () => {
             <div style={{ width: 200 }}>Tiện ích </div> :{' '}
             {viewEditConvennient.map((items, index) => (
               <React.Fragment key={index}>
-                <div>{items.convenientHomestay?.name}</div>
+                <div>&nbsp;{items.convenientHomestay?.name}</div>
                 {index !== viewEditConvennient.length - 1 && <span>,</span>}
               </React.Fragment>
             ))}
