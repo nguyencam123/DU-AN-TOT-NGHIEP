@@ -9,6 +9,7 @@ import com.example.demo.infrastructure.configemail.Email;
 import com.example.demo.infrastructure.configemail.EmailSender;
 import com.example.demo.infrastructure.contant.Message;
 import com.example.demo.infrastructure.contant.StatusBooking;
+import com.example.demo.infrastructure.contant.TypeBooking;
 import com.example.demo.infrastructure.exception.rest.RestApiException;
 import com.example.demo.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,8 @@ public class CustomerBookingServiceImpl implements CustomerBookingService {
         booking.setStatus(StatusBooking.HUY);
         if (Integer.valueOf(DateUtils.getDateFromLongMilis(calendar.getTimeInMillis())) >=
                 Integer.valueOf(DateUtils.getDateFromLongMilis(booking.getStartDate()))) {
+            booking.setRefundPrice(new BigDecimal(0));
+        } else if (booking.getTypeBooking() == TypeBooking.DAT_COC) {
             booking.setRefundPrice(new BigDecimal(0));
         } else {
             booking.setRefundPrice(booking.getTotalPrice());
