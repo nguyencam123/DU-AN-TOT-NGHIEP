@@ -76,9 +76,16 @@ const Promotion = () => {
   const rowSelection = {
     selectedRowKeys: checkedValues,
     onChange: (selectedRowKeys, selectedRows) => {
-      if (selectedRows[selectedRows.length-1]?.price <= value) {
+      if (selectedRows[selectedRows.length - 1]?.price <= value) {
         message.info(
-          `Số tiền giảm lớn hơn hoặc bằng số tiền homestay ${selectedRows[selectedRows.length-1]?.name}`
+          `Số tiền giảm lớn hơn hoặc bằng số tiền homestay ${
+            selectedRows[selectedRows.length - 1]?.name
+          }`,
+        )
+        return false
+      } else if (value <= 1000) {
+        message.info(
+          `Bạn cần phải nhập số tiền giảm trước và số tiền phải lớn hơn 1000`,
         )
         return false
       }
@@ -481,17 +488,17 @@ const Promotion = () => {
         okButtonProps={
           isLoading
             ? {
-              disabled: true,
-              icon: <LoadingOutlined />,
-              loading: true,
-            }
+                disabled: true,
+                icon: <LoadingOutlined />,
+                loading: true,
+              }
             : {}
         }
         cancelButtonProps={
           isLoading
             ? {
-              disabled: true,
-            }
+                disabled: true,
+              }
             : {}
         }
       >
@@ -542,11 +549,11 @@ const Promotion = () => {
                       value={
                         startDate
                           ? dayjs(
-                            dayjs(startDate)
-                              .locale('vi')
-                              .format('YYYY-MM-DD'),
-                            'YYYY-MM-DD',
-                          )
+                              dayjs(startDate)
+                                .locale('vi')
+                                .format('YYYY-MM-DD'),
+                              'YYYY-MM-DD',
+                            )
                           : null
                       }
                       disabledDate={isBeforeToday}
@@ -568,9 +575,9 @@ const Promotion = () => {
                       value={
                         endDate
                           ? dayjs(
-                            dayjs(endDate).locale('vi').format('YYYY-MM-DD'),
-                            'YYYY-MM-DD',
-                          )
+                              dayjs(endDate).locale('vi').format('YYYY-MM-DD'),
+                              'YYYY-MM-DD',
+                            )
                           : null
                       }
                       disabledDate={isBeforeToday}
