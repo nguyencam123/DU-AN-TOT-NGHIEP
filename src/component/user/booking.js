@@ -142,6 +142,10 @@ export const BookingUser = () => {
     console.log(booking)
   }
   const showRefusalView = (booking) => {
+    if (userDetail.data.numberAccount === ""  || userDetail.data.numberAccount === undefined) {
+      message.info('Vui lòng cập nhật tài khoản ngân hàng của bạn tại "hồ sơ của tôi"!')
+      return false
+    }
     setBookingDeatil(booking)
     setIsRefusalModal(true)
   }
