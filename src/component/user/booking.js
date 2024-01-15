@@ -95,6 +95,36 @@ export const BookingUser = () => {
     }))
   }
 
+  const checkCancel = (booking) => {
+    if (booking.status === 'HUY' || booking.status === 'DA_THUE_XONG') {
+      return ''
+    }
+    const today = dayjs()
+    const dateFix = new Date(today)
+    dateFix.setHours('00')
+    dateFix.setMinutes('00')
+    dateFix.setSeconds('00')
+    dateFix.setMilliseconds('000')
+    const startDate = new Date(booking.startDate);
+    startDate.setHours('00')
+    startDate.setMinutes('00')
+    startDate.setSeconds('00')
+    startDate.setMilliseconds('000')
+    const createdDate = new Date(booking.createdDate);
+    createdDate.setHours('00')
+    createdDate.setMinutes('00')
+    createdDate.setSeconds('00')
+    createdDate.setMilliseconds('000')
+    if (dayjs(createdDate).add(1, 'days') >= dayjs(startDate)) {
+      return 'Việc hủy phòng sẽ mất toàn bộ toàn bộ số tiền'
+    } else {
+      if (dayjs(createdDate).add(1, 'days') >= dayjs(dateFix)) {
+        return `Việc hủy phòng sẽ được miễn phí trước và trong ngày ${moment(dayjs(dateFix)).add(1, 'day').locale('vi').format('LL')}`
+      } else {
+        return 'Việc hủy phòng sẽ mất toàn bộ toàn bộ số tiền'
+      }
+    }
+  }
   const handleRemoveImage = (index) => {
     const newImages = [...selectedImages]
     file.splice(index, 1)
@@ -210,6 +240,11 @@ export const BookingUser = () => {
             </div>
           ) : (
             booking.map((booking) => {
+              const averagePoint =
+                booking.homestay.comment.reduce(
+                  (sum, comment) => sum + comment.point,
+                  0,
+                ) / booking.homestay.comment.length
               const currentDate = new Date().getTime()
               const startDate = booking?.startDate?.valueOf()
               const endDate = booking?.endDate?.valueOf()
@@ -284,7 +319,7 @@ export const BookingUser = () => {
                     <Rate
                       allowHalf
                       disabled
-                      defaultValue={booking.homestay.star}
+                      defaultValue={averagePoint}
                       size='sm'
                     />
                     <br />
@@ -390,6 +425,9 @@ export const BookingUser = () => {
                         >
                           Xem chi tiết homestay
                         </Button>
+                        <div style={{ fontSize: '14px' }}>
+                          {checkCancel(booking)}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -409,17 +447,17 @@ export const BookingUser = () => {
         okButtonProps={
           isLoading
             ? {
-                disabled: true,
-                icon: <LoadingOutlined />,
-                loading: true,
-              }
+              disabled: true,
+              icon: <LoadingOutlined />,
+              loading: true,
+            }
             : {}
         }
         cancelButtonProps={
           isLoading
             ? {
-                disabled: true,
-              }
+              disabled: true,
+            }
             : {}
         }
       >
@@ -444,17 +482,17 @@ export const BookingUser = () => {
         okButtonProps={
           isLoading
             ? {
-                disabled: true,
-                icon: <LoadingOutlined />,
-                loading: true,
-              }
+              disabled: true,
+              icon: <LoadingOutlined />,
+              loading: true,
+            }
             : {}
         }
         cancelButtonProps={
           isLoading
             ? {
-                disabled: true,
-              }
+              disabled: true,
+            }
             : {}
         }
       >

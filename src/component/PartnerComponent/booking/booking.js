@@ -163,7 +163,7 @@ const Booking = () => {
   /**
    * export excel
    */
-  const formattedData = booking.map((item) => ({
+  const formattedData = booking?.map((item) => ({
     TenTaiKhoan: item.name,
     TenHomestay: item.homestay.name,
     NgayDat: moment(item.createdDate).locale('vi').format('LL'),

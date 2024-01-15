@@ -89,7 +89,18 @@ export const DetailHomestay = () => {
   const detailHomestay = useSelector((state) => state.product.productDetails)
   const comment = useSelector((state) => state.product.commentProduct)
   const avgPoint = useSelector((state) => state.product.avgPoint)
-
+  let cancelDay = '';
+  const today = dayjs()
+  const dateFix = new Date(today)
+  dateFix.setHours('00')
+  dateFix.setMinutes('00')
+  dateFix.setSeconds('00')
+  dateFix.setMilliseconds('000')
+  if (dayjs(Date(dateFix)).add(1, 'days').valueOf() >= startDate) {
+    cancelDay = `Việc hủy phòng sẽ mất toàn bộ số tiền bạn đã thanh toán`
+  } else {
+    cancelDay = `Việc hủy phòng sau ngày ${moment(dayjs(dateFix)).add(1, 'day').locale('vi').format('LL')} sẽ mất toàn bộ số tiền bạn đã thanh toán`
+  }
   // const imgHomestay = detailHomestay[0].images
   const handleBookingHomestay = (id) => {
     navigate(
@@ -506,9 +517,7 @@ export const DetailHomestay = () => {
                   <b> Chính sách hủy phòng</b>
                 </div>
                 <span style={{ lineHeight: '12px', marginLeft: '17px' }}>
-                  Việc hủy phòng trước ngày{' '}
-                  {moment(dayjs(startDate.valueOf())).add(-1, 'day').locale('vi').format('LL')}{' '}
-                  sẽ được hoàn toàn miễn phí.
+                  {cancelDay}
                 </span>
               </div>
               <hr style={{ width: '96%', marginLeft: '2%' }} />
@@ -540,8 +549,8 @@ export const DetailHomestay = () => {
                       <td>{detailHomestay?.acreage}m2</td>
                     </tr>
                     <tr>
-                      <td>Số phần trăm tiền bạn nhân được khi hủy phòng</td>
-                      <td>{detailHomestay.cancellationPolicy} %</td>
+                      <td>Số phần trăm tiền bạn mất được khi hủy phòng</td>
+                      <td>100 %</td>
                     </tr>
                     <tr>
                       <td>Số người</td>
