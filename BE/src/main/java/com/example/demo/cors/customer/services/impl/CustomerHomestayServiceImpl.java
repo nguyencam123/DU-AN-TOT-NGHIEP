@@ -107,7 +107,7 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), res.size());
         List<Homestay> res1 = res.subList(start, end);
-        return new PageableObject<>(new PageImpl<>(res1, pageable, res1.size()));
+        return new PageableObject<>(new PageImpl<>(res1, pageable, res.size()));
     }
 
     @Override
@@ -119,8 +119,10 @@ public class CustomerHomestayServiceImpl implements CustomerHomestayService {
     public PageableObject<Homestay> searchHomestayByPromotion(CustomerHomestayRequest request) {
         List<Homestay> lists = customerHomestayRepository.findAllBetweenDate(request);
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-        Page<Homestay> res = new PageImpl<>(lists, pageable, lists.size());
-        return new PageableObject<>(res);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), lists.size());
+        List<Homestay> res1 = lists.subList(start, end);
+        return new PageableObject<>(new PageImpl<>(res1, pageable, lists.size()));
     }
 }
 
