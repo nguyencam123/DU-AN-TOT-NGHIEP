@@ -191,10 +191,6 @@ const HomeStayProduct = () => {
     setroomNumber(record.roomNumber)
   }
   const showModal = () => {
-    if (userDetail.data.numberAccount == undefined) {
-      message.info('Hãy cập nhật tài khoản ngân hàng của bạn tại "Quản lý tài khoản -> Thông tin tài khoản ngân hàng"')
-      return false
-    }
     setIsModalOpen(true)
     setIsAddForm(true)
     setname('')
@@ -1322,7 +1318,7 @@ const HomeStayProduct = () => {
             <div style={{ width: 200 }}>Tiện ích </div> :{' '}
             {viewEditConvennient.map((items, index) => (
               <React.Fragment key={index}>
-                <div>{items.convenientHomestay?.name}</div>
+                <div>&nbsp;{items.convenientHomestay?.name}</div>
                 {index !== viewEditConvennient.length - 1 && <span>,</span>}
               </React.Fragment>
             ))}

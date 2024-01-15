@@ -137,7 +137,13 @@ function AddProductForm() {
     setViewImage(record.images)
     console.log(record)
   }
-
+  const formatCurrency = (value) => {
+    // Sử dụng Intl.NumberFormat để định dạng giá trị tiền tệ
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(value)
+  }
   const aproveModalHomestay = async () => {
     const data = {
       homestayId: viewHomestay.id,
@@ -265,6 +271,9 @@ function AddProductForm() {
       title: 'Giá thuê 1 đêm',
       dataIndex: 'price',
       key: 'price',
+      render(str) {
+        return formatCurrency(str)
+      },
     },
     {
       title: 'Hành động',
@@ -392,8 +401,8 @@ function AddProductForm() {
             <tr>
               <td style={{ width: 600 }}>
                 <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Giá </div> : {viewHomestay.price}{' '}
-                  (VNĐ)
+                  <div style={{ width: 200 }}>Giá </div> :{' '}
+                  {formatCurrency(viewHomestay.price)}
                 </div>
                 <br />
               </td>
@@ -491,7 +500,7 @@ function AddProductForm() {
             <div style={{ width: 200 }}>Tiện nghi </div>:
             {viewHomestay?.detailHomestays?.map((items, index) => (
               <React.Fragment key={index}>
-                <p>{items.convenientHomestay?.name}</p>
+                <p>&nbsp;{items.convenientHomestay?.name}</p>
                 {index !== viewHomestay?.detailHomestays.length - 1 && (
                   <span>, </span>
                 )}
