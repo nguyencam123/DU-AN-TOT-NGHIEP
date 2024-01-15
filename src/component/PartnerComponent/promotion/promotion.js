@@ -637,7 +637,7 @@ const Promotion = () => {
       </Modal>
       <Modal
         title={
-          <div style={{ fontSize: '22px' }}>Xem thông tin chi tiết homstay</div>
+          <div style={{ fontSize: '22px' }}>Xem thông tin chi tiết khuyến mãi</div>
         }
         open={isViewmodal}
         onCancel={handleCancel}
