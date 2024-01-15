@@ -40,9 +40,28 @@ const userSlice = createSlice({
       state.partner = null
       state.ispartner = false
     },
+    logoutUser: (state) => {
+      state.user = null
+      state.isLoggedIn = false
+    },
+    logoutOwner: (state) => {
+      state.partner = null
+      state.ispartner = false
+    },
+    logoutAdmin: (state) => {
+      state.admin = null
+      state.isAdmin = false
+    },
   },
 })
 
-export const { loginSuccess, logout, adminloginSuccess, partnerloginSuccess } =
-  userSlice.actions
+export const {
+  loginSuccess,
+  logout,
+  logoutOwner,
+  logoutAdmin,
+  adminloginSuccess,
+  partnerloginSuccess,
+  logoutUser,
+} = userSlice.actions
 export default userSlice.reducer

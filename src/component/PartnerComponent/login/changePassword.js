@@ -9,6 +9,7 @@ import {
   ChangePasswordByPass,
   ChangePasswordSlice,
 } from '../../../features/owner_homestay/changePassword/changPassword'
+import { instance } from '../../../app/axiosConfig'
 const onChange = (key) => {
   console.log(key)
 }
@@ -19,15 +20,17 @@ const ChangePassword = () => {
   const namelocal = userDetail?.data.name
   const idowner = userDetail?.data.id
   const [name, setname] = useState(namelocal)
-  const [birthday, setbirthday] = useState('')
-  const [gender, setgender] = useState(true)
+  const [birthday, setbirthday] = useState(userDetail?.data.birthday)
+  const [gender, setgender] = useState(userDetail?.data.gender)
   const [address, setaddress] = useState(userDetail?.data.address)
   const [password, setpassword] = useState('')
   const [newpassword, setnewpassword] = useState('')
   const [confirmpassword, setconfirmpassword] = useState('')
-  const [numberBank, setNumberBank] = useState('')
-  const [nameBank, setNameBank] = useState('')
-  const [nameAccountBank, setNameAccountBank] = useState('')
+  const [numberBank, setNumberBank] = useState(userDetail?.data?.numberAccount)
+  const [nameBank, setNameBank] = useState(userDetail?.data?.nameBack)
+  const [nameAccountBank, setNameAccountBank] = useState(
+    userDetail?.data?.nameAccount,
+  )
   const [loading, setLoading] = useState(false)
   const handleDateChangestart = (dates) => {
     setbirthday(dates.valueOf())
@@ -118,30 +121,124 @@ const ChangePassword = () => {
       setLoading(false)
     }
   }
-  const handleSubmit = async (e) => {
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault()
+  //   try {
+  //     setLoading(true)
+  //     await ChangePasswordSlice(
+  //       userDetail?.data.username,
+  //       birthday || userDetail.data?.birthday.valueOf(),
+  //       name,
+  //       gender,
+  //       address,
+  //       file,
+  //       idowner,
+  //       userDetail?.data.phoneNumber,
+  //       userDetail?.data.email,
+  //     )
+  //     setLoading(false)
+  //     openNotification()
+  //   } catch (error) {
+  //     // Handle the error, show a notification, etc.
+  //     message.error('Password change failed:', 5)
+  //     setLoading(false)
+  //   }
+  // }
+  const handleSubmit = (e) => {
     e.preventDefault()
-    try {
-      setLoading(true)
-      await ChangePasswordSlice(
-        userDetail?.data.username,
-        birthday || userDetail.data?.birthday.valueOf(),
-        name,
-        gender,
-        address,
-        file,
-        idowner,
-        userDetail?.data.phoneNumber,
-        userDetail?.data.email,
-      )
-      setLoading(false)
-      openNotification()
-    } catch (error) {
-      // Handle the error, show a notification, etc.
-      message.error('Password change failed:', 5)
-      setLoading(false)
-    }
-  }
+    setLoading(true) // Set loading to true when submitting
 
+    const formData = new FormData()
+    formData.append('name', name)
+    formData.append('gender', gender)
+    formData.append('address', address)
+    formData.append('phoneNumber', userDetail?.data.phoneNumber)
+    formData.append('email', userDetail?.data.email)
+    formData.append('birthday', birthday || userDetail.data?.birthday.valueOf())
+    formData.append('username', userDetail?.data?.username)
+    if (file.length > 0) {
+      formData.append('avataUrl', file)
+    }
+    message.info('Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!', 5)
+    instance
+      .put(
+        `http://localhost:8080/api/v2/owner/update-information-owner?id=${userDetail?.data.id}`,
+        formData,
+      )
+      .then((response) => {
+        setLoading(false) // Set loading to false after a successful request
+        message.info(
+          'Sửa thông tin thành công những thay đổi sẽ được áp dụng cho lần đăng nhập tới!',
+          5,
+        )
+      })
+      .catch((error) => {
+        // console.error('Error:', error)
+
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          const errorMessage = error.response.data.message
+          //   console.error('Error Message:', errorMessage)
+
+          // Do something with the error message, such as displaying it to the user
+          message.error(errorMessage, 5)
+        }
+
+        setLoading(false) // Set loading to false if the request fails
+      })
+  }
+  const handleSubmitUser = (e) => {
+    e.preventDefault()
+    setLoading(true) // Set loading to true when submitting
+
+    const formData = new FormData()
+    formData.append('name', name)
+    formData.append('gender', gender)
+    formData.append('address', address)
+    formData.append('phoneNumber', userDetail?.data.phoneNumber)
+    formData.append('email', userDetail?.data.email)
+    formData.append('birthday', birthday || userDetail.data?.birthday.valueOf())
+    formData.append('username', userDetail?.data?.username)
+    if (file.length > 0) {
+      formData.append('avataUrl', file)
+    }
+    formData.append('nameBack', nameBank)
+    formData.append('nameAccount', nameAccountBank)
+    formData.append('numberAccount', numberBank)
+    message.info('Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!', 5)
+    instance
+      .put(
+        `http://localhost:8080/api/v2/owner/update-information-owner?id=${userDetail?.data.id}`,
+        formData,
+      )
+      .then((response) => {
+        setLoading(false) // Set loading to false after a successful request
+        message.info(
+          'Sửa thông tin thành công những thay đổi sẽ được áp dụng cho lần đăng nhập tới!',
+          5,
+        )
+      })
+      .catch((error) => {
+        // console.error('Error:', error)
+
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          const errorMessage = error.response.data.message
+          //   console.error('Error Message:', errorMessage)
+
+          // Do something with the error message, such as displaying it to the user
+          message.error(errorMessage, 5)
+        }
+
+        setLoading(false) // Set loading to false if the request fails
+      })
+  }
   const items = [
     {
       key: '1',
@@ -355,32 +452,35 @@ const ChangePassword = () => {
           <MDBInput
             wrapperClass='mb-4'
             label='Số tài khoản'
-            id='password'
-            type='password'
+            id='numberBank'
+            type='numberBank'
             required
+            defaultValue={userDetail?.data?.numberAccount}
             onChange={(e) => setNumberBank(e.target.value)}
           />
           <MDBInput
             wrapperClass='mb-4'
             label='Tên ngân hàng'
-            id='newpassword'
-            type='password'
+            id='nameBank'
+            type='nameBank'
             required
+            defaultValue={userDetail?.data?.nameBack}
             onChange={(e) => setNameBank(e.target.value)}
           />
           <MDBInput
             wrapperClass='mb-4'
             label='Tên tài khoản'
-            id='confirmpassword'
-            type='password'
+            id='nameAccount'
+            type='nameAccount'
             required
+            defaultValue={userDetail?.data?.nameAccount}
             onChange={(e) => setNameAccountBank(e.target.value)}
           />
           <MDBBtn
             className='w-100 mb-4'
             size='md'
             style={{ marginTop: 10 }}
-            onClick={handleSubmitBankAccount}
+            onClick={handleSubmitUser}
           >
             Cập nhật tài khoản ngân hàng
           </MDBBtn>

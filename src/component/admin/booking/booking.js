@@ -69,6 +69,14 @@ function BookingForm() {
     },
     {
       title: 'Ngày đặt',
+      dataIndex: 'createdDate',
+      key: 'createdDate',
+      render: (data) => {
+        return moment(data).locale('vi').format('LL')
+      },
+    },
+    {
+      title: 'Ngày checkin',
       dataIndex: 'startDate',
       key: 'startDate',
       render: (data) => {
@@ -137,23 +145,22 @@ function BookingForm() {
           }
         }
         if (record.status === 'HUY') {
-          const checkOutDate = dayjs(record.cancellationDate).add(1, 'day')
-          if (checkDate(new Date(checkOutDate), new Date(record.startDate))) {
+          if (record.refundPrice !== 0) {
             if (record.typeBooking === 'DAT_COC') {
               return formatCurrency(
                 data -
-                  (data - (data * 100) / 111) * 2 -
-                  (((data * 100) / 111) *
-                    2 *
-                    record.homestay.cancellationPolicy) /
-                    100,
+                (data - (data * 100) / 111) * 2 -
+                (((data * 100) / 111) *
+                  2 *
+                  100) /
+                100,
               )
             }
             if (record.typeBooking === 'THANH_TOAN_TRUOC') {
               return formatCurrency(
                 (data * 100) / 111 -
-                  (((data * 100) / 111) * record.homestay.cancellationPolicy) /
-                    100,
+                (((data * 100) / 111) * 100) /
+                100,
               )
             }
           } else {

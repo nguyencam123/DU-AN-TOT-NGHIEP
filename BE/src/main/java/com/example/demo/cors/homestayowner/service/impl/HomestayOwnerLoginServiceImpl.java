@@ -280,9 +280,20 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         ownerHomestay.setBirthday(request.getBirthday());
         ownerHomestay.setGender(request.getGender());
         ownerHomestay.setAddress(request.getAddress());
-        ownerHomestay.setNameBank(request.getNameBack());
-        ownerHomestay.setNameAccount(request.getNameAccount());
-        ownerHomestay.setNumberAccount(request.getNumberAccount());
+        if(request.getNameBack() != null || request.getNameAccount() != null || request.getNumberAccount() != null) {
+            if(isNullOrEmpty(request.getNameBack())) {
+                throw new RestApiException("tên ngân hành không được để trống");
+            }
+            if(isNullOrEmpty(request.getNameAccount())) {
+                throw new RestApiException("tên tài khoản ngân hàng không được để trống");
+            }
+            if(isNullOrEmpty(request.getNumberAccount())) {
+                throw new RestApiException("Số tài khoản ngân hàng không được để trống");
+            }
+                ownerHomestay.setNameBank(request.getNameBack());
+                ownerHomestay.setNameAccount(request.getNameAccount());
+                ownerHomestay.setNumberAccount(request.getNumberAccount());
+        }
         ownerHomestay.setPhoneNumber(request.getPhoneNumber());
         ownerHomestay.setEmail(request.getEmail());
         ownerHomestay.setUsername(request.getUsername());
@@ -298,7 +309,6 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         }else{
             homestayownerOwnerHomestayRepository.save(ownerHomestay);
         }
-        var jwtServices = jwtService.generateToken(ownerHomestay);
 
         return HomestayOwnerAuthenticationReponse.builder()
                 .code(ownerHomestay.getCode())

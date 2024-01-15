@@ -283,9 +283,20 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         customer.setAddress(request.getAddress());
         customer.setPhoneNumber(request.getPhoneNumber());
         customer.setEmail(request.getEmail());
-        customer.setNameBank(request.getNameBack());
-        customer.setNameAccount(request.getNameAccount());
-        customer.setNumberAccount(request.getNumberAccount());
+        if(request.getNameBack() != null || request.getNameAccount() != null || request.getNumberAccount() != null) {
+            if (isNullOrEmpty(request.getNameBack())) {
+                throw new RestApiException("tên ngân hành không được để trống");
+            }
+            if (isNullOrEmpty(request.getNameAccount())) {
+                throw new RestApiException("tên tài khoản ngân hàng không được để trống");
+            }
+            if (isNullOrEmpty(request.getNumberAccount())) {
+                throw new RestApiException("Số tài khoản ngân hàng không được để trống");
+            }
+            customer.setNameBank(request.getNameBack());
+            customer.setNameAccount(request.getNameAccount());
+            customer.setNumberAccount(request.getNumberAccount());
+        }
         customer.setUsername(request.getUsername());
         if(request.getAvatar()!=null && request.getAvatar().getBytes().length > 0) {
             customer.setAvatarUrl(cloudinary.uploader()
