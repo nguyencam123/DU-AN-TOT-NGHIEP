@@ -92,7 +92,7 @@ public class CustomerPaypalServiceImpl implements CustomerPaypalService {
         payer.setPaymentMethod(PaypalConfig.method);
 
         Payment payment = new Payment();
-        payment.setIntent("SALE");
+        payment.setIntent("ORDER");
         payment.setPayer(payer);
         payment.setTransactions(transactionList);
 
