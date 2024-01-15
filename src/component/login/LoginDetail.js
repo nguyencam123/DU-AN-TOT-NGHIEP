@@ -138,9 +138,11 @@ const LoginDetail = () => {
       identificationNumber || dataUser.data?.birthday.valueOf(),
     )
     formData.append('username', dataUser?.data?.username)
-    if (file.length > 0) {
+
+    if (file && file.size > 0) {
       formData.append('avatar', file)
     }
+
     message.info('Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!', 5)
     instance
       .put(
@@ -187,9 +189,11 @@ const LoginDetail = () => {
       identificationNumber || dataUser.data?.birthday.valueOf(),
     )
     formData.append('username', dataUser?.data?.username)
+
     if (file.length > 0) {
       formData.append('avatar', file)
     }
+
     formData.append('nameBack', nameBank)
     formData.append('nameAccount', nameAccountBank)
     formData.append('numberAccount', numberBank)

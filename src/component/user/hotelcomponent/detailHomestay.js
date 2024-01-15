@@ -266,11 +266,11 @@ export const DetailHomestay = () => {
                   >
                     {formatCurrency(
                       detailHomestay.price -
-                      detailHomestay?.promotion?.value +
-                      ((detailHomestay.price -
-                        detailHomestay?.promotion?.value) *
-                        11) /
-                      100,
+                        detailHomestay?.promotion?.value +
+                        ((detailHomestay.price -
+                          detailHomestay?.promotion?.value) *
+                          11) /
+                          100,
                     )}
                     <span style={{ fontSize: '22' }}> </span>{' '}
                   </div>

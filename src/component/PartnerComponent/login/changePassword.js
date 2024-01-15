@@ -156,7 +156,8 @@ const ChangePassword = () => {
     formData.append('email', userDetail?.data.email)
     formData.append('birthday', birthday || userDetail.data?.birthday.valueOf())
     formData.append('username', userDetail?.data?.username)
-    if (file.length > 0) {
+
+    if (file && file.size > 0) {
       formData.append('avataUrl', file)
     }
     message.info('Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!', 5)
