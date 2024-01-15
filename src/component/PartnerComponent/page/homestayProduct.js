@@ -191,10 +191,6 @@ const HomeStayProduct = () => {
     setroomNumber(record.roomNumber)
   }
   const showModal = () => {
-    if (userDetail.data.numberAccount == undefined) {
-      message.info('Hãy cập nhật tài khoản ngân hàng của bạn tại "Quản lý tài khoản -> Thông tin tài khoản ngân hàng"')
-      return false
-    }
     setIsModalOpen(true)
     setIsAddForm(true)
     setname('')
