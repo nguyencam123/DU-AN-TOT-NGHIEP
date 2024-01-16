@@ -15,7 +15,7 @@ import java.util.List;
 public interface AdminHomestayRepository extends HomestayRepository {
 
     @Query(value = """
-            SELECT ROW_NUMBER() OVER(ORDER BY h.created_date DESC) AS stt, h.* FROM homestay h 
+            SELECT ROW_NUMBER() OVER(ORDER BY h.last_modified_date DESC) AS stt, h.* FROM homestay h 
             JOIN owner_homestay oh ON h.owner_id = oh.id
             WHERE ( ( :#{#request.statusHomestay} IS NULL OR h.status = :#{#request.statusHomestay} )
             AND ( :#{#request.nameHomestay} IS NULL OR :#{#request.nameHomestay} LIKE '' OR h.name LIKE %:#{#request.nameHomestay}% )
@@ -28,5 +28,12 @@ public interface AdminHomestayRepository extends HomestayRepository {
             WHERE status = 0
             """, nativeQuery = true)
     List<Homestay> getAllHomsestayByAdmin();
+
+    @Query(value = """
+            SELECT h.* FROM homestay h 
+            JOIN owner_homestay oh ON h.owner_id = oh.id
+            WHERE oh.id = :#{#id}
+            """, nativeQuery = true)
+    Homestay findHomestayBy(String id);
 
 }

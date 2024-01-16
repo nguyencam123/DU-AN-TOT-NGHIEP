@@ -21,7 +21,7 @@ import java.util.List;
 public interface AdminBookingRepository extends BookingRepository {
 
     @Query(value = """
-                    SELECT ROW_NUMBER() OVER(ORDER BY b.created_date DESC) AS stt, b.* 
+                    SELECT ROW_NUMBER() OVER(ORDER BY b.last_modified_date DESC) AS stt, b.* 
                     FROM booking b
                     JOIN dbo.homestay h ON b.homestay_id = h.id 
                     JOIN dbo.[user] u ON b.user_id = u.id
@@ -37,7 +37,7 @@ public interface AdminBookingRepository extends BookingRepository {
     Page<Booking> getAllBooking(@Param("request") AdminBookingRequest request, Pageable pageable);
 
     @Query(value = """
-                    SELECT ROW_NUMBER() OVER(ORDER BY b.created_date DESC) AS stt, u.name AS user_name, b.id, b.status, b.created_date, b.start_date, b.end_date,b.total_price, h.name AS homestay_name
+                    SELECT ROW_NUMBER() OVER(ORDER BY b.last_modified_date DESC) AS stt, u.name AS user_name, b.id, b.status, b.created_date, b.start_date, b.end_date,b.total_price, h.name AS homestay_name
                     FROM booking b 
                     JOIN [user] u ON b.user_id = u.id 
                     JOIN homestay h ON b.homestay_id = h.id 

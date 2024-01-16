@@ -3,6 +3,7 @@ package com.example.demo.cors.admin.services.impl;
 
 import com.example.demo.cors.admin.model.request.AdminOwnerHomestayAppRequest;
 import com.example.demo.cors.admin.model.request.AdminOwnerHomestayRequest;
+import com.example.demo.cors.admin.repository.AdminHomestayRepository;
 import com.example.demo.cors.admin.repository.AdminOwnerHomestayRepository;
 import com.example.demo.cors.admin.services.AdminOwnerHomestayService;
 import com.example.demo.cors.common.base.PageableObject;
@@ -21,12 +22,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class AdminOwnerHomestayServiceImpl implements AdminOwnerHomestayService {
     @Autowired
     private AdminOwnerHomestayRepository adminOwnerHomestayRepository;
+
+    @Autowired
+    private AdminHomestayRepository adminHomestayRepository;
 
     @Autowired
     private EmailSender emailSender;
@@ -63,7 +68,10 @@ public class AdminOwnerHomestayServiceImpl implements AdminOwnerHomestayService 
         if (!optional.isPresent()) {
             throw new RestApiException(Message.NOT_EXISTS);
         }
+
         OwnerHomestay ownerHomestay = optional.get();
+        Homestay homestay = adminHomestayRepository.findHomestayBy(ownerHomestay.getId());
+        homestay.setStatus(Status.KHONG_HOAT_DONG);
         ownerHomestay.setStatus(Status.KHONG_HOAT_DONG);
         adminOwnerHomestayRepository.save(ownerHomestay);
 
