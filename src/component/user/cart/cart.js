@@ -103,9 +103,7 @@ export const CartUser = () => {
             display: 'flex',
           }}
         >
-          <Title level={3}>
-            Homestay bạn đã lưu ({shoppingcart?.length})
-          </Title>
+          <Title level={3}>Homestay bạn đã lưu ({shoppingcart?.length})</Title>
           <div style={{ marginLeft: 'auto' }}>
             <Popconfirm
               title='Bạn có muốn xóa tất cả sản phẩm trong giỏ hàng?'
@@ -114,7 +112,12 @@ export const CartUser = () => {
               cancelText='không'
               placement='topRight'
             >
-              <Button style={{ display: 'flex' }}>
+              <Button
+                style={{
+                  display: 'flex',
+                }}
+                danger
+              >
                 <DeleteOutlined style={{ marginTop: 5 }} />
                 Xóa tất cả sản phẩm
               </Button>
@@ -269,7 +272,7 @@ export const CartUser = () => {
                   </div>
                   <div style={{ marginLeft: 5, display: 'flex' }}>
                     {items.status !== '0' ? (
-                      <span>Đã hết hạn</span>
+                      <span style={{ color: 'red' }}>Đã hết hạn</span>
                     ) : (
                       <>
                         (<Title level={5}> {nightCount} đêm</Title>)

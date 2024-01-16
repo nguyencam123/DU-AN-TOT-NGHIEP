@@ -28,7 +28,7 @@ const UserComment = () => {
   const [current, setCurrent] = useState(1)
   const onChangePage = (page) => {
     setCurrent(page)
-    dispatch(fetchCommentUser(userId, current - 1))
+    dispatch(fetchCommentUser(userId, page - 1))
   }
   const userComment = useSelector((state) => state.booking.commentsUser)
   useEffect(() => {
@@ -51,6 +51,7 @@ const UserComment = () => {
               borderRadius: 8,
               boxShadow: '0 0 3px 1px #ACAEB1',
               padding: '10px 10px 10px 10px',
+              marginBottom: 15,
             }}
           >
             <div style={{ display: 'flex' }}>

@@ -41,7 +41,6 @@ dayjs.locale('vi')
 const { Title } = Typography
 const { Search } = Input
 
-
 const desc = ['Tệ', 'Không hài lòng', 'Bình thường', 'Hài lòng', 'Tuyệt vời']
 
 export const BookingUser = () => {
@@ -105,12 +104,12 @@ export const BookingUser = () => {
     dateFix.setMinutes('00')
     dateFix.setSeconds('00')
     dateFix.setMilliseconds('000')
-    const startDate = new Date(booking.startDate);
+    const startDate = new Date(booking.startDate)
     startDate.setHours('00')
     startDate.setMinutes('00')
     startDate.setSeconds('00')
     startDate.setMilliseconds('000')
-    const createdDate = new Date(booking.createdDate);
+    const createdDate = new Date(booking.createdDate)
     createdDate.setHours('00')
     createdDate.setMinutes('00')
     createdDate.setSeconds('00')
@@ -119,7 +118,12 @@ export const BookingUser = () => {
       return 'Việc hủy phòng sẽ mất toàn bộ toàn bộ số tiền'
     } else {
       if (dayjs(createdDate).add(1, 'days') >= dayjs(dateFix)) {
-        return `Việc hủy phòng sẽ được miễn phí trước và trong ngày ${moment(dayjs(dateFix)).add(1, 'day').locale('vi').format('LL')}`
+        return `Việc hủy phòng sẽ được miễn phí trước và trong ngày ${moment(
+          dayjs(dateFix),
+        )
+          .add(1, 'day')
+          .locale('vi')
+          .format('LL')}`
       } else {
         return 'Việc hủy phòng sẽ mất toàn bộ toàn bộ số tiền'
       }
@@ -139,11 +143,18 @@ export const BookingUser = () => {
   const showModalComment = (booking) => {
     setBookingDeatil(booking)
     setIsCommentModel(true)
-    console.log(booking)
+    setComment('')
+    setFile([])
+    setSelectedImages([])
   }
   const showRefusalView = (booking) => {
-    if (userDetail.data.numberAccount === ""  || userDetail.data.numberAccount === undefined) {
-      message.info('Vui lòng cập nhật tài khoản ngân hàng của bạn tại "hồ sơ của tôi"!')
+    if (
+      userDetail.data.numberAccount === '' ||
+      userDetail.data.numberAccount === undefined
+    ) {
+      message.info(
+        'Vui lòng cập nhật tài khoản ngân hàng của bạn tại "hồ sơ của tôi"!',
+      )
       return false
     }
     setBookingDeatil(booking)
@@ -188,9 +199,7 @@ export const BookingUser = () => {
     setNode(e.target.value)
   }
   const addComment = async () => {
-    if (file.length < 1) {
-      setCommentError('Bạn cần chọn ít nhất 1 file')
-    } else if (!comment) {
+    if (!comment) {
       setCommentErrorText('Bạn cần nhập đánh giá')
     } else {
       setIsLoading(true)
@@ -209,7 +218,7 @@ export const BookingUser = () => {
       )
       message.info('Đánh giá thành công!')
       setIsLoading(false)
-      setIsRefusalModal(false)
+      setIsCommentModel(false)
       setComment('')
       setFile([])
       setValue(3)
@@ -451,17 +460,17 @@ export const BookingUser = () => {
         okButtonProps={
           isLoading
             ? {
-              disabled: true,
-              icon: <LoadingOutlined />,
-              loading: true,
-            }
+                disabled: true,
+                icon: <LoadingOutlined />,
+                loading: true,
+              }
             : {}
         }
         cancelButtonProps={
           isLoading
             ? {
-              disabled: true,
-            }
+                disabled: true,
+              }
             : {}
         }
       >
@@ -481,22 +490,23 @@ export const BookingUser = () => {
         open={isCommentModel}
         onOk={() => addComment()}
         onCancel={() => handleCancel()}
+        okText='Thêm đánh giá'
         maskClosable={false}
         width={900}
         okButtonProps={
           isLoading
             ? {
-              disabled: true,
-              icon: <LoadingOutlined />,
-              loading: true,
-            }
+                disabled: true,
+                icon: <LoadingOutlined />,
+                loading: true,
+              }
             : {}
         }
         cancelButtonProps={
           isLoading
             ? {
-              disabled: true,
-            }
+                disabled: true,
+              }
             : {}
         }
       >
@@ -520,7 +530,10 @@ export const BookingUser = () => {
             validateStatus={commentErrorText ? 'error' : ''}
             help={commentErrorText}
           >
-            <TextArea onChange={(e) => setComment(e.target.value)} />
+            <TextArea
+              onChange={(e) => setComment(e.target.value)}
+              value={comment}
+            />
           </Form.Item>
           <div style={{ marginTop: 20 }}>
             <Space>
