@@ -473,7 +473,7 @@ const HomeStayProduct = () => {
     acreage: Yup.number()
       .required('Vui lòng nhập diện tích')
       .typeError('Vui lòng nhập diện tích')
-      .positive('diện tích phòng phải lớn hơn 0'),
+      .positive('Diện tích phòng phải lớn hơn 0'),
     desc: Yup.string()
       .required('vui lòng nhập vào mô tả')
       .max(500, 'Vui lòng nhập ít hơn 500 ký tự'),
@@ -765,7 +765,7 @@ const HomeStayProduct = () => {
         }
         open={isModalOpen}
         onCancel={handleCancel}
-        width={900}
+        width={1100}
         okText={isAddFrom == true ? 'Thêm homestay' : 'Sửa homestay'}
         cancelText='Hủy'
         onOk={handleSubmit}
@@ -796,7 +796,7 @@ const HomeStayProduct = () => {
             span: 24,
           }}
           style={{
-            maxWidth: 800,
+            maxWidth: 1100,
           }}
           initialValues={{
             remember: true,
@@ -822,7 +822,7 @@ const HomeStayProduct = () => {
                 help={formErrors.price}
               >
                 <InputNumber
-                  style={{ width: 254 }}
+                  style={{ width: 335 }}
                   value={price}
                   onChange={handlePriceChange}
                   formatter={(value) =>
@@ -918,24 +918,31 @@ const HomeStayProduct = () => {
           {/* time bắt đầu */}
           <Row gutter={24} style={{ marginLeft: 4 }}>
             <Col span={12}>
-              <Title level={5}>Thời gian nhận phòng:</Title>
-              <TimePicker
-                onChange={handleTimeChangestart}
-                value={timeCheckIn && dayjs(timeCheckIn, 'HH:mm:ss')} // Fix here
-                style={{ width: '67%', float: 'right' }}
-                allowClear={true}
-              />
-              <div style={{ color: 'red' }}>{formErrors.timeCheckIn}</div>
+              <Form.Item
+                label={<Title level={5}>Thời gian nhận phòng</Title>}
+                validateStatus={formErrors.timeCheckIn ? 'error' : ''}
+                help={formErrors.timeCheckIn}
+              >
+                <TimePicker
+                  onChange={handleTimeChangestart}
+                  value={timeCheckIn && dayjs(timeCheckIn, 'HH:mm:ss')} // Fix here
+                  style={{ width: '100%', float: 'right' }}
+                  allowClear={true}
+                />
+              </Form.Item>
             </Col>
             <Col span={12}>
-              <Title level={5}>Thời gian trả phòng:</Title>
-              <TimePicker
-                onChange={handleTimeChangeend}
-                value={timeCheckOut && dayjs(timeCheckOut, 'HH:mm:ss')} // Fix here
-                style={{ width: '67%', float: 'right' }}
-                allowClear={true}
-              />
-              <div style={{ color: 'red' }}>{formErrors.timeCheckOut}</div>
+              <Form.Item
+                label={<Title level={5}>Số phòng:</Title>}
+                validateStatus={formErrors.roomNumber ? 'error' : ''}
+                help={formErrors.roomNumber}
+              >
+                <Input
+                  style={{ width: '100%', float: 'right' }}
+                  value={roomNumber}
+                  onChange={(e) => setroomNumber(e.target.value)}
+                />
+              </Form.Item>
             </Col>
           </Row>
           <Row gutter={24} style={{ marginLeft: 4, marginTop: 20 }}>
@@ -951,19 +958,22 @@ const HomeStayProduct = () => {
               </div>
             </Col> */}
             <Col span={12}>
-              <Title level={5}>Số phòng:</Title>
-              <Input
-                style={{ width: '67%', float: 'right' }}
-                value={roomNumber}
-                onChange={(e) => setroomNumber(e.target.value)}
-              />
-              <div style={{ color: 'red', marginTop: 35 }}>
-                {formErrors.roomNumber}
-              </div>
+              <Form.Item
+                label={<Title level={5}>Thời gian trả phòng</Title>}
+                validateStatus={formErrors.timeCheckOut ? 'error' : ''}
+                help={formErrors.timeCheckOut}
+              >
+                <TimePicker
+                  onChange={handleTimeChangeend}
+                  value={timeCheckOut && dayjs(timeCheckOut, 'HH:mm:ss')} // Fix here
+                  style={{ width: '100%', float: 'right' }}
+                  allowClear={true}
+                />
+              </Form.Item>
             </Col>
           </Row>
           <Row gutter={24}>
-            <Col span={24} style={{ marginLeft: 15 }}>
+            <Col span={24} style={{ marginLeft: 40 }}>
               <Title level={5}>Tiện ích homestay</Title>
               <div>
                 <Checkbox.Group
@@ -1034,10 +1044,10 @@ const HomeStayProduct = () => {
             </div>
           </Row>
           <Row gutter={24}>
-            <Col span={24}>
+            <Col span={24} style={{ marginLeft: 40 }}>
               <Title level={5}>Địa chỉ chi tiết homestay</Title>
               <TextArea
-                style={{ width: '900px' }}
+                style={{ width: '1000px' }}
                 value={addressDetail}
                 onChange={(e) => setAddressDetail(e.target.value)}
               />
@@ -1045,10 +1055,10 @@ const HomeStayProduct = () => {
             </Col>
           </Row>
           <Row gutter={24}>
-            <Col span={24}>
+            <Col span={24} style={{ marginLeft: 40 }}>
               <Title level={5}>Mô tả homestay</Title>
               <TextArea
-                style={{ width: '900px' }}
+                style={{ width: '1000px' }}
                 value={desc}
                 onChange={(e) => setdesc(e.target.value)}
               />
@@ -1057,7 +1067,7 @@ const HomeStayProduct = () => {
           </Row>
         </Form>
         <form onSubmit={handleSubmit} style={{ marginTop: 20 }}>
-          <div>
+          <div style={{ marginLeft: 40 }}>
             {imghomestay.length <= 20 && (
               <div style={{ display: 'flex' }}>
                 <label htmlFor='image' style={{ marginTop: 5 }}>

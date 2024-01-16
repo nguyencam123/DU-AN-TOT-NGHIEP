@@ -115,7 +115,7 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         }
         String emails=request.getEmail();
         if (!isValidEmail(emails)){
-            throw new RestApiException("Email phải đúng định dạng @.gmail.com");
+            throw new RestApiException("Email phải đúng định dạng @gmail.com");
         }
         User user = new User();
         Random random = new Random();
@@ -310,7 +310,9 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         }else{
             customerLoginRepository.save(customer);
         }
+        var jwtToken = jwtService.generateToken(customer);
         return CustomerAuthenticationReponse.builder()
+                .token(jwtToken)
                 .code(customer.getCode())
                 .id(customer.getId())
                 .name(customer.getName())
@@ -349,10 +351,11 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         }
     }
 
-    private Boolean isValidEmail(String email) {
-        String regex = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+    private Boolean isValidEmail(String email){
+        String regex="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
         return email.matches(regex);
     }
+
 
     private boolean isValidVietnamesePhoneNumber(String phoneNumber) {
         String regex = "^(03|05|07|08|09)\\d{8}$";
