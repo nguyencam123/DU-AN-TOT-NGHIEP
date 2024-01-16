@@ -9,6 +9,7 @@ import com.example.demo.infrastructure.configemail.Email;
 import com.example.demo.infrastructure.configemail.EmailSender;
 import com.example.demo.infrastructure.contant.Message;
 import com.example.demo.infrastructure.contant.StatusBooking;
+import com.example.demo.infrastructure.contant.StatusPayUser;
 import com.example.demo.infrastructure.contant.TypeBooking;
 import com.example.demo.infrastructure.exception.rest.RestApiException;
 import com.example.demo.util.DateUtils;
@@ -66,6 +67,7 @@ public class CustomerBookingServiceImpl implements CustomerBookingService {
             booking.setRefundPrice(new BigDecimal(0));
         } else {
             booking.setRefundPrice(booking.getTotalPrice());
+            booking.setStatusPayUser(StatusPayUser.CHUA_TT_CHO_USER);
         }
         Email email = new Email();
         email.setToEmail(new String[]{booking.getHomestay().getOwnerHomestay().getEmail()});
