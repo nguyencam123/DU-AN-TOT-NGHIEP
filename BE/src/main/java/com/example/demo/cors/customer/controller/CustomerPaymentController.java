@@ -70,4 +70,9 @@ public class CustomerPaymentController {
         return null;
     }
 
+    @GetMapping("/send-mail")
+    public ResponseObject sendBillBookinng(@RequestParam("bookingId") String bookingId) {
+        return new ResponseObject(customerPaypalService.sendBillBooking(bookingId));
+    }
+
 }
