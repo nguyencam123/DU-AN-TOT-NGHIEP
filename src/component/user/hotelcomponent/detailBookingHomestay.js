@@ -380,8 +380,8 @@ export const DetailHomestayBooking = () => {
                     fontWeight: '500',
                   }}
                 >
-                  {detailHomestay?.detailHomestays?.map((items) => (
-                    <div>{items?.convenientHomestay?.name}</div>
+                  {detailHomestay?.detailHomestays?.map((items, index) => (
+                    <div>{index <=4 ?items?.convenientHomestay?.name : ''}</div>
                   ))}
                 </div>
               </div>

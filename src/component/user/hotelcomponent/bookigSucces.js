@@ -4,7 +4,7 @@ import { Content, Footer } from "antd/es/layout/layout"
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
-import { addBooking, checkBooked, updateBooking } from "../../../features/product/productThunk"
+import { addBooking, checkBooked, sendBill, updateBooking } from "../../../features/product/productThunk"
 
 export const BookingSuccess = () => {
   const dispatch = useDispatch();
@@ -18,6 +18,7 @@ export const BookingSuccess = () => {
 
   useEffect(() => {
     dispatch(updateBooking(bookingId));
+    dispatch(sendBill(bookingId));
     dispatch(checkBooked());
   }, []);
   const info = urlParams.get('vnp_OrderInfo');
