@@ -61,6 +61,7 @@ public class ExportFilePdfFormHtml {
                 .typeBooking(billBookingResponse.getTypeBooking())
                 .userName(billBookingResponse.getUser_Name())
                 .paymentMethod(billBookingResponse.getPaymentMethod())
+                .addressUser(billBookingResponse.getAddressUser())
                 .build();
         return invoiceResponse;
     }
