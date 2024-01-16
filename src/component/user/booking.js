@@ -114,6 +114,9 @@ export const BookingUser = () => {
     createdDate.setMinutes('00')
     createdDate.setSeconds('00')
     createdDate.setMilliseconds('000')
+    if (booking.typeBooking === 'DAT_COC') {
+      return 'Việc hủy phòng sẽ mất toàn bộ toàn bộ số tiền'
+    }
     if (dayjs(createdDate).add(1, 'days') >= dayjs(startDate)) {
       return 'Việc hủy phòng sẽ mất toàn bộ toàn bộ số tiền'
     } else {
@@ -148,13 +151,8 @@ export const BookingUser = () => {
     setSelectedImages([])
   }
   const showRefusalView = (booking) => {
-    if (
-      userDetail.data.numberAccount === '' ||
-      userDetail.data.numberAccount === undefined
-    ) {
-      message.info(
-        'Vui lòng cập nhật tài khoản ngân hàng của bạn tại "hồ sơ của tôi"!',
-      )
+    if (userDetail.data.numberAccount === ""  || userDetail.data.numberAccount === undefined || userDetail.data.numberAccount === null) {
+      message.info('Vui lòng cập nhật tài khoản ngân hàng của bạn tại "hồ sơ của tôi"!')
       return false
     }
     setBookingDeatil(booking)
@@ -327,7 +325,7 @@ export const BookingUser = () => {
                         width: 250,
                       }}
                     >
-                      Homestay : {booking.homestay?.name}
+                      {booking.homestay?.name}
                     </h1>
                     <Rate
                       allowHalf
@@ -512,7 +510,6 @@ export const BookingUser = () => {
       >
         <Form>
           <div>
-            <Title level={5}>Phân loại sản phẩm</Title>
             <div style={{ display: 'flex', marginBottom: 20 }}>
               <MDBCardImage
                 style={{ width: 60 }}
@@ -537,7 +534,7 @@ export const BookingUser = () => {
           </Form.Item>
           <div style={{ marginTop: 20 }}>
             <Space>
-              <div>Chất lượng sản phẩm</div>
+              <div>Chất lượng homestay</div>
               <Rate tooltips={desc} onChange={setValue} value={value} />
               {value ? <span>{desc[value - 1]}</span> : ''}
             </Space>
