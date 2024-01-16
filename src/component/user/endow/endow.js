@@ -69,7 +69,7 @@ const Endow = () => {
   return (
     <section>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <img src={imgsale} />
+        <img src={imgsale} style={{ width: '100%' }} />
       </div>
       <div style={{ padding: '50px 200px 50px 200px' }}>
         <Layout>
