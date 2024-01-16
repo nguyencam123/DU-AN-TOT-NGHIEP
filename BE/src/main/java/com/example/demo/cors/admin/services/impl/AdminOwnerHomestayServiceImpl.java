@@ -70,8 +70,11 @@ public class AdminOwnerHomestayServiceImpl implements AdminOwnerHomestayService 
         }
 
         OwnerHomestay ownerHomestay = optional.get();
-        Homestay homestay = adminHomestayRepository.findHomestayBy(ownerHomestay.getId());
-        homestay.setStatus(Status.KHONG_HOAT_DONG);
+        List<Homestay> homestay = adminHomestayRepository.findHomestayBy(ownerHomestay.getId());
+        if(!homestay.isEmpty()){
+        for (Homestay x: homestay) {
+            x.setStatus(Status.KHONG_HOAT_DONG);
+        }}
         ownerHomestay.setStatus(Status.KHONG_HOAT_DONG);
         adminOwnerHomestayRepository.save(ownerHomestay);
 

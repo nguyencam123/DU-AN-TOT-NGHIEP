@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AdminHomestayRepository extends HomestayRepository {
@@ -31,9 +32,8 @@ public interface AdminHomestayRepository extends HomestayRepository {
 
     @Query(value = """
             SELECT h.* FROM homestay h 
-            JOIN owner_homestay oh ON h.owner_id = oh.id
-            WHERE oh.id = :#{#id}
+            WHERE  h.owner_id= :#{#id}
             """, nativeQuery = true)
-    Homestay findHomestayBy(String id);
+    List<Homestay> findHomestayBy(String id);
 
 }
