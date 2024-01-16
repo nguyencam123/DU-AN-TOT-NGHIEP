@@ -39,4 +39,6 @@ public class InvoiceResponse {
 
     private Integer paymentMethod;
 
+    private String addressUser;
+
 }

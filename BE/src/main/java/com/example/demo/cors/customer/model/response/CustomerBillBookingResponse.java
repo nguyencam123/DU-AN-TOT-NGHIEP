@@ -43,4 +43,7 @@ public interface CustomerBillBookingResponse {
     @Value("#{target.payment_method}")
     Integer getPaymentMethod();
 
+    @Value("#{target.address_user}")
+    String getAddressUser();
+
 }
