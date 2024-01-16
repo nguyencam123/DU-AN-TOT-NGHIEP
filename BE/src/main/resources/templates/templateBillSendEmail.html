@@ -53,7 +53,7 @@
             <p th:text="${'Họ và tên: ' +  invoice.userName}"></p>
             <p th:text="${'Số điện thoại: '+((invoice.phoneNumber == null || invoice.phoneNumber == '') ? '' : invoice.phoneNumber)}"></p>
             <p th:text="${'Email: '+((invoice.email == null || invoice.email == '') ? '' : invoice.email)}"></p>
-            <p th:text="${'Địa chỉ: --'}"></p>
+            <p th:text="${'Địa chỉ: '+((invoice.addressUser == null || invoice.addressUser == '') ? '' : invoice.addressUser)}"></p>
         </div>
     </div>
 </div>

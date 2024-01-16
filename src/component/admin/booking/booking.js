@@ -149,18 +149,13 @@ function BookingForm() {
             if (record.typeBooking === 'DAT_COC') {
               return formatCurrency(
                 data -
-                (data - (data * 100) / 111) * 2 -
-                (((data * 100) / 111) *
-                  2 *
-                  100) /
-                100,
+                  (data - (data * 100) / 111) * 2 -
+                  (((data * 100) / 111) * 2 * 100) / 100,
               )
             }
             if (record.typeBooking === 'THANH_TOAN_TRUOC') {
               return formatCurrency(
-                (data * 100) / 111 -
-                (((data * 100) / 111) * 100) /
-                100,
+                (data * 100) / 111 - (((data * 100) / 111) * 100) / 100,
               )
             }
           } else {
@@ -621,7 +616,7 @@ function BookingForm() {
               <td style={{ width: 600 }}>
                 <div style={{ display: 'flex' }}>
                   <div style={{ width: 200 }}>Giá </div> :{' '}
-                  {viewBooking.totalPrice} (VNĐ)
+                  {formatCurrency(viewBooking.totalPrice)} (VNĐ)
                 </div>
                 <br />
               </td>
@@ -668,8 +663,11 @@ function BookingForm() {
             <tr>
               <td style={{ width: 1200 }}>
                 <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Thông tin tài khoản ngân hàng của chủ homestay </div> :{' '}
-                  {viewBooking.homestay?.ownerHomestay?.numberAccount}{' '}{viewBooking.homestay?.ownerHomestay?.nameBank}{' '}
+                  <div style={{ width: 200 }}>
+                    Thông tin tài khoản ngân hàng của chủ homestay{' '}
+                  </div>{' '}
+                  : {viewBooking.homestay?.ownerHomestay?.numberAccount}{' '}
+                  {viewBooking.homestay?.ownerHomestay?.nameBank}{' '}
                   {viewBooking.homestay?.ownerHomestay?.nameAccount}
                 </div>
                 <br />
@@ -678,9 +676,11 @@ function BookingForm() {
             <tr>
               <td style={{ width: 1200 }}>
                 <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Thông tin tài khoản ngân hàng của khách hàng </div> :{' '}
-                  {viewBooking.user?.numberAccount}{' '}{viewBooking.user?.nameBank}{' '}
-                  {viewBooking.user?.nameAccount}
+                  <div style={{ width: 200 }}>
+                    Thông tin tài khoản ngân hàng của khách hàng{' '}
+                  </div>{' '}
+                  : {viewBooking.user?.numberAccount}{' '}
+                  {viewBooking.user?.nameBank} {viewBooking.user?.nameAccount}
                 </div>
                 <br />
               </td>
