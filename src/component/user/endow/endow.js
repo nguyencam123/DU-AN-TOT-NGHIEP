@@ -69,7 +69,7 @@ const Endow = () => {
   return (
     <section>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <img src={imgsale} />
+        <img src={imgsale} style={{ width: '100%' }} />
       </div>
       <div style={{ padding: '50px 200px 50px 200px' }}>
         <Layout>
@@ -96,7 +96,7 @@ const Endow = () => {
                     })
                   }
                 >
-                  dưới 100.000 VNĐ
+                  Dưới 100.000 VNĐ
                 </Checkbox>
                 <Checkbox
                   checked={priceFilter.between100kAnd1M}
@@ -107,7 +107,7 @@ const Endow = () => {
                     })
                   }
                 >
-                  100.000 đến 1.000.000 VNĐ
+                  Từ 100.000 đến 1.000.000 VNĐ
                 </Checkbox>
                 <Checkbox
                   checked={priceFilter.above1M}
@@ -118,7 +118,7 @@ const Endow = () => {
                     })
                   }
                 >
-                  trên 1.000.000
+                  Trên 1.000.000
                 </Checkbox>
               </div>
             </Sider>

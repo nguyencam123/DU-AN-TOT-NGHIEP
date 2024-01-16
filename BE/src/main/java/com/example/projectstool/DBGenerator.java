@@ -234,8 +234,8 @@ public class DBGenerator implements CommandLineRunner {
         homestay1.setPrice(new BigDecimal(1200000));
         homestay1.setNumberPerson(10);
         homestay1.setRoomNumber(3);
-        homestay1.setStartDate(1705025273L);
-        homestay1.setEndDate(1735610873L);
+        homestay1.setStartDate(1705251600000L);
+        homestay1.setEndDate(1735578000000L);
         homestayRepository.save(homestay1);
 
         Homestay homestay2 = new Homestay();
@@ -248,8 +248,8 @@ public class DBGenerator implements CommandLineRunner {
         homestay2.setNumberPerson(12);
         homestay2.setStatus(Status.KHONG_HOAT_DONG);
         homestay2.setRoomNumber(2);
-        homestay2.setStartDate(1705025273L);
-        homestay2.setEndDate(1735610873L);
+        homestay2.setStartDate(1705251600000L);
+        homestay2.setEndDate(1735578000000L);
         homestayRepository.save(homestay2);
 
         Homestay homestay3 = new Homestay();
@@ -262,8 +262,8 @@ public class DBGenerator implements CommandLineRunner {
         homestay3.setNumberPerson(8);
         homestay3.setStatus(Status.KHONG_HOAT_DONG);
         homestay3.setRoomNumber(4);
-        homestay3.setStartDate(1705025273L);
-        homestay3.setEndDate(1735610873L);
+        homestay3.setStartDate(1705251600000L);
+        homestay3.setEndDate(1735578000000L);
         homestayRepository.save(homestay3);
 
         Homestay homestay4 = new Homestay();
@@ -276,8 +276,8 @@ public class DBGenerator implements CommandLineRunner {
         homestay4.setNumberPerson(12);
         homestay4.setStatus(Status.KHONG_HOAT_DONG);
         homestay4.setRoomNumber(2);
-        homestay4.setStartDate(1705025273L);
-        homestay4.setEndDate(1735610873L);
+        homestay4.setStartDate(1705251600000L);
+        homestay4.setEndDate(1735578000000L);
         homestayRepository.save(homestay4);
 
         Homestay homestay5 = new Homestay();
@@ -290,8 +290,8 @@ public class DBGenerator implements CommandLineRunner {
         homestay5.setNumberPerson(10);
         homestay5.setStatus(Status.KHONG_HOAT_DONG);
         homestay5.setRoomNumber(5);
-        homestay5.setStartDate(1705025273L);
-        homestay5.setEndDate(1735610873L);
+        homestay5.setStartDate(1705251600000L);
+        homestay5.setEndDate(1735578000000L);
         homestayRepository.save(homestay5);
 
         //cart_detail
