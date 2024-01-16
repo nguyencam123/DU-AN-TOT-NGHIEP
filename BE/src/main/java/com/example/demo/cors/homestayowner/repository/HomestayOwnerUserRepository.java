@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface HomestayOwnerUserRepository extends UserRepository {
 
+    boolean existsByUsername(String username);
 }

@@ -21,7 +21,10 @@ export const ChangePasswordSlice = async (
   formData.append('phoneNumber', phoneNumber)
   formData.append('email', email)
   // imgUrl.forEach((imageUrl) => {
-  formData.append('avataUrl', imgUrl)
+
+  if (imgUrl.length > 0) {
+    formData.append('avataUrl', imgUrl)
+  }
   // })
   try {
     await instance.put(

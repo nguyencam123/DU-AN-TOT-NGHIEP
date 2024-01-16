@@ -44,6 +44,8 @@ const { Search } = Input
 const desc = ['Tệ', 'Không hài lòng', 'Bình thường', 'Hài lòng', 'Tuyệt vời']
 
 export const BookingUser = () => {
+  const navigate = useNavigate()
+
   const formatCurrency = (value) => {
     // Sử dụng Intl.NumberFormat để định dạng giá trị tiền tệ
     return new Intl.NumberFormat('vi-VN', {
@@ -92,6 +94,44 @@ export const BookingUser = () => {
     }))
   }
 
+  const checkCancel = (booking) => {
+    if (booking.status === 'HUY' || booking.status === 'DA_THUE_XONG') {
+      return ''
+    }
+    const today = dayjs()
+    const dateFix = new Date(today)
+    dateFix.setHours('00')
+    dateFix.setMinutes('00')
+    dateFix.setSeconds('00')
+    dateFix.setMilliseconds('000')
+    const startDate = new Date(booking.startDate)
+    startDate.setHours('00')
+    startDate.setMinutes('00')
+    startDate.setSeconds('00')
+    startDate.setMilliseconds('000')
+    const createdDate = new Date(booking.createdDate)
+    createdDate.setHours('00')
+    createdDate.setMinutes('00')
+    createdDate.setSeconds('00')
+    createdDate.setMilliseconds('000')
+    if (booking.typeBooking === 'DAT_COC') {
+      return 'Việc hủy phòng sẽ mất toàn bộ toàn bộ số tiền'
+    }
+    if (dayjs(createdDate).add(1, 'days') >= dayjs(startDate)) {
+      return 'Việc hủy phòng sẽ mất toàn bộ toàn bộ số tiền'
+    } else {
+      if (dayjs(createdDate).add(1, 'days') >= dayjs(dateFix)) {
+        return `Việc hủy phòng sẽ được miễn phí trước và trong ngày ${moment(
+          dayjs(dateFix),
+        )
+          .add(1, 'day')
+          .locale('vi')
+          .format('LL')}`
+      } else {
+        return 'Việc hủy phòng sẽ mất toàn bộ toàn bộ số tiền'
+      }
+    }
+  }
   const handleRemoveImage = (index) => {
     const newImages = [...selectedImages]
     file.splice(index, 1)
@@ -101,14 +141,20 @@ export const BookingUser = () => {
   }
   const showModalView = (booking) => {
     setBookingDeatil(booking)
-    setIsviewmodal(true)
+    navigate(`/booking/homestay/detail/${booking.homestay.id}`)
   }
   const showModalComment = (booking) => {
     setBookingDeatil(booking)
     setIsCommentModel(true)
-    console.log(booking)
+    setComment('')
+    setFile([])
+    setSelectedImages([])
   }
   const showRefusalView = (booking) => {
+    if (userDetail.data.numberAccount === ""  || userDetail.data.numberAccount === undefined || userDetail.data.numberAccount === null) {
+      message.info('Vui lòng cập nhật tài khoản ngân hàng của bạn tại "hồ sơ của tôi"!')
+      return false
+    }
     setBookingDeatil(booking)
     setIsRefusalModal(true)
   }
@@ -151,9 +197,7 @@ export const BookingUser = () => {
     setNode(e.target.value)
   }
   const addComment = async () => {
-    if (file.length < 1) {
-      setCommentError('Bạn cần chọn ít nhất 1 file')
-    } else if (!comment) {
+    if (!comment) {
       setCommentErrorText('Bạn cần nhập đánh giá')
     } else {
       setIsLoading(true)
@@ -172,7 +216,7 @@ export const BookingUser = () => {
       )
       message.info('Đánh giá thành công!')
       setIsLoading(false)
-      setIsRefusalModal(false)
+      setIsCommentModel(false)
       setComment('')
       setFile([])
       setValue(3)
@@ -199,14 +243,19 @@ export const BookingUser = () => {
         }}
       >
         <div style={{ marginTop: '30px' }}>
-          <Title level={2}>Homestay bạn đã đặt</Title>
+          <Title level={2}>Homestay bạn đã và đang thuê</Title>
           <Title level={4}>Danh mục</Title>
           {booking.length === 0 ? (
             <div style={{ textAlign: 'center', marginTop: 20 }}>
-              Bạn chưa có đơn đặt hàng nào.
+              Bạn chưa thuê homestay nào.
             </div>
           ) : (
             booking.map((booking) => {
+              const averagePoint =
+                booking.homestay.comment.reduce(
+                  (sum, comment) => sum + comment.point,
+                  0,
+                ) / booking.homestay.comment.length
               const currentDate = new Date().getTime()
               const startDate = booking?.startDate?.valueOf()
               const endDate = booking?.endDate?.valueOf()
@@ -276,12 +325,12 @@ export const BookingUser = () => {
                         width: 250,
                       }}
                     >
-                      Homestay : {booking.homestay?.name}
+                      {booking.homestay?.name}
                     </h1>
                     <Rate
                       allowHalf
                       disabled
-                      defaultValue={booking.homestay.star}
+                      defaultValue={averagePoint}
                       size='sm'
                     />
                     <br />
@@ -387,6 +436,9 @@ export const BookingUser = () => {
                         >
                           Xem chi tiết homestay
                         </Button>
+                        <div style={{ fontSize: '14px' }}>
+                          {checkCancel(booking)}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -397,187 +449,6 @@ export const BookingUser = () => {
         </div>
       </div>
 
-      <Modal
-        title={
-          <div style={{ fontSize: '22px' }}>Xem thông tin chi tiết homstay</div>
-        }
-        open={isViewmodal}
-        onCancel={handleCancel}
-        onOk={handleCancel}
-        width={1100}
-        style={{ fontSize: '40px' }}
-      >
-        <div style={{ fontSize: 18, fontWeight: 600 }}>
-          <table>
-            <tr>
-              <td style={{ width: 600 }}>
-                <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Tên homestay </div> :{' '}
-                  {bookingDeatil?.homestay?.name}
-                </div>
-                <br />
-              </td>
-              <td style={{ width: 500 }}>
-                <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Diện tích phòng</div> :{' '}
-                  {bookingDeatil?.homestay?.acreage} (m2)
-                </div>
-                <br />
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: 600 }}>
-                <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Giá </div> :{' '}
-                  {bookingDeatil?.homestay?.price} (VNĐ)
-                </div>
-                <br />
-              </td>
-              <td style={{ width: 500 }}>
-                <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Số lượng người </div> :{' '}
-                  {bookingDeatil?.homestay?.numberPerson} (Người)
-                </div>
-                <br />
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: 600 }}>
-                <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Số phòng</div> :{' '}
-                  {bookingDeatil?.homestay?.roomNumber}
-                </div>
-                <br />
-              </td>
-              <td style={{ width: 500 }}>
-                <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Chính sách hủy phòng </div> :{' '}
-                  {bookingDeatil?.homestay?.cancellationPolicy}
-                </div>
-                <br />
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: 600 }}>
-                <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Thời gian nhận phòng </div> :{' '}
-                  {bookingDeatil?.homestay?.timeCheckIn}
-                </div>
-                <br />
-              </td>
-              <td style={{ width: 500 }}>
-                <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Thời gian trả phòng </div> :{' '}
-                  {bookingDeatil?.homestay?.timeCheckOut}
-                </div>
-                <br />
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: 600 }}>
-                <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Ngày bắt đầu</div> :{' '}
-                  {moment(bookingDeatil?.homestay?.startDate)
-                    .locale('vi')
-                    .format('LL')}
-                </div>
-                <br />
-              </td>
-              <td style={{ width: 500 }}>
-                <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Ngày kết thúc</div> :{' '}
-                  {moment(bookingDeatil?.homestay?.endDate)
-                    .locale('vi')
-                    .format('LL')}
-                </div>
-                <br />
-              </td>
-            </tr>
-          </table>
-          <div style={{ display: 'flex' }}>
-            <div style={{ width: 200 }}>Tiện ích </div> :{' '}
-            {bookingDeatil?.homestay?.detailHomestays?.map((items) => (
-              <div> {items.convenientHomestay?.name},</div>
-            ))}
-          </div>
-          <br />
-          <div style={{ display: 'flex' }}>
-            <div style={{ width: 200 }}>Mô tả </div> :{' '}
-            {bookingDeatil?.homestay?.desc}
-          </div>
-          <br />
-          <div style={{ display: 'flex' }}>
-            <div style={{ width: 200 }}>Địa chỉ </div> :{' '}
-            {bookingDeatil?.homestay?.address}
-          </div>
-          <br />
-          {Date.now() >= calculateDate(bookingDeatil?.createdDate) ? (
-            <div style={{ display: 'flex' }}>
-              <div style={{ width: 200 }}>Số điện thoại liên lạc </div> :{' '}
-              {bookingDeatil?.homestay?.ownerHomestay?.phoneNumber}
-            </div>
-          ) : (
-            ''
-          )}
-          <div>
-            Ảnh homstay :<br />
-            <div
-              style={{
-                width: 1030,
-                padding: 20,
-                flexWrap: 'wrap',
-                borderRadius: 10,
-                display: 'flex',
-                justifyContent: 'center',
-                border: '1px solid black',
-              }}
-            >
-              {bookingDeatil?.homestay?.images?.map((imageurl, index) => (
-                <Image
-                  key={index}
-                  src={imageurl.imgUrl}
-                  alt={`Homestay Image ${index}`}
-                  style={{
-                    maxWidth: '200px', // Đảm bảo ảnh không vượt quá chiều rộng của phần tử cha
-                    margin: '0 10px 10px 0', // Thêm khoảng cách giữa các ảnh
-                  }}
-                  preview={{
-                    toolbarRender: (
-                      _,
-                      {
-                        transform: { scale },
-                        actions: {
-                          onFlipY,
-                          onFlipX,
-                          onRotateLeft,
-                          onRotateRight,
-                          onZoomOut,
-                          onZoomIn,
-                        },
-                      },
-                    ) => (
-                      <Space className='toolbar-wrapper'>
-                        <SwapOutlined rotate={90} onClick={onFlipY} />
-                        <SwapOutlined onClick={onFlipX} />
-                        <RotateLeftOutlined onClick={onRotateLeft} />
-                        <RotateRightOutlined onClick={onRotateRight} />
-                        <ZoomOutOutlined
-                          disabled={scale === 1}
-                          onClick={onZoomOut}
-                        />
-                        <ZoomInOutlined
-                          disabled={scale === 50}
-                          onClick={onZoomIn}
-                        />
-                      </Space>
-                    ),
-                  }}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      </Modal>
       <Modal
         title='Hủy Homestay'
         open={isRefusalModal}
@@ -603,7 +474,7 @@ export const BookingUser = () => {
       >
         <Form>
           <Form.Item
-            label='Lý do từ chối'
+            label='Lý do hủy'
             name='node'
             validateStatus={formErrors ? 'error' : ''}
             help={formErrors}
@@ -617,6 +488,7 @@ export const BookingUser = () => {
         open={isCommentModel}
         onOk={() => addComment()}
         onCancel={() => handleCancel()}
+        okText='Thêm đánh giá'
         maskClosable={false}
         width={900}
         okButtonProps={
@@ -638,7 +510,6 @@ export const BookingUser = () => {
       >
         <Form>
           <div>
-            <Title level={5}>Phân loại sản phẩm</Title>
             <div style={{ display: 'flex', marginBottom: 20 }}>
               <MDBCardImage
                 style={{ width: 60 }}
@@ -656,11 +527,14 @@ export const BookingUser = () => {
             validateStatus={commentErrorText ? 'error' : ''}
             help={commentErrorText}
           >
-            <TextArea onChange={(e) => setComment(e.target.value)} />
+            <TextArea
+              onChange={(e) => setComment(e.target.value)}
+              value={comment}
+            />
           </Form.Item>
           <div style={{ marginTop: 20 }}>
             <Space>
-              <div>Chất lượng sản phẩm</div>
+              <div>Chất lượng homestay</div>
               <Rate tooltips={desc} onChange={setValue} value={value} />
               {value ? <span>{desc[value - 1]}</span> : ''}
             </Space>

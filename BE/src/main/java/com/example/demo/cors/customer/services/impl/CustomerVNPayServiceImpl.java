@@ -2,20 +2,26 @@ package com.example.demo.cors.customer.services.impl;
 
 import com.example.demo.cors.customer.model.request.CustomerBookingRequest;
 import com.example.demo.cors.customer.repository.CustomerBookingRepository;
+import com.example.demo.cors.customer.repository.CustomerCartDetailRepository;
 import com.example.demo.cors.customer.repository.CustomerHomestayRepository;
 import com.example.demo.cors.customer.services.CustomerVNPayService;
 import com.example.demo.entities.Booking;
 import com.example.demo.entities.Homestay;
 import com.example.demo.entities.Promotion;
+import com.example.demo.infrastructure.configemail.EmailSender;
 import com.example.demo.infrastructure.configpayment.VNPayConfig;
 import com.example.demo.infrastructure.contant.PaymentMethod;
 import com.example.demo.infrastructure.contant.StatusBooking;
+import com.example.demo.infrastructure.contant.StatusPayOwner;
 import com.example.demo.infrastructure.exception.rest.RestApiException;
+import com.example.demo.infrastructure.sendmailbill.ExportFilePdfFormHtml;
 import com.example.demo.repositories.PromotionRepository;
 import com.example.demo.repositories.UserRepository;
+import com.example.demo.util.DateUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -43,6 +49,8 @@ public class CustomerVNPayServiceImpl implements CustomerVNPayService {
     private PromotionRepository promotionRepository;
     @Autowired
     private CustomerBookingRepository customerBookingRepository;
+    @Autowired
+    private CustomerCartDetailRepository customerCartDetailRepository;
 
     @Override
     public Booking saveBooking(CustomerBookingRequest request) {
@@ -55,6 +63,7 @@ public class CustomerVNPayServiceImpl implements CustomerVNPayService {
         BigDecimal totalPrice = new BigDecimal(request.getTotalPrice());
         booking.setTypeBooking(request.getTypeBooking());
         booking.setUser(userRepository.findById(request.getUserId()).get());
+        booking.setCode("HD" + DateUtils.getCurrentDateAsString() + VNPayConfig.getRandomNumber(4));
         booking.setTotalPrice(totalPrice);
         booking.setStartDate(request.getStartDate());
         booking.setEndDate(request.getEndDate());
@@ -67,6 +76,7 @@ public class CustomerVNPayServiceImpl implements CustomerVNPayService {
         booking.setStatus(StatusBooking.CHO_THANH_TOAN);
         booking.setNumberOfNight(request.getNumberOfNight());
         booking.setPaymentMethod(PaymentMethod.VN_PAY);
+        booking.setRefundPrice(new BigDecimal(0));
         customerBookingRepository.save(booking);
         return booking;
     }
@@ -94,7 +104,6 @@ public class CustomerVNPayServiceImpl implements CustomerVNPayService {
         vnp_Params.put("vnp_OrderType", "Thanh toan hoa don");
         vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrl);
         vnp_Params.put("vnp_TxnRef", VNPayConfig.getRandomNumber(6));
-        vnp_Params.put("vnp_TransactionNo", VNPayConfig.getRandomNumber(10));
         vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
 
         List fieldList = new ArrayList(vnp_Params.keySet());
@@ -126,7 +135,6 @@ public class CustomerVNPayServiceImpl implements CustomerVNPayService {
         String vnp_SecureHash = VNPayConfig.hmacSHA512(VNPayConfig.secretKey, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
         String paymentUrl = VNPayConfig.vnp_PayUrl + "?" + queryUrl;
-        System.err.println("stt " + request.getParameter("vnp_TransactionStatus"));
         return paymentUrl;
     }
 
@@ -158,15 +166,13 @@ public class CustomerVNPayServiceImpl implements CustomerVNPayService {
         Booking booking = customerBookingRepository.findById((String) fields.get("vnp_OrderInfo")).orElse(null);
         if (signValue.equals(vnp_SecureHash)) {
             if ("00".equals(request.getParameter("vnp_TransactionStatus"))) {
-                if (booking != null && booking.getStatus() == StatusBooking.CHO_THANH_TOAN) {
-                    booking.setStatus(StatusBooking.THANH_CONG);
-                    customerBookingRepository.save(booking);
-                }
+                booking.setStatus(StatusBooking.THANH_CONG);
+                customerBookingRepository.save(booking);
+                customerCartDetailRepository.deleteByHomestayId(booking.getHomestay().getId(), booking.getUser().getId());
                 return true;
             }
         }
         return false;
     }
-
 
 }

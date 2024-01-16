@@ -9,6 +9,7 @@ import com.example.demo.entities.Homestay;
 import com.example.demo.infrastructure.contant.Status;
 import com.example.demo.infrastructure.contant.StatusBooking;
 import com.example.demo.infrastructure.contant.StatusCart;
+import com.example.demo.infrastructure.contant.StatusPayOwner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -29,7 +30,7 @@ public class ScheduledUtil {
     @Scheduled(cron = "0 0 0 * * *")
     public void scheduledCheckStatusCart() {
         List<CartDetail> cartDetailList = customerCartDetailRepository.getAllCartDetail();
-        Long currentTime = DateUtils.truncDate(new Date()).getTime() / 1000;
+        Long currentTime = DateUtils.truncDate(new Date()).getTime();
         for (CartDetail cartDetail : cartDetailList) {
             if (cartDetail.getEndDate() < currentTime) {
                 cartDetail.setStatus(StatusCart.KHONG_HOAT_DONG);
@@ -53,11 +54,25 @@ public class ScheduledUtil {
     @Scheduled(cron = "0 0 0 * * *")
     public void scheduledChangeStatusHomestay() {
         List<Homestay> listHomestays = adminHomestayRepository.getAllHomsestayByAdmin();
-        Long currentTime = DateUtils.truncDate(new Date()).getTime() / 1000;
+        Long currentTime = DateUtils.truncDate(new Date()).getTime();
         for (Homestay homestay : listHomestays) {
             if (homestay.getEndDate() < currentTime) {
                 homestay.setStatus(Status.KHONG_HOAT_DONG);
                 adminHomestayRepository.save(homestay);
+            }
+        }
+    }
+
+    @Scheduled(cron = "0 0 0 * * *")
+    public void scheduleCheckStatusBooking() {
+        List<Booking> bookingList = customerBookingRepository.getAllBookingSuccess();
+        if (!bookingList.isEmpty()) {
+            for (Booking booking : bookingList) {
+                if (booking.getEndDate() <= DateUtils.truncDate(new Date()).getTime()) {
+                    booking.setStatus(StatusBooking.DA_THUE_XONG);
+                    booking.setStatusPayOwner(StatusPayOwner.CHUA_TT_CHO_OWNER);
+                    customerBookingRepository.save(booking);
+                }
             }
         }
     }

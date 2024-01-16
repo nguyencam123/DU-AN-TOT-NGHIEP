@@ -43,16 +43,17 @@ const Endow = () => {
     }).format(value)
   }
   useEffect(() => {
-    // Set checkInDate to tomorrow
-    const tomorrow = new Date()
-    tomorrow.setDate(tomorrow.getDate() + 1)
-    setCheckInDate(tomorrow)
+    // Set checkInDate to 0h ngày hôm nay
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    setCheckInDate(today)
 
-    // Set checkOutDate to the day after tomorrow
-    const dayAfterTomorrow = new Date()
-    dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 10)
-    setCheckOutDate(dayAfterTomorrow)
+    // Set checkOutDate to 23h59p ngày hôm nay
+    const endOfDay = new Date()
+    endOfDay.setHours(23, 59, 59, 999)
+    setCheckOutDate(endOfDay)
   }, [])
+
   useEffect(() => {
     dispatch(
       fetchSearchProductsForPromotion(
@@ -68,7 +69,7 @@ const Endow = () => {
   return (
     <section>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <img src={imgsale} />
+        <img src={imgsale} style={{ width: '100%' }} />
       </div>
       <div style={{ padding: '50px 200px 50px 200px' }}>
         <Layout>
@@ -95,7 +96,7 @@ const Endow = () => {
                     })
                   }
                 >
-                  dưới 100.000 VNĐ
+                  Dưới 100.000 VNĐ
                 </Checkbox>
                 <Checkbox
                   checked={priceFilter.between100kAnd1M}
@@ -106,7 +107,7 @@ const Endow = () => {
                     })
                   }
                 >
-                  100.000 đến 1.000.000 VNĐ
+                  Từ 100.000 đến 1.000.000 VNĐ
                 </Checkbox>
                 <Checkbox
                   checked={priceFilter.above1M}
@@ -117,7 +118,7 @@ const Endow = () => {
                     })
                   }
                 >
-                  trên 1.000.000
+                  Trên 1.000.000
                 </Checkbox>
               </div>
             </Sider>
@@ -138,7 +139,7 @@ const Endow = () => {
                     const promotionValue = items.promotion?.value
 
                     if (
-                      items.promotion !== null &&
+                      items.promotion?.statusPromotion === 'HOAT_DONG' &&
                       startDate < currentDate &&
                       currentDate < endDate &&
                       ((priceFilter.under100k && promotionValue < 100000) ||

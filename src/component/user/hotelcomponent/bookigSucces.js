@@ -1,10 +1,10 @@
 import { CheckCircleOutlined, CheckCircleTwoTone } from "@ant-design/icons"
-import { Breadcrumb, Button, Col, Row } from "antd"
+import { Breadcrumb, Button, Col, Row, message } from "antd"
 import { Content, Footer } from "antd/es/layout/layout"
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
-import { addBooking, updateBooking } from "../../../features/product/productThunk"
+import { addBooking, checkBooked, updateBooking } from "../../../features/product/productThunk"
 
 export const BookingSuccess = () => {
   const dispatch = useDispatch();
@@ -18,9 +18,11 @@ export const BookingSuccess = () => {
 
   useEffect(() => {
     dispatch(updateBooking(bookingId));
+    dispatch(checkBooked());
   }, []);
   const info = urlParams.get('vnp_OrderInfo');
-  const bookingId = info.substring(info.indexOf('=') + 1);
+  const bookingId = urlParams.get('bookingId');
+
 
   const handleBooking = () => {
     navigate(`/booking/${userID}`)

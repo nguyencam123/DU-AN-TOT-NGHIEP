@@ -1,14 +1,15 @@
 import React from 'react'
-import { Tabs, Typography, message, notification } from 'antd'
+import { DatePicker, Tabs, Typography, message, notification } from 'antd'
 import { MDBBtn, MDBCol, MDBInput, MDBRow } from 'mdb-react-ui-kit'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-
+import dayjs from 'dayjs'
 import moment from 'moment'
 import {
   ChangePasswordByPass,
   ChangePasswordSlice,
 } from '../../../features/owner_homestay/changePassword/changPassword'
+import { instance } from '../../../app/axiosConfig'
 const onChange = (key) => {
   console.log(key)
 }
@@ -19,15 +20,20 @@ const ChangePassword = () => {
   const namelocal = userDetail?.data.name
   const idowner = userDetail?.data.id
   const [name, setname] = useState(namelocal)
-  const [birthday, setbirthday] = useState(856345)
-  const [gender, setgender] = useState(true)
+  const [birthday, setbirthday] = useState(userDetail?.data.birthday)
+  const [gender, setgender] = useState(userDetail?.data.gender)
   const [address, setaddress] = useState(userDetail?.data.address)
   const [password, setpassword] = useState('')
   const [newpassword, setnewpassword] = useState('')
   const [confirmpassword, setconfirmpassword] = useState('')
+  const [numberBank, setNumberBank] = useState(userDetail?.data?.numberAccount)
+  const [nameBank, setNameBank] = useState(userDetail?.data?.nameBack)
+  const [nameAccountBank, setNameAccountBank] = useState(
+    userDetail?.data?.nameAccount,
+  )
   const [loading, setLoading] = useState(false)
   const handleDateChangestart = (dates) => {
-    setbirthday(moment(dates).valueOf())
+    setbirthday(dates.valueOf())
   }
   const [file, setFile] = useState([])
 
@@ -46,7 +52,9 @@ const ChangePassword = () => {
       setFile(selectedFile)
     }
   }
-
+  const isBeforeToday = (current) => {
+    return current && current.isAfter(moment().startOf('day'))
+  }
   const navigate = useNavigate()
   const openNotification = () => {
     notification.open({
@@ -97,30 +105,141 @@ const ChangePassword = () => {
       setLoading(false)
     }
   }
-  const handleSubmit = async (e) => {
+  const handleSubmitBankAccount = async (e) => {
+    // console.log(formChangePass)
     e.preventDefault()
+    if (newpassword !== confirmpassword) {
+      openNotificationChangePass()
+      return
+    }
     try {
-      setLoading(true)
-      await ChangePasswordSlice(
-        userDetail?.data.username,
-        1234567890,
-        name,
-        gender,
-        address,
-        file,
-        idowner,
-        userDetail?.data.phoneNumber,
-        userDetail?.data.email,
-      )
-      setLoading(false)
+      // Assuming ChangePasswordByPass function takes an object with a 'password' property
+      await ChangePasswordByPass(formChangePass)
       openNotification()
     } catch (error) {
-      // Handle the error, show a notification, etc.
       message.error('Password change failed:', 5)
       setLoading(false)
     }
   }
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault()
+  //   try {
+  //     setLoading(true)
+  //     await ChangePasswordSlice(
+  //       userDetail?.data.username,
+  //       birthday || userDetail.data?.birthday.valueOf(),
+  //       name,
+  //       gender,
+  //       address,
+  //       file,
+  //       idowner,
+  //       userDetail?.data.phoneNumber,
+  //       userDetail?.data.email,
+  //     )
+  //     setLoading(false)
+  //     openNotification()
+  //   } catch (error) {
+  //     // Handle the error, show a notification, etc.
+  //     message.error('Password change failed:', 5)
+  //     setLoading(false)
+  //   }
+  // }
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    setLoading(true) // Set loading to true when submitting
 
+    const formData = new FormData()
+    formData.append('name', name)
+    formData.append('gender', gender)
+    formData.append('address', address)
+    formData.append('phoneNumber', userDetail?.data.phoneNumber)
+    formData.append('email', userDetail?.data.email)
+    formData.append('birthday', birthday || userDetail.data?.birthday.valueOf())
+    formData.append('username', userDetail?.data?.username)
+
+    if (file && file.size > 0) {
+      formData.append('avataUrl', file)
+    }
+    message.info('Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!', 5)
+    instance
+      .put(
+        `http://localhost:8080/api/v2/owner/update-information-owner?id=${userDetail?.data.id}`,
+        formData,
+      )
+      .then((response) => {
+        setLoading(false) // Set loading to false after a successful request
+        message.info(
+          'Sửa thông tin thành công những thay đổi sẽ được áp dụng cho lần đăng nhập tới!',
+          5,
+        )
+      })
+      .catch((error) => {
+        // console.error('Error:', error)
+
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          const errorMessage = error.response.data.message
+          //   console.error('Error Message:', errorMessage)
+
+          // Do something with the error message, such as displaying it to the user
+          message.error(errorMessage, 5)
+        }
+
+        setLoading(false) // Set loading to false if the request fails
+      })
+  }
+  const handleSubmitUser = (e) => {
+    e.preventDefault()
+    setLoading(true) // Set loading to true when submitting
+
+    const formData = new FormData()
+    formData.append('name', name)
+    formData.append('gender', gender)
+    formData.append('address', address)
+    formData.append('phoneNumber', userDetail?.data.phoneNumber)
+    formData.append('email', userDetail?.data.email)
+    formData.append('birthday', birthday || userDetail.data?.birthday.valueOf())
+    formData.append('username', userDetail?.data?.username)
+    if (file.length > 0) {
+      formData.append('avataUrl', file)
+    }
+    formData.append('nameBack', nameBank)
+    formData.append('nameAccount', nameAccountBank)
+    formData.append('numberAccount', numberBank)
+    message.info('Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!', 5)
+    instance
+      .put(
+        `http://localhost:8080/api/v2/owner/update-information-owner?id=${userDetail?.data.id}`,
+        formData,
+      )
+      .then((response) => {
+        setLoading(false) // Set loading to false after a successful request
+        message.info(
+          'Sửa thông tin thành công những thay đổi sẽ được áp dụng cho lần đăng nhập tới!',
+          5,
+        )
+      })
+      .catch((error) => {
+        // console.error('Error:', error)
+
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          const errorMessage = error.response.data.message
+          //   console.error('Error Message:', errorMessage)
+
+          // Do something with the error message, such as displaying it to the user
+          message.error(errorMessage, 5)
+        }
+
+        setLoading(false) // Set loading to false if the request fails
+      })
+  }
   const items = [
     {
       key: '1',
@@ -154,8 +273,28 @@ const ChangePassword = () => {
                 />
               </MDBCol>
             </MDBRow>
+            <div style={{ display: 'flex', marginBottom: 10 }}>
+              <span>Ngày sinh &ensp;</span>
+              <DatePicker
+                style={{ width: '44.5%', height: 36 }}
+                dateFormat='dd/MM/yyyy'
+                required
+                onChange={handleDateChangestart}
+                disabledDate={isBeforeToday}
+                defaultValue={
+                  userDetail.data?.birthday
+                    ? dayjs(
+                        dayjs(userDetail.data?.birthday)
+                          .locale('vi')
+                          .format('YYYY-MM-DD'),
+                        'YYYY-MM-DD',
+                      )
+                    : null
+                }
+              />
+            </div>
             <MDBRow>
-              <MDBCol col='6'>
+              <MDBCol col='3'>
                 Giới tính &emsp;&emsp;
                 <label>
                   <input
@@ -181,6 +320,7 @@ const ChangePassword = () => {
                 </label>
               </MDBCol>
             </MDBRow>
+
             <br />
             <div style={{ display: 'flex' }}>
               <label
@@ -305,11 +445,54 @@ const ChangePassword = () => {
         </div>
       ),
     },
+    {
+      key: '4',
+      label: 'Thông tin tài khoản ngân hàng',
+      children: (
+        <form>
+          <MDBInput
+            wrapperClass='mb-4'
+            label='Số tài khoản'
+            id='numberBank'
+            type='numberBank'
+            required
+            defaultValue={userDetail?.data?.numberAccount}
+            onChange={(e) => setNumberBank(e.target.value)}
+          />
+          <MDBInput
+            wrapperClass='mb-4'
+            label='Tên ngân hàng'
+            id='nameBank'
+            type='nameBank'
+            required
+            defaultValue={userDetail?.data?.nameBack}
+            onChange={(e) => setNameBank(e.target.value)}
+          />
+          <MDBInput
+            wrapperClass='mb-4'
+            label='Tên tài khoản'
+            id='nameAccount'
+            type='nameAccount'
+            required
+            defaultValue={userDetail?.data?.nameAccount}
+            onChange={(e) => setNameAccountBank(e.target.value)}
+          />
+          <MDBBtn
+            className='w-100 mb-4'
+            size='md'
+            style={{ marginTop: 10 }}
+            onClick={handleSubmitUser}
+          >
+            Cập nhật tài khoản ngân hàng
+          </MDBBtn>
+        </form>
+      ),
+    },
   ]
   return (
     <div>
       <Title level={3}>Cài đặt</Title>
-      <Tabs defaultActiveKey='1' items={items} onChange={onChange} />;
+      <Tabs defaultActiveKey='1' items={items} onChange={onChange} />
     </div>
   )
 }

@@ -6,9 +6,11 @@ const initialState = {
   commentProduct: [],
   avgPoint: [],
   payment: [],
+  paypal: [],
   products: [],
   convenient: [],
   productPromotion: [],
+  check: [],
   loading: false,
   error: null,
 }
@@ -69,6 +71,16 @@ const productSlice = createSlice({
       state.loading = false
       state.error = null
     },
+    getPaypalSuccess: (state, action) => {
+      state.paypal = action.payload
+      state.loading = false
+      state.error = null
+    },
+    checkBookingSuccess: (state, action) => {
+      state.check = action.payload
+      state.loading = false
+      state.error = null
+    },
   },
 })
 
@@ -84,5 +96,7 @@ export const {
   getPaymentSuccess,
   fetchConvenientsSuccess,
   fetchProductPromotionSuccess,
+  getPaypalSuccess,
+  checkBookingSuccess
 } = productSlice.actions
 export default productSlice.reducer

@@ -12,6 +12,7 @@ import java.security.Key;
 import java.util.*;
 import java.util.function.Function;
 import io.jsonwebtoken.io.Decoders;
+import org.apache.commons.lang3.StringUtils;
 
 @Service
 
@@ -66,6 +67,10 @@ public class JwtService {
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
+        if (StringUtils.isEmpty(token)) {
+            return false;
+        }
+
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
@@ -79,12 +84,17 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts
-                .parserBuilder()
-                .setSigningKey(getSignInKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            return Jwts
+                    .parserBuilder()
+                    .setSigningKey(getSignInKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private Key getSignInKey() {

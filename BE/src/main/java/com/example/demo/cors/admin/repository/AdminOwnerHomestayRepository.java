@@ -20,4 +20,6 @@ public interface AdminOwnerHomestayRepository extends OwnerHomestayRepository {
             AND ( :#{#request.nameOwner} IS NULL OR oh.name LIKE '' OR oh.name LIKE %:#{#request.nameOwner}% ) )
             """, nativeQuery = true)
     Page<OwnerHomestay> getAllOwner(Pageable pageable,  AdminOwnerHomestayRequest request);
+
+    boolean existsByUsername(String username);
 }

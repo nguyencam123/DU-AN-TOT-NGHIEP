@@ -1,6 +1,7 @@
 package com.example.demo.cors.customer.repository;
 
 import com.example.demo.cors.customer.model.request.CustomerBookingRequest;
+import com.example.demo.cors.customer.model.response.CustomerBillBookingResponse;
 import com.example.demo.entities.Booking;
 import com.example.demo.repositories.BookingRepository;
 import org.springframework.data.domain.Page;
@@ -16,13 +17,10 @@ import java.util.Optional;
 public interface CustomerBookingRepository extends BookingRepository {
 
     @Query(value = """
-            SELECT a.*, c.* FROM booking a 
-            JOIN [user] b 
-            ON a.user_id = b.id
-            JOIN comment c 
-            ON c.user_id = b.id
-            WHERE (a.user_id =:#{#customerBookingRequest.userId})
-            AND ((a.status = 1) OR (a.status = 0))
+            SELECT ROW_NUMBER() OVER(ORDER BY b.created_date DESC) AS stt, b.*
+            FROM booking b
+            WHERE b.[user_id] = :#{#customerBookingRequest.userId}
+            AND b.[status] = 1 OR b.[status] = 0
             """, nativeQuery = true)
     Page<Booking> getBookingByUserId(Pageable pageable, CustomerBookingRequest customerBookingRequest);
 
@@ -36,5 +34,27 @@ public interface CustomerBookingRepository extends BookingRepository {
             SELECT * FROM booking
             """, nativeQuery = true)
     List<Booking> getAllBooking();
+
+    @Query(value = """
+            SELECT * FROM dbo.booking WHERE [status] = 1
+            """, nativeQuery = true)
+    List<Booking> getAllBookingSuccess();
+
+    @Query(value = """
+               SELECT b.[name] AS name_user, b.phone_number, b.email,
+            FORMAT(CONVERT(DATE, DATEADD(SECOND, b.created_date / 1000, '19700101')), 'dd-MM-yyyy') AS created_date,
+            FORMAT(CONVERT(DATE, DATEADD(SECOND, b.[start_date] / 1000, '19700101')), 'dd-MM-yyyy') AS [start_date],
+            FORMAT(CONVERT(DATE, DATEADD(SECOND, b.[end_date] / 1000, '19700101')), 'dd-MM-yyyy') AS [end_date],
+            b.total_price, b.type_booking, b.code, b.payment_method,
+            CASE WHEN b.promotion_id IS NULL THEN (h.price * b.number_of_night + 0.11 * h.price * b.number_of_night)
+            	WHEN b.promotion_id IS NOT NULL THEN ((h.price - p.[value]) * b.number_of_night + 0.11 * (h.price - p.[value]) * b.number_of_night)
+            	END AS sum_price, h.[name] AS name_homestay, h.[address] AS adress_homestay, u.address AS address_user
+            FROM booking b
+            JOIN [user] u ON b.[user_id] = u.id
+            JOIN homestay h ON b.homestay_id = h.id
+            LEFT JOIN promotion p ON b.promotion_id = p.id
+            WHERE b.id = :bookingId           
+            """, nativeQuery = true)
+    CustomerBillBookingResponse getOneBooking(@Param("bookingId") String bookingId);
 
 }

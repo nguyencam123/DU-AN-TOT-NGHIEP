@@ -85,6 +85,13 @@ const Hotel = () => {
   useEffect(() => {
     // dispatch(getProducts(current - 1));
     dispatch(getAllConvinentHomestay())
+    const dateFix = new Date(today)
+    dateFix.setHours('00')
+    dateFix.setMinutes('00')
+    dateFix.setSeconds('00')
+    dateFix.setMilliseconds('000')
+    setCheckInDate(dateFix.valueOf())
+    calculateCheckOutDate()
   }, [])
   const onChange = (key) => {}
   const formatCurrency = (value) => {
@@ -98,7 +105,12 @@ const Hotel = () => {
   const [checkInDate, setCheckInDate] = useState(today)
   const [numNights, setNumNights] = useState(1)
   const handleCheckInChange = (date) => {
-    setCheckInDate(date)
+    const dateFix = new Date(date)
+    dateFix.setHours('00')
+    dateFix.setMinutes('00')
+    dateFix.setSeconds('00')
+    dateFix.setMilliseconds('000')
+    setCheckInDate(dateFix.valueOf())
   }
   const handleNumNightsChange = (value) => {
     setNumNights(value)
@@ -164,7 +176,7 @@ const Hotel = () => {
   const handleresetinput = () => {
     setRangeValue(initialValue)
   }
-  const [nameOrAddress, setNameOrAddress] = useState(' ')
+  const [nameOrAddress, setNameOrAddress] = useState('Hà Nội')
   const [numberPerson, setNumberPerson] = useState(1)
   const [roomNumber, setRoomNumber] = useState(1)
   const [convenientvir, setconvenient] = useState('')
@@ -174,6 +186,7 @@ const Hotel = () => {
   }
 
   const handleSearch = () => {
+    console.log(checkInDate.valueOf() + '' + calculateCheckOutDate().valueOf())
     if (nameOrAddress == '') {
       setNotification('Vui lòng nhập tên hoặc địa chỉ')
     } else {
@@ -209,6 +222,27 @@ const Hotel = () => {
       ),
     )
   }, [checkInDate, nameLocation])
+  // const groupedConvenient = convenient.reduce((acc, item) => {
+  //   const typeName = item.convenientHomestayType.name
+
+  //   const typePrefix = typeName.match(/^Type \d+/)
+
+  //   const key = typePrefix ? typePrefix[0] : typeName
+
+  //   acc[key] = acc[key] || []
+
+  //   acc[key].push(item)
+
+  //   return acc
+  // }, {})
+
+  // // Map the grouped items to display
+  // const mappedConvenient = Object.entries(groupedConvenient).map(
+  //   ([title, items]) => ({
+  //     title,
+  //     items,
+  //   }),
+  // )
 
   const text = (
     <section>
@@ -256,13 +290,20 @@ const Hotel = () => {
     >
       <div>
         <div>
-          <Checkbox.Group
-            options={convenient.map((item) => ({
-              label: item.name,
-              value: item.id,
-            }))}
-            onChange={onChangeConvenients}
-          />
+          {convenient?.map((items) => (
+            <div style={{ marginBottom: 10 }}>
+              {items.name}
+              <br />
+
+              <Checkbox.Group
+                options={items.convenientHomestays.map((item) => ({
+                  label: item.name,
+                  value: item.id,
+                }))}
+                onChange={onChangeConvenients}
+              />
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -346,7 +387,7 @@ const Hotel = () => {
                   className='form-control'
                   type='text'
                   placeholder='Search'
-                  defaultValue={nameLocation || ''}
+                  defaultValue={nameLocation || 'Hà Nội'}
                   onChange={(e) => setNameOrAddress(e.target.value)}
                   required
                 />
@@ -403,7 +444,7 @@ const Hotel = () => {
                     onClick={handleSearch}
                   >
                     <SearchOutlined />
-                    Tìm khách sạn
+                    Tìm Homestay
                   </Button>
                 </div>
               </div>
@@ -597,19 +638,19 @@ const Hotel = () => {
                           />
                           <br />
                           <div style={{ display: 'flex', marginTop: 10 }}>
-                            <CompassOutlined style={{}} />
                             &ensp;
                             <Title
                               style={{
                                 fontSize: 16,
-                                whiteSpace: 'nowrap',
-                                overflow: 'hidden',
                                 textOverflow: 'ellipsis',
-                                width: 250,
+                                width: 300,
                                 marginTop: 3,
                               }}
                             >
-                              {item.address}
+                              <CompassOutlined style={{}} />
+                              <span style={{ marginLeft: 10 }}>
+                                {item.address}
+                              </span>
                             </Title>
                           </div>
                           <h1
@@ -646,13 +687,18 @@ const Hotel = () => {
                           </div>
                           <div style={{}}>
                             <div style={{ fontSize: 16 }}>
-                              <del>
-                                {formatCurrency(
-                                  item.price + (item.price * 11) / 100,
-                                )}{' '}
-                              </del>
+                              {item?.promotion?.statusPromotion ==
+                              'HOAT_DONG' ? (
+                                <del>
+                                  {formatCurrency(
+                                    item.price + (item.price * 11) / 100,
+                                  )}{' '}
+                                </del>
+                              ) : (
+                                ' '
+                              )}
                             </div>
-                            {item?.promotion?.value ? (
+                            {item?.promotion?.statusPromotion == 'HOAT_DONG' ? (
                               <div
                                 style={{
                                   fontSize: 22,
@@ -688,7 +734,7 @@ const Hotel = () => {
                                 }}
                                 onClick={() => handleDetailHomestay(item.id)}
                               >
-                                Chọn phòng
+                                Chọn homestay
                               </Button>
                             </div>
                           </div>

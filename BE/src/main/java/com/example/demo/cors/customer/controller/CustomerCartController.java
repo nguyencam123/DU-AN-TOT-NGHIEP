@@ -50,4 +50,9 @@ public class CustomerCartController {
         return new ResponseObject((customerCartService.getOne(request)));
     }
 
+    @GetMapping("/check-booked")
+    public ResponseObject checkHomestayBooked() {
+        return new ResponseObject(customerCartDetailService.cartDetailBooked());
+    }
+
 }

@@ -1,11 +1,18 @@
-import React, { useEffect } from 'react';
-import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progress, Space } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progress, Space, Modal, message } from 'antd';
 import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, InfoCircleTwoTone, StarTwoTone } from '@ant-design/icons'
 import { Form, Table } from 'react-bootstrap';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { addBooking, getOneProduct, getPayment } from '../../../features/product/productThunk';
+import { addBooking, checkBooking, getOneProduct, getPayment, getPaymentPayPal } from '../../../features/product/productThunk';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
+import logovnpay from '../../../assets/svg/Rectangle 20.svg';
+import paypalImg from '../../../assets/img/PAYPAL.jpg';
+import dayjs from 'dayjs'
+import 'dayjs/locale/vi'
+dayjs.locale('vi')
+
+
 const { Header, Content, Footer } = Layout;
 
 export const BookingReviewHomestay = () => {
@@ -16,6 +23,8 @@ export const BookingReviewHomestay = () => {
       currency: 'VND',
     }).format(value);
   };
+  const userDetail = JSON.parse(localStorage.getItem('userDetail'))
+
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -31,23 +40,60 @@ export const BookingReviewHomestay = () => {
   const startDate = params?.get('startDate') || '';
   const endDate = params?.get('endDate') || '';
   const numNight = params?.get('numNight') || '';
+  const homestayId = params?.get('homestayId') || '';
+  const idPromotion = params?.get('idPromotion') || '';
+  const typeBooking = params?.get('typeBooking') || '';
   const totalPrice = params?.get('totalPrice') || '';
+
 
   useEffect(() => {
     dispatch(getOneProduct(id));
-    handleBooking()
   }, []);
   const dispatch = useDispatch();
   const detailHomestay = useSelector((state) => state.product.productDetails)
   const payment = useSelector((state) => state.product.payment)
+  const paypal = useSelector((state) => state.product.paypal)
+  const bookingCheck = useSelector((state) => state.product.check)
 
-  const handleBooking = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const handleBooking = async () => {
+    dispatch(checkBooking(detailHomestay.id, startDate, endDate));
+    if (bookingCheck === true) {
+      message.info('Đã có người thuê homestay trong khoảng thời gian trước bạn', 1)
+      return false
+    }
     const bookingDataGet = {
-      vnp_Ammount: totalPrice,
-      vnp_OrderInfo: String('bookingId' + '=' + bookingId)
+      totalPrice: totalPrice,
+      email: email,
+      endDate: endDate,
+      homestayId: detailHomestay.id,
+      idPromotion: idPromotion,
+      name: name,
+      numberOfNight: numNight,
+      phoneNumber: phoneNumber,
+      startDate: startDate,
+      typeBooking: typeBooking,
+      userId: userDetail?.data?.id
     }
     dispatch(getPayment(bookingDataGet));
+    message.info('Bạn vui lòng đợi một lúc!',1)
+    await dispatch(getPaymentPayPal(bookingDataGet));
+    setIsModalOpen(true)
   }
+  let cancelDay = '';
+  const today = dayjs()
+  const dateFix = new Date(today)
+  dateFix.setHours('00')
+  dateFix.setMinutes('00')
+  dateFix.setSeconds('00')
+  dateFix.setMilliseconds('000')
+  if (dayjs(Date(dateFix)).add(1, 'days').valueOf() >= startDate) {
+    cancelDay = `Việc hủy phòng sẽ mất toàn bộ số tiền bạn đã thanh toán`
+  } else {
+    cancelDay = `Việc hủy phòng sau ngày ${moment(dayjs(dateFix)).add(1, 'day').locale('vi').format('LL')} sẽ mất toàn bộ số tiền bạn đã thanh toán`
+  }
+
   return (
     <>
       <Content
@@ -194,7 +240,7 @@ export const BookingReviewHomestay = () => {
             <Col span={17}>
               <Row style={{ backgroundColor: 'white', borderRadius: '5px', minHeight: '10px' }}>
                 <Col span={6} style={{ backgroundImage: 'linear-gradient(92deg, rgba(81, 149, 227, 0.5) -60%, #D6F1FF 40%, rgba(214, 241, 255, 0.7) 100%)' }}>
-                  <h5 style={{ marginTop: '10px', textAlign: 'center' }}>Chính Sách Lưu Trú</h5>
+                  <h5 style={{ marginTop: '10px', textAlign: 'center' }}>Thông tin Lưu Trú</h5>
                 </Col>
                 <Col span={18}>
                   <div style={{ marginLeft: '10px', marginTop: '10px' }}>
@@ -211,11 +257,7 @@ export const BookingReviewHomestay = () => {
                   <div style={{ marginLeft: '10px', marginTop: '10px' }}>
                     <div style={{ lineHeight: '16px', marginTop: '3px' }}><FileTextTwoTone style={{ fontSize: '12px' }} /><b> Chính sách hủy phòng</b></div>
                     <div style={{ lineHeight: '16px', marginLeft: '17px', }}>
-                      Việc hủy phòng trước ngày{' '}
-                      {moment(detailHomestay.startDate).locale('vi').format('LL')}{' '}
-                      sẽ được hoàn toàn miễn phí. Sau ngày{' '}
-                      {moment(detailHomestay.startDate).locale('vi').format('LL')}{' '}
-                      bạn sẽ phải mất một khoản tiền khi hủy phòng
+                      {cancelDay}
                     </div>
                   </div>
                   <hr style={{ width: '96%', marginLeft: '2%' }} />
@@ -232,8 +274,8 @@ export const BookingReviewHomestay = () => {
                           <td>50m2</td>
                         </tr>
                         <tr>
-                          <td>Số phần trăm tiền bạn nhân được khi hủy phòng</td>
-                          <td>{detailHomestay.cancellationPolicy} %</td>
+                          <td>Số phần trăm tiền bạn mất được khi hủy phòng</td>
+                          <td>100%</td>
                         </tr>
                         <tr>
                           <td>Số người</td>
@@ -297,7 +339,7 @@ export const BookingReviewHomestay = () => {
                 </Col>
                 <Col span={16} >
                   <div style={{ float: 'right', marginTop: '5px' }}>
-                    <Button style={{ color: 'white', fontWeight: '500', fontSize: '14px', backgroundColor: 'rgb(255, 94, 31)', width: '85px', height: '40px' }}><a href={payment}>Tiếp tục</a></Button>
+                    <Button onClick={() => handleBooking()} style={{ color: 'white', fontWeight: '500', fontSize: '14px', backgroundColor: 'rgb(255, 94, 31)', width: '85px', height: '40px' }}>Tiếp tục</Button>
                   </div>
                 </Col>
               </Row>
@@ -312,6 +354,22 @@ export const BookingReviewHomestay = () => {
         }}
       >
       </Footer>
+      <Modal
+        title=" "
+        open={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        footer={[]}
+      >
+        <div style={{ textAlign: 'center' }}>
+          <h5>Lựa chọn hình thức thanh toán</h5>
+          <a href={payment}>
+            <img src={logovnpay} className='imgThanhToan' />
+          </a>
+          <a href={paypal} style={{marginLeft:'10px'}}>
+            <img src={paypalImg} style={{ width: '87px', height: '48px' }} className='imgThanhToanPaypal' />
+          </a>
+        </div>
+      </Modal>
     </>
   )
 

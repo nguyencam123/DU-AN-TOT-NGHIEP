@@ -1,11 +1,19 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { Avatar, Tabs, Typography, message, notification } from 'antd'
+import {
+  Avatar,
+  DatePicker,
+  Tabs,
+  Typography,
+  message,
+  notification,
+} from 'antd'
 import {
   UserOutlined,
   FileProtectOutlined,
   LogoutOutlined,
   BellOutlined,
   RedoOutlined,
+  BankOutlined,
 } from '@ant-design/icons'
 import { useState } from 'react'
 import { MDBBtn, MDBCol, MDBInput, MDBRow } from 'mdb-react-ui-kit'
@@ -26,20 +34,25 @@ const LoginDetail = () => {
   const userDetail = JSON.parse(localStorage.getItem('userDetail'))
   const namelocal = userDetail?.data.name
   const dataUser = useSelector((state) => state.user.userData)
-  const [name, setname] = useState(dataUser.data?.name)
+  const [name, setname] = useState(userDetail?.data?.name)
   const [birthday, setbirthday] = useState(856345)
   const [gender, setgender] = useState(true)
-  const [address, setaddress] = useState(dataUser.data?.address)
-  const [phoneNumber, setphoneNumber] = useState(dataUser.data?.phoneNumber)
-  const [email, setemail] = useState(dataUser.data?.email)
+  const [address, setaddress] = useState(userDetail?.data?.address)
+  const [phoneNumber, setphoneNumber] = useState(userDetail?.data?.phoneNumber)
+  const [email, setemail] = useState(userDetail?.data?.email)
   const [username, setusername] = useState('')
+  const [numberBank, setNumberBank] = useState(userDetail?.data?.numberAccount)
+  const [nameBank, setNameBank] = useState(userDetail?.data?.nameBack)
+  const [nameAccountBank, setNameAccountBank] = useState(
+    userDetail?.data?.nameAccount,
+  )
   const [password, setpassword] = useState('')
   const [identificationNumber, setidentificationNumber] = useState('')
   const [loading, setLoading] = useState(false)
-
   const handleDateChangestart = (dates) => {
-    setbirthday(moment(dates).valueOf())
+    setidentificationNumber(dates.valueOf())
   }
+
   const [newpassword, setnewpassword] = useState('')
   const [confirmpassword, setconfirmpassword] = useState('')
   const formChangePass = {
@@ -120,9 +133,16 @@ const LoginDetail = () => {
     formData.append('address', address)
     formData.append('phoneNumber', phoneNumber)
     formData.append('email', email)
-    formData.append('birthday', new Date(identificationNumber).valueOf())
+    formData.append(
+      'birthday',
+      identificationNumber || dataUser.data?.birthday.valueOf(),
+    )
     formData.append('username', dataUser?.data?.username)
-    formData.append('avatar', file)
+
+    if (file && file.size > 0) {
+      formData.append('avatar', file)
+    }
+
     message.info('Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!', 5)
     instance
       .put(
@@ -154,7 +174,64 @@ const LoginDetail = () => {
         setLoading(false) // Set loading to false if the request fails
       })
   }
+  const handleSubmitBank = (e) => {
+    e.preventDefault()
+    setLoading(true) // Set loading to true when submitting
 
+    const formData = new FormData()
+    formData.append('name', name)
+    formData.append('gender', gender)
+    formData.append('address', address)
+    formData.append('phoneNumber', phoneNumber)
+    formData.append('email', email)
+    formData.append(
+      'birthday',
+      identificationNumber || dataUser.data?.birthday.valueOf(),
+    )
+    formData.append('username', dataUser?.data?.username)
+
+    if (file.length > 0) {
+      formData.append('avatar', file)
+    }
+
+    formData.append('nameBack', nameBank)
+    formData.append('nameAccount', nameAccountBank)
+    formData.append('numberAccount', numberBank)
+    message.info('Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!', 5)
+    instance
+      .put(
+        `http://localhost:8080/api/v1/customer/update-information-customer?id=${userDetail?.data.id}`,
+        formData,
+      )
+      .then((response) => {
+        localStorage.setItem('ownerDetail', JSON.stringify(response))
+        setLoading(false) // Set loading to false after a successful request
+        message.info(
+          'Sửa thông tin thành công những thay đổi sẽ được áp dụng cho lần đăng nhập tới!',
+          5,
+        )
+      })
+      .catch((error) => {
+        // console.error('Error:', error)
+
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          const errorMessage = error.response.data.message
+          //   console.error('Error Message:', errorMessage)
+
+          // Do something with the error message, such as displaying it to the user
+          message.error(errorMessage, 5)
+        }
+
+        setLoading(false) // Set loading to false if the request fails
+      })
+  }
+  const isBeforeToday = (current) => {
+    return current && current.isAfter(moment().startOf('day'))
+  }
   const [activeTab, setActiveTab] = useState('1')
   const items = [
     {
@@ -224,7 +301,7 @@ const LoginDetail = () => {
                     id='name'
                     type='text'
                     onChange={(e) => setname(e.target.value)}
-                    defaultValue={dataUser.data?.name}
+                    defaultValue={dataUser?.data?.name}
                     required
                   />
                 </MDBCol>
@@ -235,7 +312,7 @@ const LoginDetail = () => {
                     id='address'
                     type='text'
                     required
-                    defaultValue={dataUser.data?.address}
+                    defaultValue={dataUser?.data?.address}
                     onChange={(e) => setaddress(e.target.value)}
                   />
                 </MDBCol>
@@ -246,7 +323,7 @@ const LoginDetail = () => {
                 label='Email'
                 id='email'
                 type='email'
-                defaultValue={dataUser.data?.email}
+                defaultValue={dataUser?.data?.email}
                 onChange={(e) => setemail(e.target.value)}
               />
               <MDBInput
@@ -255,19 +332,19 @@ const LoginDetail = () => {
                 id='phoneNumber'
                 type='number'
                 required
-                defaultValue={dataUser.data?.phoneNumber}
+                defaultValue={dataUser?.data?.phoneNumber}
                 onChange={(e) => setphoneNumber(e.target.value)}
               />
-              <MDBInput
+              {/* <MDBInput
                 wrapperClass='mb-4'
                 label='Ngày sinh'
                 id='birthday'
                 type='date'
                 required
                 defaultValue={
-                  dataUser.data?.birthday
+                  dataUser?.data?.birthday
                     ? dayjs(
-                        dayjs(dataUser.data?.birthday)
+                        dayjs(dataUser?.data?.birthday)
                           .locale('vi')
                           .format('YYYY-MM-DD'),
                         'YYYY-MM-DD',
@@ -275,7 +352,27 @@ const LoginDetail = () => {
                     : null
                 }
                 onChange={(e) => setidentificationNumber(e.target.value)}
+              /> */}
+              <DatePicker
+                label='Ngày sinh'
+                id='birthday'
+                type='date'
+                required
+                defaultValue={
+                  dataUser?.data?.birthday
+                    ? dayjs(
+                        dayjs(dataUser?.data?.birthday)
+                          .locale('vi')
+                          .format('YYYY-MM-DD'),
+                        'YYYY-MM-DD',
+                      )
+                    : null
+                }
+                onChange={handleDateChangestart}
+                style={{ width: '100%', marginBottom: 15 }}
+                disabledDate={isBeforeToday}
               />
+
               <MDBRow>
                 <MDBCol col='6'>
                   Giới tính &emsp;&emsp;
@@ -349,6 +446,59 @@ const LoginDetail = () => {
               </MDBBtn>
             </form>
           </div>
+        </div>
+      ),
+    },
+    {
+      key: '6',
+      label: (
+        <div style={{ display: 'flex' }}>
+          <BankOutlined style={{ fontSize: 25 }} />
+          <Title level={5} style={{ marginTop: 2 }}>
+            Thông tin tài khoản
+          </Title>
+        </div>
+      ),
+      children: (
+        <div>
+          <Title level={3}>Cập nhật thông tin tài khoản ngân hàng</Title>
+          <form>
+            <MDBInput
+              wrapperClass='mb-4'
+              label='Số tài khoản'
+              id='numberBank'
+              type='numberBank'
+              required
+              defaultValue={userDetail?.data?.numberAccount}
+              onChange={(e) => setNumberBank(e.target.value)}
+            />
+            <MDBInput
+              wrapperClass='mb-4'
+              label='Tên ngân hàng'
+              id='nameBank'
+              type='nameBank'
+              required
+              defaultValue={userDetail?.data?.nameBack}
+              onChange={(e) => setNameBank(e.target.value)}
+            />
+            <MDBInput
+              wrapperClass='mb-4'
+              label='Tên tài khoản'
+              id='nameAccountBank'
+              type='nameAccountBank'
+              required
+              defaultValue={userDetail?.data?.nameAccount}
+              onChange={(e) => setNameAccountBank(e.target.value)}
+            />
+            <MDBBtn
+              className='w-100 mb-4'
+              size='md'
+              style={{ marginTop: 10 }}
+              onClick={handleSubmitBank}
+            >
+              Cập nhật thông tin tài khoản ngân hàng
+            </MDBBtn>
+          </form>
         </div>
       ),
     },
@@ -481,7 +631,7 @@ const LoginDetail = () => {
           style={{ color: 'black' }}
           onClick={logout}
         >
-          <UserOutlined /> Đăng xuất
+          <LogoutOutlined /> Đăng xuất
         </button>
       ),
     },

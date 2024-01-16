@@ -23,8 +23,8 @@ public interface CustomerCartDetailRepository extends CartDetailRepository {
     List<CartDetail> listCartDetail(String idCart);
 
     @Query(value = """
-           SELECT * FROM cart_detail
-            """, nativeQuery = true)
+            SELECT * FROM cart_detail
+             """, nativeQuery = true)
     List<CartDetail> getAllCartDetail();
 
     @Modifying
@@ -34,7 +34,7 @@ public interface CustomerCartDetailRepository extends CartDetailRepository {
             JOIN cart c ON cd.id_cart = c.id
             JOIN [user] u ON c.id_user = u.id
             WHERE u.id = :#{#userId} 
-            """,nativeQuery = true)
+            """, nativeQuery = true)
     void deleteAllCart(String userId);
 
     @Query(value = """
@@ -51,5 +51,37 @@ public interface CustomerCartDetailRepository extends CartDetailRepository {
                             GROUP BY cd.id, cd.start_date, cd.end_date, cd.status, h.id, h.name, h.price, h.number_person, h.address, h.[desc], h.email, h.acreage, p.value
             """, nativeQuery = true)
     Page<CustomerCartDetailResponse> getAllHomestayInCart(Pageable pageable, CustomerCartRequest request);
+
+    @Query(value = """
+            SELECT cd.*
+            FROM cart_detail cd
+            WHERE cd.[status] = 0
+            AND EXISTS (
+            	SELECT 1
+            	FROM booking b
+            	WHERE b.[status] = 1
+            		AND (b.[start_date] <= cd.[start_date] AND b.end_date >= cd.[start_date])
+            		OR (b.end_date >= cd.end_date AND b.[start_date] <= cd.end_date)
+            		AND b.homestay_id = cd.homestay_id
+            );
+            """, nativeQuery = true)
+    List<CartDetail> cartDetailBooked();
+
+    @Transactional
+    @Query(value = """
+            DELETE cd FROM cart_detail cd
+                JOIN cart c ON cd.id_cart = c.id
+                JOIN [user] u ON c.id_user = u.id
+                WHERE u.id = :#{#userId} 
+            	AND cd.homestay_id = :#{#homestayId}
+            	AND cd.[status] = 0
+            	AND EXISTS 
+            	(
+                    SELECT 1 FROM booking b 
+                    WHERE b.homestay_id = :#{#homestayId} 
+                    AND b.[status] = 1 
+                )
+            """, nativeQuery = true)
+    void deleteByHomestayId(String homestayId, String userId);
 
 }

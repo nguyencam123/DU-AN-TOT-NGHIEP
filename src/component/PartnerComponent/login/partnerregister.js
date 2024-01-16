@@ -39,9 +39,11 @@ const PartnerRegister = () => {
   const [email, setemail] = useState('')
   const [username, setusername] = useState('')
   const [password, setpassword] = useState('')
-  const [identificationNumber, setidentificationNumber] = useState('')
+  const [numberBank, setNumberBank] = useState(0)
+  const [nameBank, setNameBank] = useState(0)
+  const [nameAccountBank, setNameAccountBank] = useState('')
   const handleDateChangestart = (dates) => {
-    setbirthday(moment(dates).valueOf())
+    setbirthday(dates.valueOf())
   }
   const navigate = useNavigate()
   const openNotification = () => {
@@ -63,16 +65,18 @@ const PartnerRegister = () => {
     email: email,
     username: username,
     password: password,
-    // identificationNumber: identificationNumber,
+    nameBack: nameBank,
+    nameAccount: nameAccountBank,
+    numberAccount: numberBank,
     point: 9,
   }
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (password.length < 8 || username.length < 8) {
-      alert('Mật khẩu và tài khoản phải có ít nhất 8 ký tự')
+      message.info('Mật khẩu và tài khoản phải có ít nhất 8 ký tự', 5)
       return
     } else if (phoneNumber.toString().length !== 10) {
-      alert('Số điện thoại phải có đúng 10 số')
+      message.info('Số điện thoại phải có đúng 10 số', 5)
       return
     } else {
       setIsLoading(true)
@@ -103,7 +107,7 @@ const PartnerRegister = () => {
         // Xử lý lỗi từ request
         setIsLoading(false)
         console.error('Error during registration:', error)
-        message.error(error.response.data.message)
+        message.error(error.response.data.message, 5)
       }
     }
   }
@@ -185,6 +189,30 @@ const PartnerRegister = () => {
               required
               onChange={(e) => setphoneNumber(e.target.value)}
             />
+            <MDBInput
+              wrapperClass='mb-4'
+              label='Số tài khoản'
+              id='numberBank'
+              type='numberBank'
+              required
+              onChange={(e) => setNumberBank(e.target.value)}
+            />
+            <MDBInput
+              wrapperClass='mb-4'
+              label='Tên ngân hàng'
+              id='nameBank'
+              type='nameBank'
+              required
+              onChange={(e) => setNameBank(e.target.value)}
+            />
+            <MDBInput
+              wrapperClass='mb-4'
+              label='Tên tài khoản'
+              id='nameAccount'
+              type='nameAccount'
+              required
+              onChange={(e) => setNameAccountBank(e.target.value)}
+            />
             <MDBRow>
               <MDBCol col='6'>
                 Giới tính &emsp;&emsp;
@@ -205,7 +233,7 @@ const PartnerRegister = () => {
               </MDBCol>
               <MDBCol col='6'>
                 <div style={{ display: 'flex' }}>
-                  Ngày sinh &ensp;
+                  <span style={{ marginTop: 4 }}>Ngày sinh &ensp;</span>
                   <DatePicker
                     style={{ width: '86%', height: 36 }}
                     dateFormat='dd/MM/yyyy'

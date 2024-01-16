@@ -21,6 +21,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +53,13 @@ public class HomestayOwnerPromotionServiceImpl implements HomestayOwnerPromotion
             homestayOwnerPromotionRepository.save(promotion);
         }
         }
+        List<Promotion> promotiond=homestayOwnerPromotionRepository.findByStartDateLessThanAndStatusPromotion();
+        if (promotiond!=null){
+            for (Promotion promotion: promotiond){
+                promotion.setStatusPromotion(StatusPromotion.HOAT_DONG);
+                homestayOwnerPromotionRepository.save(promotion);
+            }
+        }
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
         Page<Promotion> getPromotion = homestayOwnerPromotionRepository.getBookingByNameAndStatus(request, pageable);
         return new PageableObject<>(getPromotion);
@@ -76,7 +86,6 @@ public class HomestayOwnerPromotionServiceImpl implements HomestayOwnerPromotion
         if (homestayOwnerPromotionRepository.existsByName(request.getName())) {
             throw new RestApiException("tên không được trùng");
         }
-
         Promotion promotion=new Promotion();
         promotion.setName(request.getName());
         promotion.setStartDate(request.getStartDate());
@@ -84,7 +93,7 @@ public class HomestayOwnerPromotionServiceImpl implements HomestayOwnerPromotion
         promotion.setType(request.getType());
         promotion.setValue(request.getValue());
         promotion.setIdOwnerHomestay(homestayOwnerOwnerHomestayRepository.findById(request.getOwner()).get());
-        promotion.setStatusPromotion(StatusPromotion.HOAT_DONG);
+        promotion.setStatusPromotion(StatusPromotion.CHO_HOAT_DONG);
         Promotion promotion1=homestayOwnerPromotionRepository.save(promotion);
         for (String homestay: request.getHomestay()){
             Homestay homestay1=homestayOwnerHomestayRepository.findById(homestay).orElse(null);
@@ -103,7 +112,7 @@ public class HomestayOwnerPromotionServiceImpl implements HomestayOwnerPromotion
         }
 
         if (request.getStartDate() <= 0 || request.getEndDate() <= 0) {
-            throw new RestApiException("Ngày bắt đầu và nagyf kết thúc không được nhỏ hơn 0");
+            throw new RestApiException("Ngày bắt đầu và ngày kết thúc không được nhỏ hơn 0");
         }
 
         if (request.getEndDate() <= request.getStartDate()) {
@@ -119,13 +128,17 @@ public class HomestayOwnerPromotionServiceImpl implements HomestayOwnerPromotion
         if (homestayOwnerPromotionRepository.existsByName(request.getName()) && !promotion.getName().equals(request.getName())) {
             throw new RestApiException("Tên đã được sử dụng");
         }
-
         promotion.setName(request.getName());
         promotion.setStartDate(request.getStartDate());
         promotion.setEndDate(request.getEndDate());
         promotion.setType(request.getType());
         promotion.setValue(request.getValue());
         Promotion promotion1=homestayOwnerPromotionRepository.save(promotion);
+        List<Homestay> homestayList=homestayOwnerHomestayRepository.getHomestayByPromotion(idPromotion);
+        for (Homestay homestay: homestayList){
+            homestay.setPromotion(null);
+            homestayOwnerHomestayRepository.save(homestay);
+        }
         for (String homestay: request.getHomestay()){
             Homestay homestay1=homestayOwnerHomestayRepository.findById(homestay).orElse(null);
             homestay1.setPromotion(promotion1);

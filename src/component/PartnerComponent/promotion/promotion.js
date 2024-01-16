@@ -49,7 +49,7 @@ const Promotion = () => {
   const [valueselect, setValueSelect] = useState('')
   const [isViewmodal, setIsviewmodal] = useState(false)
   const [homestay, setHomestay] = useState([])
-
+  const [dataPromotion, setDataPromotion] = useState([])
   const [arrow, setArrow] = useState('Show')
   const dispatch = useDispatch()
   const userDetail = JSON.parse(localStorage.getItem('ownerDetail'))
@@ -77,12 +77,16 @@ const Promotion = () => {
     selectedRowKeys: checkedValues,
     onChange: (selectedRowKeys, selectedRows) => {
       setCheckedValues(selectedRowKeys)
+      setDataPromotion(selectedRows)
     },
     getCheckboxProps: (record) => ({
       // Column configuration not to be checked
       name: record.name,
+      checked: record.price < value,
+      disabled: record.price < value,
     }),
   }
+
   const isBeforeToday = (current) => {
     return current && current.isBefore(moment().startOf('day'))
   }
@@ -245,6 +249,8 @@ const Promotion = () => {
           return 'Hoạt động'
         } else if (str == 'KET_THUC') {
           return 'Khuyến mãi đã kết thúc'
+        } else if (str == 'CHO_HOAT_DONG') {
+          return 'Chờ hoạt động'
         } else {
           return 'Không hoạt động'
         }
@@ -325,7 +331,10 @@ const Promotion = () => {
     homestay: checkedValues,
   }
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Vui lòng nhập tên khuyến mãi'),
+    name: Yup.string()
+      .trim() // Remove leading and trailing whitespaces
+      .min(1, 'Vui lòng nhập ít nhất một ký tự cho tên sản phẩm')
+      .required('Vui lòng nhập tên khuyến mãi'),
     value: Yup.number()
       .required('Vui lòng nhập số tiền giảm')
       .typeError('Vui lòng nhập số tiền giảm')
@@ -353,41 +362,45 @@ const Promotion = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    try {
-      await validationSchema.validate(promotions, { abortEarly: false })
-      setIsLoading(true)
-      if (isAddFrom) {
-        await message.info(
-          'Đang tiến hành thêm bạn vui lòng đợi một vài giây nhé!',
-        )
-        await dispatch(addPromotion(promotions))
-        await dispatch(fetchPromotion(UserID, homestayname, valueselect))
-        await setIsModalOpen(false)
-        await setIsLoading(false)
-        message.info('Thêm thành công')
-        setName('')
-        setValue(0)
-        setStartDate(null)
-        setEndDate(null)
-      } else {
-        await message.info(
-          'Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!',
-        )
-        await dispatch(UpdateStatusPromotion(idPromotion, promotions))
-        await dispatch(fetchPromotion(UserID, homestayname, valueselect))
-        await setIsModalOpen(false)
-        await setIsLoading(false)
-        message.info('Sửa thành công')
+    if (dataPromotion.some((item) => item.price < value)) {
+      message.info('Có homestay có giá thấp hơn số tiền khuyến mãi!')
+    } else {
+      try {
+        await validationSchema.validate(promotions, { abortEarly: false })
+        setIsLoading(true)
+        if (isAddFrom) {
+          await message.info(
+            'Đang tiến hành thêm bạn vui lòng đợi một vài giây nhé!',
+          )
+          await dispatch(addPromotion(promotions))
+          await dispatch(fetchPromotion(UserID, homestayname, valueselect))
+          await setIsModalOpen(false)
+          await setIsLoading(false)
+          message.info('Thêm thành công')
+          setName('')
+          setValue(0)
+          setStartDate(null)
+          setEndDate(null)
+        } else {
+          await message.info(
+            'Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!',
+          )
+          await dispatch(UpdateStatusPromotion(idPromotion, promotions))
+          await dispatch(fetchPromotion(UserID, homestayname, valueselect))
+          await setIsModalOpen(false)
+          await setIsLoading(false)
+          message.info('Sửa thành công')
+        }
+        dispatch(fetchPromotion(UserID))
+        setFormErrors({})
+      } catch (errors) {
+        const errorObject = {}
+        errors.inner.forEach((error) => {
+          errorObject[error.path] = error.message
+        })
+        setFormErrors(errorObject)
+        setIsLoading(false)
       }
-      dispatch(fetchPromotion(UserID))
-      setFormErrors({})
-    } catch (errors) {
-      const errorObject = {}
-      errors.inner.forEach((error) => {
-        errorObject[error.path] = error.message
-      })
-      setFormErrors(errorObject)
-      setIsLoading(false)
     }
   }
   const hanhdleSelect = (selectedValue) => {
@@ -408,6 +421,10 @@ const Promotion = () => {
     {
       name: 'Không hoạt động',
       value: 1,
+    },
+    {
+      name: 'Chờ hoạt động',
+      value: 2,
     },
   ]
 
@@ -621,7 +638,9 @@ const Promotion = () => {
       </Modal>
       <Modal
         title={
-          <div style={{ fontSize: '22px' }}>Xem thông tin chi tiết homstay</div>
+          <div style={{ fontSize: '22px' }}>
+            Xem thông tin chi tiết khuyến mãi
+          </div>
         }
         open={isViewmodal}
         onCancel={handleCancel}

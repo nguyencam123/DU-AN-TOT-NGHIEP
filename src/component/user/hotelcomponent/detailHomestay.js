@@ -50,6 +50,9 @@ import {
   addShoppingCartThunk,
   fetchShoppingCart,
 } from '../../../features/user/shoppingCartThunk'
+import dayjs from 'dayjs'
+import 'dayjs/locale/vi'
+dayjs.locale('vi')
 
 const { Header, Content, Footer } = Layout
 
@@ -86,7 +89,21 @@ export const DetailHomestay = () => {
   const detailHomestay = useSelector((state) => state.product.productDetails)
   const comment = useSelector((state) => state.product.commentProduct)
   const avgPoint = useSelector((state) => state.product.avgPoint)
-
+  let cancelDay = ''
+  const today = dayjs()
+  const dateFix = new Date(today)
+  dateFix.setHours('00')
+  dateFix.setMinutes('00')
+  dateFix.setSeconds('00')
+  dateFix.setMilliseconds('000')
+  if (dayjs(Date(dateFix)).add(1, 'days').valueOf() >= startDate) {
+    cancelDay = `Việc hủy phòng sẽ mất toàn bộ số tiền bạn đã thanh toán`
+  } else {
+    cancelDay = `Việc hủy phòng sau ngày ${moment(dayjs(dateFix))
+      .add(1, 'day')
+      .locale('vi')
+      .format('LL')} sẽ mất toàn bộ số tiền bạn đã thanh toán`
+  }
   // const imgHomestay = detailHomestay[0].images
   const handleBookingHomestay = (id) => {
     navigate(
@@ -94,39 +111,41 @@ export const DetailHomestay = () => {
     )
   }
   const maxCommentsToShow = 6
-  const slicedComments = comment.slice(0, maxCommentsToShow)
+  const slicedComments = detailHomestay?.comment?.slice(0, maxCommentsToShow)
 
-  const listComment = slicedComments.map((comment, index) => {
+  const listComment = slicedComments?.map((comment, index) => {
     if (index === 2) {
       return false
     }
-    return (
-      <Col key={index} span={6} style={{ marginRight: '70px' }}>
-        <div
-          style={{
-            minHeight: '80px',
-            width: '270px',
-            marginLeft: '15px',
-            marginBottom: '15px',
-            paddingLeft: '5px',
-            fontSize: '12px',
-            fontWeight: '500',
-            boxShadow: '0px 2px 5px rgba(3,18,26,0.15)',
-            borderRadius: '5px',
-          }}
-        >
-          <div style={{ marginBottom: '5px', paddingTop: '5px' }}>
-            {comment?.user.name}
+    if (comment?.point >= 4) {
+      return (
+        <Col key={index} span={6} style={{ marginRight: '70px' }}>
+          <div
+            style={{
+              minHeight: '80px',
+              width: '270px',
+              marginLeft: '15px',
+              marginBottom: '15px',
+              paddingLeft: '5px',
+              fontSize: '12px',
+              fontWeight: '500',
+              boxShadow: '0px 2px 5px rgba(3,18,26,0.15)',
+              borderRadius: '5px',
+            }}
+          >
+            <div style={{ marginBottom: '5px', paddingTop: '5px' }}>
+              {comment?.user.name}
+            </div>
+            <div style={{ width: '250px', wordWrap: 'break-word' }}>
+              {comment?.comment}
+            </div>
           </div>
-          <div style={{ width: '250px', wordWrap: 'break-word' }}>
-            {comment?.comment}
-          </div>
-        </div>
-      </Col>
-    )
+        </Col>
+      )
+    }
   })
   const calculatePercentage = (point, totalPoints) => {
-    return (point / totalPoints) * 100
+    return Math.round((point / totalPoints) * 100)
   }
 
   const renderProgressBars = () => {
@@ -139,7 +158,7 @@ export const DetailHomestay = () => {
     let totalPoints = 0
 
     // Count points and calculate total points
-    comment.forEach((item) => {
+    detailHomestay?.comment?.forEach((item) => {
       const point = item.point
       if (point >= 1 && point <= 5) {
         pointCounts[point]++
@@ -219,12 +238,7 @@ export const DetailHomestay = () => {
           </Row>
           <Row style={{ marginTop: '10px' }}>
             <Col span={8}>
-              <EnvironmentOutlined
-                style={{ fontSize: '10px', alignItems: 'center' }}
-              />
-              <span style={{ fontSize: '12px', marginTop: '3px' }}>
-                {detailHomestay.address}
-              </span>
+              <span style={{ fontSize: '12px', marginTop: '3px' }}></span>
               <div
                 style={{
                   fontSize: '18px',
@@ -232,7 +246,10 @@ export const DetailHomestay = () => {
                   marginTop: '10px',
                 }}
               >
-                Tổng số phòng của homestay: {detailHomestay.numberPerson}
+                <EnvironmentOutlined
+                  style={{ fontSize: '10px', alignItems: 'center' }}
+                />
+                {detailHomestay.address}
               </div>
             </Col>
             <Col span={6} push={10}>
@@ -240,7 +257,7 @@ export const DetailHomestay = () => {
                 <div style={{ fontSize: '12px', marginBottom: '0' }}>
                   Giá mỗi phòng mỗi đêm từ
                 </div>
-                {detailHomestay?.promotion?.value ? (
+                {detailHomestay?.promotion?.statusPromotion === 'HOAT_DONG' ? (
                   <div
                     style={{
                       fontSize: '24',
@@ -252,11 +269,11 @@ export const DetailHomestay = () => {
                   >
                     {formatCurrency(
                       detailHomestay.price -
-                      detailHomestay?.promotion?.value +
-                      ((detailHomestay.price -
-                        detailHomestay?.promotion?.value) *
-                        11) /
-                      100,
+                        detailHomestay?.promotion?.value +
+                        ((detailHomestay.price -
+                          detailHomestay?.promotion?.value) *
+                          11) /
+                          100,
                     )}
                     <span style={{ fontSize: '22' }}> </span>{' '}
                   </div>
@@ -288,7 +305,7 @@ export const DetailHomestay = () => {
                     marginRight: 10,
                   }}
                 >
-                  Chọn phòng
+                  Chọn Homestay
                 </Button>
                 <Button
                   onClick={addShoppingCart}
@@ -503,11 +520,7 @@ export const DetailHomestay = () => {
                   <b> Chính sách hủy phòng</b>
                 </div>
                 <span style={{ lineHeight: '12px', marginLeft: '17px' }}>
-                  Việc hủy phòng trước ngày{' '}
-                  {moment(detailHomestay.startDate).locale('vi').format('LL')}{' '}
-                  sẽ được hoàn toàn miễn phí. Sau ngày{' '}
-                  {moment(detailHomestay.startDate).locale('vi').format('LL')}{' '}
-                  bạn sẽ phải mất một khoản tiền khi hủy phòng
+                  {cancelDay}
                 </span>
               </div>
               <hr style={{ width: '96%', marginLeft: '2%' }} />
@@ -539,12 +552,16 @@ export const DetailHomestay = () => {
                       <td>{detailHomestay?.acreage}m2</td>
                     </tr>
                     <tr>
-                      <td>Số phần trăm tiền bạn nhân được khi hủy phòng</td>
-                      <td>{detailHomestay.cancellationPolicy} %</td>
+                      <td>Số phần trăm tiền bạn mất được khi hủy phòng</td>
+                      <td>100 %</td>
                     </tr>
                     <tr>
                       <td>Số người</td>
                       <td>{detailHomestay?.numberPerson}</td>
+                    </tr>
+                    <tr>
+                      <td>Số phòng</td>
+                      <td>{detailHomestay?.roomNumber}</td>
                     </tr>
                   </tbody>
                 </Table>
@@ -590,7 +607,7 @@ export const DetailHomestay = () => {
               <Space wrap style={{ marginLeft: '40px', marginTop: '10px' }}>
                 <Progress
                   type='dashboard'
-                  percent={(avgPoint * 100) / 5}
+                  percent={Math.round((avgPoint * 100) / 5)}
                   gapDegree={30}
                 />
               </Space>
@@ -625,7 +642,7 @@ export const DetailHomestay = () => {
               <MDBCol md='12' lg='11' xl='10'>
                 <div className='d-flex justify-content-between align-items-center mb-4'>
                   <MDBTypography tag='h4' className='text-dark mb-0'>
-                    Có tất cả ({detailHomestay?.comment?.length}) đánh giá
+                    Có tất cả ({comment?.length}) đánh giá
                   </MDBTypography>
                 </div>
                 {comment.map((items) => (

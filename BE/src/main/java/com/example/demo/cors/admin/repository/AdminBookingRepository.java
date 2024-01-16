@@ -7,10 +7,6 @@ import com.example.demo.cors.admin.model.request.AdminStatisticalTop5Request;
 import com.example.demo.cors.admin.model.response.AdminBookingResponse;
 import com.example.demo.cors.admin.model.response.AdminStatisticalReponse;
 import com.example.demo.cors.admin.model.response.AdminStatisticalTop5Response;
-import com.example.demo.cors.homestayowner.model.reponse.HomestayOwnerStatisticalReponse;
-import com.example.demo.cors.homestayowner.model.reponse.HomestayOwnerStatisticalTop5Reponse;
-import com.example.demo.cors.homestayowner.model.request.HomestayOwnerStatisticalRequest;
-import com.example.demo.cors.homestayowner.model.request.HomestayOwnerTop5StatisticalRequest;
 import com.example.demo.entities.Booking;
 import com.example.demo.repositories.BookingRepository;
 import org.springframework.data.domain.Page;
@@ -55,7 +51,7 @@ public interface AdminBookingRepository extends BookingRepository {
     @Query(value = """
             SELECT
                 COUNT(a.id) AS 'DoanhSo',
-                SUM(a.total_price) AS 'TongSoTien'
+                SUM(a.total_price - a.refund_price) AS 'TongSoTien'
             FROM
                 booking a
                 INNER JOIN homestay b ON a.homestay_id = b.id
@@ -65,21 +61,21 @@ public interface AdminBookingRepository extends BookingRepository {
                 AND (MONTH(DATEADD(SECOND, a.created_date / 1000, '1970-01-01')) = :#{#request.month} OR :#{#request.month} IS NULL OR :#{#request.month} LIKE '')
                 AND (DAY(DATEADD(SECOND, a.created_date / 1000, '1970-01-01')) = :#{#request.date} OR :#{#request.date} IS NULL OR :#{#request.date} LIKE '')
 				)
-                AND a.status = 1;                 
+                AND (a.status = 1 or a.status = 0);                 
             """, nativeQuery = true)
     AdminStatisticalReponse getAllStatistical(AdminStatisticalRequest request);
 
     @Query(value = """
             SELECT
             COUNT(a.id) AS 'DoanhSo',
-            SUM(a.total_price) AS 'TongSoTien'
+            SUM(a.total_price - a.refund_price) AS 'TongSoTien'
             FROM
             booking a
             inner join homestay b on a.homestay_id=b.id
             WHERE
              MONTH(DATEADD(SECOND, a.created_date / 1000, '1970-01-01')) = :#{#request.month}
             AND DATEPART(YEAR, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.year}
-            AND a.status=1;                     
+            AND (a.status = 1 or a.status = 0);                     
             """, nativeQuery = true)
     AdminStatisticalReponse getAllStatisticalYear(AdminStatisticalRequest request);
 
@@ -89,13 +85,13 @@ public interface AdminBookingRepository extends BookingRepository {
                 b.address,
                 b.room_number AS "roomNumber",
                 COUNT(a.id) AS 'DoanhSo',
-                SUM(a.total_price) AS 'TongSoTien'
+                SUM(a.total_price - a.refund_price) AS 'TongSoTien'
                 FROM
                 booking a
                 INNER JOIN homestay b ON a.homestay_id = b.id
                 WHERE
                 DATEPART(YEAR, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.year}
-                AND a.status=1
+                AND (a.status = 1 or a.status = 0)
                 GROUP BY
                     b.name,
                     b.address,

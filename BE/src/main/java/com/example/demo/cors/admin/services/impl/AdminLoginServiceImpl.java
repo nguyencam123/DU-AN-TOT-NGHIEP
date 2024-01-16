@@ -8,7 +8,9 @@ import com.example.demo.cors.admin.model.request.AdminUserPasswordRequest;
 import com.example.demo.cors.admin.model.response.AdminAuthenticationReponse;
 import com.example.demo.cors.admin.model.response.AdminLoginResponse;
 import com.example.demo.cors.admin.repository.AdminLoginRepository;
+import com.example.demo.cors.admin.repository.AdminOwnerHomestayRepository;
 import com.example.demo.cors.admin.repository.AdminTokenRepository;
+import com.example.demo.cors.admin.repository.AdminUserRepository;
 import com.example.demo.cors.admin.services.AdminLoginService;
 import com.example.demo.entities.Admin;
 import com.example.demo.entities.Token;
@@ -50,6 +52,13 @@ public class AdminLoginServiceImpl implements AdminLoginService {
     private AdminLoginRepository adminLoginRepository;
 
     @Autowired
+    private AdminOwnerHomestayRepository adminOwnerHomestayRepository;
+
+
+    @Autowired
+    private AdminUserRepository adminUserRepository;
+
+    @Autowired
     private Cloudinary cloudinary;
 
     @Override
@@ -57,39 +66,51 @@ public class AdminLoginServiceImpl implements AdminLoginService {
         return adminLoginRepository.getLogin(adminLoginRequest);
     }
 
+    private boolean usernameExistsInAdmin(String username) {
+        return adminLoginRepository.existsByUsername(username);
+    }
+
+    private boolean usernameExistsInOwnerHomestay(String username) {
+        return adminOwnerHomestayRepository.existsByUsername(username);
+    }
+
+    private boolean usernameExistsInUser(String username) {
+        return adminUserRepository.existsByUsername(username);
+    }
+
     @Override
     public AdminAuthenticationReponse register(AdminRequest request) {
         if (isNullOrEmpty(request.getUsername())) {
-            throw new RestApiException("Username cannot be empty");
+            throw new RestApiException("tên tài khoản không được để trống");
         }
         if (isNullOrEmpty(request.getName())) {
-            throw new RestApiException("Name cannot be empty");
+            throw new RestApiException("tên không được để trống");
         }
         if (request.getBirthday() == null) {
-            throw new RestApiException("Birthday cannot be empty");
+            throw new RestApiException("ngày sinh không được để trống");
         }
         if (isNullOrEmpty(request.getAddress())) {
-            throw new RestApiException("Address cannot be empty");
+            throw new RestApiException("địa chỉ không được để trống");
         }
         if (isNullOrEmpty(request.getPhoneNumber())) {
-            throw new RestApiException("Phone number cannot be empty");
+            throw new RestApiException("số điện thoại không được để trống");
         }
         if (isNullOrEmpty(request.getEmail())) {
-            throw new RestApiException("Email cannot be empty");
+            throw new RestApiException("Email không được để trống");
         }
         if (isNullOrEmpty(request.getPassword())) {
-            throw new RestApiException("Password cannot be empty");
+            throw new RestApiException("Mật khẩu không được để trống");
+        }
+        if (usernameExistsInAdmin(request.getUsername()) || usernameExistsInUser(request.getUsername()) || usernameExistsInOwnerHomestay(request.getUsername())){
+            throw new RestApiException(" Tên tài khoản đã được sử dụng");
         }
         Admin admin = new Admin();
         Random random = new Random();
         int number = random.nextInt(1000);
         String code = String.format("G%04d", number);
         admin.setCode(code);
-        if (adminLoginRepository.existsByUsername(request.getUsername())) {
-            throw new RestApiException("Username is already in use");
-        }
         if (adminLoginRepository.existsByEmail(request.getEmail())) {
-            throw new RestApiException("Email is already in use");
+            throw new RestApiException("Email đã tồn tại");
         }
         admin.setName(request.getName());
         admin.setBirthday(request.getBirthday());

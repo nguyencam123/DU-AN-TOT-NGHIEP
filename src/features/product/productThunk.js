@@ -7,6 +7,8 @@ import {
   fetchAvgPointSuccess,
   getPaymentSuccess,
   addInfoBooking,
+  getPaypalSuccess,
+  checkBookingSuccess,
 } from './productSlide'
 import { instance } from '../../app/axiosConfig'
 import axios from 'axios'
@@ -87,6 +89,18 @@ export const getNumberPersonPoint = (id) => async (dispatch) => {
   }
 }
 
+export const checkBooking = (id, startDate, endDate) => async (dispatch) => {
+  try {
+    const response = await instance.get(
+      `http://localhost:8080/api/v1/cart/check-available?homestayId=${id}&startDate=${startDate}&endDate=${endDate}`
+    )
+    dispatch(checkBookingSuccess(response.data.data)) // Lấy dữ liệu từ response.data.data
+    // console.log(response.data.data);
+  } catch (error) {
+    dispatch(fetchProductsFailure(error.message))
+  }
+}
+
 export const getPayment = (price) => async (dispatch) => {
   try {
     const response = await instance.post(
@@ -94,6 +108,19 @@ export const getPayment = (price) => async (dispatch) => {
       price,
     )
     dispatch(getPaymentSuccess(response.data.data)) // Lấy dữ liệu từ response.data.data
+    // console.log(response.data.data);
+  } catch (error) {
+    dispatch(fetchProductsFailure(error.message))
+  }
+}
+
+export const getPaymentPayPal = (price) => async (dispatch) => {
+  try {
+    const response = await instance.post(
+      'http://localhost:8080/api/v1/payment/paypal',
+      price,
+    )
+    dispatch(getPaypalSuccess(response.data.data)) // Lấy dữ liệu từ response.data.data
     // console.log(response.data.data);
   } catch (error) {
     dispatch(fetchProductsFailure(error.message))
@@ -138,6 +165,16 @@ export const updateBooking = (bookingId) => async (dispatch) => {
     dispatch(fetchProductsFailure(error.message))
   }
 }
+export const checkBooked = () => async (dispatch) => {
+  try {
+    const response = await instance.get(
+      'http://localhost:8080/api/v1/cart/check-booked',
+    )
+    // console.log(response.data.data);
+  } catch (error) {
+  }
+}
+
 
 export const getAllHomestay = () => async (dispatch) => {
   dispatch(fetchProductsStart())

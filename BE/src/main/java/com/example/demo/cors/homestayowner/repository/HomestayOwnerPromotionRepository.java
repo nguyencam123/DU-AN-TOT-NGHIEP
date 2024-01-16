@@ -6,6 +6,7 @@ import com.example.demo.infrastructure.contant.StatusPromotion;
 import com.example.demo.repositories.PromotionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -32,9 +33,20 @@ public interface HomestayOwnerPromotionRepository extends PromotionRepository {
     Page<Promotion> getBookingByNameAndStatus(@Param("request") HomestayOwnerPromotionSearchRequest request, Pageable pageable);
 
     @Query(value = """
-       SELECT *
-       FROM Promotion a
-       WHERE a.end_date / 1000 < DATEDIFF(SECOND, '1970-01-01', GETDATE()) AND a.status_promotion = 0;
+    SELECT *
+    FROM Promotion a
+    WHERE DATEADD(DAY, 1, CONVERT(DATE, DATEADD(SECOND, a.start_date / 1000, '1970-01-01'))) = CONVERT(DATE, GETUTCDATE())
+    AND a.status_promotion = 2;
+    """, nativeQuery = true)
+    List<Promotion> findByStartDateLessThanAndStatusPromotion();
+
+    @Query(value = """
+    SELECT *
+    FROM Promotion a
+    WHERE 
+    (DATEADD(DAY, 1, CONVERT(DATE, DATEADD(SECOND, a.end_date / 1000, '1970-01-01'))) < CONVERT(DATE, GETUTCDATE()))
+    AND a.status_promotion = 0 ;
     """, nativeQuery = true)
     List<Promotion> findByEndDateLessThanAndStatusPromotion();
+
 }

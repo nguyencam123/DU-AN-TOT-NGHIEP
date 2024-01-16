@@ -72,11 +72,19 @@ const Booking = () => {
   }
   const columns = [
     {
-      title: 'Tên tài khoản',
-      dataIndex: 'user',
-      key: 'user',
+      title: 'Ngày nhận phòng',
+      dataIndex: 'startDate',
+      key: 'startDate',
       render: (data) => {
-        return data.name
+        return moment(data).locale('vi').format('LL')
+      },
+    },
+    {
+      title: 'Ngày trả phòng',
+      dataIndex: 'endDate',
+      key: 'endDate',
+      render: (data) => {
+        return moment(data).locale('vi').format('LL')
       },
     },
     {
@@ -113,6 +121,13 @@ const Booking = () => {
       title: 'Email người đặt',
       dataIndex: 'email',
       key: 'email',
+      render: (data, record) => {
+        const isShowPhoneNumber = moment(record.startDate).isBefore(
+          moment().subtract(1, 'day'),
+        )
+
+        return isShowPhoneNumber ? data : null
+      },
     },
     {
       title: 'Tên người đặt',
@@ -122,7 +137,14 @@ const Booking = () => {
     {
       title: 'Số điện thoại người đặt',
       dataIndex: 'phoneNumber',
-      key: 'createdDate',
+      key: 'phoneNumber',
+      render: (data, record) => {
+        const isShowPhoneNumber = moment(record.startDate).isBefore(
+          moment().subtract(1, 'day'),
+        )
+
+        return isShowPhoneNumber ? data : null
+      },
     },
     {
       title: 'Tổng tiền',
@@ -163,27 +185,30 @@ const Booking = () => {
   /**
    * export excel
    */
-  const formattedData = booking.map((item) => ({
-    TenTaiKhoan: item.name,
-    TenHomestay: item.homestay.name,
-    NgayDat: moment(item.createdDate).locale('vi').format('LL'),
-    TrangThai: item.status,
-    EmailNguoiDat: item.user.email,
-    TenNguoiDat: item.user.name,
-    SoDienThoaiNguoiDat: item.user.phoneNumber,
-    TongTien: formatCurrency(item.totalPrice),
-  }))
+  const formattedData = booking?.map((item) => {
+    // Kiểm tra nếu startDate là ngày trước đó và thời gian là từ 12 giờ trở đi thì hiển thị số điện thoại
+    const isShowPhoneNumber = moment(item.startDate).isBefore(
+      moment().subtract(1, 'day'),
+    )
+
+    return {
+      TenTaiKhoan: item.name,
+      TenHomestay: item.homestay.name,
+      NgayDat: moment(item.createdDate).locale('vi').format('LL'),
+      TrangThai: item.status,
+      EmailNguoiDat: isShowPhoneNumber ? item.user.email : '',
+      TenNguoiDat: item.user.name,
+      SoDienThoaiNguoiDat: isShowPhoneNumber ? item.user.phoneNumber : '',
+      TongTien: formatCurrency((item.totalPrice * 100) / 111),
+    }
+  })
 
   const importAndAppendData = (data) => {
     const today = moment().format('YYYY-MM-DD')
     // Sample data
     const title = [`Thống kê lượt đặt phòng trong năm(ngày xuất file ${today})`]
     const header = ['Name', 'Age', 'City']
-    // const data = [
-    //   { name: 'John Doe', age: 25, city: 'New York' },
-    //   { name: 'Jane Smith', age: 30, city: 'San Francisco' },
-    //   { name: 'Bob Johnson', age: 28, city: 'Los Angeles' },
-    // ];
+
     const headers = Object.keys(data[0])
     const values = data.map((obj) => headers.map((key) => obj[key]))
 
@@ -254,19 +279,22 @@ const Booking = () => {
   const exportExcel = () => {
     importAndAppendData(formattedData)
   }
+
   return (
     <div style={{ marginTop: '20px' }}>
       <Title level={2}>Quản trị đặt phòng</Title>
-      <div style={{ display: 'flex', marginBottom: 15 }}>
-        <Title level={4}>Danh mục</Title>
-        <Button
-          style={{ marginLeft: 'auto' }}
-          type='primary'
-          onClick={exportExcel}
-        >
-          Xuất file thống kê đặt phòng
-        </Button>
-      </div>
+      {formattedData.length > 0 && (
+        <div style={{ display: 'flex', marginBottom: 15 }}>
+          <Title level={4}>Danh mục</Title>
+          <Button
+            style={{ marginLeft: 'auto' }}
+            type='primary'
+            onClick={exportExcel}
+          >
+            Xuất file thống kê đặt phòng
+          </Button>
+        </div>
+      )}
       <Row>
         <Form.Item label='Trạng thái' style={{ float: 'left' }}>
           <Select
@@ -281,7 +309,7 @@ const Booking = () => {
         </Form.Item>
         <Form.Item
           label='Tìm kiếm theo tên homestay'
-          style={{ float: 'left', marginLeft: ' 50px' }}
+          style={{ float: 'left', marginLeft: '30px' }}
         >
           <Input.Search
             placeholder='Tên homestay'
@@ -293,20 +321,22 @@ const Booking = () => {
         </Form.Item>
         <Form.Item
           label='Tìm kiếm theo tên người đặt'
-          style={{ float: 'left', marginLeft: ' 50px' }}
+          style={{ float: 'left', marginLeft: ' 30px' }}
         >
           <Input.Search
-            placeholder='Tên chủ người đặt'
+            placeholder='Tên người đặt'
             allowClear
             size='medium'
             enterButton='search'
             onSearch={handleSearchBooking}
           />
         </Form.Item>
+      </Row>
+      <Row>
         <div style={{ marginLeft: 30 }}>
           <Form.Item
             label='Tìm kiếm theo tháng và năm'
-            style={{ float: 'left', marginLeft: '50px' }}
+            style={{ float: 'left', marginLeft: '30px' }}
           >
             <DatePicker onChange={onChangeMonth} picker='month' format='MM' />
           </Form.Item>

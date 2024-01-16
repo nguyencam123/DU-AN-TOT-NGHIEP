@@ -5,8 +5,10 @@ import com.example.demo.cors.homestayowner.model.reponse.loginreponse.HomestayOw
 import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayOwnerOwnerHomestayRequest;
 import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayOwnerPasswordRequest;
 import com.example.demo.cors.homestayowner.model.request.loginrequest.HomestayOwnerUsenamePasswordRequest;
+import com.example.demo.cors.homestayowner.repository.HomestayOwnerAdminRepository;
 import com.example.demo.cors.homestayowner.repository.HomestayOwnerOwnerHomestayRepository;
 import com.example.demo.cors.homestayowner.repository.HomestayOwnerTokenRepository;
+import com.example.demo.cors.homestayowner.repository.HomestayOwnerUserRepository;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerLoginService;
 import com.example.demo.entities.OwnerHomestay;
 import com.example.demo.entities.Token;
@@ -40,6 +42,12 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
     private HomestayOwnerOwnerHomestayRepository homestayownerOwnerHomestayRepository;
 
     @Autowired
+    private HomestayOwnerAdminRepository homestayOwnerAdminRepository;
+
+    @Autowired
+    private HomestayOwnerUserRepository homestayOwnerUserRepository;
+
+    @Autowired
     private HomestayOwnerTokenRepository tokenRepository;
 
     @Autowired
@@ -64,9 +72,24 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         homestayownerOwnerHomestayRepository.save(ownerHomestay);
     }
 
+    private boolean usernameExistsInAdmin(String username) {
+        return homestayOwnerAdminRepository.existsByUsername(username);
+    }
+
+    private boolean usernameExistsInOwnerHomestay(String username) {
+        return homestayownerOwnerHomestayRepository.existsByUsername(username);
+    }
+
+    private boolean usernameExistsInUser(String username) {
+        return homestayOwnerUserRepository.existsByUsername(username);
+    }
+
     @Override
     public HomestayOwnerAuthenticationReponse register(HomestayOwnerOwnerHomestayRequest request) {
 
+        if (usernameExistsInAdmin(request.getUsername()) || usernameExistsInUser(request.getUsername()) || usernameExistsInOwnerHomestay(request.getUsername())){
+            throw new RestApiException(" Username đã được sử dụng");
+        }
         if (isNullOrEmpty(request.getUsername())) {
             throw new RestApiException("Username không được để trống");
         }
@@ -89,9 +112,6 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         String code = String.format("G%04d", number);
         ownerHomestay.setCode(code);
 
-        if (homestayownerOwnerHomestayRepository.existsByUsername(request.getUsername())) {
-            throw new RestApiException("Username đã được sử dụng");
-        }
         if (homestayownerOwnerHomestayRepository.existsByEmail(request.getEmail())) {
             throw new RestApiException("Email đã được sử dụng");
         }
@@ -111,6 +131,12 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         ownerHomestay.setPhoneNumber(request.getPhoneNumber());
         ownerHomestay.setEmail(request.getEmail());
         ownerHomestay.setUsername(request.getUsername());
+        ownerHomestay.setBirthday(request.getBirthday());
+        ownerHomestay.setGender(request.getGender());
+        ownerHomestay.setNameBank(request.getNameBack());
+        ownerHomestay.setNameAccount(request.getNameAccount());
+        ownerHomestay.setNumberAccount(request.getNumberAccount());
+        ownerHomestay.setAddress(request.getAddress());
         ownerHomestay.setPassword(passwordEncoder.encode(request.getPassword()));
         ownerHomestay.setStatus(Status.CHO_DUYET);
         ownerHomestay.setRole(RoleOwner.OWNER);
@@ -134,6 +160,9 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                 .phoneNumber(ownerHomestay.getPhoneNumber())
                 .email(ownerHomestay.getEmail())
                 .username(ownerHomestay.getUsername())
+                .nameBack(ownerHomestay.getNameBank())
+                .nameAccount(ownerHomestay.getNameAccount())
+                .numberAccount(ownerHomestay.getNumberAccount())
                 .status(ownerHomestay.getStatus())
                 .roleOwner(ownerHomestay.getRole())
                 .avataUrl(ownerHomestay.getAvatarUrl())
@@ -179,6 +208,9 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                 .gender(ownerHomestay.getGender())
                 .address(ownerHomestay.getAddress())
                 .phoneNumber(ownerHomestay.getPhoneNumber())
+                .nameBack(ownerHomestay.getNameBank())
+                .nameAccount(ownerHomestay.getNameAccount())
+                .numberAccount(ownerHomestay.getNumberAccount())
                 .email(ownerHomestay.getEmail())
                 .username(ownerHomestay.getUsername())
                 .status(ownerHomestay.getStatus())
@@ -209,6 +241,9 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                 .gender(ownerHomestay.getGender())
                 .address(ownerHomestay.getAddress())
                 .phoneNumber(ownerHomestay.getPhoneNumber())
+                .nameBack(ownerHomestay.getNameBank())
+                .nameAccount(ownerHomestay.getNameAccount())
+                .numberAccount(ownerHomestay.getNumberAccount())
                 .email(ownerHomestay.getEmail())
                 .username(ownerHomestay.getUsername())
                 .status(ownerHomestay.getStatus())
@@ -231,7 +266,7 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         if (!isValidEmail(emails)){
             throw new RestApiException("Đúng định dạng Email");
         }
-        if (homestayownerOwnerHomestayRepository.existsByUsername(request.getUsername()) && !ownerHomestay.getUsername().equals(request.getUsername())) {
+        if ((usernameExistsInAdmin(request.getUsername()) || usernameExistsInUser(request.getUsername()) || usernameExistsInOwnerHomestay(request.getUsername())) && !ownerHomestay.getUsername().equals(request.getUsername())) {
             throw new RestApiException("Username đã được sử dụng");
         }
         if (homestayownerOwnerHomestayRepository.existsByEmail(request.getEmail()) && !ownerHomestay.getEmail().equals(request.getEmail())) {
@@ -245,6 +280,20 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         ownerHomestay.setBirthday(request.getBirthday());
         ownerHomestay.setGender(request.getGender());
         ownerHomestay.setAddress(request.getAddress());
+        if(request.getNameBack() != null || request.getNameAccount() != null || request.getNumberAccount() != null) {
+            if(isNullOrEmpty(request.getNameBack())) {
+                throw new RestApiException("tên ngân hành không được để trống");
+            }
+            if(isNullOrEmpty(request.getNameAccount())) {
+                throw new RestApiException("tên tài khoản ngân hàng không được để trống");
+            }
+            if(isNullOrEmpty(request.getNumberAccount())) {
+                throw new RestApiException("Số tài khoản ngân hàng không được để trống");
+            }
+                ownerHomestay.setNameBank(request.getNameBack());
+                ownerHomestay.setNameAccount(request.getNameAccount());
+                ownerHomestay.setNumberAccount(request.getNumberAccount());
+        }
         ownerHomestay.setPhoneNumber(request.getPhoneNumber());
         ownerHomestay.setEmail(request.getEmail());
         ownerHomestay.setUsername(request.getUsername());
@@ -260,9 +309,13 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
         }else{
             homestayownerOwnerHomestayRepository.save(ownerHomestay);
         }
-        var jwtServices = jwtService.generateToken(ownerHomestay);
+        var jwtToken = jwtService.generateToken(ownerHomestay);
+        var refreshToken = jwtService.generateRefreshToken(ownerHomestay);
+        revokeAllUserTokens(ownerHomestay);
+        saveUserToken(ownerHomestay, jwtToken);
 
         return HomestayOwnerAuthenticationReponse.builder()
+                .token(jwtToken)
                 .code(ownerHomestay.getCode())
                 .id(ownerHomestay.getId())
                 .name(ownerHomestay.getName())
@@ -270,6 +323,9 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
                 .gender(ownerHomestay.getGender())
                 .address(ownerHomestay.getAddress())
                 .phoneNumber(ownerHomestay.getPhoneNumber())
+                .nameBack(ownerHomestay.getNameBank())
+                .nameAccount(ownerHomestay.getNameAccount())
+                .numberAccount(ownerHomestay.getNumberAccount())
                 .avataUrl(ownerHomestay.getAvatarUrl())
                 .email(ownerHomestay.getEmail())
                 .username(ownerHomestay.getUsername())

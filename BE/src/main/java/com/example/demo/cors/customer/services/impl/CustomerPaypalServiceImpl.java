@@ -1,18 +1,23 @@
 package com.example.demo.cors.customer.services.impl;
 
 import com.example.demo.cors.customer.model.request.CustomerBookingRequest;
+import com.example.demo.cors.customer.model.response.InvoiceResponse;
 import com.example.demo.cors.customer.repository.CustomerBookingRepository;
 import com.example.demo.cors.customer.repository.CustomerHomestayRepository;
 import com.example.demo.cors.customer.services.CustomerPaypalService;
 import com.example.demo.entities.Booking;
 import com.example.demo.entities.Homestay;
 import com.example.demo.entities.Promotion;
+import com.example.demo.infrastructure.configemail.EmailSender;
+import com.example.demo.infrastructure.configpayment.VNPayConfig;
 import com.example.demo.infrastructure.contant.PaymentMethod;
 import com.example.demo.infrastructure.contant.StatusBooking;
 import com.example.demo.infrastructure.exception.rest.RestApiException;
 import com.example.demo.infrastructure.paypalconfig.PaypalConfig;
+import com.example.demo.infrastructure.sendmailbill.ExportFilePdfFormHtml;
 import com.example.demo.repositories.PromotionRepository;
 import com.example.demo.repositories.UserRepository;
+import com.example.demo.util.DateUtils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.paypal.api.payments.Amount;
@@ -25,6 +30,8 @@ import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
@@ -46,6 +53,12 @@ public class CustomerPaypalServiceImpl implements CustomerPaypalService {
     private UserRepository userRepository;
     @Autowired
     private CustomerBookingRepository customerBookingRepository;
+    @Autowired
+    private ExportFilePdfFormHtml exportFilePdfFormHtml;
+    @Autowired
+    private SpringTemplateEngine springTemplateEngine;
+    @Autowired
+    private EmailSender emailSender;
 
     @Override
     public Payment createPayment(CustomerBookingRequest customerBookingRequest) throws PayPalRESTException {
@@ -59,6 +72,7 @@ public class CustomerPaypalServiceImpl implements CustomerPaypalService {
         booking.setTypeBooking(customerBookingRequest.getTypeBooking());
         booking.setUser(userRepository.findById(customerBookingRequest.getUserId()).get());
         booking.setTotalPrice(totalPrice);
+        booking.setCode("HD" + DateUtils.getCurrentDateAsString() + VNPayConfig.getRandomNumber(4));
         booking.setStartDate(customerBookingRequest.getStartDate());
         booking.setEndDate(customerBookingRequest.getEndDate());
         booking.setName(customerBookingRequest.getName());
@@ -70,6 +84,7 @@ public class CustomerPaypalServiceImpl implements CustomerPaypalService {
         booking.setNote(customerBookingRequest.getNote());
         booking.setStatus(StatusBooking.CHO_THANH_TOAN);
         booking.setNumberOfNight(customerBookingRequest.getNumberOfNight());
+        booking.setRefundPrice(new BigDecimal(0));
         customerBookingRepository.save(booking);
 
         Amount amount = new Amount();
@@ -88,14 +103,15 @@ public class CustomerPaypalServiceImpl implements CustomerPaypalService {
         payer.setPaymentMethod(PaypalConfig.method);
 
         Payment payment = new Payment();
-        payment.setIntent("SALE");
+        payment.setIntent("ORDER");
         payment.setPayer(payer);
         payment.setTransactions(transactionList);
-        RedirectUrls redirectUrls = new RedirectUrls();
 
+        RedirectUrls redirectUrls = new RedirectUrls();
         redirectUrls.setCancelUrl(PaypalConfig.cancelUrl);
         redirectUrls.setReturnUrl(PaypalConfig.successUrl + "?bookingId=" + booking.getId());
         payment.setRedirectUrls(redirectUrls);
+
         return payment.create(apiContext);
     }
 
@@ -106,6 +122,19 @@ public class CustomerPaypalServiceImpl implements CustomerPaypalService {
         PaymentExecution paymentExecute = new PaymentExecution();
         paymentExecute.setPayerId(payerId);
         return payment.execute(apiContext, paymentExecute);
+    }
+
+    @Override
+    public boolean sendBillBooking(String bookingId) {
+        Booking booking = customerBookingRepository.findById(bookingId).orElse(null);
+        InvoiceResponse invoiceResponse = exportFilePdfFormHtml.getInvoiceResponse(bookingId);
+        String email = booking.getEmail();
+        if (booking.getStatus() == StatusBooking.THANH_CONG && !email.isEmpty()) {
+            sendMail(invoiceResponse, "http://localhost:3000/booking/homestay/detail/" + booking.getHomestay().getId(), booking.getEmail());
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static double convertVNDtoUSD(double vndAmount) {
@@ -130,6 +159,16 @@ public class CustomerPaypalServiceImpl implements CustomerPaypalService {
         } catch (Exception e) {
             e.printStackTrace();
             return -1.0; // Trả về giá trị âm nếu có lỗi
+        }
+    }
+
+    public void sendMail(InvoiceResponse invoice, String url, String email) {
+        if (email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            String finalHtmlSendMail = null;
+            Context dataContextSendMail = exportFilePdfFormHtml.setDataSendMail(invoice, url);
+            finalHtmlSendMail = springTemplateEngine.process("templateBillSendEmail", dataContextSendMail);
+            String subject = "Biên lai thanh toán ";
+            emailSender.sendBill(email, subject, finalHtmlSendMail);
         }
     }
 

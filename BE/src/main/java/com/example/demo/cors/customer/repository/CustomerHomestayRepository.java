@@ -1,8 +1,6 @@
 package com.example.demo.cors.customer.repository;
 
-import com.example.demo.cors.customer.model.request.CustomerCartRequest;
 import com.example.demo.cors.customer.model.request.CustomerHomestayRequest;
-import com.example.demo.entities.Cart;
 import com.example.demo.entities.Homestay;
 import com.example.demo.repositories.HomestayRepository;
 import org.springframework.data.domain.Page;
@@ -27,10 +25,12 @@ public interface CustomerHomestayRepository extends HomestayRepository {
             WHERE (a.status = 0)
             AND (a.start_date <=:#{#customerHomestayRequest.dateFrom} AND a.end_date >=:#{#customerHomestayRequest.dateTo})
             AND a.id
-            NOT IN (SELECT d.homestay_id FROM booking d WHERE (d.status = 1)
-            AND ((d.start_date <=:#{#customerHomestayRequest.dateFrom}) and (d.end_date >=:#{#customerHomestayRequest.dateFrom}))
-            AND ((d.start_date <=:#{#customerHomestayRequest.dateTo}) and (d.end_date >=:#{#customerHomestayRequest.dateTo})))
+            NOT IN (SELECT b.homestay_id FROM booking b
+            WHERE (b.status = 1)
+            AND (:#{#customerHomestayRequest.dateFrom} > b.start_date AND b.end_date >:#{#customerHomestayRequest.dateFrom}
+            OR :#{#customerHomestayRequest.dateTo} > b.start_date AND b.end_date > :#{#customerHomestayRequest.dateTo}
+            OR (b.start_date >= :#{#customerHomestayRequest.dateFrom} AND b.end_date <= :#{#customerHomestayRequest.dateTo})))
             """, nativeQuery = true)
     List<Homestay> findAllBetweenDate(CustomerHomestayRequest customerHomestayRequest);
 
-}
+}   

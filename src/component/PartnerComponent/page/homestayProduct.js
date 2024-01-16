@@ -102,6 +102,10 @@ const HomeStayProduct = () => {
     // You can perform any additional formatting or validation here
     setprice(value)
   }
+  const handlePriceChangeWeb = (value) => {
+    // You can perform any additional formatting or validation here
+    setprice((value * 100) / 111)
+  }
   useEffect(() => {
     dispatch(fetchHomestay(valueselect))
     dispatch(fetchConvenient())
@@ -208,6 +212,7 @@ const HomeStayProduct = () => {
     setCheckedValues([])
     setFile([])
     setAddressDetail('')
+    setviewEditConvennient([])
     const fileInput = document.getElementById('image')
     if (fileInput) {
       fileInput.value = null
@@ -233,7 +238,7 @@ const HomeStayProduct = () => {
       key: 'address',
     },
     {
-      title: 'Giá homestay',
+      title: 'Giá thuê homestay 1 đêm',
       dataIndex: 'price',
       key: 'price',
       align: 'center',
@@ -257,7 +262,7 @@ const HomeStayProduct = () => {
       },
     },
     {
-      title: 'Action',
+      title: 'Hành động',
       key: 'action',
       render: (_, record) => (
         <Space size='middle'>
@@ -346,13 +351,22 @@ const HomeStayProduct = () => {
   }
   const [startDate, setstartDate] = useState(null)
   const handleDateChangestart = (dates) => {
-    // setstartDate(moment(dates).valueOf());
-    setstartDate(dates)
+    const dateFix = new Date(dates)
+    dateFix.setHours('00')
+    dateFix.setMinutes('00')
+    dateFix.setSeconds('00')
+    dateFix.setMilliseconds('000')
+    setstartDate(dateFix.valueOf())
   }
   const [endDate, setendDate] = useState(null)
   const handleDateChangeend = (dates) => {
     // setendDate(moment(dates).valueOf());
-    setendDate(dates)
+    const dateFix = new Date(dates)
+    dateFix.setHours('00')
+    dateFix.setMinutes('00')
+    dateFix.setSeconds('00')
+    dateFix.setMilliseconds('000')
+    setendDate(dateFix.valueOf())
   }
   const [desc, setdesc] = useState('')
   const [price, setprice] = useState(0)
@@ -388,7 +402,7 @@ const HomeStayProduct = () => {
     name: name,
     timeCheckIn: timeCheckIn,
     timeCheckOut: timeCheckOut,
-    cancellationPolicy: parseFloat(cancellationPolicy),
+    // cancellationPolicy: parseFloat(cancellationPolicy),
     startDate: startDate?.valueOf(),
     endDate: endDate?.valueOf(),
     desc: desc,
@@ -405,11 +419,15 @@ const HomeStayProduct = () => {
   const [errorFile, setErrorFile] = useState('')
   const [erorrAddress, setErrorAddress] = useState('')
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Vui lòng nhập tên sản phẩm'),
+    name: Yup.string()
+      .trim() // Remove leading and trailing whitespaces
+      .min(1, 'Vui lòng nhập ít nhất một ký tự cho tên sản phẩm')
+      .required('Vui lòng nhập tên sản phẩm'),
     price: Yup.number()
       .required('Vui lòng nhập giá sản phẩm')
       .typeError('Vui lòng nhập giá sản phẩm')
-      .positive('Giá phải là số dương'),
+      .positive('Giá phải là số dương')
+      .min(1000, 'Giá sản phẩm phải lớn hơn 1000'),
     file: Yup.array()
       .min(5, 'Vui lòng chọn ít nhất 5 file')
       .max(20, 'Vui lòng chọn tối đa 20 file')
@@ -433,10 +451,6 @@ const HomeStayProduct = () => {
       .required('Vui lòng nhập số phòng')
       .typeError('Vui lòng nhập số phòng')
       .positive('Số lượng phòng phải lớn hơn 0'),
-    cancellationPolicy: Yup.number()
-      .required('Vui lòng nhập số chính sách ủy phòng')
-      .typeError('Vui lòng nhập số chính sách ủy phòng')
-      .positive('Số lượng chính sách ủy phòng phải lớn hơn 0'),
     // province: Yup.string().required('Vui lòng chọn thành phố homestay'),
     startDate: Yup.number().required('Vui lòng chọn ngày bắt đầu'),
     endDate: Yup.number()
@@ -459,7 +473,7 @@ const HomeStayProduct = () => {
     acreage: Yup.number()
       .required('Vui lòng nhập diện tích')
       .typeError('Vui lòng nhập diện tích')
-      .positive('diện tích phòng phải lớn hơn 0'),
+      .positive('Diện tích phòng phải lớn hơn 0'),
     desc: Yup.string()
       .required('vui lòng nhập vào mô tả')
       .max(500, 'Vui lòng nhập ít hơn 500 ký tự'),
@@ -540,7 +554,7 @@ const HomeStayProduct = () => {
         setIsLoading(true)
         message.info(
           'Đang tiến hành thêm bạn vui lòng đợi một vài giây nhé!',
-          5,
+          10,
         )
         await dispatch(addHomestay(homestay, file, convenientvir))
         message.info('Thêm thành công')
@@ -566,7 +580,7 @@ const HomeStayProduct = () => {
         setIsLoading(true)
         await message.info(
           'Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!',
-          5,
+          10,
         )
         await dispatch(EditHomestay(homestay, file, recordid, convenientvir))
         await setIsLoading(false)
@@ -712,10 +726,10 @@ const HomeStayProduct = () => {
       .then((res) => res.json())
       .then(() => {
         setFileList([])
-        message.success('upload successfully.')
+        message.success('Upload successfully.')
       })
       .catch(() => {
-        message.error('upload failed.')
+        message.error('Upload failed.')
       })
       .finally(() => {
         setUploading(false)
@@ -738,21 +752,21 @@ const HomeStayProduct = () => {
           />
         </Form.Item>
         <Button style={{ marginLeft: 20 }} type='primary' onClick={showModal}>
-          Thêm mới HomeStay
+          Thêm mới Homestay
         </Button>
       </div>
       <Modal
         title={
           isAddFrom == true ? (
-            <div style={{ fontSize: 24 }}>Thêm homstay </div>
+            <div style={{ fontSize: 24 }}>Thêm homestay </div>
           ) : (
             <div style={{ fontSize: 24 }}>Sửa homestay</div>
           )
         }
         open={isModalOpen}
         onCancel={handleCancel}
-        width={900}
-        okText={isAddFrom == true ? 'Thêm homstay' : 'Sửa homestay'}
+        width={1100}
+        okText={isAddFrom == true ? 'Thêm homestay' : 'Sửa homestay'}
         cancelText='Hủy'
         onOk={handleSubmit}
         maskClosable={false}
@@ -782,7 +796,7 @@ const HomeStayProduct = () => {
             span: 24,
           }}
           style={{
-            maxWidth: 800,
+            maxWidth: 1100,
           }}
           initialValues={{
             remember: true,
@@ -793,7 +807,11 @@ const HomeStayProduct = () => {
             {/* Trường thứ nhất */}
             <Col span={12}>
               <Form.Item
-                label={<Title level={5}>Tên homestay</Title>}
+                label={
+                  <Title level={5} style={{ marginTop: 5 }}>
+                    Tên homestay
+                  </Title>
+                }
                 validateStatus={formErrors.name ? 'error' : ''} // Hiển thị lỗi cho trường name nếu có
                 help={formErrors.name} // Hiển thị thông báo lỗi cho trường name nếu có
               >
@@ -803,12 +821,16 @@ const HomeStayProduct = () => {
             {/* Trường thứ hai */}
             <Col span={12}>
               <Form.Item
-                label={<Title level={5}>Giá homestay</Title>}
+                label={
+                  <Title level={5} style={{ marginTop: 5 }}>
+                    Giá homestay
+                  </Title>
+                }
                 validateStatus={formErrors.price ? 'error' : ''}
                 help={formErrors.price}
               >
                 <InputNumber
-                  style={{ width: 254 }}
+                  style={{ width: 335 }}
                   value={price}
                   onChange={handlePriceChange}
                   formatter={(value) =>
@@ -822,12 +844,24 @@ const HomeStayProduct = () => {
                   addonAfter='VNĐ'
                 />
               </Form.Item>
+              {price !== null && (
+                <span style={{ marginLeft: 60 }}>
+                  Giá thực tế được đăng trên website{' '}
+                  {formatCurrency(price + (price * 11) / 100)}
+                  <br />
+                </span>
+              )}
             </Col>
           </Row>
+
           <Row gutter={24} style={{ marginLeft: 3 }}>
             <Col span={12}>
               <Form.Item
-                label={<Title level={5}>Số người ở</Title>}
+                label={
+                  <Title level={5} style={{ marginTop: 5 }}>
+                    Số người ở
+                  </Title>
+                }
                 validateStatus={formErrors.numberPerson ? 'error' : ''}
                 help={formErrors.numberPerson}
               >
@@ -839,7 +873,11 @@ const HomeStayProduct = () => {
             </Col>
             <Col span={12}>
               <Form.Item
-                label={<Title level={5}>Diện tích</Title>}
+                label={
+                  <Title level={5} style={{ marginTop: 5 }}>
+                    Diện tích
+                  </Title>
+                }
                 validateStatus={formErrors.acreage ? 'error' : ''}
                 help={formErrors.acreage}
               >
@@ -847,13 +885,20 @@ const HomeStayProduct = () => {
                   value={acreage}
                   onChange={(e) => setacreage(e.target.value)}
                   addonAfter='m2'
+                  defaultValue='0.0'
                 />
               </Form.Item>
             </Col>
           </Row>
           <Row gutter={24} style={{ marginLeft: 4 }}>
             <Col span={12}>
-              <Form.Item label={<Title level={5}>Ngày bắt đầu</Title>}>
+              <Form.Item
+                label={
+                  <Title level={5} style={{ marginTop: 5 }}>
+                    Ngày bắt đầu
+                  </Title>
+                }
+              >
                 <DatePicker
                   onChange={handleDateChangestart}
                   style={{ width: '100%' }}
@@ -872,7 +917,13 @@ const HomeStayProduct = () => {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item label={<Title level={5}>Ngày kết thúc</Title>}>
+              <Form.Item
+                label={
+                  <Title level={5} style={{ marginTop: 5 }}>
+                    Ngày kết thúc
+                  </Title>
+                }
+              >
                 <DatePicker
                   onChange={handleDateChangeend}
                   style={{ width: '100%' }}
@@ -895,29 +946,45 @@ const HomeStayProduct = () => {
           {/* time bắt đầu */}
           <Row gutter={24} style={{ marginLeft: 4 }}>
             <Col span={12}>
-              <Title level={5}>Thời gian nhận phòng:</Title>
-              <TimePicker
-                onChange={handleTimeChangestart}
-                value={timeCheckIn && dayjs(timeCheckIn, 'HH:mm:ss')} // Fix here
-                style={{ width: '67%', float: 'right' }}
-                allowClear={true}
-              />
-              <div style={{ color: 'red' }}>{formErrors.timeCheckIn}</div>
+              <Form.Item
+                label={
+                  <Title level={5} style={{ marginTop: 5 }}>
+                    Thời gian nhận phòng
+                  </Title>
+                }
+                validateStatus={formErrors.timeCheckIn ? 'error' : ''}
+                help={formErrors.timeCheckIn}
+              >
+                <TimePicker
+                  onChange={handleTimeChangestart}
+                  value={timeCheckIn && dayjs(timeCheckIn, 'HH:mm:ss')} // Fix here
+                  style={{ width: '100%', float: 'right' }}
+                  allowClear={true}
+                />
+              </Form.Item>
             </Col>
             <Col span={12}>
-              <Title level={5}>Thời gian trả phòng:</Title>
-              <TimePicker
-                onChange={handleTimeChangeend}
-                value={timeCheckOut && dayjs(timeCheckOut, 'HH:mm:ss')} // Fix here
-                style={{ width: '67%', float: 'right' }}
-                allowClear={true}
-              />
-              <div style={{ color: 'red' }}>{formErrors.timeCheckOut}</div>
+              <Form.Item
+                label={
+                  <Title level={5} style={{ marginTop: 5 }}>
+                    Thời gian trả phòng
+                  </Title>
+                }
+                validateStatus={formErrors.timeCheckOut ? 'error' : ''}
+                help={formErrors.timeCheckOut}
+              >
+                <TimePicker
+                  onChange={handleTimeChangeend}
+                  value={timeCheckOut && dayjs(timeCheckOut, 'HH:mm:ss')} // Fix here
+                  style={{ width: '100%', float: 'right' }}
+                  allowClear={true}
+                />
+              </Form.Item>
             </Col>
           </Row>
           <Row gutter={24} style={{ marginLeft: 4, marginTop: 20 }}>
-            <Col span={12}>
-              <Title level={5}>Chính sách hủy phòng:</Title>
+            {/* <Col span={12}>
+              <Title level={5} style={{marginTop:5}}>Chính sách hủy phòng:</Title>
               <Input
                 style={{ width: '67%', float: 'right' }}
                 value={cancellationPolicy}
@@ -926,29 +993,37 @@ const HomeStayProduct = () => {
               <div style={{ color: 'red', marginTop: 35 }}>
                 {formErrors.cancellationPolicy}
               </div>
-            </Col>
+            </Col> */}
             <Col span={12}>
-              <Title level={5}>Số phòng:</Title>
-              <Input
-                style={{ width: '67%', float: 'right' }}
-                value={roomNumber}
-                onChange={(e) => setroomNumber(e.target.value)}
-              />
-              <div style={{ color: 'red', marginTop: 35 }}>
-                {formErrors.roomNumber}
-              </div>
+              <Form.Item
+                label={
+                  <Title level={5} style={{ marginTop: 5 }}>
+                    Số phòng
+                  </Title>
+                }
+                validateStatus={formErrors.roomNumber ? 'error' : ''}
+                help={formErrors.roomNumber}
+              >
+                <Input
+                  style={{ width: '100%', float: 'right' }}
+                  value={roomNumber}
+                  onChange={(e) => setroomNumber(e.target.value)}
+                />
+              </Form.Item>
             </Col>
           </Row>
           <Row gutter={24}>
-            <Col span={24} style={{ marginLeft: 15 }}>
-              <Title level={5}>Tiện ích homestay</Title>
+            <Col span={24} style={{ marginLeft: 40 }}>
+              <Title level={5} style={{ marginTop: 5 }}>
+                Tiện ích homestay
+              </Title>
               <div>
                 <Checkbox.Group
                   options={convenients.map((item) => ({
                     label: item.name,
                     value: item.id,
                   }))}
-                  value={checkedList}
+                  defaultValue={checkedList}
                   onChange={onChangeConvenients}
                 />
               </div>
@@ -961,7 +1036,9 @@ const HomeStayProduct = () => {
             {/* <DatePicker /> */}
             <div style={{ display: 'flex' }}>
               <div style={{ marginRight: 30, marginLeft: 20 }}>
-                <Title level={5}>Tỉnh/Thành phố:</Title>
+                <Title level={5} style={{ marginTop: 5 }}>
+                  Tỉnh/Thành phố:
+                </Title>
                 <select
                   value={selectedCity}
                   onChange={(e) => setSelectedCity(e.target.value)}
@@ -977,7 +1054,9 @@ const HomeStayProduct = () => {
                 <div style={{ color: 'red' }}>{erorrAddress}</div>
               </div>
               <div style={{ marginRight: 30 }}>
-                <Title level={5}>Quận/Huyện:</Title>
+                <Title level={5} style={{ marginTop: 5 }}>
+                  Quận/Huyện:
+                </Title>
                 <select
                   value={selectedDistrict}
                   onChange={(e) => setSelectedDistrict(e.target.value)}
@@ -993,7 +1072,9 @@ const HomeStayProduct = () => {
                 <div style={{ color: 'red' }}>{erorrAddress}</div>
               </div>
               <div>
-                <Title level={5}>Phường/Xã:</Title>
+                <Title level={5} style={{ marginTop: 5 }}>
+                  Phường/Xã:
+                </Title>
                 <select
                   value={selectedWard}
                   onChange={(e) => setSelectedWard(e.target.value)}
@@ -1011,10 +1092,12 @@ const HomeStayProduct = () => {
             </div>
           </Row>
           <Row gutter={24}>
-            <Col span={24}>
-              <Title level={5}>Địa chỉ chi tiết homestay</Title>
+            <Col span={24} style={{ marginLeft: 40 }}>
+              <Title level={5} style={{ marginTop: 5 }}>
+                Địa chỉ chi tiết homestay
+              </Title>
               <TextArea
-                style={{ width: '900px' }}
+                style={{ width: '1000px' }}
                 value={addressDetail}
                 onChange={(e) => setAddressDetail(e.target.value)}
               />
@@ -1022,10 +1105,12 @@ const HomeStayProduct = () => {
             </Col>
           </Row>
           <Row gutter={24}>
-            <Col span={24}>
-              <Title level={5}>Mô tả homestay</Title>
+            <Col span={24} style={{ marginLeft: 40 }}>
+              <Title level={5} style={{ marginTop: 5 }}>
+                Mô tả homestay
+              </Title>
               <TextArea
-                style={{ width: '900px' }}
+                style={{ width: '1000px' }}
                 value={desc}
                 onChange={(e) => setdesc(e.target.value)}
               />
@@ -1034,7 +1119,7 @@ const HomeStayProduct = () => {
           </Row>
         </Form>
         <form onSubmit={handleSubmit} style={{ marginTop: 20 }}>
-          <div>
+          <div style={{ marginLeft: 40 }}>
             {imghomestay.length <= 20 && (
               <div style={{ display: 'flex' }}>
                 <label htmlFor='image' style={{ marginTop: 5 }}>
@@ -1073,6 +1158,13 @@ const HomeStayProduct = () => {
                 </span>
               )}
             </div>
+            {isAddFrom == true ? (
+              <span />
+            ) : (
+              <div style={{ color: 'red' }}>
+                Ảnh sẽ được cập nhật ngay khi bạn tải ảnh lên hoặc xóa ảnh đi
+              </div>
+            )}
             {isAddFrom == true ? (
               <div>
                 {selectedImages.map((image, index) => (
@@ -1215,15 +1307,15 @@ const HomeStayProduct = () => {
             <tr>
               <td style={{ width: 600 }}>
                 <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Giá </div> :{' '}
+                  <div style={{ width: 200 }}>Giá trên mỗi đêm</div> :{' '}
                   {formatCurrency(price)}
                 </div>
                 <br />
               </td>
-              <td style={{ width: 500 }}>
+              <td style={{ width: 600 }}>
                 <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Số lượng người </div> :{' '}
-                  {numberPerson} (Người)
+                  <div style={{ width: 200 }}>Giá thực tế được đăng</div> :{' '}
+                  {formatCurrency(price + (price * 11) / 100)}
                 </div>
                 <br />
               </td>
@@ -1235,10 +1327,17 @@ const HomeStayProduct = () => {
                 </div>
                 <br />
               </td>
-              <td style={{ width: 500 }}>
+              {/* <td style={{ width: 500 }}>
                 <div style={{ display: 'flex' }}>
                   <div style={{ width: 200 }}>Chính sách hủy phòng </div> :{' '}
                   {cancellationPolicy}
+                </div>
+                <br />
+              </td> */}
+              <td style={{ width: 500 }}>
+                <div style={{ display: 'flex' }}>
+                  <div style={{ width: 200 }}>Số lượng người </div> :{' '}
+                  {numberPerson} (Người)
                 </div>
                 <br />
               </td>
@@ -1276,10 +1375,14 @@ const HomeStayProduct = () => {
               </td>
             </tr>
           </table>
+
           <div style={{ display: 'flex' }}>
             <div style={{ width: 200 }}>Tiện ích </div> :{' '}
-            {viewEditConvennient.map((items) => (
-              <div> {items.convenientHomestay?.name},</div>
+            {viewEditConvennient.map((items, index) => (
+              <React.Fragment key={index}>
+                <div>&nbsp;{items.convenientHomestay?.name}</div>
+                {index !== viewEditConvennient.length - 1 && <span>,</span>}
+              </React.Fragment>
             ))}
           </div>
           <br />

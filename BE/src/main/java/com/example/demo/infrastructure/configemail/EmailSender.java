@@ -1,6 +1,7 @@
 package com.example.demo.infrastructure.configemail;
 
 import com.example.demo.infrastructure.contant.MailContant;
+import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,21 @@ public class EmailSender {
                 bodyEmail +
                 MailContant.BODY_END;
         sendSimpleMail(toEmails, htmlBody, subject);
+    }
+
+    @Async
+    public void sendBill(String to, String subject, String htmlBody) {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
+        try {
+            helper.setFrom(sender);
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(htmlBody, true);
+            javaMailSender.send(message);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 
     private void sendSimpleMail(String[] recipients, String msgBody, String subject) {

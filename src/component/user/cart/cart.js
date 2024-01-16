@@ -103,9 +103,7 @@ export const CartUser = () => {
             display: 'flex',
           }}
         >
-          <Title level={3}>
-            Xe đẩy hàng của quý khách ({shoppingcart?.length})
-          </Title>
+          <Title level={3}>Homestay bạn đã lưu ({shoppingcart?.length})</Title>
           <div style={{ marginLeft: 'auto' }}>
             <Popconfirm
               title='Bạn có muốn xóa tất cả sản phẩm trong giỏ hàng?'
@@ -114,7 +112,13 @@ export const CartUser = () => {
               cancelText='không'
               placement='topRight'
             >
-              <Button danger icon={<DeleteOutlined />}>
+              <Button
+                style={{
+                  display: 'flex',
+                }}
+                danger
+              >
+                <DeleteOutlined style={{ marginTop: 5 }} />
                 Xóa tất cả sản phẩm
               </Button>
             </Popconfirm>
@@ -174,7 +178,6 @@ export const CartUser = () => {
                       {items.name}
                     </Title>
                     <div style={{ display: 'flex' }}>
-                      <EnvironmentOutlined style={{ marginBottom: 2 }} />
                       <Title
                         level={5}
                         style={{
@@ -182,8 +185,10 @@ export const CartUser = () => {
                           whiteSpace: 'nowrap',
                           textOverflow: 'ellipsis',
                           marginLeft: 5,
+                          display: 'flex',
                         }}
                       >
+                        <EnvironmentOutlined style={{ marginTop: 4 }} />
                         {city}
                       </Title>
                     </div>
@@ -267,7 +272,7 @@ export const CartUser = () => {
                   </div>
                   <div style={{ marginLeft: 5, display: 'flex' }}>
                     {items.status !== '0' ? (
-                      <span>Đã hết hạn</span>
+                      <span style={{ color: 'red' }}>Đã hết hạn</span>
                     ) : (
                       <>
                         (<Title level={5}> {nightCount} đêm</Title>)
@@ -301,7 +306,7 @@ export const CartUser = () => {
           <div style={{ display: 'flex' }}>
             <Title level={5}>Tổng giá</Title>
             {selectedRadioData.length === 0 ? (
-              <span>&emsp;Bạn chưa chọn món hàng nào</span>
+              <span>&emsp;Bạn chưa chọn homestay nào</span>
             ) : (
               <div style={{ display: 'flex', marginLeft: 'auto' }}>
                 <Title level={4}>

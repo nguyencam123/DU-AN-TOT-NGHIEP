@@ -6,6 +6,8 @@ import com.example.demo.cors.customer.model.request.CustomerPasswordRequest;
 import com.example.demo.cors.customer.model.request.CustomerRequest;
 import com.example.demo.cors.customer.model.request.CustomerUserPassRequest;
 import com.example.demo.cors.customer.model.response.CustomerAuthenticationReponse;
+import com.example.demo.cors.customer.repository.CustomerAdminRepository;
+import com.example.demo.cors.customer.repository.CustomerHomestayOwnerRepository;
 import com.example.demo.cors.customer.repository.CustomerLoginRepository;
 import com.example.demo.cors.customer.repository.CustomerTokenRepository;
 import com.example.demo.cors.customer.services.CustomerLoginService;
@@ -39,6 +41,12 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
     private CustomerLoginRepository customerLoginRepository;
 
     @Autowired
+    private CustomerAdminRepository customerAdminRepository;
+
+    @Autowired
+    private CustomerHomestayOwnerRepository customerHomestayOwnerRepository;
+
+    @Autowired
     private CustomerTokenRepository customerTokenRepository;
 
     @Autowired
@@ -63,6 +71,18 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         customerLoginRepository.save(user);
     }
 
+    private boolean usernameExistsInAdmin(String username) {
+        return customerAdminRepository.existsByUsername(username);
+    }
+
+    private boolean usernameExistsInOwnerHomestay(String username) {
+        return customerHomestayOwnerRepository.existsByUsername(username);
+    }
+
+    private boolean usernameExistsInUser(String username) {
+        return customerLoginRepository.existsByUsername(username);
+    }
+
     @Override
     public CustomerAuthenticationReponse CustomerRegister(CustomerRequest request) {
         if (isNullOrEmpty(request.getUsername())) {
@@ -80,8 +100,8 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         if (isNullOrEmpty(request.getPassword())) {
             throw new RestApiException("Password không được để trống");
         }
-        if (customerLoginRepository.existsByUsername(request.getUsername())) {
-            throw new RestApiException("Tên tài khoản đã tồn tại");
+        if (usernameExistsInAdmin(request.getUsername()) || usernameExistsInUser(request.getUsername()) || usernameExistsInOwnerHomestay(request.getUsername())){
+            throw new RestApiException(" Username đã được sử dụng");
         }
         if (customerLoginRepository.existsByEmail(request.getEmail())) {
             throw new RestApiException("Email đã tồn tại");
@@ -95,7 +115,7 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         }
         String emails=request.getEmail();
         if (!isValidEmail(emails)){
-            throw new RestApiException("Email phải đúng định dạng @.gmail.com");
+            throw new RestApiException("Email phải đúng định dạng @gmail.com");
         }
         User user = new User();
         Random random = new Random();
@@ -104,6 +124,9 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         user.setCode(code);
         user.setName(request.getName());
         user.setPhoneNumber(request.getPhoneNumber());
+        user.setBirthday(request.getBirthday());
+        user.setGender(request.getGender());
+        user.setAddress(request.getAddress());
         user.setEmail(request.getEmail());
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -135,6 +158,9 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 .username(user.getUsername())
                 .status(user.getStatus())
                 .roleCustomer(user.getRole())
+                .nameAccount(user.getNameAccount())
+                .nameBack(user.getNameBank())
+                .numberAccount(user.getNumberAccount())
                 .avataUrl(user.getAvatarUrl())
                 .build();
     }
@@ -179,6 +205,9 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 .phoneNumber(user.getPhoneNumber())
                 .email(user.getEmail())
                 .username(user.getUsername())
+                .nameAccount(user.getNameAccount())
+                .nameBack(user.getNameBank())
+                .numberAccount(user.getNumberAccount())
                 .status(user.getStatus())
                 .roleCustomer(user.getRole())
                 .avataUrl(user.getAvatarUrl())
@@ -207,6 +236,9 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 .phoneNumber(user.getPhoneNumber())
                 .email(user.getEmail())
                 .username(user.getUsername())
+                .nameAccount(user.getNameAccount())
+                .nameBack(user.getNameBank())
+                .numberAccount(user.getNumberAccount())
                 .status(user.getStatus())
                 .roleCustomer(user.getRole())
                 .avataUrl(user.getAvatarUrl())
@@ -228,7 +260,7 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         if (isNullOrEmpty(request.getEmail())) {
             throw new RestApiException("Email không được để trống");
         }
-        if (customerLoginRepository.existsByUsername(request.getUsername()) && ! customer.getUsername().equals(request.getUsername())) {
+        if ((usernameExistsInAdmin(request.getUsername()) || usernameExistsInUser(request.getUsername()) || usernameExistsInOwnerHomestay(request.getUsername())) && ! customer.getUsername().equals(request.getUsername())) {
             throw new RestApiException("Tên tài khoản đã tồn tại");
         }
         if (customerLoginRepository.existsByEmail(request.getEmail()) && !customer.getEmail().equals(request.getEmail())) {
@@ -243,7 +275,7 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         }
         String emails=request.getEmail();
         if (!isValidEmail(emails)){
-            throw new RestApiException("Email phải đúng định dạng @.gmail.com");
+            throw new RestApiException("Email phải đúng định dạng");
         }
         customer.setName(request.getName());
         customer.setBirthday(request.getBirthday());
@@ -251,6 +283,20 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         customer.setAddress(request.getAddress());
         customer.setPhoneNumber(request.getPhoneNumber());
         customer.setEmail(request.getEmail());
+        if(request.getNameBack() != null || request.getNameAccount() != null || request.getNumberAccount() != null) {
+            if (isNullOrEmpty(request.getNameBack())) {
+                throw new RestApiException("tên ngân hành không được để trống");
+            }
+            if (isNullOrEmpty(request.getNameAccount())) {
+                throw new RestApiException("tên tài khoản ngân hàng không được để trống");
+            }
+            if (isNullOrEmpty(request.getNumberAccount())) {
+                throw new RestApiException("Số tài khoản ngân hàng không được để trống");
+            }
+            customer.setNameBank(request.getNameBack());
+            customer.setNameAccount(request.getNameAccount());
+            customer.setNumberAccount(request.getNumberAccount());
+        }
         customer.setUsername(request.getUsername());
         if(request.getAvatar()!=null && request.getAvatar().getBytes().length > 0) {
             customer.setAvatarUrl(cloudinary.uploader()
@@ -264,7 +310,9 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         }else{
             customerLoginRepository.save(customer);
         }
+        var jwtToken = jwtService.generateToken(customer);
         return CustomerAuthenticationReponse.builder()
+                .token(jwtToken)
                 .code(customer.getCode())
                 .id(customer.getId())
                 .name(customer.getName())
@@ -275,6 +323,9 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
                 .email(customer.getEmail())
                 .avataUrl(customer.getAvatarUrl())
                 .username(customer.getUsername())
+                .nameAccount(customer.getNameAccount())
+                .nameBack(customer.getNameBank())
+                .numberAccount(customer.getNumberAccount())
                 .status(customer.getStatus())
                 .roleCustomer(customer.getRole())
                 .build();
@@ -300,10 +351,11 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         }
     }
 
-    private Boolean isValidEmail(String email) {
-        String regex = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+    private Boolean isValidEmail(String email){
+        String regex="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
         return email.matches(regex);
     }
+
 
     private boolean isValidVietnamesePhoneNumber(String phoneNumber) {
         String regex = "^(03|05|07|08|09)\\d{8}$";

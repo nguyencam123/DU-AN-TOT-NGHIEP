@@ -28,6 +28,8 @@ public class Booking extends PrimaryEntity {
 
     private BigDecimal totalPrice;
 
+    private String code;
+
     @ManyToOne
     @JoinColumn(name = "promotion_id")
     private Promotion promotion;
@@ -77,4 +79,7 @@ public class Booking extends PrimaryEntity {
     private StatusPayUser statusPayUser;
 
     private StatusPayOwner statusPayOwner;
+
+    private BigDecimal refundPrice;
+
 }
