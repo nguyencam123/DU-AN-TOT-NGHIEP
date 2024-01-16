@@ -249,7 +249,7 @@ export const DetailHomestay = () => {
                 <EnvironmentOutlined
                   style={{ fontSize: '10px', alignItems: 'center' }}
                 />
-                {detailHomestay.address}
+                &nbsp;{detailHomestay.address}
               </div>
             </Col>
             <Col span={6} push={10}>
@@ -443,8 +443,8 @@ export const DetailHomestay = () => {
                     fontWeight: '500',
                   }}
                 >
-                  {detailHomestay?.detailHomestays?.map((items) => (
-                    <div>{items?.convenientHomestay?.name}</div>
+                  {detailHomestay?.detailHomestays?.map((items, index) => (
+                    <div>{index <= 4 ? items?.convenientHomestay?.name : ''}</div>
                   ))}
                 </div>
               </div>

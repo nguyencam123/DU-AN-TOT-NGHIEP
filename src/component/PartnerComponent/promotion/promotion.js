@@ -265,25 +265,30 @@ const Promotion = () => {
           <a style={{ color: '#1677ff' }} onClick={() => handleViewRow(record)}>
             <EyeOutlined />
           </a>
-          {record.statusPromotion === 'HOAT_DONG' && ( // Thêm điều kiện ở đây
-            <a style={{ color: '#1677ff' }} onClick={() => handleEdit(record)}>
-              <EditOutlined />
-            </a>
-          )}
-          {record.statusPromotion === 'HOAT_DONG' && ( // Thêm điều kiện ở đây
-            <Popconfirm
-              title='Cập nhật mục này'
-              description='Bạn chắc chắn muốn cập nhật khuyến mãi này thành không hoạt động không?'
-              icon={<ReloadOutlined />}
-              cancelText='Hủy'
-              okText='Cập nhật'
-              onConfirm={() => handleSubmitStatus(record)}
-            >
-              <a>
-                <ReloadOutlined />
+          {record.statusPromotion === 'HOAT_DONG' ||
+            (record.statusPromotion === 'CHO_HOAT_DONG' && ( // Thêm điều kiện ở đây
+              <a
+                style={{ color: '#1677ff' }}
+                onClick={() => handleEdit(record)}
+              >
+                <EditOutlined />
               </a>
-            </Popconfirm>
-          )}
+            ))}
+          {record.statusPromotion === 'HOAT_DONG' ||
+            (record.statusPromotion === 'CHO_HOAT_DONG' && ( // Thêm điều kiện ở đây
+              <Popconfirm
+                title='Cập nhật mục này'
+                description='Bạn chắc chắn muốn cập nhật khuyến mãi này thành không hoạt động không?'
+                icon={<ReloadOutlined />}
+                cancelText='Hủy'
+                okText='Cập nhật'
+                onConfirm={() => handleSubmitStatus(record)}
+              >
+                <a>
+                  <ReloadOutlined />
+                </a>
+              </Popconfirm>
+            ))}
         </Space>
       ),
     },

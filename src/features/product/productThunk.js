@@ -165,6 +165,18 @@ export const updateBooking = (bookingId) => async (dispatch) => {
     dispatch(fetchProductsFailure(error.message))
   }
 }
+
+export const sendBill = (bookingId) => async (dispatch) => {
+  try {
+    const response = await instance.get(
+      'http://localhost:8080/api/v1/payment/send-mail?bookingId=' + bookingId,
+    )
+    dispatch(addBookingsSuccess(response.data.data)) // Lấy dữ liệu từ response.data.data
+    // console.log(response.data.data);
+  } catch (error) {
+    dispatch(fetchProductsFailure(error.message))
+  }
+}
 export const checkBooked = () => async (dispatch) => {
   try {
     const response = await instance.get(
