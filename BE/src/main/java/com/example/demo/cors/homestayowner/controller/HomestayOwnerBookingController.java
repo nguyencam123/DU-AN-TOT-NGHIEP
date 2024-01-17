@@ -16,9 +16,14 @@ public class HomestayOwnerBookingController {
     @Autowired
     private HomestayOwnerBookingService homestayOwnerBookingService;
 
-    @GetMapping("/number_of_book_today")
+    @GetMapping("/number-of-book-today")
     public ResponseObject getNumberOfBookToday(@RequestParam("idowner") String id) {
         return new ResponseObject(homestayOwnerBookingService.getNumberOfBookingsToday(id));
+    }
+
+    @GetMapping("/number-of-book-cho")
+    public ResponseObject getNumberOfBookCho(@RequestParam("idowner") String id) {
+        return new ResponseObject(homestayOwnerBookingService.getNumberOfBookingsCho(id));
     }
 
     @GetMapping("/user")
