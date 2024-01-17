@@ -104,6 +104,8 @@ const Booking = () => {
           return 'Thành công'
         } else if (data === 'HUY') {
           return 'Hủy'
+        } else if (data === 'DA_THUE_XONG') {
+          return 'Đã thuê xong'
         } else {
           return 'Không thành công'
         }
@@ -132,7 +134,8 @@ const Booking = () => {
         dateFix.setMinutes('00')
         dateFix.setSeconds('00')
         dateFix.setMilliseconds('000')
-        let isShowEmail = dayjs(Date(dateFix)).add(1, 'days').valueOf() >= record.startDate
+        let isShowEmail =
+          dayjs(Date(dateFix)).add(1, 'days').valueOf() >= record.startDate
         if (record.typeBooking === 'DAT_COC') {
           isShowEmail = true
         }
@@ -156,7 +159,8 @@ const Booking = () => {
         dateFix.setMinutes('00')
         dateFix.setSeconds('00')
         dateFix.setMilliseconds('000')
-        let isShowPhoneNumber = dayjs(Date(dateFix)).add(1, 'days').valueOf() >= record.startDate
+        let isShowPhoneNumber =
+          dayjs(Date(dateFix)).add(1, 'days').valueOf() >= record.startDate
         if (record.typeBooking === 'DAT_COC') {
           isShowPhoneNumber = true
         }
@@ -186,10 +190,10 @@ const Booking = () => {
       name: 'Thành công',
       value: 1,
     },
-    // {
-    //   name: 'Không thành công',
-    //   value: 2,
-    // },
+    {
+      name: 'Đã thuê xong',
+      value: 3,
+    },
   ]
   const hanhdleSelect = (selectedValue) => {
     setValueSelect(selectedValue) // You can access the selected value here
@@ -258,8 +262,9 @@ const Booking = () => {
       )
       const columnWidth = Math.min(50, maxColumnWidth) // Set a maximum width for columns (50 is just an example)
       ws['!autofilter'] = {
-        ref: `A1:${XLSX.utils.encode_col(headers.length - 1)}${values.length + 3
-          }`,
+        ref: `A1:${XLSX.utils.encode_col(headers.length - 1)}${
+          values.length + 3
+        }`,
       }
       ws['!cols'] = ws['!cols'] || []
       ws['!cols'][index] = { width: columnWidth + 2 } // Add some extra padding
