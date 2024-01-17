@@ -34,4 +34,15 @@ public class AdminHomestayServiceImpl implements AdminHomestayService {
         return adminLoginRepository.findAdminByToken(token);
     }
 
+    @Override
+    public Integer getCountHoatDong() {
+        return adminHomestayRepository.countHoatDong();
+    }
+
+    @Override
+    public Integer getCountChoDuyet() {
+        return adminHomestayRepository.countChoDuyet();
+    }
+
+
 }

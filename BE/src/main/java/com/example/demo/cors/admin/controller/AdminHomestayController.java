@@ -44,4 +44,14 @@ public class AdminHomestayController {
         return new ResponseObject(adminApprovalHomestayService.adminRefuseHomestay(request));
     }
 
+    @GetMapping("/countHD")
+    public ResponseObject getCountHD() {
+        return new ResponseObject(adminHomestayService.getCountHoatDong());
+    }
+
+    @GetMapping("/countCD")
+    public ResponseObject getCountCD() {
+        return new ResponseObject(adminHomestayService.getCountChoDuyet());
+    }
+
 }
