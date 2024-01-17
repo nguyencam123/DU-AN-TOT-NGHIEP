@@ -55,4 +55,9 @@ public class CustomerCartController {
         return new ResponseObject(customerCartDetailService.cartDetailBooked());
     }
 
+    @DeleteMapping("/delete-cart")
+    public ResponseObject deleteCartByUser(@RequestBody CustomerCartRequest request) {
+        return new ResponseObject(customerCartDetailService.deleteCartByUser(request));
+    }
+
 }

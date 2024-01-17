@@ -1,5 +1,6 @@
 package com.example.demo.cors.customer.services.impl;
 
+import com.example.demo.cors.customer.model.request.CustomerCartRequest;
 import com.example.demo.cors.customer.repository.CustomerCartDetailRepository;
 import com.example.demo.cors.customer.services.CustomerCartDetailService;
 import com.example.demo.entities.CartDetail;
@@ -48,6 +49,12 @@ public class CustomerCartDetailServiceImpl implements CustomerCartDetailService 
         } else {
             return false;
         }
+    }
+
+    @Override
+    public Boolean deleteCartByUser(CustomerCartRequest request) {
+        customerCartDetailRepository.deleteCartByUser(request);
+        return true;
     }
 
 }

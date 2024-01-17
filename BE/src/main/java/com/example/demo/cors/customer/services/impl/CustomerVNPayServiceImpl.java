@@ -7,21 +7,16 @@ import com.example.demo.cors.customer.repository.CustomerHomestayRepository;
 import com.example.demo.cors.customer.services.CustomerVNPayService;
 import com.example.demo.entities.Booking;
 import com.example.demo.entities.Homestay;
-import com.example.demo.entities.Promotion;
-import com.example.demo.infrastructure.configemail.EmailSender;
 import com.example.demo.infrastructure.configpayment.VNPayConfig;
 import com.example.demo.infrastructure.contant.PaymentMethod;
 import com.example.demo.infrastructure.contant.StatusBooking;
-import com.example.demo.infrastructure.contant.StatusPayOwner;
 import com.example.demo.infrastructure.exception.rest.RestApiException;
-import com.example.demo.infrastructure.sendmailbill.ExportFilePdfFormHtml;
 import com.example.demo.repositories.PromotionRepository;
 import com.example.demo.repositories.UserRepository;
 import com.example.demo.util.DateUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -46,8 +41,6 @@ public class CustomerVNPayServiceImpl implements CustomerVNPayService {
     @Autowired
     private CustomerHomestayRepository homestayRepository;
     @Autowired
-    private PromotionRepository promotionRepository;
-    @Autowired
     private CustomerBookingRepository customerBookingRepository;
     @Autowired
     private CustomerCartDetailRepository customerCartDetailRepository;
@@ -59,7 +52,11 @@ public class CustomerVNPayServiceImpl implements CustomerVNPayService {
         if (homestay == null) {
             throw new RestApiException("Homestay khong ton tai!");
         }
-        Promotion promotion = promotionRepository.findById(request.getIdPromotion()).orElse(null);
+        if (homestay.getPromotion() == null) {
+            booking.setPromotion(null);
+        } else {
+            booking.setPromotion(homestay.getPromotion());
+        }
         BigDecimal totalPrice = new BigDecimal(request.getTotalPrice());
         booking.setTypeBooking(request.getTypeBooking());
         booking.setUser(userRepository.findById(request.getUserId()).get());
@@ -71,7 +68,6 @@ public class CustomerVNPayServiceImpl implements CustomerVNPayService {
         booking.setEmail(request.getEmail());
         booking.setPhoneNumber(request.getPhoneNumber());
         booking.setHomestay(homestay);
-        booking.setPromotion(promotion);
         booking.setNote(request.getNote());
         booking.setStatus(StatusBooking.CHO_THANH_TOAN);
         booking.setNumberOfNight(request.getNumberOfNight());

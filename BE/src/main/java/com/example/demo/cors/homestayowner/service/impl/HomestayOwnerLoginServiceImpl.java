@@ -146,7 +146,7 @@ public class HomestayOwnerLoginServiceImpl implements HomestayOwnerLoginService 
 
         Email email = new Email();
         email.setToEmail(new String[]{ownerHomestay.getEmail()});
-        email.setSubject("Chào mừng đến với trang Web trvelViVu");
+        email.setSubject("Chào mừng đến với trang Web TravelViVu");
         email.setTitleEmail("Chúc mừng " + ownerHomestay.getUsername());
         String confirmationLink = "http://localhost:3000/owner/comfirmmail?id=" + ownerHomestay.getId();
         String emailBody = "Bạn đã đăng ký thành công. Vui lòng xác nhận email bằng cách nhấp vào liên kết sau: " + confirmationLink;
