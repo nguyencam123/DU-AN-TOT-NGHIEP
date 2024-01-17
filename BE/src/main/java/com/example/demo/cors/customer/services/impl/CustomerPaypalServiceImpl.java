@@ -67,8 +67,12 @@ public class CustomerPaypalServiceImpl implements CustomerPaypalService {
         if (homestay == null) {
             throw new RestApiException("Homestay khong ton tai!");
         }
-        Promotion promotion = promotionRepository.findById(customerBookingRequest.getIdPromotion()).orElse(null);
         BigDecimal totalPrice = new BigDecimal(customerBookingRequest.getTotalPrice());
+        if (homestay.getPromotion() == null) {
+            booking.setPromotion(null);
+        } else {
+            booking.setPromotion(homestay.getPromotion());
+        }
         booking.setTypeBooking(customerBookingRequest.getTypeBooking());
         booking.setUser(userRepository.findById(customerBookingRequest.getUserId()).get());
         booking.setTotalPrice(totalPrice);
@@ -79,7 +83,6 @@ public class CustomerPaypalServiceImpl implements CustomerPaypalService {
         booking.setEmail(customerBookingRequest.getEmail());
         booking.setPhoneNumber(customerBookingRequest.getPhoneNumber());
         booking.setHomestay(homestay);
-        booking.setPromotion(promotion);
         booking.setPaymentMethod(PaymentMethod.PAYPAL);
         booking.setNote(customerBookingRequest.getNote());
         booking.setStatus(StatusBooking.CHO_THANH_TOAN);
@@ -103,7 +106,7 @@ public class CustomerPaypalServiceImpl implements CustomerPaypalService {
         payer.setPaymentMethod(PaypalConfig.method);
 
         Payment payment = new Payment();
-        payment.setIntent("ORDER");
+        payment.setIntent("SALE");
         payment.setPayer(payer);
         payment.setTransactions(transactionList);
 
