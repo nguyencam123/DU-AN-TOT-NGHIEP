@@ -282,8 +282,22 @@ const Promotion = () => {
               <a>
                 <ReloadOutlined />
               </a>
-            </Popconfirm>
-          )}
+            ))}
+          {record.statusPromotion === 'HOAT_DONG' ||
+            (record.statusPromotion === 'CHO_HOAT_DONG' && ( // Thêm điều kiện ở đây
+              <Popconfirm
+                title='Cập nhật mục này'
+                description='Bạn chắc chắn muốn cập nhật khuyến mãi này thành không hoạt động không?'
+                icon={<ReloadOutlined />}
+                cancelText='Hủy'
+                okText='Cập nhật'
+                onConfirm={() => handleSubmitStatus(record)}
+              >
+                <a>
+                  <ReloadOutlined />
+                </a>
+              </Popconfirm>
+            ))}
         </Space>
       ),
     },

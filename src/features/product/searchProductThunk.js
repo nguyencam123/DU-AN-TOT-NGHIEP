@@ -49,7 +49,7 @@ export const fetchSearchProductsByPage =
     dispatch(fetchProductsStart())
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/v1/homestay/search?dateFrom=${startDate}&dateTo=${enDate}&nameOrAddress=${nameOrAddress}&numberPerson=${numberPerson}&roomNumber=${roomNumber}&priceMin=${priceMin}&priceMax=${priceMax}&${convenientHomestayList}&size=10&page=${page}`,
+        `http://localhost:8080/api/v1/homestay/search?dateFrom=${startDate}&dateTo=${enDate}&nameOrAddress=${nameOrAddress}&numberPerson=${numberPerson}&roomNumber=${roomNumber}&priceMin=${priceMin}&priceMax=${priceMax}&convenientHomestayList=${convenientHomestayList}&size=10&page=${page}`,
       )
       dispatch(fetchProductsSuccess(response.data.data)) // Lấy dữ liệu từ response.data.data
     } catch (error) {

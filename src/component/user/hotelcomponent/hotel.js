@@ -186,7 +186,6 @@ const Hotel = () => {
   }
 
   const handleSearch = () => {
-    console.log(checkInDate.valueOf() + '' + calculateCheckOutDate().valueOf())
     if (nameOrAddress == '') {
       setNotification('Vui lòng nhập tên hoặc địa chỉ')
     } else {
