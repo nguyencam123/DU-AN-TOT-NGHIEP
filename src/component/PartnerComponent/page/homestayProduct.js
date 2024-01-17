@@ -397,7 +397,7 @@ const HomeStayProduct = () => {
   }
   // Use useEffect to call updateAddress whenever the selectedCity, selectedDistrict, or selectedWard changes
   const updateDesc = () => {
-    const newDesc = `Có ${totalBathroom} phòng tắm,có ${totalbedroom} phòng ngủ,${desc}`
+    const newDesc = `Có ${totalBathroom} phòng tắm, có ${totalbedroom} phòng ngủ, ${desc}`
     setSumdesc(newDesc)
   }
 
