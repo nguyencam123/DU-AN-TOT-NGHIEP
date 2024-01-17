@@ -667,18 +667,16 @@ const HomeStayProduct = () => {
 
     const detailDesc = record.desc.split(',')
     console.log(detailDesc)
-    setdesc(detailDesc[2].trim())
+    setdesc(detailDesc[2]?.trim())
     const bathroom = detailDesc[0]
     const bedroom = detailDesc[1]
     setTotalBathroom(
       bathroom
-        .substring(bathroom.indexOf('ó') + 1, bathroom.indexOf('p') - 1)
-        .trim(),
+        .substring(bathroom.indexOf('ó') + 2, bathroom.indexOf('p') - 1),
     )
     setTotalbedroom(
       bedroom
-        .substring(bedroom.indexOf('ó') + 1, bedroom.indexOf('p') - 1)
-        .trim(),
+        .substring(bedroom.indexOf('ó') + 2, bedroom.indexOf('p') - 1),
     )
 
     const addressParts = record.address.split(', ')
