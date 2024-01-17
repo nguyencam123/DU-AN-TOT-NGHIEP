@@ -6,6 +6,8 @@ import {
   getAllHomestayByHomestayName,
   getAllHomestayByNameOwner,
   getAllHomestayByStatus,
+  getCountHomestaySuccess,
+  getCountHomestayWait,
 } from '../../features/product/productThunk'
 import { fetchCategory } from '../../features/category/categoryThunk'
 import { useState } from 'react'
@@ -48,6 +50,8 @@ function AddProductForm() {
   const [viewImage, setViewImage] = useState([])
   const dispatch = useDispatch()
   const products = useSelector((state) => state.product.products)
+  const countSuccess = useSelector((state) => state.product.homestayHD)
+  const countWait = useSelector((state) => state.product.homestayCD)
   const [confirmModal, setConfirmModal] = useState(false)
   const [deniedModal, setDeniedModal] = useState(false)
   const [refuse, setRefuse] = useState('')
@@ -227,6 +231,8 @@ function AddProductForm() {
   }
   //
   useEffect(() => {
+    dispatch(getCountHomestaySuccess())
+    dispatch(getCountHomestayWait())
     dispatch(getAllHomestayByStatus(1))
   }, [])
   const columns = [
@@ -305,6 +311,56 @@ function AddProductForm() {
   return (
     <div style={{ marginTop: '30px' }}>
       <Title level={2}>Quản trị homestay</Title>
+      <div>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <div
+            style={{
+              width: '25%',
+              height: 110,
+              backgroundColor: '#321fdb',
+              padding: 25,
+              marginRight: 60,
+              borderRadius: 8,
+            }}
+          >
+            <Title
+              style={{ marginTop: '1px', color: 'white', fontWeight: 600 }}
+              level={3}
+            >
+            </Title>
+            <Title
+              style={{ marginTop: '1px', color: 'white', fontWeight: 600, textAlign: 'center', fontSize: '24px' }}
+              level={5}
+            >
+              {' '}
+              Homestay chờ duyệt{' : '}
+              {countWait}
+            </Title>
+          </div>
+          <div
+            style={{
+              width: '25%',
+              height: 110,
+              backgroundColor: '#e55353',
+              padding: 25,
+              borderRadius: 8,
+            }}
+          >
+            <Title
+              style={{ marginTop: '1px', color: 'white', fontWeight: 600 }}
+              level={3}
+            >
+            </Title>
+            <Title
+              style={{ marginTop: '1px', color: 'white', fontWeight: 600, textAlign: 'center', fontSize: '24px' }}
+              level={5}
+            >
+              Homestay đã duyệt {' : '} 
+              {countSuccess}
+            </Title>
+          </div>
+        </div>
+      </div>
       <Title level={4}>Danh mục</Title>
       <Row>
         <Form.Item label='Trạng thái' style={{ float: 'left' }}>

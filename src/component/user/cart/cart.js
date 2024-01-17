@@ -148,7 +148,7 @@ export const CartUser = () => {
               (items.price -
                 items?.valuePromotion +
                 ((items.price - items?.valuePromotion) * 11) / 100) *
-                nightCount,
+              nightCount,
             )
 
             return (
@@ -239,6 +239,15 @@ export const CartUser = () => {
                     <div>
                       <Title level={5}>Có {items.quantityCmt} đánh giá</Title>
                     </div>
+                    <div style={{ marginLeft: 5, display: 'flex' }}>
+                      {items.status !== '0' ? (
+                        <span style={{ color: 'red', fontWeight:'600' }}>Đã hết hạn hoặc homestay đã được booking</span>
+                      ) : (
+                        <>
+                          (<Title level={5}> {nightCount} đêm</Title>)
+                        </>
+                      )}
+                    </div>
                   </div>
                   <div style={{ marginLeft: 'auto' }}>
                     <Popconfirm
@@ -269,15 +278,6 @@ export const CartUser = () => {
                     {moment(items.endDate * 1)
                       .locale('vi')
                       .format('LL')}{' '}
-                  </div>
-                  <div style={{ marginLeft: 5, display: 'flex' }}>
-                    {items.status !== '0' ? (
-                      <span style={{ color: 'red' }}>Đã hết hạn</span>
-                    ) : (
-                      <>
-                        (<Title level={5}> {nightCount} đêm</Title>)
-                      </>
-                    )}
                   </div>
                   <div style={{ marginLeft: 'auto' }}>
                     <Title level={4}>{TotolPrice}</Title>
@@ -316,22 +316,21 @@ export const CartUser = () => {
                       ((selectedRadioData.price -
                         selectedRadioData?.valuePromotion) *
                         11) /
-                        100) *
-                      moment(selectedRadioData.endDate * 1).diff(
-                        moment(selectedRadioData.startDate * 1),
-                        'days',
-                      ),
+                      100) *
+                    moment(selectedRadioData.endDate * 1).diff(
+                      moment(selectedRadioData.startDate * 1),
+                      'days',
+                    ),
                   )}
                 </Title>
               </div>
             )}
           </div>
           <Link
-            to={`/homestay/booking/${selectedRadioData.idHomestay}?startDate=${
-              selectedRadioData.startDate
-            }&endDate=${selectedRadioData.endDate}&numNight=${moment(
-              selectedRadioData.endDate * 1,
-            ).diff(moment(selectedRadioData.startDate * 1), 'days')}`}
+            to={`/homestay/booking/${selectedRadioData.idHomestay}?startDate=${selectedRadioData.startDate
+              }&endDate=${selectedRadioData.endDate}&numNight=${moment(
+                selectedRadioData.endDate * 1,
+              ).diff(moment(selectedRadioData.startDate * 1), 'days')}`}
           >
             <MDBBtn
               type='submit'

@@ -99,7 +99,12 @@ export const DetailHomestay = () => {
   if (dayjs(Date(dateFix)).add(1, 'days').valueOf() >= startDate) {
     cancelDay = `Việc hủy phòng sẽ mất toàn bộ số tiền bạn đã thanh toán`
   } else {
-    cancelDay = `Việc hủy phòng sau ngày ${moment(dayjs(dateFix))
+    cancelDay = `
+    Việc hủy phòng trước hoặc trong ngày ${moment(dayjs(dateFix))
+      .add(1, 'day')
+      .locale('vi')
+      .format('LL')} sẽ được hoàn toàn bộ số tiền bạn đã thanh toán
+    . Việc hủy phòng sau ngày ${moment(dayjs(dateFix))
       .add(1, 'day')
       .locale('vi')
       .format('LL')} sẽ mất toàn bộ số tiền bạn đã thanh toán`

@@ -9,6 +9,8 @@ import {
   addInfoBooking,
   getPaypalSuccess,
   checkBookingSuccess,
+  checkHomestayHDSuccess,
+  checkHomestayCDSuccess,
 } from './productSlide'
 import { instance } from '../../app/axiosConfig'
 import axios from 'axios'
@@ -205,6 +207,27 @@ export const getAllHomestayByStatus = (status) => async (dispatch) => {
       '/api/v3/homestay?size=99&statusHomestay=' + status,
     )
     dispatch(fetchProductsSuccess(response.data.data.data)) // Lấy dữ liệu từ response.data.data
+  } catch (error) {
+    dispatch(fetchProductsFailure(error.message))
+  }
+}
+export const getCountHomestaySuccess = () => async (dispatch) => {
+  try {
+    const response = await instance.get(
+      '/api/v3/homestay/countHD',
+    )
+    dispatch(checkHomestayHDSuccess(response.data.data)) // Lấy dữ liệu từ response.data.data
+  } catch (error) {
+    dispatch(fetchProductsFailure(error.message))
+  }
+}
+
+export const getCountHomestayWait = () => async (dispatch) => {
+  try {
+    const response = await instance.get(
+      '/api/v3/homestay/countCD',
+    )
+    dispatch(checkHomestayCDSuccess(response.data.data)) // Lấy dữ liệu từ response.data.data
   } catch (error) {
     dispatch(fetchProductsFailure(error.message))
   }
