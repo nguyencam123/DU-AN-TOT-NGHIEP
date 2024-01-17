@@ -77,7 +77,7 @@ export const BookingReviewHomestay = () => {
       userId: userDetail?.data?.id
     }
     dispatch(getPayment(bookingDataGet));
-    message.info('Bạn vui lòng đợi một lúc!',1)
+    message.info('Bạn vui lòng đợi một lúc!', 1)
     await dispatch(getPaymentPayPal(bookingDataGet));
     setIsModalOpen(true)
   }
@@ -91,7 +91,12 @@ export const BookingReviewHomestay = () => {
   if (dayjs(Date(dateFix)).add(1, 'days').valueOf() >= startDate) {
     cancelDay = `Việc hủy phòng sẽ mất toàn bộ số tiền bạn đã thanh toán`
   } else {
-    cancelDay = `Việc hủy phòng sau ngày ${moment(dayjs(dateFix)).add(1, 'day').locale('vi').format('LL')} sẽ mất toàn bộ số tiền bạn đã thanh toán`
+    cancelDay = `
+    Việc hủy phòng trước hoặc trong ngày ${moment(dayjs(dateFix))
+        .add(1, 'day')
+        .locale('vi')
+        .format('LL')} sẽ được hoàn toàn bộ số tiền bạn đã thanh toán
+    . Việc hủy phòng sau ngày ${moment(dayjs(dateFix)).add(1, 'day').locale('vi').format('LL')} sẽ mất toàn bộ số tiền bạn đã thanh toán`
   }
 
   return (
@@ -365,7 +370,7 @@ export const BookingReviewHomestay = () => {
           <a href={payment}>
             <img src={logovnpay} className='imgThanhToan' />
           </a>
-          <a href={paypal} style={{marginLeft:'10px'}}>
+          <a href={paypal} style={{ marginLeft: '10px' }}>
             <img src={paypalImg} style={{ width: '87px', height: '48px' }} className='imgThanhToanPaypal' />
           </a>
         </div>
