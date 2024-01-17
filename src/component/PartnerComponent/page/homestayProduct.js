@@ -130,24 +130,30 @@ const HomeStayProduct = () => {
     const files = event.target.files
     let selectedFile = event.target.files
     let fileList = [...selectedFile]
+
     const imagesArray = fileList.map((file) => ({
       name: file.name,
       url: URL.createObjectURL(file),
     }))
 
     setSelectedImages((prevImages) => [...prevImages, ...imagesArray])
-    setFile(fileList)
+
+    // Use the callback function to ensure the most up-to-date state
+    setFile((prevFileList) => [...prevFileList, ...fileList])
+
     const filesArray = Array.from(files).map((file) => ({
       name: file.name,
       size: file.size,
       type: file.type,
     }))
+
     if (!isAddFrom) {
       setIsLoadingImg(true)
       message.info(
         'Đang tiến hành tải ảnh lên máy chủ bạn vui lòng đợi một vài giây nhé!',
         5,
       )
+
       await dispatch(addImgUpload(idHomestay, fileList))
       dispatch(fetchBaseImg(idHomestay))
       setIsLoadingImg(false)
@@ -190,6 +196,7 @@ const HomeStayProduct = () => {
     setacreage(record.acreage)
     setroomNumber(record.roomNumber)
   }
+
   const showModal = () => {
     setIsModalOpen(true)
     setIsAddForm(true)
@@ -213,6 +220,7 @@ const HomeStayProduct = () => {
     setFile([])
     setAddressDetail('')
     setviewEditConvennient([])
+    setconvenient('')
     const fileInput = document.getElementById('image')
     if (fileInput) {
       fileInput.value = null
@@ -621,7 +629,10 @@ const HomeStayProduct = () => {
     setacreage(record.acreage)
     settimeCheckIn(record.timeCheckIn)
     settimeCheckOut(record.timeCheckOut)
-    setconvenient(record.detailHomestays)
+    setconvenient(
+      record.detailHomestays?.map((items) => items.convenientHomestay.id),
+    )
+
     setFile([])
     setviewEditConvennient(record.detailHomestays)
     const fileInput = document.getElementById('image')
@@ -1023,7 +1034,7 @@ const HomeStayProduct = () => {
                     label: item.name,
                     value: item.id,
                   }))}
-                  defaultValue={checkedList}
+                  defaultValue={convenientvir}
                   onChange={onChangeConvenients}
                 />
               </div>
