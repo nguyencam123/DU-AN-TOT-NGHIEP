@@ -50,7 +50,7 @@ function BookingForm() {
   const dispatch = useDispatch()
   const columns = [
     {
-      title: 'Mã booking',
+      title: 'Tên người đặt',
       dataIndex: 'user',
       key: 'userName',
       render: (data) => {
@@ -687,6 +687,17 @@ function BookingForm() {
                   </div>{' '}
                   : {viewBooking.user?.numberAccount}{' - '}
                   {viewBooking.user?.nameBank}{' - '}{viewBooking.user?.nameAccount}
+                </div>
+                <br />
+              </td>
+            </tr>
+            <tr>
+              <td style={{ width: 1200 }}>
+                <div style={{ display: 'flex' }}>
+                  <div style={{ width: 200 }}>
+                    Mã booking
+                  </div>{' '}
+                  : {viewBooking?.code}
                 </div>
                 <br />
               </td>
