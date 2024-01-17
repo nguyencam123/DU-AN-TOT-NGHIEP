@@ -12,6 +12,7 @@ public interface CustomerConvenientTypeRepository extends ConvenientHomestayType
 
     @Query(value = """
             SELECT * FROM convenient_homestay_type
-                        """, nativeQuery = true)
+            ORDER BY last_modified_date DESC
+            """, nativeQuery = true)
     List<ConvenientHomestayType> getAll();
 }

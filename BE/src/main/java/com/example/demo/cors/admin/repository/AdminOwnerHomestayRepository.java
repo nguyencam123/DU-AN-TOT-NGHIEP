@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AdminOwnerHomestayRepository extends OwnerHomestayRepository {
     @Query(value = """
-            SELECT ROW_NUMBER() OVER(ORDER BY oh.created_date DESC) AS stt, oh.* FROM owner_homestay oh\s
+            SELECT ROW_NUMBER() OVER(ORDER BY oh.last_modified_date DESC) AS stt, oh.* FROM owner_homestay oh\s
             WHERE ( ( :#{#request.statusOwnerHomestay} IS NULL OR oh.status = :#{#request.statusOwnerHomestay} )
             AND ( :#{#request.nameOwner} IS NULL OR oh.name LIKE '' OR oh.name LIKE %:#{#request.nameOwner}% ) )
             """, nativeQuery = true)

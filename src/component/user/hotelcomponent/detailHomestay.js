@@ -198,10 +198,10 @@ export const DetailHomestay = () => {
   }
   const addShoppingCart = async () => {
     if (userDetail?.data.id == null) {
-      message.info('Bạn cần đăng nhập để có thể thêm vào giỏ hàng!')
+      message.info('Bạn cần đăng nhập để có thể Lưu!')
     } else {
       await dispatch(addShoppingCartThunk(shoppingCart))
-      message.info('Thêm vào giỏ hàng thành công!')
+      message.info('Lưu thành công!')
       dispatch(fetchShoppingCart(userDetail?.data.id))
     }
   }
@@ -249,7 +249,7 @@ export const DetailHomestay = () => {
                 <EnvironmentOutlined
                   style={{ fontSize: '10px', alignItems: 'center' }}
                 />
-                {detailHomestay.address}
+                &nbsp;{detailHomestay.address}
               </div>
             </Col>
             <Col span={6} push={10}>
@@ -315,7 +315,7 @@ export const DetailHomestay = () => {
                     fontWeight: 500,
                   }}
                 >
-                  Thêm vào giỏ hàng
+                  Lưu
                 </Button>
               </div>
             </Col>
@@ -443,8 +443,8 @@ export const DetailHomestay = () => {
                     fontWeight: '500',
                   }}
                 >
-                  {detailHomestay?.detailHomestays?.map((items) => (
-                    <div>{items?.convenientHomestay?.name}</div>
+                  {detailHomestay?.detailHomestays?.map((items, index) => (
+                    <div>{index <= 4 ? items?.convenientHomestay?.name : ''}</div>
                   ))}
                 </div>
               </div>

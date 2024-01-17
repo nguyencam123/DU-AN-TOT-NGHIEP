@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface HomestayOwnerCommentRepository extends CommentRepository {
 
-    @Query(value = "Select * from comment a where a.homestay_id=:idHomestay", nativeQuery = true)
+    @Query(value = "Select * from comment a where a.homestay_id=:idHomestay ORDER BY a.last_modified_date DESC", nativeQuery = true)
     Page<Comment> getComment(String idHomestay,Pageable pageable);
 
     @Query(value = """

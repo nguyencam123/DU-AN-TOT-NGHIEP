@@ -48,12 +48,12 @@ public interface CustomerBookingRepository extends BookingRepository {
             b.total_price, b.type_booking, b.code, b.payment_method,
             CASE WHEN b.promotion_id IS NULL THEN (h.price * b.number_of_night + 0.11 * h.price * b.number_of_night)
             	WHEN b.promotion_id IS NOT NULL THEN ((h.price - p.[value]) * b.number_of_night + 0.11 * (h.price - p.[value]) * b.number_of_night)
-            	END AS sum_price, h.[name] AS name_homestay, h.[address] AS adress_homestay, u.address AS address_user
+            	END AS sum_price, h.[name] AS name_homestay, h.[address] AS adress_homestay, u.[address] AS address_user
             FROM booking b
             JOIN [user] u ON b.[user_id] = u.id
             JOIN homestay h ON b.homestay_id = h.id
             LEFT JOIN promotion p ON b.promotion_id = p.id
-            WHERE b.id = :bookingId           
+            WHERE b.id = :bookingId     
             """, nativeQuery = true)
     CustomerBillBookingResponse getOneBooking(@Param("bookingId") String bookingId);
 
