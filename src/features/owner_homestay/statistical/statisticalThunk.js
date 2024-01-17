@@ -6,6 +6,8 @@ import {
   fetchStatisticalByYearsSuccess,
   fetchStatisticalByDaySuccess,
   fetchStatisticalByTop5Success,
+  fetchStatisticalTopBooking,
+  fetchStatisticalByBookingTodaySuccess,
 } from './statisticalSlice'
 import { instance } from '../../../app/axiosConfig'
 
@@ -67,6 +69,31 @@ export const fetchStatisticalByTop5 =
         `/api/v2/statictical/top5?idOwnerHomestay=${idOwnerHomestay}&year=${year}&size=5`,
       )
       dispatch(fetchStatisticalByTop5Success(response.data.data)) // Lấy dữ liệu từ response.data.data
+    } catch (error) {
+      dispatch(fetchstatisticalFailure(error.message))
+    }
+  }
+export const fetchTopUserBooking = (idOwnerHomestay) => async (dispatch) => {
+  dispatch(fetchstatisticalStart())
+
+  try {
+    const response = await instance.get(
+      `/api/v2/booking/user?idowner=${idOwnerHomestay}&size=99`,
+    )
+    dispatch(fetchStatisticalTopBooking(response.data.data.data)) // Lấy dữ liệu từ response.data.data
+  } catch (error) {
+    dispatch(fetchstatisticalFailure(error.message))
+  }
+}
+export const fetchStatisticalByBookingToday =
+  (idOwnerHomestay) => async (dispatch) => {
+    dispatch(fetchstatisticalStart())
+
+    try {
+      const response = await instance.get(
+        `/api/v2/booking/number_of_book_today?idowner=${idOwnerHomestay}&size=99`,
+      )
+      dispatch(fetchStatisticalByBookingTodaySuccess(response.data.data)) // Lấy dữ liệu từ response.data.data
     } catch (error) {
       dispatch(fetchstatisticalFailure(error.message))
     }

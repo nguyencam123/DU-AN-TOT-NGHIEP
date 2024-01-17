@@ -79,6 +79,7 @@ export const BookingReviewHomestay = () => {
     dispatch(getPayment(bookingDataGet));
     message.info('Bạn vui lòng đợi một lúc!', 1)
     await dispatch(getPaymentPayPal(bookingDataGet));
+    deleteCart()
     setIsModalOpen(true)
   }
   let cancelDay = '';
@@ -97,6 +98,9 @@ export const BookingReviewHomestay = () => {
         .locale('vi')
         .format('LL')} sẽ được hoàn toàn bộ số tiền bạn đã thanh toán
     . Việc hủy phòng sau ngày ${moment(dayjs(dateFix)).add(1, 'day').locale('vi').format('LL')} sẽ mất toàn bộ số tiền bạn đã thanh toán`
+  }
+  if (typeBooking === '0') {
+    cancelDay = `Việc hủy phòng sẽ mất toàn bộ số tiền bạn đã thanh toán`
   }
   const deleteCart = () => {
     dispatch(deleteCartUser(userDetail?.data?.id, id))
@@ -369,10 +373,10 @@ export const BookingReviewHomestay = () => {
       >
         <div style={{ textAlign: 'center' }}>
           <h5>Lựa chọn hình thức thanh toán</h5>
-          <a onClick={deleteCart} href={payment}>
+          <a href={payment}>
             <img src={logovnpay} className='imgThanhToan' />
           </a>
-          <a onClick={deleteCart} href={paypal} style={{ marginLeft: '10px' }}>
+          <a href={paypal} style={{ marginLeft: '10px' }}>
             <img src={paypalImg} style={{ width: '87px', height: '48px' }} className='imgThanhToanPaypal' />
           </a>
         </div>

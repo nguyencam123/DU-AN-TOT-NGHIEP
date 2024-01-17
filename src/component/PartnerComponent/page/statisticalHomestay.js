@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import moment from 'moment'
 import {
+  fetchStatisticalByBookingToday,
   fetchStatisticalByDay,
   fetchStatisticalByMonth,
   fetchStatisticalByTop5,
@@ -39,7 +40,9 @@ const StatisticalHomestay = () => {
   const statisticalByTop5 = useSelector(
     (state) => state.statistical.statisticalByTop5,
   )
-
+  const statisticalByBookingToday = useSelector(
+    (state) => state.statistical.statisticalByBookingToday,
+  )
   const booking = useSelector((state) => state.booking.bookings)
   const userDetail = JSON.parse(localStorage.getItem('ownerDetail'))
   const UserID = userDetail?.data.id
@@ -69,6 +72,7 @@ const StatisticalHomestay = () => {
       getBookingByNameHomestay(UserID, homestayname, namebooking, valueselect),
     )
     dispatch(fetchStatisticalByTop5(UserID, currentYear))
+    dispatch(fetchStatisticalByBookingToday(UserID))
     // console.log(currentYear)
   }, [currentYear])
 
@@ -281,7 +285,7 @@ const StatisticalHomestay = () => {
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <div
             style={{
-              width: '25%',
+              width: '30%',
               height: 200,
               backgroundColor: '#321fdb',
               padding: 25,
@@ -311,7 +315,7 @@ const StatisticalHomestay = () => {
           </div>
           <div
             style={{
-              width: '25%',
+              width: '30%',
               height: 200,
               backgroundColor: '#3399ff',
               padding: 25,
@@ -341,11 +345,11 @@ const StatisticalHomestay = () => {
           </div>
           <div
             style={{
-              width: '25%',
+              width: '30%',
               height: 200,
               backgroundColor: '#f9b115',
               padding: 25,
-              marginRight: 60,
+
               borderRadius: 8,
             }}
           >
@@ -372,13 +376,46 @@ const StatisticalHomestay = () => {
               style={{ width: '100%', marginTop: 10 }}
             />
           </div>
+        </div>
+        <div
+          style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}
+        >
           <div
             style={{
-              width: '25%',
+              width: '30%',
               height: 200,
               backgroundColor: '#e55353',
               padding: 25,
               borderRadius: 8,
+              marginRight: 30,
+            }}
+          >
+            <Title
+              style={{ marginTop: '1px', color: 'white', fontWeight: 600 }}
+              level={3}
+            >
+              {' '}
+              {statisticalByBookingToday?.bookToday == null
+                ? 0
+                : statisticalByBookingToday?.bookToday}{' '}
+              lượt
+            </Title>
+            <Title
+              style={{ marginTop: '1px', color: 'white', fontWeight: 600 }}
+              level={5}
+            >
+              Số lượt đã đặt phòng trong hôm nay
+            </Title>
+            <img src={imgRedchart} style={{ width: '100%', marginTop: 1 }} />
+          </div>
+          <div
+            style={{
+              width: '30%',
+              height: 200,
+              backgroundColor: '#e55353',
+              padding: 25,
+              borderRadius: 8,
+              marginLeft: 30,
             }}
           >
             <Title
