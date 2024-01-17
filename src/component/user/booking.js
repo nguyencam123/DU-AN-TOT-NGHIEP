@@ -415,7 +415,7 @@ export const BookingUser = () => {
                             {canComment && (
                               <Button
                                 style={{
-                                  backgroundColor: '#ee4d2d',
+                                  backgroundColor: '#eda500',
                                   color: 'white',
                                   width: 180,
                                 }}

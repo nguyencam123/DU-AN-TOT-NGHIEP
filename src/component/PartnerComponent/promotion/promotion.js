@@ -39,9 +39,9 @@ import dayjs from 'dayjs'
 
 const { Title } = Typography
 
-const text = <span>Sửa khuyến mãi</span>
-const textView = <span>xem chi tiết khuyến mãi</span>
-const textupdate = <span>Dừng hoạt động khuyến mãi</span>
+const text = <span>Sửa khuyến mại</span>
+const textView = <span>xem chi tiết khuyến mại</span>
+const textupdate = <span>Dừng hoạt động khuyến mại</span>
 const Promotion = () => {
   const [isAddFrom, setIsAddFrom] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
@@ -205,7 +205,7 @@ const Promotion = () => {
   }, [arrow])
   const columns = [
     {
-      title: 'Tên khuyến mãi',
+      title: 'Tên khuyến mại',
       dataIndex: 'name',
       key: 'name',
       render: (data) => {
@@ -248,7 +248,7 @@ const Promotion = () => {
         if (str == 'HOAT_DONG') {
           return 'Hoạt động'
         } else if (str == 'KET_THUC') {
-          return 'Khuyến mãi đã kết thúc'
+          return 'Khuyến mại đã kết thúc'
         } else if (str == 'CHO_HOAT_DONG') {
           return 'Chờ hoạt động'
         } else {
@@ -265,15 +265,15 @@ const Promotion = () => {
           <a style={{ color: '#1677ff' }} onClick={() => handleViewRow(record)}>
             <EyeOutlined />
           </a>
-          {record.statusPromotion === 'HOAT_DONG' && ( // Thêm điều kiện ở đây
+          {record.statusPromotion === 'HOAT_DONG' || record.statusPromotion === 'CHO_HOAT_DONG' && ( // Thêm điều kiện ở đây
             <a style={{ color: '#1677ff' }} onClick={() => handleEdit(record)}>
               <EditOutlined />
             </a>
           )}
-          {record.statusPromotion === 'HOAT_DONG' && ( // Thêm điều kiện ở đây
+          {record.statusPromotion === 'HOAT_DONG' &&( // Thêm điều kiện ở đây
             <Popconfirm
               title='Cập nhật mục này'
-              description='Bạn chắc chắn muốn cập nhật khuyến mãi này thành không hoạt động không?'
+              description='Bạn chắc chắn muốn cập nhật khuyến mại này thành không hoạt động không?'
               icon={<ReloadOutlined />}
               cancelText='Hủy'
               okText='Cập nhật'
@@ -334,7 +334,7 @@ const Promotion = () => {
     name: Yup.string()
       .trim() // Remove leading and trailing whitespaces
       .min(1, 'Vui lòng nhập ít nhất một ký tự cho tên sản phẩm')
-      .required('Vui lòng nhập tên khuyến mãi'),
+      .required('Vui lòng nhập tên khuyến mại'),
     value: Yup.number()
       .required('Vui lòng nhập số tiền giảm')
       .typeError('Vui lòng nhập số tiền giảm')
@@ -363,7 +363,7 @@ const Promotion = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (dataPromotion.some((item) => item.price < value)) {
-      message.info('Có homestay có giá thấp hơn số tiền khuyến mãi!')
+      message.info('Có homestay có giá thấp hơn số tiền khuyến mại!')
     } else {
       try {
         await validationSchema.validate(promotions, { abortEarly: false })
@@ -430,10 +430,10 @@ const Promotion = () => {
 
   return (
     <div style={{ marginTop: '20px' }}>
-      <Title level={2}>Quản trị khuyến mãi</Title>
+      <Title level={2}>Quản trị khuyến mại</Title>
       <div style={{ marginBottom: 20, float: 'right' }}>
         <Button type='primary' onClick={showModal}>
-          Thêm mới khuyến mãi
+          Thêm mới khuyến mại
         </Button>
       </div>
       <Title level={4}>Danh mục</Title>
@@ -458,11 +458,11 @@ const Promotion = () => {
           />
         </Form.Item>
         <Form.Item
-          label='Tìm kiếm theo tên khuyến mãi'
+          label='Tìm kiếm theo tên khuyến mại'
           style={{ float: 'left', marginLeft: ' 50px' }}
         >
           <Input.Search
-            placeholder='Tên khuyến mãi'
+            placeholder='Tên khuyến mại'
             allowClear
             size='medium'
             enterButton='search'
@@ -481,8 +481,8 @@ const Promotion = () => {
       <Table columns={columns} dataSource={promotion} />
       <Modal
         width={1200}
-        title={isAddFrom == true ? 'Thêm khuyến mãi' : 'Sửa khuyến mãi'}
-        okText={isAddFrom == true ? 'Thêm khuyến mãi' : 'Sửa khuyến mãi'}
+        title={isAddFrom == true ? 'Thêm khuyến mại' : 'Sửa khuyến mại'}
+        okText={isAddFrom == true ? 'Thêm khuyến mại' : 'Sửa khuyến mại'}
         open={isModalOpen}
         onOk={handleSubmit}
         onCancel={handleCancel}
@@ -525,7 +525,7 @@ const Promotion = () => {
                 {/* Trường thứ nhất */}
                 <Col span={24}>
                   <Form.Item
-                    label={<Title level={5}>Tên khuyến mãi</Title>}
+                    label={<Title level={5}>Tên khuyến mại</Title>}
                     validateStatus={formErrors.name ? 'error' : ''} // Hiển thị lỗi cho trường name nếu có
                     help={formErrors.name} // Hiển thị thông báo lỗi cho trường name nếu có
                   >
@@ -621,7 +621,7 @@ const Promotion = () => {
             </div>
             <div>
               <div style={{ color: 'red', marginLeft: 30 }}>
-                *(Vui lòng chọn homestay mà bạn muốn áp dụng khuyến mãi)
+                *(Vui lòng chọn homestay mà bạn muốn áp dụng khuyến mại)
               </div>
               <Table
                 rowSelection={{
@@ -639,7 +639,7 @@ const Promotion = () => {
       <Modal
         title={
           <div style={{ fontSize: '22px' }}>
-            Xem thông tin chi tiết khuyến mãi
+            Xem thông tin chi tiết khuyến mại
           </div>
         }
         open={isViewmodal}
@@ -650,16 +650,16 @@ const Promotion = () => {
       >
         <div style={{ fontSize: 18, fontWeight: 600 }}>
           <div style={{ display: 'flex' }}>
-            <div style={{ width: 400 }}>Tên khuyến mãi </div> : {name}
+            <div style={{ width: 400 }}>Tên khuyến mại </div> : {name}
           </div>
           <br />
           <div style={{ display: 'flex' }}>
-            <div style={{ width: 400 }}>Thời gian bắt đầu khuyến mãi </div> :{' '}
+            <div style={{ width: 400 }}>Thời gian bắt đầu khuyến mại </div> :{' '}
             {startDate}
           </div>
           <br />
           <div style={{ display: 'flex' }}>
-            <div style={{ width: 400 }}>Thời gian kết thúc khuyến mãi </div> :{' '}
+            <div style={{ width: 400 }}>Thời gian kết thúc khuyến mại </div> :{' '}
             {endDate}
           </div>
           <br />
@@ -670,7 +670,7 @@ const Promotion = () => {
           <br />
           <div style={{ display: 'flex' }}>
             <div style={{ width: 400 }}>
-              Các homestay đã được áp dụng khuyến mãi{' '}
+              Các homestay đã được áp dụng khuyến mại{' '}
             </div>
           </div>
           <Table columns={columnsDataView} dataSource={homestay} />

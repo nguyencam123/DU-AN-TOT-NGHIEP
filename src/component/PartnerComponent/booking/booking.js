@@ -187,7 +187,7 @@ const Booking = () => {
    */
   const formattedData = booking?.map((item) => {
     // Kiểm tra nếu startDate là ngày trước đó và thời gian là từ 12 giờ trở đi thì hiển thị số điện thoại
-    const isShowPhoneNumber = moment(item.startDate).isBefore(
+    const isShowPhoneNumber = moment(item?.startDate).isBefore(
       moment().subtract(1, 'day'),
     )
 

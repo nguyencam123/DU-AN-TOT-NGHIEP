@@ -149,8 +149,8 @@ function BookingForm() {
             if (record.typeBooking === 'DAT_COC') {
               return formatCurrency(
                 data -
-                  (data - (data * 100) / 111) * 2 -
-                  (((data * 100) / 111) * 2 * 100) / 100,
+                (data - (data * 100) / 111) * 2 -
+                (((data * 100) / 111) * 2 * 100) / 100,
               )
             }
             if (record.typeBooking === 'THANH_TOAN_TRUOC') {
@@ -214,12 +214,17 @@ function BookingForm() {
           <a onClick={() => showBooking(record)}>
             <EyeOutlined />
           </a>
-          <a onClick={() => openOwnerTranCode(record)}>
-            <HomeOutlined />
-          </a>
-          <a onClick={() => openUserTranCode(record)}>
-            <UserOutlined />
-          </a>
+          {record.statusPayOwner === 'CHUA_TT_CHO_OWNER' && (
+            <a onClick={() => openOwnerTranCode(record)}>
+              <HomeOutlined />
+            </a>
+          )}
+          {record.statusPayUser === 'CHUA_TT_CHO_USER' && (
+            <a onClick={() => openUserTranCode(record)}>
+              <UserOutlined />
+            </a>
+          )}
+
         </Space>
       ),
     },
@@ -631,22 +636,6 @@ function BookingForm() {
             <tr>
               <td style={{ width: 600 }}>
                 <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Số phòng</div> :{' '}
-                  {viewBooking.roomNumber}
-                </div>
-                <br />
-              </td>
-              <td style={{ width: 500 }}>
-                <div style={{ display: 'flex' }}>
-                  <div style={{ width: 200 }}>Chính sách hủy phòng </div> :{' '}
-                  {viewBooking?.homestay?.cancellationPolicy}
-                </div>
-                <br />
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: 600 }}>
-                <div style={{ display: 'flex' }}>
                   <div style={{ width: 200 }}>Ngày bắt đầu</div> :{' '}
                   {moment(viewBooking.startDate).locale('vi').format('LL')}
                 </div>
@@ -666,8 +655,8 @@ function BookingForm() {
                   <div style={{ width: 200 }}>
                     Thông tin tài khoản ngân hàng của chủ homestay{' '}
                   </div>{' '}
-                  : {viewBooking.homestay?.ownerHomestay?.numberAccount}{' '}
-                  {viewBooking.homestay?.ownerHomestay?.nameBank}{' '}
+                  : {viewBooking.homestay?.ownerHomestay?.numberAccount}{' - '}
+                  {viewBooking.homestay?.ownerHomestay?.nameBank}{' - '}
                   {viewBooking.homestay?.ownerHomestay?.nameAccount}
                 </div>
                 <br />
@@ -679,8 +668,8 @@ function BookingForm() {
                   <div style={{ width: 200 }}>
                     Thông tin tài khoản ngân hàng của khách hàng{' '}
                   </div>{' '}
-                  : {viewBooking.user?.numberAccount}{' '}
-                  {viewBooking.user?.nameBank} {viewBooking.user?.nameAccount}
+                  : {viewBooking.user?.numberAccount}{' - '}
+                  {viewBooking.user?.nameBank}{' - '}{viewBooking.user?.nameAccount}
                 </div>
                 <br />
               </td>
@@ -699,6 +688,24 @@ function BookingForm() {
                     Mã giao dịch với chủ homestay{' '}
                   </div>{' '}
                   : {viewBooking.adminTransactionCode}
+                </div>
+                <br />
+              </td>
+            </tr>
+            <tr>
+              <td style={{ width: 600 }}>
+                <div style={{ display: 'flex' }}>
+                  <div style={{ width: 200 }}>Tên khuyến mại </div> :{' '}
+                  {viewBooking?.promotion?.name}
+                </div>
+                <br />
+              </td>
+              <td style={{ width: 500 }}>
+                <div style={{ display: 'flex' }}>
+                  <div style={{ width: 200 }}>
+                    Số tiền giảm{' '}
+                  </div>{' '}
+                  : {viewBooking.promotionPrice}
                 </div>
                 <br />
               </td>
