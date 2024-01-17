@@ -115,12 +115,20 @@ function ProductList() {
   useEffect(() => {
     // Set checkInDate to tomorrow
     const tomorrow = new Date()
-    tomorrow.setDate(tomorrow.getDate() + 1)
+    tomorrow.setDate(tomorrow.getDate())
+    tomorrow.setHours('00')
+    tomorrow.setMinutes('00')
+    tomorrow.setSeconds('00')
+    tomorrow.setMilliseconds('000')
     setCheckInDate(tomorrow)
 
     // Set checkOutDate to the day after tomorrow
     const dayAfterTomorrow = new Date()
-    dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2)
+    dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 1)
+    dayAfterTomorrow.setHours('00')
+    dayAfterTomorrow.setMinutes('00')
+    dayAfterTomorrow.setSeconds('00')
+    dayAfterTomorrow.setMilliseconds('000')
     setCheckOutDate(dayAfterTomorrow)
   }, [])
 
