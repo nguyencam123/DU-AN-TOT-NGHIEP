@@ -162,4 +162,10 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
     """, nativeQuery = true)
     HomestayNumberOfBookingTodayReponse getNumberOfBookingsToday(String id);
 
+    @Query(value = """
+            SELECT * FROM booking
+            WHERE homestay_id = :#{#homestayId} AND [status] = 1
+            """, nativeQuery = true)
+    List<Booking> getBookingActive(@Param("homestayId") String homestayId);
+
 }
