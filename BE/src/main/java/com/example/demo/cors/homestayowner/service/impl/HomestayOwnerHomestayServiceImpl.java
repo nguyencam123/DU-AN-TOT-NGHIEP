@@ -86,7 +86,7 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
             Homestay homestay1 = homestayownerHomestayRepository.save(homestay);
             return homestay1;
         } else {
-            return null;
+            throw new RestApiException("Homestay đang được book!");
         }
     }
 
@@ -107,7 +107,7 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
             Homestay homestay1 = homestayownerHomestayRepository.save(homestay);
             return homestay1;
         } else {
-            return null;
+            throw new RestApiException("Homestay đang được book!");
         }
     }
 
@@ -165,7 +165,6 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
             detailHomestays.add(detailHomestay);
         }
         homestay1.setDetailHomestays(detailHomestays);
-
         return homestay1;
     }
 
