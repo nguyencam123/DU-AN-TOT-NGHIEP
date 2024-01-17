@@ -16,7 +16,7 @@ import java.util.List;
 @Repository
 public interface HomestayOwnerPromotionRepository extends PromotionRepository {
 
-    @Query(value = "select * from promotion where owner_id=:id",nativeQuery = true)
+    @Query(value = "select * from promotion where owner_id=:id ORDER BY last_modified_date DESC",nativeQuery = true)
     List<Promotion> getAllPromotion(String id);
 
     Boolean existsByName(String name);
@@ -28,14 +28,14 @@ public interface HomestayOwnerPromotionRepository extends PromotionRepository {
             AND (
             (a.name LIKE %:#{#request.name}% OR :#{#request.name} IS NULL OR a.name like '')
             AND (:#{#request.status} is null or a.status_promotion=:#{#request.status})
-            )
+            ) ORDER BY a.last_modified_date DESC
     """,nativeQuery = true)
     Page<Promotion> getBookingByNameAndStatus(@Param("request") HomestayOwnerPromotionSearchRequest request, Pageable pageable);
 
     @Query(value = """
     SELECT *
     FROM Promotion a
-    WHERE DATEADD(DAY, 1, CONVERT(DATE, DATEADD(SECOND, a.start_date / 1000, '1970-01-01'))) = CONVERT(DATE, GETUTCDATE())
+    WHERE DATEADD(DAY, 0, CONVERT(DATE, DATEADD(SECOND, a.start_date / 1000, '1970-01-01'))) = CONVERT(DATE, GETUTCDATE())
     AND a.status_promotion = 2;
     """, nativeQuery = true)
     List<Promotion> findByStartDateLessThanAndStatusPromotion();
@@ -44,7 +44,7 @@ public interface HomestayOwnerPromotionRepository extends PromotionRepository {
     SELECT *
     FROM Promotion a
     WHERE 
-    (DATEADD(DAY, 1, CONVERT(DATE, DATEADD(SECOND, a.end_date / 1000, '1970-01-01'))) < CONVERT(DATE, GETUTCDATE()))
+    (DATEADD(DAY, 0, CONVERT(DATE, DATEADD(SECOND, a.end_date / 1000, '1970-01-01'))) < CONVERT(DATE, GETUTCDATE()))
     AND a.status_promotion = 0;
     """, nativeQuery = true)
     List<Promotion> findByEndDateLessThanAndStatusPromotion();

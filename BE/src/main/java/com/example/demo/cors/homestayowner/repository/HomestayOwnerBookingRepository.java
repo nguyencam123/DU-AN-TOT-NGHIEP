@@ -1,7 +1,9 @@
 package com.example.demo.cors.homestayowner.repository;
 
+import com.example.demo.cors.homestayowner.model.reponse.HomestayNumberOfBookingTodayReponse;
 import com.example.demo.cors.homestayowner.model.reponse.HomestayOwnerStatisticalReponse;
 import com.example.demo.cors.homestayowner.model.reponse.HomestayOwnerStatisticalTop5Reponse;
+import com.example.demo.cors.homestayowner.model.reponse.HomestayOwnerUserBookingReponse;
 import com.example.demo.cors.homestayowner.model.request.HomestayOwnerBookingRequest;
 import com.example.demo.cors.homestayowner.model.request.HomestayOwnerStatisticalRequest;
 import com.example.demo.cors.homestayowner.model.request.HomestayOwnerTop5StatisticalRequest;
@@ -21,8 +23,30 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
     @Query(value = "select a.* from booking a \n" +
             "left join  homestay b on a.homestay_id=b.id\n" +
             "left join owner_homestay c on b.owner_id=c.id\n" +
-            "where c.id=:id", nativeQuery = true)
+            "where c.id=:id ORDER BY a.last_modified_date DESC", nativeQuery = true)
     Page<Booking> getBookingByOwnerHomestay(String id, Pageable pageable);
+
+    @Query(value = """
+            SELECT
+            d.name, d.address,d.birthday,d.email,d.gender,d.phone_number,COUNT(a.id) AS soLuot
+            FROM
+            booking a
+            LEFT JOIN
+            homestay b ON a.homestay_id = b.id
+            LEFT JOIN
+            owner_homestay c ON b.owner_id = c.id
+            LEFT JOIN
+            [user] d ON a.user_id = d.id
+            WHERE
+            c.id =:id
+            GROUP BY
+            d.name, d.address,d.birthday,d.email,d.gender,d.phone_number
+            HAVING
+            COUNT(a.id) >=5
+            ORDER BY
+            COUNT(a.id) DESC;
+            """, nativeQuery = true)
+    Page<HomestayOwnerUserBookingReponse> getBookingByUserMoreThan(String id, Pageable pageable);
 
     @Query(value = """
             SELECT ROW_NUMBER() OVER(ORDER BY b.created_date DESC) AS stt, b.*
@@ -41,7 +65,7 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
                 AND (MONTH(DATEADD(SECOND, b.created_date / 1000, '1970-01-01')) = :#{#request.month} OR :#{#request.month} IS NULL OR :#{#request.month} LIKE '')
 			)
 			AND b.status <> 2
-			)
+			) ORDER BY b.last_modified_date DESC
             """, nativeQuery = true)
     Page<Booking> getAllBooking(@Param("request") HomestayOwnerBookingRequest request, Pageable pageable);
 
@@ -117,10 +141,25 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
                     b.address,
                     b.room_number
                 ORDER BY
-                    SUM(a.total_price) DESC
+                    SUM(a.total_price - a.refund_price) DESC
     """,nativeQuery = true)
     List<HomestayOwnerStatisticalTop5Reponse> getTop5StaticalYear(HomestayOwnerTop5StatisticalRequest request);
 
-
+    @Query(value = """
+              SELECT
+                  COUNT(a.homestay_id) AS bookToday
+              FROM
+                  booking a
+                  LEFT JOIN homestay b ON a.homestay_id = b.id
+                  LEFT JOIN owner_homestay c ON b.owner_id = c.id
+              WHERE
+                  c.id = :id
+                AND a.status = 1
+                AND DATEADD(DAY, 0, CONVERT(DATE, DATEADD(SECOND, a.start_date / 1000, '1970-01-01'))) <= CONVERT(DATE, GETUTCDATE())
+                  and DATEADD(DAY, 0, CONVERT(DATE, DATEADD(SECOND, a.end_date / 1000, '1970-01-01'))) >= CONVERT(DATE, GETUTCDATE())
+              ORDER BY
+                  COUNT(a.homestay_id) DESC;
+    """, nativeQuery = true)
+    HomestayNumberOfBookingTodayReponse getNumberOfBookingsToday(String id);
 
 }
