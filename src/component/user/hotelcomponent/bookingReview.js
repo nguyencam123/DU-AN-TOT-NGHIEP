@@ -79,6 +79,7 @@ export const BookingReviewHomestay = () => {
     dispatch(getPayment(bookingDataGet));
     message.info('Bạn vui lòng đợi một lúc!', 1)
     await dispatch(getPaymentPayPal(bookingDataGet));
+    deleteCart()
     setIsModalOpen(true)
   }
   let cancelDay = '';
@@ -369,10 +370,10 @@ export const BookingReviewHomestay = () => {
       >
         <div style={{ textAlign: 'center' }}>
           <h5>Lựa chọn hình thức thanh toán</h5>
-          <a onClick={deleteCart} href={payment}>
+          <a href={payment}>
             <img src={logovnpay} className='imgThanhToan' />
           </a>
-          <a onClick={deleteCart} href={paypal} style={{ marginLeft: '10px' }}>
+          <a href={paypal} style={{ marginLeft: '10px' }}>
             <img src={paypalImg} style={{ width: '87px', height: '48px' }} className='imgThanhToanPaypal' />
           </a>
         </div>
