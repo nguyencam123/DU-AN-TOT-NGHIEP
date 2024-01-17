@@ -7,6 +7,7 @@ import com.example.demo.cors.homestayowner.model.request.HomestayOwnerBookingReq
 import com.example.demo.entities.Booking;
 
 public interface HomestayOwnerBookingService {
+    HomestayNumberOfBookingTodayReponse getNumberOfBookingsCho(String id);
 
     HomestayNumberOfBookingTodayReponse getNumberOfBookingsToday(String id);
 

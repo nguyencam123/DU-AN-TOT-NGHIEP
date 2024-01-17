@@ -38,7 +38,7 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
             LEFT JOIN
             [user] d ON a.user_id = d.id
             WHERE
-            c.id =:id
+            c.id =:id and a.status=3
             GROUP BY
             d.name, d.address,d.birthday,d.email,d.gender,d.phone_number
             HAVING
@@ -154,7 +154,7 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
                   LEFT JOIN owner_homestay c ON b.owner_id = c.id
               WHERE
                   c.id = :id
-                AND a.status = 1
+                AND a.status = 3
                 AND DATEADD(DAY, 0, CONVERT(DATE, DATEADD(SECOND, a.start_date / 1000, '1970-01-01'))) <= CONVERT(DATE, GETUTCDATE())
                   and DATEADD(DAY, 0, CONVERT(DATE, DATEADD(SECOND, a.end_date / 1000, '1970-01-01'))) >= CONVERT(DATE, GETUTCDATE())
               ORDER BY
@@ -162,4 +162,20 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
     """, nativeQuery = true)
     HomestayNumberOfBookingTodayReponse getNumberOfBookingsToday(String id);
 
+
+    @Query(value = """
+              SELECT
+                  COUNT(a.homestay_id) AS bookToday
+              FROM
+                  booking a
+                  LEFT JOIN homestay b ON a.homestay_id = b.id
+                  LEFT JOIN owner_homestay c ON b.owner_id = c.id
+              WHERE
+                c.id =:id
+                AND a.status = 3
+                AND DATEADD(DAY, 0, CONVERT(DATE, DATEADD(SECOND, a.start_date / 1000, '1970-01-01'))) > CONVERT(DATE, GETUTCDATE())
+              ORDER BY
+                COUNT(a.homestay_id) DESC;
+    """, nativeQuery = true)
+    HomestayNumberOfBookingTodayReponse getNumberOfBookingCho(String id);
 }
