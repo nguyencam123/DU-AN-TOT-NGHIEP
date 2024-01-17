@@ -96,14 +96,6 @@ const Booking = () => {
       },
     },
     {
-      title: 'Ngày đặt',
-      dataIndex: 'createdDate',
-      key: 'createdDate',
-      render: (data) => {
-        return moment(data).locale('vi').format('LL')
-      },
-    },
-    {
       title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
@@ -118,15 +110,34 @@ const Booking = () => {
       },
     },
     {
+      title: 'Hình thức',
+      dataIndex: 'typeBooking',
+      key: 'typeBooking',
+      render: (data) => {
+        if (data === 'DAT_COC') {
+          return 'Đặt cọc'
+        } else {
+          return 'Thanh toán trước'
+        }
+      },
+    },
+    {
       title: 'Email người đặt',
       dataIndex: 'email',
       key: 'email',
       render: (data, record) => {
-        const isShowPhoneNumber = moment(record.startDate).isBefore(
-          moment().subtract(1, 'day'),
-        )
+        const today = dayjs()
+        const dateFix = new Date(today)
+        dateFix.setHours('00')
+        dateFix.setMinutes('00')
+        dateFix.setSeconds('00')
+        dateFix.setMilliseconds('000')
+        let isShowEmail = dayjs(Date(dateFix)).add(1, 'days').valueOf() >= record.startDate
+        if (record.typeBooking === 'DAT_COC') {
+          isShowEmail = true
+        }
 
-        return isShowPhoneNumber ? data : null
+        return isShowEmail ? data : null
       },
     },
     {
@@ -139,9 +150,16 @@ const Booking = () => {
       dataIndex: 'phoneNumber',
       key: 'phoneNumber',
       render: (data, record) => {
-        const isShowPhoneNumber = moment(record.startDate).isBefore(
-          moment().subtract(1, 'day'),
-        )
+        const today = dayjs()
+        const dateFix = new Date(today)
+        dateFix.setHours('00')
+        dateFix.setMinutes('00')
+        dateFix.setSeconds('00')
+        dateFix.setMilliseconds('000')
+        let isShowPhoneNumber = dayjs(Date(dateFix)).add(1, 'days').valueOf() >= record.startDate
+        if (record.typeBooking === 'DAT_COC') {
+          isShowPhoneNumber = true
+        }
 
         return isShowPhoneNumber ? data : null
       },
@@ -240,9 +258,8 @@ const Booking = () => {
       )
       const columnWidth = Math.min(50, maxColumnWidth) // Set a maximum width for columns (50 is just an example)
       ws['!autofilter'] = {
-        ref: `A1:${XLSX.utils.encode_col(headers.length - 1)}${
-          values.length + 3
-        }`,
+        ref: `A1:${XLSX.utils.encode_col(headers.length - 1)}${values.length + 3
+          }`,
       }
       ws['!cols'] = ws['!cols'] || []
       ws['!cols'][index] = { width: columnWidth + 2 } // Add some extra padding
