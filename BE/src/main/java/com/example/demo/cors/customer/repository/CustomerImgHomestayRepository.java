@@ -15,6 +15,7 @@ public interface CustomerImgHomestayRepository extends ImgHomestayRepository {
     @Query(value = """
             SELECT * FROM img_homestay a
             WHERE a.homestay_id =:#{#customerImgHomestayRequest.homestayId}
+            ORDER BY a.last_modified_date DESC
             """, nativeQuery = true)
     List<ImgHomestay> getImgHomestayByIdHomestay(CustomerImgHomestayRequest customerImgHomestayRequest);
 
