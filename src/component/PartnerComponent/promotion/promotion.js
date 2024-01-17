@@ -352,7 +352,7 @@ const Promotion = () => {
   const validationSchema = Yup.object().shape({
     name: Yup.string()
       .trim() // Remove leading and trailing whitespaces
-      .min(1, 'Vui lòng nhập ít nhất một ký tự cho tên sản phẩm')
+      .min(1, 'Vui lòng nhập ít nhất một ký tự cho tên khuyến mại')
       .required('Vui lòng nhập tên khuyến mại'),
     value: Yup.number()
       .required('Vui lòng nhập số tiền giảm')

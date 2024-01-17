@@ -445,13 +445,13 @@ const HomeStayProduct = () => {
   const validationSchema = Yup.object().shape({
     name: Yup.string()
       .trim() // Remove leading and trailing whitespaces
-      .min(1, 'Vui lòng nhập ít nhất một ký tự cho tên sản phẩm')
-      .required('Vui lòng nhập tên sản phẩm'),
+      .min(1, 'Vui lòng nhập ít nhất một ký tự cho tên homestay')
+      .required('Vui lòng nhập tên homestay'),
     price: Yup.number()
-      .required('Vui lòng nhập giá sản phẩm')
-      .typeError('Vui lòng nhập giá sản phẩm')
+      .required('Vui lòng nhập giá homestay')
+      .typeError('Vui lòng nhập giá homestay')
       .positive('Giá phải là số dương')
-      .min(1000, 'Giá sản phẩm phải lớn hơn 1000'),
+      .min(1000, 'Giá homestay phải lớn hơn 1000'),
     file: Yup.array()
       .min(5, 'Vui lòng chọn ít nhất 5 file')
       .max(20, 'Vui lòng chọn tối đa 20 file')
@@ -666,20 +666,11 @@ const HomeStayProduct = () => {
     setFormErrors({})
 
     const detailDesc = record.desc.split(',')
-    console.log(detailDesc)
-    setdesc(detailDesc[2].trim())
+    setdesc(record.desc.substring(record.desc.indexOf('ủ') + 3))
     const bathroom = detailDesc[0]
     const bedroom = detailDesc[1]
-    setTotalBathroom(
-      bathroom
-        .substring(bathroom.indexOf('ó') + 1, bathroom.indexOf('p') - 1)
-        .trim(),
-    )
-    setTotalbedroom(
-      bedroom
-        .substring(bedroom.indexOf('ó') + 1, bedroom.indexOf('p') - 1)
-        .trim(),
-    )
+    setTotalBathroom(bathroom.substring(bathroom.indexOf('ó') + 2, bathroom.indexOf('p') - 1))
+    setTotalbedroom(bedroom.substring(bedroom.indexOf('ó') + 2, bedroom.indexOf('p') - 1))
 
     const addressParts = record.address.split(', ')
     const selectedWardName = addressParts[1] // Lấy tên phường/xã từ địa chỉ
