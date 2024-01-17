@@ -43,9 +43,9 @@ public interface CustomerCartDetailRepository extends CartDetailRepository {
             DELETE cd FROM cart_detail cd
             JOIN cart c ON cd.id_cart = c.id
             JOIN [user] u ON c.id_user = u.id
-            WHERE u.id = :#{#request.userId} AND homestay_id = :#{#request.homestayId}
+            WHERE u.id = :#{#userId} AND homestay_id = :#{#homestayId}
             """, nativeQuery = true)
-    void deleteCartByUser(CustomerCartRequest request);
+    void deleteCartByUser(String userId, String homestayId);
 
     @Query(value = """
             SELECT cd.id, cd.start_date, cd.end_date, cd.status, h.id AS id_homestay, h.name, h.price, h.number_person, 

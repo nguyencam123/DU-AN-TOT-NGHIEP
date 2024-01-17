@@ -1,6 +1,5 @@
 package com.example.demo.cors.customer.services.impl;
 
-import com.example.demo.cors.customer.model.request.CustomerCartRequest;
 import com.example.demo.cors.customer.repository.CustomerCartDetailRepository;
 import com.example.demo.cors.customer.services.CustomerCartDetailService;
 import com.example.demo.entities.CartDetail;
@@ -52,8 +51,8 @@ public class CustomerCartDetailServiceImpl implements CustomerCartDetailService 
     }
 
     @Override
-    public Boolean deleteCartByUser(CustomerCartRequest request) {
-        customerCartDetailRepository.deleteCartByUser(request);
+    public Boolean deleteCartByUser(String userId, String homestayId) {
+        customerCartDetailRepository.deleteCartByUser(userId, homestayId);
         return true;
     }
 
