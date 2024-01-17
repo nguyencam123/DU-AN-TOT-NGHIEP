@@ -85,7 +85,7 @@ const Endow = () => {
                 maxWidth: 400,
               }}
             >
-              <Title level={4}>Ưu đãi khuyến mãi</Title>
+              <Title level={4}>Ưu đãi khuyến mại</Title>
               <div>
                 <Checkbox
                   checked={priceFilter.under100k}
@@ -183,7 +183,7 @@ const Endow = () => {
                                     textOverflow: 'ellipsis',
                                   }}
                                 >
-                                  Khuyến mãi {items.promotion?.name}
+                                  Khuyến mại {items.promotion?.name}
                                 </MDBCardTitle>
                                 <MDBCardTitle>
                                   GIẢM ĐẾN{' '}
