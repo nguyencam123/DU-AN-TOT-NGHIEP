@@ -59,7 +59,7 @@ const Booking = () => {
   const currentMonth = currentDate.getMonth() + 1 // Tháng bắt đầu từ 0
   const currentYear = new Date().getFullYear()
   const currentDateTime = new Date().getDate()
-  const booking = useSelector((state) => state.booking.bookings)
+  const booking = useSelector((state) => state.booking.booking)
   const onChangeMonth = (date, dateString) => {
     const selectedMonth = date ? date.format('MM') : '' // Format the selected date to get only the month
     const selectedYear = date ? date.format('YYYY') : ''

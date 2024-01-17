@@ -379,7 +379,10 @@ const HomeStayProduct = () => {
   const [desc, setdesc] = useState('')
   const [price, setprice] = useState(0)
   const [numberPerson, setnumberPerson] = useState(0)
+  const [totalBathroom, setTotalBathroom] = useState(0)
+  const [totalbedroom, setTotalbedroom] = useState(0)
   const [address, setaddress] = useState('')
+  const [sumDesc, setSumdesc] = useState('')
   const [addressView, setaddressView] = useState('')
   const updateAddress = () => {
     const selectedCityName =
@@ -393,6 +396,15 @@ const HomeStayProduct = () => {
     setaddress(newAddress)
   }
   // Use useEffect to call updateAddress whenever the selectedCity, selectedDistrict, or selectedWard changes
+  const updateDesc = () => {
+    const newDesc = `Có ${totalBathroom} phòng tắm,có ${totalbedroom} phòng ngủ,${desc}`
+    setSumdesc(newDesc)
+  }
+
+  useEffect(() => {
+    updateDesc()
+  }, [totalBathroom, totalbedroom, desc])
+
   useEffect(() => {
     updateAddress()
   }, [selectedCity, selectedDistrict, selectedWard, addressDetail])
@@ -413,7 +425,7 @@ const HomeStayProduct = () => {
     // cancellationPolicy: parseFloat(cancellationPolicy),
     startDate: startDate?.valueOf(),
     endDate: endDate?.valueOf(),
-    desc: desc,
+    desc: sumDesc,
     price: parseFloat(price),
     numberPerson: parseInt(numberPerson),
     address: address,
@@ -426,6 +438,8 @@ const HomeStayProduct = () => {
   //validateform
   const [errorFile, setErrorFile] = useState('')
   const [erorrAddress, setErrorAddress] = useState('')
+  const [erorrDesc, setErorrDesc] = useState('')
+  const [erorrDescDetail, setErorrDescDetail] = useState('')
   const validationSchema = Yup.object().shape({
     name: Yup.string()
       .trim() // Remove leading and trailing whitespaces
@@ -482,10 +496,6 @@ const HomeStayProduct = () => {
       .required('Vui lòng nhập diện tích')
       .typeError('Vui lòng nhập diện tích')
       .positive('Diện tích phòng phải lớn hơn 0'),
-    desc: Yup.string()
-      .required('vui lòng nhập vào mô tả')
-      .max(500, 'Vui lòng nhập ít hơn 500 ký tự'),
-    // addressDetail: Yup.string().required('vui lòng nhập địa chỉ chi tiết'),
   })
   const handleSubmitStatus = async (record) => {
     await message.info(
@@ -510,6 +520,7 @@ const HomeStayProduct = () => {
     await dispatch(UpdateStatusToUpdating(record.id))
     dispatch(fetchHomestay(''))
   }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
@@ -542,21 +553,24 @@ const HomeStayProduct = () => {
           )
         }
       }
-      if (!addressDetail) {
+      if (addressDetail == '') {
         setErrorAddress('Vui lòng nhập địa chỉ hoặc chọn địa chỉ')
         throw new Error('Vui lòng nhập địa chỉ hoặc chọn địa chỉ')
       }
-      if (!selectedWard) {
-        setErrorAddress('Vui lòng nhập địa chỉ hoặc chọn địa chỉ')
-        throw new Error('Vui lòng nhập địa chỉ hoặc chọn địa chỉ')
+
+      if (!totalBathroom || isNaN(totalBathroom) || totalBathroom <= 0) {
+        setErorrDesc('Vui lòng nhập số phòng tắm hợp lệ (lớn hơn 0)')
+        throw new Error('Vui lòng nhập số phòng tắm hợp lệ (lớn hơn 0)')
       }
-      if (!wards) {
-        setErrorAddress('Vui lòng nhập địa chỉ hoặc chọn địa chỉ')
-        throw new Error('Vui lòng nhập địa chỉ hoặc chọn địa chỉ')
+
+      // Tiếp tục kiểm tra totalBedroom
+      if (!totalbedroom || isNaN(totalbedroom) || totalbedroom <= 0) {
+        setErorrDesc('Vui lòng nhập số phòng ngủ hợp lệ (lớn hơn 0)')
+        throw new Error('Vui lòng nhập số phòng ngủ hợp lệ (lớn hơn 0)')
       }
-      if (!selectedDistrict) {
-        setErrorAddress('Vui lòng nhập địa chỉ hoặc chọn địa chỉ')
-        throw new Error('Vui lòng nhập địa chỉ hoặc chọn địa chỉ')
+      if (desc == '') {
+        setErorrDescDetail('Vui lòng nhập mô tả')
+        throw new Error('Vui lòng nhập mô tả')
       }
       if (isAddFrom) {
         setIsLoading(true)
@@ -601,7 +615,7 @@ const HomeStayProduct = () => {
       setErrorAddress('')
     } catch (errors) {
       const errorObject = {}
-      errors.inner.forEach((error) => {
+      errors.inner?.forEach((error) => {
         errorObject[error.path] = error.message
       })
       setFormErrors(errorObject)
@@ -642,6 +656,11 @@ const HomeStayProduct = () => {
     setSelectedImages([])
     //
     setFormErrors({})
+
+    const detaiDesc = record.desc.split(',')
+    setdesc(detaiDesc[2])
+    setTotalBathroom(detaiDesc[0])
+    setTotalbedroom(detaiDesc[1])
 
     const addressParts = record.address.split(', ')
     const selectedWardName = addressParts[1] // Lấy tên phường/xã từ địa chỉ
@@ -993,23 +1012,12 @@ const HomeStayProduct = () => {
               </Form.Item>
             </Col>
           </Row>
-          <Row gutter={24} style={{ marginLeft: 4, marginTop: 20 }}>
-            {/* <Col span={12}>
-              <Title level={5} style={{marginTop:5}}>Chính sách hủy phòng:</Title>
-              <Input
-                style={{ width: '67%', float: 'right' }}
-                value={cancellationPolicy}
-                onChange={(e) => setcancellationPolicy(e.target.value)}
-              />
-              <div style={{ color: 'red', marginTop: 35 }}>
-                {formErrors.cancellationPolicy}
-              </div>
-            </Col> */}
+          <Row gutter={24} style={{ marginLeft: 4 }}>
             <Col span={12}>
               <Form.Item
                 label={
                   <Title level={5} style={{ marginTop: 5 }}>
-                    Số phòng
+                    Tổng số phòng
                   </Title>
                 }
                 validateStatus={formErrors.roomNumber ? 'error' : ''}
@@ -1019,6 +1027,42 @@ const HomeStayProduct = () => {
                   style={{ width: '100%', float: 'right' }}
                   value={roomNumber}
                   onChange={(e) => setroomNumber(e.target.value)}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label={
+                  <Title level={5} style={{ marginTop: 5 }}>
+                    Số phòng ngủ
+                  </Title>
+                }
+                validateStatus={erorrDesc ? 'error' : ''}
+                help={erorrDesc}
+              >
+                <Input
+                  style={{ width: '100%', float: 'right' }}
+                  value={totalbedroom}
+                  onChange={(e) => setTotalbedroom(e.target.value)}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={24} style={{ marginLeft: 4 }}>
+            <Col span={12}>
+              <Form.Item
+                label={
+                  <Title level={5} style={{ marginTop: 5 }}>
+                    Số phòng tắm
+                  </Title>
+                }
+                validateStatus={erorrDesc ? 'error' : ''}
+                help={erorrDesc}
+              >
+                <Input
+                  style={{ width: '100%', float: 'right' }}
+                  value={totalBathroom}
+                  onChange={(e) => setTotalBathroom(e.target.value)}
                 />
               </Form.Item>
             </Col>
@@ -1062,7 +1106,7 @@ const HomeStayProduct = () => {
                     </option>
                   ))}
                 </select>
-                <div style={{ color: 'red' }}>{erorrAddress}</div>
+                <div style={{ color: 'red' }}>{formErrors.address}</div>
               </div>
               <div style={{ marginRight: 30 }}>
                 <Title level={5} style={{ marginTop: 5 }}>
@@ -1080,7 +1124,7 @@ const HomeStayProduct = () => {
                     </option>
                   ))}
                 </select>
-                <div style={{ color: 'red' }}>{erorrAddress}</div>
+                <div style={{ color: 'red' }}>{formErrors.address}</div>
               </div>
               <div>
                 <Title level={5} style={{ marginTop: 5 }}>
@@ -1098,7 +1142,7 @@ const HomeStayProduct = () => {
                     </option>
                   ))}
                 </select>
-                <div style={{ color: 'red' }}>{erorrAddress}</div>
+                <div style={{ color: 'red' }}>{formErrors.address}</div>
               </div>
             </div>
           </Row>
@@ -1112,7 +1156,7 @@ const HomeStayProduct = () => {
                 value={addressDetail}
                 onChange={(e) => setAddressDetail(e.target.value)}
               />
-              <div style={{ color: 'red' }}>{erorrAddress}</div>
+              <div style={{ color: 'red' }}>{erorrDescDetail}</div>
             </Col>
           </Row>
           <Row gutter={24}>
@@ -1125,7 +1169,7 @@ const HomeStayProduct = () => {
                 value={desc}
                 onChange={(e) => setdesc(e.target.value)}
               />
-              <div style={{ color: 'red' }}>{formErrors.desc}</div>
+              <div style={{ color: 'red' }}>{erorrDesc}</div>
             </Col>
           </Row>
         </Form>
