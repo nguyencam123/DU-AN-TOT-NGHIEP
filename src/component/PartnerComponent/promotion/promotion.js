@@ -265,11 +265,15 @@ const Promotion = () => {
           <a style={{ color: '#1677ff' }} onClick={() => handleViewRow(record)}>
             <EyeOutlined />
           </a>
-          {record.statusPromotion === 'HOAT_DONG' || record.statusPromotion === 'CHO_HOAT_DONG' && ( // Thêm điều kiện ở đây
-            <a style={{ color: '#1677ff' }} onClick={() => handleEdit(record)}>
-              <EditOutlined />
-            </a>
-          )}
+          {record.statusPromotion === 'HOAT_DONG' ||
+            (record.statusPromotion === 'CHO_HOAT_DONG' && ( // Thêm điều kiện ở đây
+              <a
+                style={{ color: '#1677ff' }}
+                onClick={() => handleEdit(record)}
+              >
+                <EditOutlined />
+              </a>
+            ))}
           {record.statusPromotion === 'HOAT_DONG' && ( // Thêm điều kiện ở đây
             <Popconfirm
               title='Cập nhật mục này'
@@ -283,10 +287,9 @@ const Promotion = () => {
                 <ReloadOutlined />
               </a>
             </Popconfirm>
-          )
-          }
+          )}
           {record.statusPromotion === 'HOAT_DONG' ||
-            record.statusPromotion === 'CHO_HOAT_DONG' && ( // Thêm điều kiện ở đây
+            (record.statusPromotion === 'CHO_HOAT_DONG' && ( // Thêm điều kiện ở đây
               <Popconfirm
                 title='Cập nhật mục này'
                 description='Bạn chắc chắn muốn cập nhật khuyến mãi này thành không hoạt động không?'
@@ -299,7 +302,7 @@ const Promotion = () => {
                   <ReloadOutlined />
                 </a>
               </Popconfirm>
-            )}
+            ))}
         </Space>
       ),
     },
@@ -505,17 +508,17 @@ const Promotion = () => {
         okButtonProps={
           isLoading
             ? {
-              disabled: true,
-              icon: <LoadingOutlined />,
-              loading: true,
-            }
+                disabled: true,
+                icon: <LoadingOutlined />,
+                loading: true,
+              }
             : {}
         }
         cancelButtonProps={
           isLoading
             ? {
-              disabled: true,
-            }
+                disabled: true,
+              }
             : {}
         }
       >
@@ -566,11 +569,11 @@ const Promotion = () => {
                       value={
                         startDate
                           ? dayjs(
-                            dayjs(startDate)
-                              .locale('vi')
-                              .format('YYYY-MM-DD'),
-                            'YYYY-MM-DD',
-                          )
+                              dayjs(startDate)
+                                .locale('vi')
+                                .format('YYYY-MM-DD'),
+                              'YYYY-MM-DD',
+                            )
                           : null
                       }
                       disabledDate={isBeforeToday}
@@ -592,9 +595,9 @@ const Promotion = () => {
                       value={
                         endDate
                           ? dayjs(
-                            dayjs(endDate).locale('vi').format('YYYY-MM-DD'),
-                            'YYYY-MM-DD',
-                          )
+                              dayjs(endDate).locale('vi').format('YYYY-MM-DD'),
+                              'YYYY-MM-DD',
+                            )
                           : null
                       }
                       disabledDate={isBeforeToday}

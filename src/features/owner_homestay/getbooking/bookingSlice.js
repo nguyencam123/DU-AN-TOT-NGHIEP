@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   bookings: [],
-  booking: {},
+  booking: [],
   promotions: [],
   comments: [],
   commentsUser: [],
@@ -21,6 +21,11 @@ const bookingSlice = createSlice({
     },
     fetchBookingsSuccess: (state, action) => {
       state.bookings = action.payload
+      state.loading = false
+      state.error = null
+    },
+    fetchBookingsOwnerSuccess: (state, action) => {
+      state.booking = action.payload
       state.loading = false
       state.error = null
     },
@@ -65,5 +70,6 @@ export const {
   addBookingsSuccess,
   fetchCommentSuccess,
   fetchCommentUserSuccess,
+  fetchBookingsOwnerSuccess,
 } = bookingSlice.actions
 export default bookingSlice.reducer

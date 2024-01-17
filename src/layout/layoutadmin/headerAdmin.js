@@ -26,7 +26,7 @@ const HeaderAdmin = () => {
       <div className='demo-logo' />
       <Title level={3} style={{ marginTop: '13px', color: 'white' }}>
         <img src={logotravel} />
-        Trang quản trị Homestay của bạn
+        Trang quản trị Homestay TravelViVu
       </Title>
       <div className='layout-login' style={{ marginLeft: 'auto' }}>
         <Title level={5} style={{ color: 'white', display: 'flex' }}>

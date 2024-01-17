@@ -3,7 +3,7 @@ import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progres
 import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, InfoCircleTwoTone, StarTwoTone } from '@ant-design/icons'
 import { Form, Table } from 'react-bootstrap';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { addBooking, checkBooking, getOneProduct, getPayment, getPaymentPayPal } from '../../../features/product/productThunk';
+import { addBooking, checkBooking, deleteCartUser, getOneProduct, getPayment, getPaymentPayPal } from '../../../features/product/productThunk';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import logovnpay from '../../../assets/svg/Rectangle 20.svg';
@@ -79,6 +79,7 @@ export const BookingReviewHomestay = () => {
     dispatch(getPayment(bookingDataGet));
     message.info('Bạn vui lòng đợi một lúc!', 1)
     await dispatch(getPaymentPayPal(bookingDataGet));
+    deleteCart()
     setIsModalOpen(true)
   }
   let cancelDay = '';
@@ -98,7 +99,9 @@ export const BookingReviewHomestay = () => {
         .format('LL')} sẽ được hoàn toàn bộ số tiền bạn đã thanh toán
     . Việc hủy phòng sau ngày ${moment(dayjs(dateFix)).add(1, 'day').locale('vi').format('LL')} sẽ mất toàn bộ số tiền bạn đã thanh toán`
   }
-
+  const deleteCart = () => {
+    dispatch(deleteCartUser(userDetail?.data?.id, id))
+  }
   return (
     <>
       <Content
