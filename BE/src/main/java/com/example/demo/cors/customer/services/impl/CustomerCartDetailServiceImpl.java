@@ -50,4 +50,10 @@ public class CustomerCartDetailServiceImpl implements CustomerCartDetailService 
         }
     }
 
+    @Override
+    public Boolean deleteCartByUser(String userId, String homestayId) {
+        customerCartDetailRepository.deleteCartByUser(userId, homestayId);
+        return true;
+    }
+
 }

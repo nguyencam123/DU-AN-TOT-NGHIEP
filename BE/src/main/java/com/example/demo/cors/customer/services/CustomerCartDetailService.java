@@ -8,4 +8,6 @@ public interface CustomerCartDetailService {
 
     Boolean cartDetailBooked();
 
+    Boolean deleteCartByUser(String userId, String homestayId);
+
 }

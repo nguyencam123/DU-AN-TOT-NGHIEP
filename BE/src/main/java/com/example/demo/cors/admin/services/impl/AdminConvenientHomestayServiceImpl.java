@@ -33,14 +33,14 @@ public class AdminConvenientHomestayServiceImpl implements AdminConvenientHomest
     @Override
     public PageableObject<ConvenientHomestay> getAllConvenient(AdminConvenientHomestayRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-        Page<ConvenientHomestay> res = adminConvenientHomestayRepository.findAll(pageable);
+        Page<ConvenientHomestay> res = adminConvenientHomestayRepository.getAllConvenientHomestay(pageable,request);
         return new PageableObject<>(res);
     }
 
     @Override
     public PageableObject<ConvenientHomestayType> getAllConvenientType(AdminConvenientHomestayTypeRequest request) {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-        Page<ConvenientHomestayType> res = adminConvenientHomestayTypeRespository.findAll(pageable);
+        Page<ConvenientHomestayType> res = adminConvenientHomestayTypeRespository.getAllConvenientHomestayType(pageable,request);
         return new PageableObject<>(res);
     }
 

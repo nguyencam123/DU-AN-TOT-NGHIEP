@@ -7,7 +7,6 @@ import com.example.demo.cors.customer.repository.CustomerHomestayRepository;
 import com.example.demo.cors.customer.services.CustomerPaypalService;
 import com.example.demo.entities.Booking;
 import com.example.demo.entities.Homestay;
-import com.example.demo.entities.Promotion;
 import com.example.demo.infrastructure.configemail.EmailSender;
 import com.example.demo.infrastructure.configpayment.VNPayConfig;
 import com.example.demo.infrastructure.contant.PaymentMethod;
@@ -15,7 +14,6 @@ import com.example.demo.infrastructure.contant.StatusBooking;
 import com.example.demo.infrastructure.exception.rest.RestApiException;
 import com.example.demo.infrastructure.paypalconfig.PaypalConfig;
 import com.example.demo.infrastructure.sendmailbill.ExportFilePdfFormHtml;
-import com.example.demo.repositories.PromotionRepository;
 import com.example.demo.repositories.UserRepository;
 import com.example.demo.util.DateUtils;
 import com.google.gson.JsonObject;
@@ -48,8 +46,6 @@ public class CustomerPaypalServiceImpl implements CustomerPaypalService {
     @Autowired
     private CustomerHomestayRepository homestayRepository;
     @Autowired
-    private PromotionRepository promotionRepository;
-    @Autowired
     private UserRepository userRepository;
     @Autowired
     private CustomerBookingRepository customerBookingRepository;
@@ -67,8 +63,12 @@ public class CustomerPaypalServiceImpl implements CustomerPaypalService {
         if (homestay == null) {
             throw new RestApiException("Homestay khong ton tai!");
         }
-        Promotion promotion = promotionRepository.findById(customerBookingRequest.getIdPromotion()).orElse(null);
         BigDecimal totalPrice = new BigDecimal(customerBookingRequest.getTotalPrice());
+        if (homestay.getPromotion() == null) {
+            booking.setPromotion(null);
+        } else {
+            booking.setPromotion(homestay.getPromotion());
+        }
         booking.setTypeBooking(customerBookingRequest.getTypeBooking());
         booking.setUser(userRepository.findById(customerBookingRequest.getUserId()).get());
         booking.setTotalPrice(totalPrice);
@@ -79,7 +79,6 @@ public class CustomerPaypalServiceImpl implements CustomerPaypalService {
         booking.setEmail(customerBookingRequest.getEmail());
         booking.setPhoneNumber(customerBookingRequest.getPhoneNumber());
         booking.setHomestay(homestay);
-        booking.setPromotion(promotion);
         booking.setPaymentMethod(PaymentMethod.PAYPAL);
         booking.setNote(customerBookingRequest.getNote());
         booking.setStatus(StatusBooking.CHO_THANH_TOAN);
@@ -103,7 +102,7 @@ public class CustomerPaypalServiceImpl implements CustomerPaypalService {
         payer.setPaymentMethod(PaypalConfig.method);
 
         Payment payment = new Payment();
-        payment.setIntent("ORDER");
+        payment.setIntent("SALE");
         payment.setPayer(payer);
         payment.setTransactions(transactionList);
 
@@ -129,7 +128,7 @@ public class CustomerPaypalServiceImpl implements CustomerPaypalService {
         Booking booking = customerBookingRepository.findById(bookingId).orElse(null);
         InvoiceResponse invoiceResponse = exportFilePdfFormHtml.getInvoiceResponse(bookingId);
         String email = booking.getEmail();
-        if (booking.getStatus() == StatusBooking.THANH_CONG && !email.isEmpty()) {
+        if (!email.isEmpty() && booking.getStatus() == StatusBooking.THANH_CONG) {
             sendMail(invoiceResponse, "http://localhost:3000/booking/homestay/detail/" + booking.getHomestay().getId(), booking.getEmail());
             return true;
         } else {
@@ -164,9 +163,8 @@ public class CustomerPaypalServiceImpl implements CustomerPaypalService {
 
     public void sendMail(InvoiceResponse invoice, String url, String email) {
         if (email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
-            String finalHtmlSendMail = null;
             Context dataContextSendMail = exportFilePdfFormHtml.setDataSendMail(invoice, url);
-            finalHtmlSendMail = springTemplateEngine.process("templateBillSendEmail", dataContextSendMail);
+            String finalHtmlSendMail = springTemplateEngine.process("templateBillSendEmail", dataContextSendMail);
             String subject = "Biên lai thanh toán ";
             emailSender.sendBill(email, subject, finalHtmlSendMail);
         }

@@ -3,7 +3,7 @@ import { Breadcrumb, Col, Layout, Menu, Row, theme, Rate, Button, Image, Progres
 import { ClockCircleTwoTone, EnvironmentOutlined, FileTextTwoTone, InfoCircleTwoTone, StarTwoTone } from '@ant-design/icons'
 import { Form, Table } from 'react-bootstrap';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { addBooking, checkBooking, getOneProduct, getPayment, getPaymentPayPal } from '../../../features/product/productThunk';
+import { addBooking, checkBooking, deleteCartUser, getOneProduct, getPayment, getPaymentPayPal } from '../../../features/product/productThunk';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import logovnpay from '../../../assets/svg/Rectangle 20.svg';
@@ -77,7 +77,7 @@ export const BookingReviewHomestay = () => {
       userId: userDetail?.data?.id
     }
     dispatch(getPayment(bookingDataGet));
-    message.info('Bạn vui lòng đợi một lúc!',1)
+    message.info('Bạn vui lòng đợi một lúc!', 1)
     await dispatch(getPaymentPayPal(bookingDataGet));
     setIsModalOpen(true)
   }
@@ -91,9 +91,16 @@ export const BookingReviewHomestay = () => {
   if (dayjs(Date(dateFix)).add(1, 'days').valueOf() >= startDate) {
     cancelDay = `Việc hủy phòng sẽ mất toàn bộ số tiền bạn đã thanh toán`
   } else {
-    cancelDay = `Việc hủy phòng sau ngày ${moment(dayjs(dateFix)).add(1, 'day').locale('vi').format('LL')} sẽ mất toàn bộ số tiền bạn đã thanh toán`
+    cancelDay = `
+    Việc hủy phòng trước hoặc trong ngày ${moment(dayjs(dateFix))
+        .add(1, 'day')
+        .locale('vi')
+        .format('LL')} sẽ được hoàn toàn bộ số tiền bạn đã thanh toán
+    . Việc hủy phòng sau ngày ${moment(dayjs(dateFix)).add(1, 'day').locale('vi').format('LL')} sẽ mất toàn bộ số tiền bạn đã thanh toán`
   }
-
+  const deleteCart = () => {
+    dispatch(deleteCartUser(userDetail?.data?.id, id))
+  }
   return (
     <>
       <Content
@@ -362,10 +369,10 @@ export const BookingReviewHomestay = () => {
       >
         <div style={{ textAlign: 'center' }}>
           <h5>Lựa chọn hình thức thanh toán</h5>
-          <a href={payment}>
+          <a onClick={deleteCart} href={payment}>
             <img src={logovnpay} className='imgThanhToan' />
           </a>
-          <a href={paypal} style={{marginLeft:'10px'}}>
+          <a onClick={deleteCart} href={paypal} style={{ marginLeft: '10px' }}>
             <img src={paypalImg} style={{ width: '87px', height: '48px' }} className='imgThanhToanPaypal' />
           </a>
         </div>

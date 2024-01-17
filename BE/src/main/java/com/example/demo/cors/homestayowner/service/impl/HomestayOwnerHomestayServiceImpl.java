@@ -5,10 +5,22 @@ import com.cloudinary.utils.ObjectUtils;
 import com.example.demo.cors.common.base.PageableObject;
 import com.example.demo.cors.homestayowner.model.request.HomestayOwnerHomestayGetRequest;
 import com.example.demo.cors.homestayowner.model.request.HomestayownerHomestayRequest;
-import com.example.demo.cors.homestayowner.repository.*;
+import com.example.demo.cors.homestayowner.repository.HomestayOwnerBookingRepository;
+import com.example.demo.cors.homestayowner.repository.HomestayOwnerConvenientHomestayRepository;
+import com.example.demo.cors.homestayowner.repository.HomestayOwnerDetailHomestayReposritory;
+import com.example.demo.cors.homestayowner.repository.HomestayOwnerHomestayRepository;
+import com.example.demo.cors.homestayowner.repository.HomestayOwnerImgHomestayRepo;
+import com.example.demo.cors.homestayowner.repository.HomestayOwnerOwnerHomestayRepository;
+import com.example.demo.cors.homestayowner.repository.HomestayOwnerPromotionRepository;
 import com.example.demo.cors.homestayowner.service.HomestayOwnerHomestayService;
-import com.example.demo.entities.*;
+import com.example.demo.entities.ConvenientHomestay;
+import com.example.demo.entities.DetailHomestay;
+import com.example.demo.entities.Homestay;
+import com.example.demo.entities.ImgHomestay;
+import com.example.demo.entities.OwnerHomestay;
+import com.example.demo.entities.Promotion;
 import com.example.demo.infrastructure.contant.Status;
+import com.example.demo.infrastructure.exception.rest.RestApiException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -44,6 +56,9 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
     private HomestayOwnerPromotionRepository homestayOwnerPromotionRepository;
 
     @Autowired
+    private HomestayOwnerBookingRepository homestayOwnerBookingRepository;
+
+    @Autowired
     private Cloudinary cloudinary;
 
     @Override
@@ -55,22 +70,25 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
 
     @Override
     @Transactional
-    public Homestay updateHomestays(String id, HomestayownerHomestayRequest request,List<String> idConvenientHomestay) throws IOException {
+    public Homestay updateHomestays(String id, HomestayownerHomestayRequest request, List<String> idConvenientHomestay) throws IOException {
         Homestay homestay = homestayownerHomestayRepository.findById(id).orElse(null);
         getHomestay(request, homestay);
         Homestay homestay1 = homestayownerHomestayRepository.save(homestay);
         homestayOwnerDetailHomestayReposritory.deleteByHomestay(id);
-        return getImgHomestayAndConvenientHomestay(id,idConvenientHomestay, homestay1);
+        return getImgHomestayAndConvenientHomestay(id, idConvenientHomestay, homestay1);
     }
 
     @Override
     public Homestay deleteHomestays(String id) {
         Homestay homestay = homestayownerHomestayRepository.findById(id).orElse(null);
         homestay.setStatus(Status.KHONG_HOAT_DONG);
-        Homestay homestay1 = homestayownerHomestayRepository.save(homestay);
-        return homestay1;
+        if (homestayOwnerBookingRepository.getBookingActive(id).size() == 0) {
+            Homestay homestay1 = homestayownerHomestayRepository.save(homestay);
+            return homestay1;
+        } else {
+            return null;
+        }
     }
-
 
     @Override
     public Homestay addHomestay(HomestayownerHomestayRequest request, List<MultipartFile> multipartFiles, List<String> idConvenientHomestay) throws IOException {
@@ -85,16 +103,20 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
     public Homestay updateStatusHomestay(String id) {
         Homestay homestay = homestayownerHomestayRepository.findById(id).orElse(null);
         homestay.setStatus(Status.CHO_DUYET);
-        Homestay homestay1 = homestayownerHomestayRepository.save(homestay);
-        return homestay1;
+        if (homestayOwnerBookingRepository.getBookingActive(id).size() == 0) {
+            Homestay homestay1 = homestayownerHomestayRepository.save(homestay);
+            return homestay1;
+        } else {
+            return null;
+        }
     }
 
     @Override
-    public Homestay updateHomestayPromition(String id, HomestayownerHomestayRequest request){
+    public Homestay updateHomestayPromition(String id, HomestayownerHomestayRequest request) {
         Homestay homestay = homestayownerHomestayRepository.findById(id).get();
         Promotion newPromotion = homestayOwnerPromotionRepository.findById(request.getPromotion()).orElse(null);
         homestay.setPromotion(newPromotion);
-        Homestay homestay1=homestayownerHomestayRepository.save(homestay);
+        Homestay homestay1 = homestayownerHomestayRepository.save(homestay);
         return homestay1;
     }
 
@@ -102,7 +124,6 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
     public OwnerHomestay getOwnerHomestayByToken(String token) {
         return homestayOwnerOwnerHomestayRepository.findOwnerByToken(token);
     }
-
 
     private void getHomestay(HomestayownerHomestayRequest request, Homestay homestay) {
         homestay.setName(request.getName());
@@ -148,7 +169,7 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
         return homestay1;
     }
 
-    private Homestay getImgHomestayAndConvenientHomestay(String id,List<String> idConvenientHomestay, Homestay homestay1) throws IOException {
+    private Homestay getImgHomestayAndConvenientHomestay(String id, List<String> idConvenientHomestay, Homestay homestay1) throws IOException {
         Homestay homestay = homestayownerHomestayRepository.findById(id).orElse(null);
         List<DetailHomestay> detailHomestays = new ArrayList<>();
         for (String detail : idConvenientHomestay) {
@@ -159,7 +180,6 @@ public class HomestayOwnerHomestayServiceImpl implements HomestayOwnerHomestaySe
             homestayOwnerDetailHomestayReposritory.save(detailHomestay);
             detailHomestays.add(detailHomestay);
         }
-
         homestay1.setDetailHomestays(detailHomestays);
         return homestay1;
     }

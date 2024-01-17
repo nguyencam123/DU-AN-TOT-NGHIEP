@@ -10,4 +10,8 @@ public interface AdminHomestayService {
     PageableObject<Homestay> getAllHomestay(AdminHomestayRequest request);
 
     Admin getAdminByToken(String token);
+
+    Integer getCountHoatDong();
+
+    Integer getCountChoDuyet();
 }

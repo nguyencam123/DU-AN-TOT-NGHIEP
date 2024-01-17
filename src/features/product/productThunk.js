@@ -9,6 +9,8 @@ import {
   addInfoBooking,
   getPaypalSuccess,
   checkBookingSuccess,
+  checkHomestayHDSuccess,
+  checkHomestayCDSuccess,
 } from './productSlide'
 import { instance } from '../../app/axiosConfig'
 import axios from 'axios'
@@ -168,10 +170,9 @@ export const updateBooking = (bookingId) => async (dispatch) => {
 
 export const sendBill = (bookingId) => async (dispatch) => {
   try {
-    const response = await instance.get(
+    await instance.get(
       'http://localhost:8080/api/v1/payment/send-mail?bookingId=' + bookingId,
     )
-    dispatch(addBookingsSuccess(response.data.data)) // Lấy dữ liệu từ response.data.data
     // console.log(response.data.data);
   } catch (error) {
     dispatch(fetchProductsFailure(error.message))
@@ -205,6 +206,27 @@ export const getAllHomestayByStatus = (status) => async (dispatch) => {
       '/api/v3/homestay?size=99&statusHomestay=' + status,
     )
     dispatch(fetchProductsSuccess(response.data.data.data)) // Lấy dữ liệu từ response.data.data
+  } catch (error) {
+    dispatch(fetchProductsFailure(error.message))
+  }
+}
+export const getCountHomestaySuccess = () => async (dispatch) => {
+  try {
+    const response = await instance.get(
+      '/api/v3/homestay/countHD',
+    )
+    dispatch(checkHomestayHDSuccess(response.data.data)) // Lấy dữ liệu từ response.data.data
+  } catch (error) {
+    dispatch(fetchProductsFailure(error.message))
+  }
+}
+
+export const getCountHomestayWait = () => async (dispatch) => {
+  try {
+    const response = await instance.get(
+      '/api/v3/homestay/countCD',
+    )
+    dispatch(checkHomestayCDSuccess(response.data.data)) // Lấy dữ liệu từ response.data.data
   } catch (error) {
     dispatch(fetchProductsFailure(error.message))
   }
@@ -244,3 +266,14 @@ export const getAllHomestayByHomestayName =
       dispatch(fetchProductsFailure(error.message))
     }
   }
+
+export const deleteCartUser = (idUser, idHomestay) => async (dispatch) => {
+  try {
+    const response = await instance.delete(
+      `http://localhost:8080/api/v1/cart/delete-cart?userId=${idUser}&homestayId=${idHomestay}`,
+    )
+    // console.log(response.data.data);
+  } catch (error) {
+    dispatch(fetchProductsFailure(error.message))
+  }
+}
