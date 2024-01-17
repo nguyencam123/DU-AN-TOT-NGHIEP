@@ -257,14 +257,14 @@ function ProductList() {
                         </div>
                     </div>
                     <div style={{ width: 368, height: 294, border: '1px solid #e9ebee', backgroundColor: '#fff', textAlign: 'center', padding: '15px 15px 15px 10px', marginRight: 30, borderBottom: '4px solid #75a8f9' }} >
-                        <Title level={4} style={{ color: '#5392f9' }}>khách sạn haritage<br /></Title><Title level={5} style={{ color: '#737373' }}>Đà nẵng</Title><br />
+                        <Title level={4} style={{ color: '#5392f9' }}>homestay haritage<br /></Title><Title level={5} style={{ color: '#737373' }}>Đà nẵng</Title><br />
                         <span style={{ fontSize: 22, fontFamily: 'mallory,Helvetica Neue,Helvetica,Arial,sans-serif', color: 'black' }}>Tôi săn được giá đặc biệt giờ chót với TravalVIVU. Phòng ốc rộng rãi, giường ngủ thoải mái và ấm cúng.</span>
                         <div style={{ marginTop: 30, fontSize: 18 }}>
                             <p>- fukada đến từ Nhật Bản</p>
                         </div>
                     </div>
                     <div style={{ width: 368, height: 294, border: '1px solid #e9ebee', backgroundColor: '#fff', textAlign: 'center', padding: '15px 15px 15px 10px', borderBottom: '4px solid #75a8f9' }} >
-                        <Title level={4} style={{ color: '#5392f9' }}>Khách sạn novotel<br /></Title><Title level={5} style={{ color: '#737373' }}>Phú QUốc</Title><br />
+                        <Title level={4} style={{ color: '#5392f9' }}>homestay novotel<br /></Title><Title level={5} style={{ color: '#737373' }}>Phú QUốc</Title><br />
                         <span style={{ fontSize: 22, fontFamily: 'mallory,Helvetica Neue,Helvetica,Arial,sans-serif', color: 'black' }}>Sau khi nghỉ tại đây, mọi âu lo đều tan biến. Cám ơn trvalVIVU rất nhiều.</span>
                         <div style={{ marginTop: 30, fontSize: 18 }}>
                             <p>- Anh Wang đến từ Trung Quốc</p>

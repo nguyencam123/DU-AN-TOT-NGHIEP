@@ -343,7 +343,7 @@ const Hotel = () => {
           }}
         >
           <Title level={2} style={{ color: 'white' }}>
-            Tìm & đặt phòng khách sạn giá rẻ chỉ với <br />3 bước đơn giản!
+            Tìm & đặt phòng homestay giá rẻ chỉ với <br />3 bước đơn giản!
             <br />
             <br />
             <Title level={4} style={{ color: 'rgba(255,255,255,1)' }}>
@@ -369,12 +369,12 @@ const Hotel = () => {
           >
             <Title level={4} style={{ color: '#0194f3', display: 'flex' }}>
               <SearchOutlined style={{ marginTop: 5, marginRight: 10 }} />{' '}
-              <div> Hãy tìm kiếm khách sạn quý khách mong muốn</div>{' '}
+              <div> Hãy tìm kiếm homestay quý khách mong muốn</div>{' '}
             </Title>
             <hr />
             <div>
               <h5 style={{ fontSize: 16 }}>
-                Thành phố đia điểm hoặc tên khách sạn
+                Thành phố đia điểm hoặc tên homestay
               </h5>
               <MDBInputGroup
                 className='mb-3'

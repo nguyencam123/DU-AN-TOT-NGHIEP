@@ -284,7 +284,7 @@ export default function FooterUser() {
               <h6 className='text-uppercase fw-bold mb-4'>Sản Phẩm</h6>
               <p>
                 <a href='#!' className='text-reset'>
-                  Khách sạn
+                  homestay
                 </a>
               </p>
               <p>
