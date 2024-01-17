@@ -666,12 +666,20 @@ const HomeStayProduct = () => {
     setFormErrors({})
 
     const detailDesc = record.desc.split(',')
-    console.log(detailDesc);
+    console.log(detailDesc)
     setdesc(detailDesc[2].trim())
     const bathroom = detailDesc[0]
     const bedroom = detailDesc[1]
-    setTotalBathroom(bathroom.substring(bathroom.indexOf('ó') + 1,bathroom.indexOf('p')-1).trim())
-    setTotalbedroom(bedroom.substring(bedroom.indexOf('ó') + 1,bedroom.indexOf('p')-1).trim())
+    setTotalBathroom(
+      bathroom
+        .substring(bathroom.indexOf('ó') + 1, bathroom.indexOf('p') - 1)
+        .trim(),
+    )
+    setTotalbedroom(
+      bedroom
+        .substring(bedroom.indexOf('ó') + 1, bedroom.indexOf('p') - 1)
+        .trim(),
+    )
 
     const addressParts = record.address.split(', ')
     const selectedWardName = addressParts[1] // Lấy tên phường/xã từ địa chỉ

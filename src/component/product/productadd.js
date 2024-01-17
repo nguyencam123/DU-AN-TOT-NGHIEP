@@ -311,7 +311,7 @@ function AddProductForm() {
   return (
     <div style={{ marginTop: '30px' }}>
       <Title level={2}>Quản trị homestay</Title>
-      <div>
+      {/* <div>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <div
             style={{
@@ -360,8 +360,10 @@ function AddProductForm() {
             </Title>
           </div>
         </div>
-      </div>
-      <Title level={4}>Danh mục</Title>
+      </div> */}
+      <Title level={4}>
+        Danh mục (Có {countWait} chờ duyệt, {countSuccess} đã duyệt)
+      </Title>
       <Row>
         <Form.Item label='Trạng thái' style={{ float: 'left' }}>
           <Select
