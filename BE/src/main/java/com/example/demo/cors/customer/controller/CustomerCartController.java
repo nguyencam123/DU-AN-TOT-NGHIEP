@@ -55,4 +55,9 @@ public class CustomerCartController {
         return new ResponseObject(customerCartDetailService.cartDetailBooked());
     }
 
+    @DeleteMapping("/delete-cart")
+    public ResponseObject deleteCartByUser(@RequestParam("userId") String userId, @RequestParam("homestayId") String homestayId) {
+        return new ResponseObject(customerCartDetailService.deleteCartByUser(userId, homestayId));
+    }
+
 }

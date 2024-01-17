@@ -17,6 +17,7 @@ public interface CustomerHomestayRepository extends HomestayRepository {
 
     @Query(value = """
             SELECT * FROM homestay a WHERE a.status = 0
+            ORDER BY a.last_modified_date DESC
             """, nativeQuery = true)
     Page<Homestay> getAllHomestay(Pageable pageable);
 
@@ -30,6 +31,7 @@ public interface CustomerHomestayRepository extends HomestayRepository {
             AND (:#{#customerHomestayRequest.dateFrom} > b.start_date AND b.end_date >:#{#customerHomestayRequest.dateFrom}
             OR :#{#customerHomestayRequest.dateTo} > b.start_date AND b.end_date > :#{#customerHomestayRequest.dateTo}
             OR (b.start_date >= :#{#customerHomestayRequest.dateFrom} AND b.end_date <= :#{#customerHomestayRequest.dateTo})))
+            ORDER BY a.last_modified_date DESC 
             """, nativeQuery = true)
     List<Homestay> findAllBetweenDate(CustomerHomestayRequest customerHomestayRequest);
 

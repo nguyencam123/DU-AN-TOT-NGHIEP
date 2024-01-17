@@ -11,6 +11,8 @@ const initialState = {
   convenient: [],
   productPromotion: [],
   check: [],
+  homestayHD: [],
+  homestayCD: [],
   loading: false,
   error: null,
 }
@@ -81,6 +83,16 @@ const productSlice = createSlice({
       state.loading = false
       state.error = null
     },
+    checkHomestayHDSuccess: (state, action) => {
+      state.homestayHD = action.payload
+      state.loading = false
+      state.error = null
+    },
+    checkHomestayCDSuccess: (state, action) => {
+      state.homestayCD = action.payload
+      state.loading = false
+      state.error = null
+    },
   },
 })
 
@@ -97,6 +109,8 @@ export const {
   fetchConvenientsSuccess,
   fetchProductPromotionSuccess,
   getPaypalSuccess,
-  checkBookingSuccess
+  checkBookingSuccess,
+  checkHomestayCDSuccess,
+  checkHomestayHDSuccess
 } = productSlice.actions
 export default productSlice.reducer

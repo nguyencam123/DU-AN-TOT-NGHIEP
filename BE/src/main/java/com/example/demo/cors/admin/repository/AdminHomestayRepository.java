@@ -10,7 +10,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface AdminHomestayRepository extends HomestayRepository {
@@ -35,5 +34,19 @@ public interface AdminHomestayRepository extends HomestayRepository {
             WHERE  h.owner_id= :#{#id}
             """, nativeQuery = true)
     List<Homestay> findHomestayBy(String id);
+
+    @Query(value = """
+            SELECT COUNT(h.id) AS 'CountHoatDong' 
+            FROM dbo.homestay h 
+            WHERE h.[status] = 0
+            """,nativeQuery = true)
+    Integer countHoatDong();
+
+    @Query(value = """
+            SELECT COUNT(h.id) AS 'CountChoDuyet' 
+            FROM dbo.homestay h 
+            WHERE h.[status] = 1
+            """,nativeQuery = true)
+    Integer countChoDuyet();
 
 }

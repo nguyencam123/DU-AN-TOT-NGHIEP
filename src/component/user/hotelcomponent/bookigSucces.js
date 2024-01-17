@@ -20,7 +20,7 @@ export const BookingSuccess = () => {
     dispatch(updateBooking(bookingId));
     dispatch(sendBill(bookingId));
     dispatch(checkBooked());
-  }, []);
+  }, [1]);
   const info = urlParams.get('vnp_OrderInfo');
   const bookingId = urlParams.get('bookingId');
 

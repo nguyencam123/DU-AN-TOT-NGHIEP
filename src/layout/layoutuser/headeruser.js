@@ -14,6 +14,8 @@ import {
   StarOutlined,
   BankOutlined,
   LogoutOutlined,
+  HomeOutlined,
+  BookOutlined,
 } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 import { logoutUser } from '../../features/user/userThunk'
@@ -280,7 +282,7 @@ const HeaderUser = () => {
                   <span className='picturecart'>
                     <span className='cc'>
                       <Badge count={shoppingcart?.length} showZero>
-                        <ShoppingCartOutlined
+                        <HeartOutlined
                           style={{
                             color: 'black',
                             fontSize: '26px',

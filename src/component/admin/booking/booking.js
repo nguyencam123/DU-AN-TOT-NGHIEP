@@ -15,9 +15,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   adminTranCodeBooking,
   getBooking,
-  getBookingByName,
-  getBookingByNameHomestay,
-  getBookingByPhoneNumber,
   searchBooking,
   userTranCodeBooking,
 } from '../../../features/admin/adminThunk'
@@ -26,6 +23,7 @@ import moment from 'moment'
 import dayjs from 'dayjs'
 import 'dayjs/locale/vi'
 import { date } from 'yup'
+import { getCountHomestaySuccess, getCountHomestayWait } from '../../../features/product/productThunk'
 dayjs.locale('vi')
 
 const { Title } = Typography
@@ -52,7 +50,7 @@ function BookingForm() {
   const dispatch = useDispatch()
   const columns = [
     {
-      title: 'Tên tài khoản',
+      title: 'Mã booking',
       dataIndex: 'user',
       key: 'userName',
       render: (data) => {
@@ -72,7 +70,7 @@ function BookingForm() {
       dataIndex: 'createdDate',
       key: 'createdDate',
       render: (data) => {
-        return moment(data).locale('vi').format('LL')
+        return moment(data).locale('vi').format('DD/MM/YYYY');
       },
     },
     {
@@ -80,7 +78,7 @@ function BookingForm() {
       dataIndex: 'startDate',
       key: 'startDate',
       render: (data) => {
-        return moment(data).locale('vi').format('LL')
+        return moment(data).locale('vi').format('DD/MM/YYYY')
       },
     },
     {
@@ -91,7 +89,7 @@ function BookingForm() {
         if (data === null) {
           return ''
         }
-        return moment(data).locale('vi').format('LL')
+        return moment(data).locale('vi').format('DD/MM/YYYY')
       },
     },
     {
@@ -242,6 +240,10 @@ function BookingForm() {
       name: 'Thành công',
       value: 1,
     },
+    {
+      name: 'Đã thuê xong',
+      value: 3,
+    },
   ]
   const listFilterOwner = [
     {
@@ -324,6 +326,21 @@ function BookingForm() {
       dispatch(
         searchBooking(
           0,
+          bookingSearch.homestayName,
+          bookingSearch.userName,
+          bookingSearch.statusPayUser,
+          bookingSearch.statusPayOwner,
+        ),
+      )
+    } else if (value === 3) {
+      setSelectedStatus({
+        name: 'Đã thuê xong',
+        value: 3,
+      })
+      setBookingSearch({ ...bookingSearch, status: 3 })
+      dispatch(
+        searchBooking(
+          3,
           bookingSearch.homestayName,
           bookingSearch.userName,
           bookingSearch.statusPayUser,

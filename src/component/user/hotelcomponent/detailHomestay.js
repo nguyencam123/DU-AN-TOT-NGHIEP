@@ -99,7 +99,12 @@ export const DetailHomestay = () => {
   if (dayjs(Date(dateFix)).add(1, 'days').valueOf() >= startDate) {
     cancelDay = `Việc hủy phòng sẽ mất toàn bộ số tiền bạn đã thanh toán`
   } else {
-    cancelDay = `Việc hủy phòng sau ngày ${moment(dayjs(dateFix))
+    cancelDay = `
+    Việc hủy phòng trước hoặc trong ngày ${moment(dayjs(dateFix))
+      .add(1, 'day')
+      .locale('vi')
+      .format('LL')} sẽ được hoàn toàn bộ số tiền bạn đã thanh toán
+    . Việc hủy phòng sau ngày ${moment(dayjs(dateFix))
       .add(1, 'day')
       .locale('vi')
       .format('LL')} sẽ mất toàn bộ số tiền bạn đã thanh toán`
@@ -198,10 +203,10 @@ export const DetailHomestay = () => {
   }
   const addShoppingCart = async () => {
     if (userDetail?.data.id == null) {
-      message.info('Bạn cần đăng nhập để có thể thêm vào giỏ hàng!')
+      message.info('Bạn cần đăng nhập để có thể Lưu!')
     } else {
       await dispatch(addShoppingCartThunk(shoppingCart))
-      message.info('Thêm vào giỏ hàng thành công!')
+      message.info('Lưu thành công!')
       dispatch(fetchShoppingCart(userDetail?.data.id))
     }
   }
@@ -315,7 +320,7 @@ export const DetailHomestay = () => {
                     fontWeight: 500,
                   }}
                 >
-                  Thêm vào giỏ hàng
+                  Lưu
                 </Button>
               </div>
             </Col>

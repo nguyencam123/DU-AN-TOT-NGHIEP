@@ -26,7 +26,8 @@ public interface CustomerCommentRepository extends CommentRepository {
     Double getAvgPoint(CustomerCommentRequest customerCommentRequest);
 
     @Query(value = """
-                Select * from Comment Where user_id=:idUser
+            Select * from Comment Where user_id=:idUser
+            ORDER BY last_modified_date DESC
             """, nativeQuery = true)
     Page<Comment> commentByUserId(Pageable pageable, String idUser);
 
