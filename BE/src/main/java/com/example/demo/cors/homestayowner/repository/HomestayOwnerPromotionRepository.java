@@ -45,7 +45,7 @@ public interface HomestayOwnerPromotionRepository extends PromotionRepository {
     FROM Promotion a
     WHERE 
     (DATEADD(DAY, 1, CONVERT(DATE, DATEADD(SECOND, a.end_date / 1000, '1970-01-01'))) < CONVERT(DATE, GETUTCDATE()))
-    AND a.status_promotion = 0 ;
+    AND a.status_promotion = 0;
     """, nativeQuery = true)
     List<Promotion> findByEndDateLessThanAndStatusPromotion();
 
