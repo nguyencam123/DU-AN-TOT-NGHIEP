@@ -198,10 +198,10 @@ export const DetailHomestay = () => {
   }
   const addShoppingCart = async () => {
     if (userDetail?.data.id == null) {
-      message.info('Bạn cần đăng nhập để có thể thêm vào giỏ hàng!')
+      message.info('Bạn cần đăng nhập để có thể Lưu!')
     } else {
       await dispatch(addShoppingCartThunk(shoppingCart))
-      message.info('Thêm vào giỏ hàng thành công!')
+      message.info('Lưu thành công!')
       dispatch(fetchShoppingCart(userDetail?.data.id))
     }
   }
@@ -315,7 +315,7 @@ export const DetailHomestay = () => {
                     fontWeight: 500,
                   }}
                 >
-                  Thêm vào giỏ hàng
+                  Lưu
                 </Button>
               </div>
             </Col>
