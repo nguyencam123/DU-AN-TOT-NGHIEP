@@ -10,4 +10,6 @@ public interface CustomerPaypalService {
 
     Payment executePayment(String paymentId, String payerId) throws PayPalRESTException;
 
+    boolean sendBillBooking(String bookingId);
+
 }

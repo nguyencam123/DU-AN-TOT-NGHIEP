@@ -130,24 +130,30 @@ const HomeStayProduct = () => {
     const files = event.target.files
     let selectedFile = event.target.files
     let fileList = [...selectedFile]
+
     const imagesArray = fileList.map((file) => ({
       name: file.name,
       url: URL.createObjectURL(file),
     }))
 
     setSelectedImages((prevImages) => [...prevImages, ...imagesArray])
-    setFile(fileList)
+
+    // Use the callback function to ensure the most up-to-date state
+    setFile((prevFileList) => [...prevFileList, ...fileList])
+
     const filesArray = Array.from(files).map((file) => ({
       name: file.name,
       size: file.size,
       type: file.type,
     }))
+
     if (!isAddFrom) {
       setIsLoadingImg(true)
       message.info(
         'Đang tiến hành tải ảnh lên máy chủ bạn vui lòng đợi một vài giây nhé!',
         5,
       )
+
       await dispatch(addImgUpload(idHomestay, fileList))
       dispatch(fetchBaseImg(idHomestay))
       setIsLoadingImg(false)
@@ -190,6 +196,7 @@ const HomeStayProduct = () => {
     setacreage(record.acreage)
     setroomNumber(record.roomNumber)
   }
+
   const showModal = () => {
     setIsModalOpen(true)
     setIsAddForm(true)
@@ -213,6 +220,7 @@ const HomeStayProduct = () => {
     setFile([])
     setAddressDetail('')
     setviewEditConvennient([])
+    setconvenient('')
     const fileInput = document.getElementById('image')
     if (fileInput) {
       fileInput.value = null
@@ -473,7 +481,7 @@ const HomeStayProduct = () => {
     acreage: Yup.number()
       .required('Vui lòng nhập diện tích')
       .typeError('Vui lòng nhập diện tích')
-      .positive('diện tích phòng phải lớn hơn 0'),
+      .positive('Diện tích phòng phải lớn hơn 0'),
     desc: Yup.string()
       .required('vui lòng nhập vào mô tả')
       .max(500, 'Vui lòng nhập ít hơn 500 ký tự'),
@@ -554,7 +562,7 @@ const HomeStayProduct = () => {
         setIsLoading(true)
         message.info(
           'Đang tiến hành thêm bạn vui lòng đợi một vài giây nhé!',
-          5,
+          10,
         )
         await dispatch(addHomestay(homestay, file, convenientvir))
         message.info('Thêm thành công')
@@ -580,7 +588,7 @@ const HomeStayProduct = () => {
         setIsLoading(true)
         await message.info(
           'Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!',
-          5,
+          10,
         )
         await dispatch(EditHomestay(homestay, file, recordid, convenientvir))
         await setIsLoading(false)
@@ -621,7 +629,10 @@ const HomeStayProduct = () => {
     setacreage(record.acreage)
     settimeCheckIn(record.timeCheckIn)
     settimeCheckOut(record.timeCheckOut)
-    setconvenient(record.detailHomestays)
+    setconvenient(
+      record.detailHomestays?.map((items) => items.convenientHomestay.id),
+    )
+
     setFile([])
     setviewEditConvennient(record.detailHomestays)
     const fileInput = document.getElementById('image')
@@ -765,7 +776,7 @@ const HomeStayProduct = () => {
         }
         open={isModalOpen}
         onCancel={handleCancel}
-        width={900}
+        width={1100}
         okText={isAddFrom == true ? 'Thêm homestay' : 'Sửa homestay'}
         cancelText='Hủy'
         onOk={handleSubmit}
@@ -796,7 +807,7 @@ const HomeStayProduct = () => {
             span: 24,
           }}
           style={{
-            maxWidth: 800,
+            maxWidth: 1100,
           }}
           initialValues={{
             remember: true,
@@ -807,7 +818,11 @@ const HomeStayProduct = () => {
             {/* Trường thứ nhất */}
             <Col span={12}>
               <Form.Item
-                label={<Title level={5}>Tên homestay</Title>}
+                label={
+                  <Title level={5} style={{ marginTop: 5 }}>
+                    Tên homestay
+                  </Title>
+                }
                 validateStatus={formErrors.name ? 'error' : ''} // Hiển thị lỗi cho trường name nếu có
                 help={formErrors.name} // Hiển thị thông báo lỗi cho trường name nếu có
               >
@@ -817,12 +832,16 @@ const HomeStayProduct = () => {
             {/* Trường thứ hai */}
             <Col span={12}>
               <Form.Item
-                label={<Title level={5}>Giá homestay</Title>}
+                label={
+                  <Title level={5} style={{ marginTop: 5 }}>
+                    Giá homestay
+                  </Title>
+                }
                 validateStatus={formErrors.price ? 'error' : ''}
                 help={formErrors.price}
               >
                 <InputNumber
-                  style={{ width: 254 }}
+                  style={{ width: 335 }}
                   value={price}
                   onChange={handlePriceChange}
                   formatter={(value) =>
@@ -837,7 +856,7 @@ const HomeStayProduct = () => {
                 />
               </Form.Item>
               {price !== null && (
-                <span style={{ marginLeft: 15 }}>
+                <span style={{ marginLeft: 60 }}>
                   Giá thực tế được đăng trên website{' '}
                   {formatCurrency(price + (price * 11) / 100)}
                   <br />
@@ -849,7 +868,11 @@ const HomeStayProduct = () => {
           <Row gutter={24} style={{ marginLeft: 3 }}>
             <Col span={12}>
               <Form.Item
-                label={<Title level={5}>Số người ở</Title>}
+                label={
+                  <Title level={5} style={{ marginTop: 5 }}>
+                    Số người ở
+                  </Title>
+                }
                 validateStatus={formErrors.numberPerson ? 'error' : ''}
                 help={formErrors.numberPerson}
               >
@@ -861,7 +884,11 @@ const HomeStayProduct = () => {
             </Col>
             <Col span={12}>
               <Form.Item
-                label={<Title level={5}>Diện tích</Title>}
+                label={
+                  <Title level={5} style={{ marginTop: 5 }}>
+                    Diện tích
+                  </Title>
+                }
                 validateStatus={formErrors.acreage ? 'error' : ''}
                 help={formErrors.acreage}
               >
@@ -876,7 +903,13 @@ const HomeStayProduct = () => {
           </Row>
           <Row gutter={24} style={{ marginLeft: 4 }}>
             <Col span={12}>
-              <Form.Item label={<Title level={5}>Ngày bắt đầu</Title>}>
+              <Form.Item
+                label={
+                  <Title level={5} style={{ marginTop: 5 }}>
+                    Ngày bắt đầu
+                  </Title>
+                }
+              >
                 <DatePicker
                   onChange={handleDateChangestart}
                   style={{ width: '100%' }}
@@ -895,7 +928,13 @@ const HomeStayProduct = () => {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item label={<Title level={5}>Ngày kết thúc</Title>}>
+              <Form.Item
+                label={
+                  <Title level={5} style={{ marginTop: 5 }}>
+                    Ngày kết thúc
+                  </Title>
+                }
+              >
                 <DatePicker
                   onChange={handleDateChangeend}
                   style={{ width: '100%' }}
@@ -918,29 +957,45 @@ const HomeStayProduct = () => {
           {/* time bắt đầu */}
           <Row gutter={24} style={{ marginLeft: 4 }}>
             <Col span={12}>
-              <Title level={5}>Thời gian nhận phòng:</Title>
-              <TimePicker
-                onChange={handleTimeChangestart}
-                value={timeCheckIn && dayjs(timeCheckIn, 'HH:mm:ss')} // Fix here
-                style={{ width: '67%', float: 'right' }}
-                allowClear={true}
-              />
-              <div style={{ color: 'red' }}>{formErrors.timeCheckIn}</div>
+              <Form.Item
+                label={
+                  <Title level={5} style={{ marginTop: 5 }}>
+                    Thời gian nhận phòng
+                  </Title>
+                }
+                validateStatus={formErrors.timeCheckIn ? 'error' : ''}
+                help={formErrors.timeCheckIn}
+              >
+                <TimePicker
+                  onChange={handleTimeChangestart}
+                  value={timeCheckIn && dayjs(timeCheckIn, 'HH:mm:ss')} // Fix here
+                  style={{ width: '100%', float: 'right' }}
+                  allowClear={true}
+                />
+              </Form.Item>
             </Col>
             <Col span={12}>
-              <Title level={5}>Thời gian trả phòng:</Title>
-              <TimePicker
-                onChange={handleTimeChangeend}
-                value={timeCheckOut && dayjs(timeCheckOut, 'HH:mm:ss')} // Fix here
-                style={{ width: '67%', float: 'right' }}
-                allowClear={true}
-              />
-              <div style={{ color: 'red' }}>{formErrors.timeCheckOut}</div>
+              <Form.Item
+                label={
+                  <Title level={5} style={{ marginTop: 5 }}>
+                    Thời gian trả phòng
+                  </Title>
+                }
+                validateStatus={formErrors.timeCheckOut ? 'error' : ''}
+                help={formErrors.timeCheckOut}
+              >
+                <TimePicker
+                  onChange={handleTimeChangeend}
+                  value={timeCheckOut && dayjs(timeCheckOut, 'HH:mm:ss')} // Fix here
+                  style={{ width: '100%', float: 'right' }}
+                  allowClear={true}
+                />
+              </Form.Item>
             </Col>
           </Row>
           <Row gutter={24} style={{ marginLeft: 4, marginTop: 20 }}>
             {/* <Col span={12}>
-              <Title level={5}>Chính sách hủy phòng:</Title>
+              <Title level={5} style={{marginTop:5}}>Chính sách hủy phòng:</Title>
               <Input
                 style={{ width: '67%', float: 'right' }}
                 value={cancellationPolicy}
@@ -951,27 +1006,35 @@ const HomeStayProduct = () => {
               </div>
             </Col> */}
             <Col span={12}>
-              <Title level={5}>Số phòng:</Title>
-              <Input
-                style={{ width: '67%', float: 'right' }}
-                value={roomNumber}
-                onChange={(e) => setroomNumber(e.target.value)}
-              />
-              <div style={{ color: 'red', marginTop: 35 }}>
-                {formErrors.roomNumber}
-              </div>
+              <Form.Item
+                label={
+                  <Title level={5} style={{ marginTop: 5 }}>
+                    Số phòng
+                  </Title>
+                }
+                validateStatus={formErrors.roomNumber ? 'error' : ''}
+                help={formErrors.roomNumber}
+              >
+                <Input
+                  style={{ width: '100%', float: 'right' }}
+                  value={roomNumber}
+                  onChange={(e) => setroomNumber(e.target.value)}
+                />
+              </Form.Item>
             </Col>
           </Row>
           <Row gutter={24}>
-            <Col span={24} style={{ marginLeft: 15 }}>
-              <Title level={5}>Tiện ích homestay</Title>
+            <Col span={24} style={{ marginLeft: 40 }}>
+              <Title level={5} style={{ marginTop: 5 }}>
+                Tiện ích homestay
+              </Title>
               <div>
                 <Checkbox.Group
                   options={convenients.map((item) => ({
                     label: item.name,
                     value: item.id,
                   }))}
-                  value={checkedList}
+                  defaultValue={convenientvir}
                   onChange={onChangeConvenients}
                 />
               </div>
@@ -984,7 +1047,9 @@ const HomeStayProduct = () => {
             {/* <DatePicker /> */}
             <div style={{ display: 'flex' }}>
               <div style={{ marginRight: 30, marginLeft: 20 }}>
-                <Title level={5}>Tỉnh/Thành phố:</Title>
+                <Title level={5} style={{ marginTop: 5 }}>
+                  Tỉnh/Thành phố:
+                </Title>
                 <select
                   value={selectedCity}
                   onChange={(e) => setSelectedCity(e.target.value)}
@@ -1000,7 +1065,9 @@ const HomeStayProduct = () => {
                 <div style={{ color: 'red' }}>{erorrAddress}</div>
               </div>
               <div style={{ marginRight: 30 }}>
-                <Title level={5}>Quận/Huyện:</Title>
+                <Title level={5} style={{ marginTop: 5 }}>
+                  Quận/Huyện:
+                </Title>
                 <select
                   value={selectedDistrict}
                   onChange={(e) => setSelectedDistrict(e.target.value)}
@@ -1016,7 +1083,9 @@ const HomeStayProduct = () => {
                 <div style={{ color: 'red' }}>{erorrAddress}</div>
               </div>
               <div>
-                <Title level={5}>Phường/Xã:</Title>
+                <Title level={5} style={{ marginTop: 5 }}>
+                  Phường/Xã:
+                </Title>
                 <select
                   value={selectedWard}
                   onChange={(e) => setSelectedWard(e.target.value)}
@@ -1034,10 +1103,12 @@ const HomeStayProduct = () => {
             </div>
           </Row>
           <Row gutter={24}>
-            <Col span={24}>
-              <Title level={5}>Địa chỉ chi tiết homestay</Title>
+            <Col span={24} style={{ marginLeft: 40 }}>
+              <Title level={5} style={{ marginTop: 5 }}>
+                Địa chỉ chi tiết homestay
+              </Title>
               <TextArea
-                style={{ width: '900px' }}
+                style={{ width: '1000px' }}
                 value={addressDetail}
                 onChange={(e) => setAddressDetail(e.target.value)}
               />
@@ -1045,10 +1116,12 @@ const HomeStayProduct = () => {
             </Col>
           </Row>
           <Row gutter={24}>
-            <Col span={24}>
-              <Title level={5}>Mô tả homestay</Title>
+            <Col span={24} style={{ marginLeft: 40 }}>
+              <Title level={5} style={{ marginTop: 5 }}>
+                Mô tả homestay
+              </Title>
               <TextArea
-                style={{ width: '900px' }}
+                style={{ width: '1000px' }}
                 value={desc}
                 onChange={(e) => setdesc(e.target.value)}
               />
@@ -1057,7 +1130,7 @@ const HomeStayProduct = () => {
           </Row>
         </Form>
         <form onSubmit={handleSubmit} style={{ marginTop: 20 }}>
-          <div>
+          <div style={{ marginLeft: 40 }}>
             {imghomestay.length <= 20 && (
               <div style={{ display: 'flex' }}>
                 <label htmlFor='image' style={{ marginTop: 5 }}>

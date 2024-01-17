@@ -186,7 +186,6 @@ const Hotel = () => {
   }
 
   const handleSearch = () => {
-    console.log(checkInDate.valueOf() + '' + calculateCheckOutDate().valueOf())
     if (nameOrAddress == '') {
       setNotification('Vui lòng nhập tên hoặc địa chỉ')
     } else {
@@ -638,7 +637,6 @@ const Hotel = () => {
                           />
                           <br />
                           <div style={{ display: 'flex', marginTop: 10 }}>
-                            <CompassOutlined style={{}} />
                             &ensp;
                             <Title
                               style={{
@@ -648,7 +646,10 @@ const Hotel = () => {
                                 marginTop: 3,
                               }}
                             >
-                              {item.address}
+                              <CompassOutlined style={{}} />
+                              <span style={{ marginLeft: 10 }}>
+                                {item.address}
+                              </span>
                             </Title>
                           </div>
                           <h1

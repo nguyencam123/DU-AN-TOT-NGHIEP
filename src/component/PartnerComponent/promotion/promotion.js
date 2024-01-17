@@ -39,9 +39,9 @@ import dayjs from 'dayjs'
 
 const { Title } = Typography
 
-const text = <span>Sửa khuyến mãi</span>
-const textView = <span>xem chi tiết khuyến mãi</span>
-const textupdate = <span>Dừng hoạt động khuyến mãi</span>
+const text = <span>Sửa khuyến mại</span>
+const textView = <span>xem chi tiết khuyến mại</span>
+const textupdate = <span>Dừng hoạt động khuyến mại</span>
 const Promotion = () => {
   const [isAddFrom, setIsAddFrom] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
@@ -49,7 +49,7 @@ const Promotion = () => {
   const [valueselect, setValueSelect] = useState('')
   const [isViewmodal, setIsviewmodal] = useState(false)
   const [homestay, setHomestay] = useState([])
-
+  const [dataPromotion, setDataPromotion] = useState([])
   const [arrow, setArrow] = useState('Show')
   const dispatch = useDispatch()
   const userDetail = JSON.parse(localStorage.getItem('ownerDetail'))
@@ -76,26 +76,17 @@ const Promotion = () => {
   const rowSelection = {
     selectedRowKeys: checkedValues,
     onChange: (selectedRowKeys, selectedRows) => {
-      if (selectedRows[selectedRows.length - 1]?.price <= value) {
-        message.info(
-          `Số tiền giảm lớn hơn hoặc bằng số tiền homestay ${
-            selectedRows[selectedRows.length - 1]?.name
-          }`,
-        )
-        return false
-      } else if (value <= 1000) {
-        message.info(
-          `Bạn cần phải nhập số tiền giảm trước và số tiền phải lớn hơn 1000`,
-        )
-        return false
-      }
       setCheckedValues(selectedRowKeys)
+      setDataPromotion(selectedRows)
     },
     getCheckboxProps: (record) => ({
       // Column configuration not to be checked
       name: record.name,
+      checked: record.price < value,
+      disabled: record.price < value,
     }),
   }
+
   const isBeforeToday = (current) => {
     return current && current.isBefore(moment().startOf('day'))
   }
@@ -214,7 +205,7 @@ const Promotion = () => {
   }, [arrow])
   const columns = [
     {
-      title: 'Tên khuyến mãi',
+      title: 'Tên khuyến mại',
       dataIndex: 'name',
       key: 'name',
       render: (data) => {
@@ -257,7 +248,9 @@ const Promotion = () => {
         if (str == 'HOAT_DONG') {
           return 'Hoạt động'
         } else if (str == 'KET_THUC') {
-          return 'Khuyến mãi đã kết thúc'
+          return 'Khuyến mại đã kết thúc'
+        } else if (str == 'CHO_HOAT_DONG') {
+          return 'Chờ hoạt động'
         } else {
           return 'Không hoạt động'
         }
@@ -272,7 +265,7 @@ const Promotion = () => {
           <a style={{ color: '#1677ff' }} onClick={() => handleViewRow(record)}>
             <EyeOutlined />
           </a>
-          {record.statusPromotion === 'HOAT_DONG' && ( // Thêm điều kiện ở đây
+          {record.statusPromotion === 'HOAT_DONG' || record.statusPromotion === 'CHO_HOAT_DONG' && ( // Thêm điều kiện ở đây
             <a style={{ color: '#1677ff' }} onClick={() => handleEdit(record)}>
               <EditOutlined />
             </a>
@@ -280,7 +273,7 @@ const Promotion = () => {
           {record.statusPromotion === 'HOAT_DONG' && ( // Thêm điều kiện ở đây
             <Popconfirm
               title='Cập nhật mục này'
-              description='Bạn chắc chắn muốn cập nhật khuyến mãi này thành không hoạt động không?'
+              description='Bạn chắc chắn muốn cập nhật khuyến mại này thành không hoạt động không?'
               icon={<ReloadOutlined />}
               cancelText='Hủy'
               okText='Cập nhật'
@@ -290,7 +283,23 @@ const Promotion = () => {
                 <ReloadOutlined />
               </a>
             </Popconfirm>
-          )}
+          )
+          }
+          {record.statusPromotion === 'HOAT_DONG' ||
+            record.statusPromotion === 'CHO_HOAT_DONG' && ( // Thêm điều kiện ở đây
+              <Popconfirm
+                title='Cập nhật mục này'
+                description='Bạn chắc chắn muốn cập nhật khuyến mãi này thành không hoạt động không?'
+                icon={<ReloadOutlined />}
+                cancelText='Hủy'
+                okText='Cập nhật'
+                onConfirm={() => handleSubmitStatus(record)}
+              >
+                <a>
+                  <ReloadOutlined />
+                </a>
+              </Popconfirm>
+            )}
         </Space>
       ),
     },
@@ -341,7 +350,7 @@ const Promotion = () => {
     name: Yup.string()
       .trim() // Remove leading and trailing whitespaces
       .min(1, 'Vui lòng nhập ít nhất một ký tự cho tên sản phẩm')
-      .required('Vui lòng nhập tên khuyến mãi'),
+      .required('Vui lòng nhập tên khuyến mại'),
     value: Yup.number()
       .required('Vui lòng nhập số tiền giảm')
       .typeError('Vui lòng nhập số tiền giảm')
@@ -369,41 +378,45 @@ const Promotion = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    try {
-      await validationSchema.validate(promotions, { abortEarly: false })
-      setIsLoading(true)
-      if (isAddFrom) {
-        await message.info(
-          'Đang tiến hành thêm bạn vui lòng đợi một vài giây nhé!',
-        )
-        await dispatch(addPromotion(promotions))
-        await dispatch(fetchPromotion(UserID, homestayname, valueselect))
-        await setIsModalOpen(false)
-        await setIsLoading(false)
-        message.info('Thêm thành công')
-        setName('')
-        setValue(0)
-        setStartDate(null)
-        setEndDate(null)
-      } else {
-        await message.info(
-          'Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!',
-        )
-        await dispatch(UpdateStatusPromotion(idPromotion, promotions))
-        await dispatch(fetchPromotion(UserID, homestayname, valueselect))
-        await setIsModalOpen(false)
-        await setIsLoading(false)
-        message.info('Sửa thành công')
+    if (dataPromotion.some((item) => item.price < value)) {
+      message.info('Có homestay có giá thấp hơn số tiền khuyến mại!')
+    } else {
+      try {
+        await validationSchema.validate(promotions, { abortEarly: false })
+        setIsLoading(true)
+        if (isAddFrom) {
+          await message.info(
+            'Đang tiến hành thêm bạn vui lòng đợi một vài giây nhé!',
+          )
+          await dispatch(addPromotion(promotions))
+          await dispatch(fetchPromotion(UserID, homestayname, valueselect))
+          await setIsModalOpen(false)
+          await setIsLoading(false)
+          message.info('Thêm thành công')
+          setName('')
+          setValue(0)
+          setStartDate(null)
+          setEndDate(null)
+        } else {
+          await message.info(
+            'Đang tiến hành sửa bạn vui lòng đợi một vài giây nhé!',
+          )
+          await dispatch(UpdateStatusPromotion(idPromotion, promotions))
+          await dispatch(fetchPromotion(UserID, homestayname, valueselect))
+          await setIsModalOpen(false)
+          await setIsLoading(false)
+          message.info('Sửa thành công')
+        }
+        dispatch(fetchPromotion(UserID))
+        setFormErrors({})
+      } catch (errors) {
+        const errorObject = {}
+        errors.inner.forEach((error) => {
+          errorObject[error.path] = error.message
+        })
+        setFormErrors(errorObject)
+        setIsLoading(false)
       }
-      dispatch(fetchPromotion(UserID))
-      setFormErrors({})
-    } catch (errors) {
-      const errorObject = {}
-      errors.inner.forEach((error) => {
-        errorObject[error.path] = error.message
-      })
-      setFormErrors(errorObject)
-      setIsLoading(false)
     }
   }
   const hanhdleSelect = (selectedValue) => {
@@ -425,14 +438,18 @@ const Promotion = () => {
       name: 'Không hoạt động',
       value: 1,
     },
+    {
+      name: 'Chờ hoạt động',
+      value: 2,
+    },
   ]
 
   return (
     <div style={{ marginTop: '20px' }}>
-      <Title level={2}>Quản trị khuyến mãi</Title>
+      <Title level={2}>Quản trị khuyến mại</Title>
       <div style={{ marginBottom: 20, float: 'right' }}>
         <Button type='primary' onClick={showModal}>
-          Thêm mới khuyến mãi
+          Thêm mới khuyến mại
         </Button>
       </div>
       <Title level={4}>Danh mục</Title>
@@ -457,11 +474,11 @@ const Promotion = () => {
           />
         </Form.Item>
         <Form.Item
-          label='Tìm kiếm theo tên khuyến mãi'
+          label='Tìm kiếm theo tên khuyến mại'
           style={{ float: 'left', marginLeft: ' 50px' }}
         >
           <Input.Search
-            placeholder='Tên khuyến mãi'
+            placeholder='Tên khuyến mại'
             allowClear
             size='medium'
             enterButton='search'
@@ -480,25 +497,25 @@ const Promotion = () => {
       <Table columns={columns} dataSource={promotion} />
       <Modal
         width={1200}
-        title={isAddFrom == true ? 'Thêm khuyến mãi' : 'Sửa khuyến mãi'}
-        okText={isAddFrom == true ? 'Thêm khuyến mãi' : 'Sửa khuyến mãi'}
+        title={isAddFrom == true ? 'Thêm khuyến mại' : 'Sửa khuyến mại'}
+        okText={isAddFrom == true ? 'Thêm khuyến mại' : 'Sửa khuyến mại'}
         open={isModalOpen}
         onOk={handleSubmit}
         onCancel={handleCancel}
         okButtonProps={
           isLoading
             ? {
-                disabled: true,
-                icon: <LoadingOutlined />,
-                loading: true,
-              }
+              disabled: true,
+              icon: <LoadingOutlined />,
+              loading: true,
+            }
             : {}
         }
         cancelButtonProps={
           isLoading
             ? {
-                disabled: true,
-              }
+              disabled: true,
+            }
             : {}
         }
       >
@@ -524,7 +541,7 @@ const Promotion = () => {
                 {/* Trường thứ nhất */}
                 <Col span={24}>
                   <Form.Item
-                    label={<Title level={5}>Tên khuyến mãi</Title>}
+                    label={<Title level={5}>Tên khuyến mại</Title>}
                     validateStatus={formErrors.name ? 'error' : ''} // Hiển thị lỗi cho trường name nếu có
                     help={formErrors.name} // Hiển thị thông báo lỗi cho trường name nếu có
                   >
@@ -549,11 +566,11 @@ const Promotion = () => {
                       value={
                         startDate
                           ? dayjs(
-                              dayjs(startDate)
-                                .locale('vi')
-                                .format('YYYY-MM-DD'),
-                              'YYYY-MM-DD',
-                            )
+                            dayjs(startDate)
+                              .locale('vi')
+                              .format('YYYY-MM-DD'),
+                            'YYYY-MM-DD',
+                          )
                           : null
                       }
                       disabledDate={isBeforeToday}
@@ -575,9 +592,9 @@ const Promotion = () => {
                       value={
                         endDate
                           ? dayjs(
-                              dayjs(endDate).locale('vi').format('YYYY-MM-DD'),
-                              'YYYY-MM-DD',
-                            )
+                            dayjs(endDate).locale('vi').format('YYYY-MM-DD'),
+                            'YYYY-MM-DD',
+                          )
                           : null
                       }
                       disabledDate={isBeforeToday}
@@ -620,7 +637,7 @@ const Promotion = () => {
             </div>
             <div>
               <div style={{ color: 'red', marginLeft: 30 }}>
-                *(Vui lòng chọn homestay mà bạn muốn áp dụng khuyến mãi)
+                *(Vui lòng chọn homestay mà bạn muốn áp dụng khuyến mại)
               </div>
               <Table
                 rowSelection={{
@@ -637,7 +654,9 @@ const Promotion = () => {
       </Modal>
       <Modal
         title={
-          <div style={{ fontSize: '22px' }}>Xem thông tin chi tiết khuyến mãi</div>
+          <div style={{ fontSize: '22px' }}>
+            Xem thông tin chi tiết khuyến mại
+          </div>
         }
         open={isViewmodal}
         onCancel={handleCancel}
@@ -647,16 +666,16 @@ const Promotion = () => {
       >
         <div style={{ fontSize: 18, fontWeight: 600 }}>
           <div style={{ display: 'flex' }}>
-            <div style={{ width: 400 }}>Tên khuyến mãi </div> : {name}
+            <div style={{ width: 400 }}>Tên khuyến mại </div> : {name}
           </div>
           <br />
           <div style={{ display: 'flex' }}>
-            <div style={{ width: 400 }}>Thời gian bắt đầu khuyến mãi </div> :{' '}
+            <div style={{ width: 400 }}>Thời gian bắt đầu khuyến mại </div> :{' '}
             {startDate}
           </div>
           <br />
           <div style={{ display: 'flex' }}>
-            <div style={{ width: 400 }}>Thời gian kết thúc khuyến mãi </div> :{' '}
+            <div style={{ width: 400 }}>Thời gian kết thúc khuyến mại </div> :{' '}
             {endDate}
           </div>
           <br />
@@ -667,7 +686,7 @@ const Promotion = () => {
           <br />
           <div style={{ display: 'flex' }}>
             <div style={{ width: 400 }}>
-              Các homestay đã được áp dụng khuyến mãi{' '}
+              Các homestay đã được áp dụng khuyến mại{' '}
             </div>
           </div>
           <Table columns={columnsDataView} dataSource={homestay} />

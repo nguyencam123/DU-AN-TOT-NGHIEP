@@ -89,7 +89,7 @@ export const DetailHomestay = () => {
   const detailHomestay = useSelector((state) => state.product.productDetails)
   const comment = useSelector((state) => state.product.commentProduct)
   const avgPoint = useSelector((state) => state.product.avgPoint)
-  let cancelDay = '';
+  let cancelDay = ''
   const today = dayjs()
   const dateFix = new Date(today)
   dateFix.setHours('00')
@@ -99,7 +99,10 @@ export const DetailHomestay = () => {
   if (dayjs(Date(dateFix)).add(1, 'days').valueOf() >= startDate) {
     cancelDay = `Việc hủy phòng sẽ mất toàn bộ số tiền bạn đã thanh toán`
   } else {
-    cancelDay = `Việc hủy phòng sau ngày ${moment(dayjs(dateFix)).add(1, 'day').locale('vi').format('LL')} sẽ mất toàn bộ số tiền bạn đã thanh toán`
+    cancelDay = `Việc hủy phòng sau ngày ${moment(dayjs(dateFix))
+      .add(1, 'day')
+      .locale('vi')
+      .format('LL')} sẽ mất toàn bộ số tiền bạn đã thanh toán`
   }
   // const imgHomestay = detailHomestay[0].images
   const handleBookingHomestay = (id) => {
@@ -108,9 +111,9 @@ export const DetailHomestay = () => {
     )
   }
   const maxCommentsToShow = 6
-  const slicedComments = comment.slice(0, maxCommentsToShow)
+  const slicedComments = detailHomestay?.comment?.slice(0, maxCommentsToShow)
 
-  const listComment = slicedComments.map((comment, index) => {
+  const listComment = slicedComments?.map((comment, index) => {
     if (index === 2) {
       return false
     }
@@ -142,7 +145,7 @@ export const DetailHomestay = () => {
     }
   })
   const calculatePercentage = (point, totalPoints) => {
-    return (point / totalPoints) * 100
+    return Math.round((point / totalPoints) * 100)
   }
 
   const renderProgressBars = () => {
@@ -155,7 +158,7 @@ export const DetailHomestay = () => {
     let totalPoints = 0
 
     // Count points and calculate total points
-    comment.forEach((item) => {
+    detailHomestay?.comment?.forEach((item) => {
       const point = item.point
       if (point >= 1 && point <= 5) {
         pointCounts[point]++
@@ -195,10 +198,10 @@ export const DetailHomestay = () => {
   }
   const addShoppingCart = async () => {
     if (userDetail?.data.id == null) {
-      message.info('Bạn cần đăng nhập để có thể thêm vào giỏ hàng!')
+      message.info('Bạn cần đăng nhập để có thể Lưu!')
     } else {
       await dispatch(addShoppingCartThunk(shoppingCart))
-      message.info('Thêm vào giỏ hàng thành công!')
+      message.info('Lưu thành công!')
       dispatch(fetchShoppingCart(userDetail?.data.id))
     }
   }
@@ -246,7 +249,7 @@ export const DetailHomestay = () => {
                 <EnvironmentOutlined
                   style={{ fontSize: '10px', alignItems: 'center' }}
                 />
-                {detailHomestay.address}
+                &nbsp;{detailHomestay.address}
               </div>
             </Col>
             <Col span={6} push={10}>
@@ -312,7 +315,7 @@ export const DetailHomestay = () => {
                     fontWeight: 500,
                   }}
                 >
-                  Thêm vào giỏ hàng
+                  Lưu
                 </Button>
               </div>
             </Col>
@@ -440,8 +443,8 @@ export const DetailHomestay = () => {
                     fontWeight: '500',
                   }}
                 >
-                  {detailHomestay?.detailHomestays?.map((items) => (
-                    <div>{items?.convenientHomestay?.name}</div>
+                  {detailHomestay?.detailHomestays?.map((items, index) => (
+                    <div>{index <= 4 ? items?.convenientHomestay?.name : ''}</div>
                   ))}
                 </div>
               </div>
@@ -604,7 +607,7 @@ export const DetailHomestay = () => {
               <Space wrap style={{ marginLeft: '40px', marginTop: '10px' }}>
                 <Progress
                   type='dashboard'
-                  percent={(avgPoint * 100) / 5}
+                  percent={Math.round((avgPoint * 100) / 5)}
                   gapDegree={30}
                 />
               </Space>
@@ -639,7 +642,7 @@ export const DetailHomestay = () => {
               <MDBCol md='12' lg='11' xl='10'>
                 <div className='d-flex justify-content-between align-items-center mb-4'>
                   <MDBTypography tag='h4' className='text-dark mb-0'>
-                    Có tất cả ({detailHomestay?.comment?.length}) đánh giá
+                    Có tất cả ({comment?.length}) đánh giá
                   </MDBTypography>
                 </div>
                 {comment.map((items) => (

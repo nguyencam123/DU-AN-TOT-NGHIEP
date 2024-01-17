@@ -150,7 +150,6 @@ const LoginDetail = () => {
         formData,
       )
       .then((response) => {
-        console.log(response)
         setLoading(false) // Set loading to false after a successful request
         message.info(
           'Sửa thông tin thành công những thay đổi sẽ được áp dụng cho lần đăng nhập tới!',
@@ -205,6 +204,7 @@ const LoginDetail = () => {
         formData,
       )
       .then((response) => {
+        localStorage.setItem('ownerDetail', JSON.stringify(response))
         setLoading(false) // Set loading to false after a successful request
         message.info(
           'Sửa thông tin thành công những thay đổi sẽ được áp dụng cho lần đăng nhập tới!',

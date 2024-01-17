@@ -187,7 +187,7 @@ const Booking = () => {
    */
   const formattedData = booking?.map((item) => {
     // Kiểm tra nếu startDate là ngày trước đó và thời gian là từ 12 giờ trở đi thì hiển thị số điện thoại
-    const isShowPhoneNumber = moment(item.startDate).isBefore(
+    const isShowPhoneNumber = moment(item?.startDate).isBefore(
       moment().subtract(1, 'day'),
     )
 
@@ -309,7 +309,7 @@ const Booking = () => {
         </Form.Item>
         <Form.Item
           label='Tìm kiếm theo tên homestay'
-          style={{ float: 'left', marginLeft: ' 50px' }}
+          style={{ float: 'left', marginLeft: '30px' }}
         >
           <Input.Search
             placeholder='Tên homestay'
@@ -321,20 +321,22 @@ const Booking = () => {
         </Form.Item>
         <Form.Item
           label='Tìm kiếm theo tên người đặt'
-          style={{ float: 'left', marginLeft: ' 50px' }}
+          style={{ float: 'left', marginLeft: ' 30px' }}
         >
           <Input.Search
-            placeholder='Tên chủ người đặt'
+            placeholder='Tên người đặt'
             allowClear
             size='medium'
             enterButton='search'
             onSearch={handleSearchBooking}
           />
         </Form.Item>
+      </Row>
+      <Row>
         <div style={{ marginLeft: 30 }}>
           <Form.Item
             label='Tìm kiếm theo tháng và năm'
-            style={{ float: 'left', marginLeft: '50px' }}
+            style={{ float: 'left', marginLeft: '30px' }}
           >
             <DatePicker onChange={onChangeMonth} picker='month' format='MM' />
           </Form.Item>
