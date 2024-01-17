@@ -440,6 +440,8 @@ const HomeStayProduct = () => {
   const [erorrAddress, setErrorAddress] = useState('')
   const [erorrDesc, setErorrDesc] = useState('')
   const [erorrDescDetail, setErorrDescDetail] = useState('')
+  const [erorrBedRoom, setErorrBedRoom] = useState('')
+  const [erorrBathRoom, setErorrBathRoom] = useState('')
   const validationSchema = Yup.object().shape({
     name: Yup.string()
       .trim() // Remove leading and trailing whitespaces
@@ -559,13 +561,13 @@ const HomeStayProduct = () => {
       }
 
       if (!totalBathroom || isNaN(totalBathroom) || totalBathroom <= 0) {
-        setErorrDesc('Vui lòng nhập số phòng tắm hợp lệ (lớn hơn 0)')
+        setErorrBathRoom('Vui lòng nhập số phòng tắm hợp lệ (lớn hơn 0)')
         throw new Error('Vui lòng nhập số phòng tắm hợp lệ (lớn hơn 0)')
       }
 
       // Tiếp tục kiểm tra totalBedroom
       if (!totalbedroom || isNaN(totalbedroom) || totalbedroom <= 0) {
-        setErorrDesc('Vui lòng nhập số phòng ngủ hợp lệ (lớn hơn 0)')
+        setErorrBedRoom('Vui lòng nhập số phòng ngủ hợp lệ (lớn hơn 0)')
         throw new Error('Vui lòng nhập số phòng ngủ hợp lệ (lớn hơn 0)')
       }
       if (desc == '') {
@@ -598,6 +600,8 @@ const HomeStayProduct = () => {
         setSelectedDistrict('')
         setSelectedWard('')
         setAddressDetail('')
+        setTotalBathroom(0)
+        setTotalbedroom(0)
       } else {
         setIsLoading(true)
         await message.info(
@@ -613,6 +617,10 @@ const HomeStayProduct = () => {
       setFormErrors({})
       setErrorFile('')
       setErrorAddress('')
+      setErorrBathRoom('')
+      setErorrBedRoom('')
+      setTotalBathroom(0)
+      setTotalbedroom(0)
     } catch (errors) {
       const errorObject = {}
       errors.inner?.forEach((error) => {
@@ -657,10 +665,13 @@ const HomeStayProduct = () => {
     //
     setFormErrors({})
 
-    const detaiDesc = record.desc.split(',')
-    setdesc(detaiDesc[2])
-    setTotalBathroom(detaiDesc[0])
-    setTotalbedroom(detaiDesc[1])
+    const detailDesc = record.desc.split(',')
+    console.log(detailDesc);
+    setdesc(detailDesc[2].trim())
+    const bathroom = detailDesc[0]
+    const bedroom = detailDesc[1]
+    setTotalBathroom(bathroom.substring(bathroom.indexOf('ó') + 1,bathroom.indexOf('p')-1).trim())
+    setTotalbedroom(bedroom.substring(bedroom.indexOf('ó') + 1,bedroom.indexOf('p')-1).trim())
 
     const addressParts = record.address.split(', ')
     const selectedWardName = addressParts[1] // Lấy tên phường/xã từ địa chỉ
@@ -1037,8 +1048,8 @@ const HomeStayProduct = () => {
                     Số phòng ngủ
                   </Title>
                 }
-                validateStatus={erorrDesc ? 'error' : ''}
-                help={erorrDesc}
+                validateStatus={erorrBedRoom ? 'error' : ''}
+                help={erorrBedRoom}
               >
                 <Input
                   style={{ width: '100%', float: 'right' }}
@@ -1056,8 +1067,8 @@ const HomeStayProduct = () => {
                     Số phòng tắm
                   </Title>
                 }
-                validateStatus={erorrDesc ? 'error' : ''}
-                help={erorrDesc}
+                validateStatus={erorrBathRoom ? 'error' : ''}
+                help={erorrBathRoom}
               >
                 <Input
                   style={{ width: '100%', float: 'right' }}
