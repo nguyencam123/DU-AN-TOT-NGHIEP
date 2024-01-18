@@ -92,7 +92,7 @@ export const fetchStatisticalByBookingToday =
 
     try {
       const response = await instance.get(
-        `/api/v2/booking/number_of_book_today?idowner=${idOwnerHomestay}&size=99`,
+        `/api/v2/booking/number-of-book-today?idowner=${idOwnerHomestay}&size=99`,
       )
       dispatch(fetchStatisticalByBookingTodaySuccess(response.data.data)) // Lấy dữ liệu từ response.data.data
     } catch (error) {
