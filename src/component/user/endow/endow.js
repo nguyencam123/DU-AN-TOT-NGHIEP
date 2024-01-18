@@ -160,6 +160,7 @@ const Endow = () => {
                           >
                             <MDBCard>
                               <MDBCardImage
+                                style={{width: '100%', height: '200px'}}
                                 src={items.images[0]?.imgUrl}
                                 position='top'
                                 alt='...'
