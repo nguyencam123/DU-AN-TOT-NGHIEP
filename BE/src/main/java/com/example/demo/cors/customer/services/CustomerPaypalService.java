@@ -12,4 +12,6 @@ public interface CustomerPaypalService {
 
     boolean sendBillBooking(String bookingId);
 
+    boolean sendBillBookingOwner(String bookingId);
+
 }

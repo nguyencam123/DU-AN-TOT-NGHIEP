@@ -5,6 +5,7 @@ import com.example.demo.cors.customer.model.response.InvoiceResponse;
 import com.example.demo.cors.customer.repository.CustomerBookingRepository;
 import com.example.demo.cors.customer.repository.CustomerHomestayRepository;
 import com.example.demo.cors.customer.services.CustomerPaypalService;
+import com.example.demo.cors.homestayowner.repository.HomestayOwnerBookingRepository;
 import com.example.demo.entities.Booking;
 import com.example.demo.entities.Homestay;
 import com.example.demo.infrastructure.configemail.EmailSender;
@@ -49,6 +50,8 @@ public class CustomerPaypalServiceImpl implements CustomerPaypalService {
     private UserRepository userRepository;
     @Autowired
     private CustomerBookingRepository customerBookingRepository;
+    @Autowired
+    private HomestayOwnerBookingRepository homestayOwnerBookingRepository;
     @Autowired
     private ExportFilePdfFormHtml exportFilePdfFormHtml;
     @Autowired
@@ -136,6 +139,19 @@ public class CustomerPaypalServiceImpl implements CustomerPaypalService {
         }
     }
 
+    @Override
+    public boolean sendBillBookingOwner(String bookingId) {
+        Booking booking = customerBookingRepository.findById(bookingId).orElse(null);
+        InvoiceResponse invoiceResponse = exportFilePdfFormHtml.getInvoiceResponse(bookingId);
+        String email = homestayOwnerBookingRepository.getEmailOwner(bookingId);
+        if (!email.isEmpty() && booking.getStatus() == StatusBooking.THANH_CONG) {
+            sendMailOwner(invoiceResponse, "http://localhost:3000/partner/booking", email);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public static double convertVNDtoUSD(double vndAmount) {
         try {
             URL url = new URL("https://open.er-api.com/v6/latest/USD");
@@ -166,6 +182,15 @@ public class CustomerPaypalServiceImpl implements CustomerPaypalService {
             Context dataContextSendMail = exportFilePdfFormHtml.setDataSendMail(invoice, url);
             String finalHtmlSendMail = springTemplateEngine.process("templateBillSendEmail", dataContextSendMail);
             String subject = "Biên lai thanh toán ";
+            emailSender.sendBill(email, subject, finalHtmlSendMail);
+        }
+    }
+
+    public void sendMailOwner(InvoiceResponse invoice, String url, String email) {
+        if (email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            Context dataContextSendMail = exportFilePdfFormHtml.setDataSendMail(invoice, url);
+            String finalHtmlSendMail = springTemplateEngine.process("templateBillSendEmail", dataContextSendMail);
+            String subject = "Quý khách có một đơn đặt phòng";
             emailSender.sendBill(email, subject, finalHtmlSendMail);
         }
     }
