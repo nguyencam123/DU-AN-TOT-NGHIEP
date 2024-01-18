@@ -106,7 +106,7 @@ export const CartUser = () => {
           <Title level={3}>Homestay bạn đã lưu ({shoppingcart?.length})</Title>
           <div style={{ marginLeft: 'auto' }}>
             <Popconfirm
-              title='Bạn có muốn xóa tất cả sản phẩm trong giỏ hàng?'
+              title='Bạn có muốn xóa tất cả homestay đã lưu trong giỏ hàng?'
               onConfirm={() => handleDeleteAllCart()}
               okText='có'
               cancelText='không'
@@ -119,7 +119,7 @@ export const CartUser = () => {
                 danger
               >
                 <DeleteOutlined style={{ marginTop: 5 }} />
-                Xóa tất cả sản phẩm
+                Xóa tất cả homestay đã lưu
               </Button>
             </Popconfirm>
           </div>

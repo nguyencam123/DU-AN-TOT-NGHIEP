@@ -20,6 +20,11 @@ public class HomestayOwnerBookingServiceImpl implements HomestayOwnerBookingServ
     private HomestayOwnerBookingRepository homestayOwnerBookingRepository;
 
     @Override
+    public HomestayNumberOfBookingTodayReponse getNumberOfBookingsCho(String id) {
+        return homestayOwnerBookingRepository.getNumberOfBookingCho(id);
+    }
+
+    @Override
     public HomestayNumberOfBookingTodayReponse getNumberOfBookingsToday(String id) {
         return homestayOwnerBookingRepository.getNumberOfBookingsToday(id);
     }

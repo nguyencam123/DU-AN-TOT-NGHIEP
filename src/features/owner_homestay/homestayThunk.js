@@ -6,6 +6,7 @@ import {
   edithomestay,
 } from '../owner_homestay/onwerHomestaySlice'
 import { instance } from '../../app/axiosConfig'
+import { message } from 'antd'
 
 const BASE_URL = '/api/v2/homestay'
 export const fetchHomestay = (status) => async (dispatch) => {
@@ -18,6 +19,7 @@ export const fetchHomestay = (status) => async (dispatch) => {
     dispatch(fetchProductsSuccess(response.data.data.data))
   } catch (error) {
     dispatch(fetchProductsFailure(error.message))
+    message.info(error.request.responseText)
   }
 }
 
@@ -57,6 +59,7 @@ export const UpdateStatus = (id) => async (dispatch) => {
     await instance.put(BASE_URL + `/delete-homestays?id=${id}`)
   } catch (error) {
     dispatch(fetchProductsFailure(error.message))
+    message.info(error.request.responseText)
   }
 }
 export const UpdateStatusToUpdating = (id) => async (dispatch) => {

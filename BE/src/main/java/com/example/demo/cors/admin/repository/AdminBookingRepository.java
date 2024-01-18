@@ -61,7 +61,7 @@ public interface AdminBookingRepository extends BookingRepository {
                 AND (MONTH(DATEADD(SECOND, a.created_date / 1000, '1970-01-01')) = :#{#request.month} OR :#{#request.month} IS NULL OR :#{#request.month} LIKE '')
                 AND (DAY(DATEADD(SECOND, a.created_date / 1000, '1970-01-01')) = :#{#request.date} OR :#{#request.date} IS NULL OR :#{#request.date} LIKE '')
 				)
-                AND (a.status = 1 or a.status = 0);                 
+                AND (a.status = 3 or a.status = 0);                 
             """, nativeQuery = true)
     AdminStatisticalReponse getAllStatistical(AdminStatisticalRequest request);
 
@@ -75,7 +75,7 @@ public interface AdminBookingRepository extends BookingRepository {
             WHERE
              MONTH(DATEADD(SECOND, a.created_date / 1000, '1970-01-01')) = :#{#request.month}
             AND DATEPART(YEAR, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.year}
-            AND (a.status = 1 or a.status = 0);                     
+            AND (a.status = 3 or a.status = 0);                     
             """, nativeQuery = true)
     AdminStatisticalReponse getAllStatisticalYear(AdminStatisticalRequest request);
 
@@ -91,7 +91,7 @@ public interface AdminBookingRepository extends BookingRepository {
                 INNER JOIN homestay b ON a.homestay_id = b.id
                 WHERE
                 DATEPART(YEAR, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.year}
-                AND (a.status = 1 or a.status = 0)
+                AND (a.status = 3 or a.status = 0)
                 GROUP BY
                     b.name,
                     b.address,

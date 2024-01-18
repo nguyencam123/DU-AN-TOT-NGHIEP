@@ -31,7 +31,6 @@ const Endow = () => {
       fetchSearchProductsForPromotion(
         checkInDate?.valueOf(),
         checkOutDate?.valueOf(),
-        parseInt(page) - 1,
       ),
     )
   }
@@ -59,7 +58,6 @@ const Endow = () => {
       fetchSearchProductsForPromotion(
         checkInDate?.valueOf(),
         checkOutDate?.valueOf(),
-        parseInt(current) - 1,
       ),
     )
   }, [checkInDate, checkOutDate])
@@ -162,6 +160,7 @@ const Endow = () => {
                           >
                             <MDBCard>
                               <MDBCardImage
+                                style={{width: '100%', height: '200px'}}
                                 src={items.images[0]?.imgUrl}
                                 position='top'
                                 alt='...'
@@ -205,17 +204,6 @@ const Endow = () => {
                   <p>Nơi bạn tìm kiếm không có homestay nào</p>
                 )}
               </Row>
-              <div style={{ float: 'right', marginTop: 20 }}>
-                {productPromotion?.data?.length > 0 ? (
-                  <Pagination
-                    current={current}
-                    onChange={onChangePage}
-                    total={productPromotion?.totalPages * 10}
-                  />
-                ) : (
-                  <div />
-                )}
-              </div>
             </Content>
           </Layout>
         </Layout>

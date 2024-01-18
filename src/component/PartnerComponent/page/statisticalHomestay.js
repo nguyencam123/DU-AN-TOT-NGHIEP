@@ -1,4 +1,4 @@
-import { Button, DatePicker, Table, Tabs, Typography } from 'antd'
+import { Button, DatePicker, Progress, Table, Tabs, Typography } from 'antd'
 import { Column } from '@ant-design/plots'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -21,6 +21,12 @@ import {
   getBookingByNameHomestay,
 } from '../../../features/owner_homestay/getbooking/bookingThunk'
 import * as XLSX from 'xlsx'
+import {
+  DollarOutlined,
+  MoneyCollectOutlined,
+  PropertySafetyOutlined,
+} from '@ant-design/icons'
+import { fetchHomestay } from '../../../features/owner_homestay/homestayThunk'
 
 const { Title } = Typography
 const StatisticalHomestay = () => {
@@ -43,6 +49,10 @@ const StatisticalHomestay = () => {
   const statisticalByBookingToday = useSelector(
     (state) => state.statistical.statisticalByBookingToday,
   )
+  const statisticalAwait = useSelector(
+    (state) => state.statistical.fetchStatisticalAwait,
+  )
+  const products = useSelector((state) => state.ownerHomestay.homestays)
   const booking = useSelector((state) => state.booking.bookings)
   const userDetail = JSON.parse(localStorage.getItem('ownerDetail'))
   const UserID = userDetail?.data.id
@@ -58,7 +68,7 @@ const StatisticalHomestay = () => {
 
   const onChange = (dateString) => {
     setYear(new Date(dateString).getFullYear())
-    dispatch(fetchStatisticalByYear(UserID, dateString))
+    dispatch(fetchStatisticalByYear(UserID, new Date(dateString).getFullYear()))
     dispatch(fetchStatisticalByTop5(UserID, new Date(dateString).getFullYear()))
   }
   useEffect(() => {
@@ -73,6 +83,7 @@ const StatisticalHomestay = () => {
     )
     dispatch(fetchStatisticalByTop5(UserID, currentYear))
     dispatch(fetchStatisticalByBookingToday(UserID))
+    dispatch(fetchHomestay(''))
     // console.log(currentYear)
   }, [currentYear])
 
@@ -278,184 +289,279 @@ const StatisticalHomestay = () => {
   const exportExcel = () => {
     importAndAppendData(statisticalByTop5)
   }
+  moment.locale('vi')
+
+  // Lấy ngày giờ hiện tại và định dạng
+  const currentDateNow = moment().format('DD/MM/YYYY ')
+  const startOfMonth = moment().startOf('month').format('DD/MM/YYYY')
+  // Lấy ngày kết thúc của tháng hiện tại
+  const endOfMonth = moment().endOf('month').format('DD/MM/YYYY')
+  const startOfYear = moment().startOf('year').format('DD/MM/YYYY')
+
+  // Lấy ngày kết thúc của năm hiện tại
+  const endOfYear = moment().endOf('year').format('DD/MM/YYYY')
+
   return (
     <div>
       <Title style={{ marginTop: '20px' }}>Thống kê doanh thu</Title>
-      <div>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <div
-            style={{
-              width: '30%',
-              height: 200,
-              backgroundColor: '#321fdb',
-              padding: 25,
-              marginRight: 60,
-              borderRadius: 8,
-            }}
-          >
-            <Title
-              style={{ marginTop: '1px', color: 'white', fontWeight: 600 }}
-              level={3}
-            >
-              {' '}
-              {statisticalByDay.tongSoTien == null
-                ? 0
-                : formatCurrency(
-                    (statisticalByDay.tongSoTien * 100) / 111,
-                  )}{' '}
-            </Title>
-            <Title
-              style={{ marginTop: '1px', color: 'white', fontWeight: 600 }}
-              level={5}
-            >
-              {' '}
-              Doanh thu ngày hôm nay
-            </Title>
-            <img src={imgchart} style={{ width: '100%' }} />
-          </div>
-          <div
-            style={{
-              width: '30%',
-              height: 200,
-              backgroundColor: '#3399ff',
-              padding: 25,
-              marginRight: 60,
-              borderRadius: 8,
-            }}
-          >
-            <Title
-              style={{ marginTop: '1px', color: 'white', fontWeight: 600 }}
-              level={3}
-            >
-              {' '}
-              {statisticalByMonth.tongSoTien == null
-                ? 0
-                : formatCurrency(
-                    (statisticalByMonth.tongSoTien * 100) / 111,
-                  )}{' '}
-            </Title>
-            <Title
-              style={{ marginTop: '1px', color: 'white', fontWeight: 600 }}
-              level={5}
-            >
-              {' '}
-              Doanh thu tháng này{' '}
-            </Title>
-            <img src={imgBluechart} style={{ width: '100%' }} />
-          </div>
-          <div
-            style={{
-              width: '30%',
-              height: 200,
-              backgroundColor: '#f9b115',
-              padding: 25,
-
-              borderRadius: 8,
-            }}
-          >
-            <Title
-              style={{ marginTop: '1px', color: 'white', fontWeight: 600 }}
-              level={3}
-            >
-              {' '}
-              {statisticalByYears?.tongSoTien == null
-                ? 0
-                : formatCurrency(
-                    (statisticalByYears?.tongSoTien * 100) / 111,
-                  )}{' '}
-            </Title>
-            <Title
-              style={{ marginTop: '1px', color: 'white', fontWeight: 600 }}
-              level={5}
-            >
-              {' '}
-              Doanh thu năm nay{' '}
-            </Title>
-            <img
-              src={imgyellowchart}
-              style={{ width: '100%', marginTop: 10 }}
+      <div style={{ display: 'flex' }}>
+        <div
+          style={{
+            borderRadius: 8,
+            padding: 16,
+            width: '70%',
+            backgroundColor: '#f2f7fb',
+            boxShadow:
+              '0 0 5px 0 rgba(43,43,43,.1), 0 11px 6px -7px rgba(43,43,43,.1)',
+          }}
+        >
+          <div style={{ display: 'flex', marginBottom: '20px' }}>
+            <Title level={5}>Biểu đồ thống kê doanh thu trong năm {year}</Title>
+            <DatePicker
+              onChange={onChange}
+              picker='year'
+              style={{
+                marginLeft: 'auto',
+                width: 300,
+                height: 40,
+              }}
+              disabledDate={(current) =>
+                current && current.year() > currentYear
+              }
+              defaultValue={dayjs(`${currentYear}-01-01`)}
             />
           </div>
+          <Column {...config} />
         </div>
-        <div
-          style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}
-        >
+
+        <div style={{ width: '28%', marginLeft: 20 }}>
           <div
             style={{
-              width: '30%',
-              height: 200,
-              backgroundColor: '#e55353',
-              padding: 25,
+              width: '100%',
+              height: 150,
+              backgroundColor: 'rgb(189 236 224)',
+              padding: 16,
+              marginRight: 60,
               borderRadius: 8,
-              marginRight: 30,
+              display: 'flex',
+              boxShadow:
+                '0 0 5px 0 rgba(43,43,43,.1), 0 11px 10px -7px rgba(43,43,43,.1)',
             }}
           >
-            <Title
-              style={{ marginTop: '1px', color: 'white', fontWeight: 600 }}
-              level={3}
+            <div>
+              <Title style={{ marginTop: '1px', fontWeight: 400 }} level={5}>
+                {' '}
+                Doanh thu ngày hôm nay
+              </Title>
+              <Title
+                style={{ marginTop: '1px', color: '#4099ff', fontWeight: 600 }}
+                level={2}
+              >
+                {' '}
+                {statisticalByDay.tongSoTien == null
+                  ? 0
+                  : formatCurrency(
+                      (statisticalByDay.tongSoTien * 100) / 111,
+                    )}{' '}
+              </Title>
+              <Title level={4} style={{ fontWeight: 400 }}>
+                {currentDateNow}
+              </Title>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center', // căn giữa theo chiều dọc
+                justifyContent: 'center', // căn giữa theo chiều ngang
+                marginLeft: 'auto',
+                backgroundColor: '#4099ff',
+                borderRadius: 10,
+                height: 50, // tùy chỉnh chiều cao của div
+                width: 50, // tùy chỉnh chiều rộng của div
+                marginTop: 40,
+              }}
             >
-              {' '}
-              {statisticalByBookingToday?.bookToday == null
-                ? 0
-                : statisticalByBookingToday?.bookToday}{' '}
-              lượt
-            </Title>
-            <Title
-              style={{ marginTop: '1px', color: 'white', fontWeight: 600 }}
-              level={5}
-            >
-              Số lượt đã đặt phòng trong hôm nay
-            </Title>
-            <img src={imgRedchart} style={{ width: '100%', marginTop: 1 }} />
+              <DollarOutlined
+                style={{
+                  color: 'white',
+                  fontSize: 25,
+                }}
+              />
+            </div>
           </div>
           <div
             style={{
-              width: '30%',
-              height: 200,
-              backgroundColor: '#e55353',
-              padding: 25,
+              width: '100%',
+              height: 150,
+              backgroundColor: 'rgb(87 171 169)',
+              padding: 16,
+              marginRight: 60,
               borderRadius: 8,
-              marginLeft: 30,
+              display: 'flex',
+              marginTop: 20,
+              boxShadow:
+                '0 0 5px 0 rgba(43,43,43,.1), 0 11px 10px -7px rgba(43,43,43,.1)',
             }}
           >
-            <Title
-              style={{ marginTop: '1px', color: 'white', fontWeight: 600 }}
-              level={3}
+            <div>
+              <Title style={{ marginTop: '1px', fontWeight: 400 }} level={5}>
+                {' '}
+                Doanh thu tháng này
+              </Title>
+              <Title
+                style={{ marginTop: '1px', color: '#2ed8b6', fontWeight: 600 }}
+                level={2}
+              >
+                {' '}
+                {statisticalByMonth.tongSoTien == null
+                  ? 0
+                  : formatCurrency(
+                      (statisticalByMonth.tongSoTien * 100) / 111,
+                    )}{' '}
+              </Title>
+              <Title level={4} style={{ fontWeight: 400 }}>
+                {startOfMonth} - {endOfMonth}
+              </Title>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center', // căn giữa theo chiều dọc
+                justifyContent: 'center', // căn giữa theo chiều ngang
+                marginLeft: 'auto',
+                backgroundColor: '#2ed8b6',
+                borderRadius: 10,
+                height: 50, // tùy chỉnh chiều cao của div
+                width: 50, // tùy chỉnh chiều rộng của div
+                marginTop: 40,
+              }}
             >
-              {' '}
-              {statisticalByYears?.doanhSo == null
-                ? 0
-                : statisticalByYears?.doanhSo}{' '}
-              lượt
-            </Title>
-            <Title
-              style={{ marginTop: '1px', color: 'white', fontWeight: 600 }}
-              level={5}
+              <MoneyCollectOutlined
+                style={{
+                  color: 'white',
+                  fontSize: 25,
+                }}
+              />
+            </div>
+          </div>
+          <div
+            style={{
+              width: '100%',
+              height: 150,
+              backgroundColor: 'rgb(61 121 122)',
+              padding: 16,
+              marginRight: 60,
+              borderRadius: 8,
+              display: 'flex',
+              marginTop: 20,
+              boxShadow:
+                '0 0 5px 0 rgba(43,43,43,.1), 0 11px 10px -7px rgba(43,43,43,.1)',
+            }}
+          >
+            <div>
+              <Title style={{ marginTop: '1px', fontWeight: 400 }} level={5}>
+                {' '}
+                Doanh thu năm nay
+              </Title>
+              <Title
+                style={{ marginTop: '1px', color: '#ffb64d', fontWeight: 600 }}
+                level={2}
+              >
+                {' '}
+                {statisticalByYears?.tongSoTien == null
+                  ? 0
+                  : formatCurrency(
+                      (statisticalByYears?.tongSoTien * 100) / 111,
+                    )}{' '}
+              </Title>
+              <Title level={4} style={{ fontWeight: 400 }}>
+                {startOfYear} - {endOfYear}
+              </Title>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center', // căn giữa theo chiều dọc
+                justifyContent: 'center', // căn giữa theo chiều ngang
+                marginLeft: 'auto',
+                backgroundColor: '#ffb64d',
+                borderRadius: 10,
+                height: 50, // tùy chỉnh chiều cao của div
+                width: 50, // tùy chỉnh chiều rộng của div
+                marginTop: 40,
+              }}
             >
-              Số lượt đã đặt phòng trong năm
-            </Title>
-            <img src={imgRedchart} style={{ width: '100%', marginTop: 1 }} />
+              <PropertySafetyOutlined
+                style={{
+                  color: 'white',
+                  fontSize: 25,
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>
-      <div style={{ display: 'flex', marginTop: '20px' }}>
-        <Title level={5} style={{ marginTop: '20px' }}>
-          Biểu đồ thống kê doanh thu trong năm {year}
-        </Title>
-        <DatePicker
-          onChange={onChange}
-          picker='year'
-          style={{
-            marginLeft: 'auto',
-            width: 300,
-            height: 40,
-            marginTop: '20px',
-          }}
-          disabledDate={(current) => current && current.year() > currentYear}
-          defaultValue={dayjs(`${currentYear}-01-01`)}
-        />
+
+      <div
+        style={{
+          borderRadius: 8,
+          padding: 25,
+          marginTop: 20,
+          width: '100%',
+          backgroundColor: '#f2f7fb',
+          display: 'flex',
+          boxShadow:
+            '0 0 5px 0 rgba(43,43,43,.1), 0 11px 6px -7px rgba(43,43,43,.1)',
+        }}
+      >
+        <div style={{ width: '33%' }}>
+          <Title style={{ marginTop: '1px', fontWeight: 400 }} level={5}>
+            {' '}
+            Số lượt đã đặt phòng trong hôm nay
+          </Title>
+          <Title style={{ marginTop: '1px', fontWeight: 500 }} level={4}>
+            {statisticalByBookingToday?.bookToday == null
+              ? 0
+              : statisticalByBookingToday?.bookToday}{' '}
+            lượt
+          </Title>
+          <Title style={{ marginTop: '1px', fontWeight: 400 }} level={5}>
+            Tỉ lệ số homestay được đặt trên homestay hoạt động
+          </Title>
+          <Progress
+            percent={
+              (statisticalByBookingToday?.bookToday / products.length) * 100
+            }
+            size='small'
+            status='active'
+          />
+        </div>
+        <div style={{ width: '33%', marginLeft: 50 }}>
+          <Title style={{ marginTop: '1px', fontWeight: 400 }} level={5}>
+            {' '}
+            Số lượt đã đặt phòng trong năm
+          </Title>
+          <Title style={{ marginTop: '1px', fontWeight: 500 }} level={4}>
+            {statisticalByYears?.doanhSo == null
+              ? 0
+              : statisticalByYears?.doanhSo}{' '}
+            lượt
+          </Title>
+        </div>
+        <div style={{ width: '33%', marginLeft: 50 }}>
+          <Title style={{ marginTop: '1px', fontWeight: 400 }} level={5}>
+            {' '}
+            Số homestay đang chờ nhận phòng
+          </Title>
+          <Title style={{ marginTop: '1px', fontWeight: 500 }} level={4}>
+            {statisticalAwait?.bookToday == null
+              ? 0
+              : statisticalAwait?.bookToday}{' '}
+            lượt
+          </Title>
+        </div>
       </div>
-      <Column {...config} />
+
       <div style={{ marginTop: '40px' }}>
         <div style={{ display: 'flex', marginBottom: 20 }}>
           <Title level={5}>

@@ -8,6 +8,7 @@ const initialState = {
   statisticalByTop5: [],
   statisticalTopBooking: [],
   statisticalByBookingToday: [],
+  statisticalIsAwait: [],
   loading: false,
   error: null,
 }
@@ -37,6 +38,11 @@ const statisticalSlice = createSlice({
     },
     fetchStatisticalByTop5Success: (state, action) => {
       state.statisticalByTop5 = action.payload
+      state.loading = false
+      state.error = null
+    },
+    fetchStatisticalIsAwait: (state, action) => {
+      state.statisticalIsAwait = action.payload
       state.loading = false
       state.error = null
     },
@@ -72,5 +78,6 @@ export const {
   fetchStatisticalByTop5Success,
   fetchStatisticalTopBooking,
   fetchStatisticalByBookingTodaySuccess,
+  fetchStatisticalIsAwait,
 } = statisticalSlice.actions
 export default statisticalSlice.reducer

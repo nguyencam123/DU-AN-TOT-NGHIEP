@@ -38,7 +38,7 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
             LEFT JOIN
             [user] d ON a.user_id = d.id
             WHERE
-            c.id =:id
+            c.id =:id and a.status=3
             GROUP BY
             d.name, d.address,d.birthday,d.email,d.gender,d.phone_number
             HAVING
@@ -51,7 +51,7 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
     @Query(value = """
                      SELECT ROW_NUMBER() OVER(ORDER BY b.created_date DESC) AS stt, b.*
                      FROM booking b
-                     JOIN dbo.homestay h ON b.homestay_id = h.id 
+                     JOIN dbo.homestay h ON b.homestay_id = h.id
                      JOIN owner_homestay c ON h.owner_id=c.id
                      JOIN dbo.[user] u ON b.user_id = u.id
                      WHERE c.id=:#{#request.idOwner} AND
@@ -70,12 +70,12 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
     Page<Booking> getAllBooking(@Param("request") HomestayOwnerBookingRequest request, Pageable pageable);
 
     @Query(value = """
-                     SELECT ROW_NUMBER() OVER(ORDER BY b.created_date DESC) AS stt, b.* ,SUM(b.total_price - b.refund_price) AS 'TongSoTien'
+                     SELECT ROW_NUMBER() OVER(ORDER BY b.created_date DESC) AS stt, b.*
                      FROM booking b
-                     JOIN dbo.homestay h ON b.homestay_id = h.id 
+                     JOIN dbo.homestay h ON b.homestay_id = h.id
                      JOIN owner_homestay c ON h.owner_id=c.id
                      JOIN dbo.[user] u ON b.user_id = u.id
-                     WHERE c.id=:#{#request.idOwner}                 
+                     WHERE c.id=:#{#request.idOwner}
                      AND (
                          YEAR(DATEADD(SECOND, b.created_date / 1000, '1970-01-01')) = :#{#request.year}
                          AND (MONTH(DATEADD(SECOND, b.created_date / 1000, '1970-01-01')) = :#{#request.month} OR :#{#request.month} IS NULL OR :#{#request.month} LIKE '')
@@ -101,7 +101,7 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
                         AND (MONTH(DATEADD(SECOND, a.created_date / 1000, '1970-01-01')) = :#{#request.month} OR :#{#request.month} IS NULL OR :#{#request.month} LIKE '')
                         AND (DAY(DATEADD(SECOND, a.created_date / 1000, '1970-01-01')) = :#{#request.date} OR :#{#request.date} IS NULL OR :#{#request.date} LIKE '')
             )
-                        AND (a.status = 1 or a.status = 0);                 
+                        AND (a.status = 3 or a.status = 0);
                     """, nativeQuery = true)
     HomestayOwnerStatisticalReponse getAllStatistical(HomestayOwnerStatisticalRequest request);
 
@@ -117,7 +117,7 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
             c.id = :#{#request.idOwnerHomestay}
             AND MONTH(DATEADD(SECOND, a.created_date / 1000, '1970-01-01')) = :#{#request.month}
             AND DATEPART(YEAR, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.year}
-            AND (a.status = 1 or a.status = 0);                     
+            AND (a.status = 3 or a.status = 0);
             """, nativeQuery = true)
     HomestayOwnerStatisticalReponse getAllStatisticalYear(HomestayOwnerStatisticalRequest request);
 
@@ -135,7 +135,7 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
                         WHERE
                         c.id = :#{#request.idOwnerHomestay}
                         AND DATEPART(YEAR, CONVERT(DATETIME, DATEADD(SECOND, a.created_date / 1000, '1970-01-01'))) = :#{#request.year}
-                        AND (a.status = 1 or a.status = 0)
+                        AND (a.status = 3 or a.status = 0)
                         GROUP BY
                             b.name,
                             b.address,
@@ -154,13 +154,29 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
                           LEFT JOIN owner_homestay c ON b.owner_id = c.id
                       WHERE
                           c.id = :id
-                        AND a.status = 1
+                        AND a.status = 3
                         AND DATEADD(DAY, 0, CONVERT(DATE, DATEADD(SECOND, a.start_date / 1000, '1970-01-01'))) <= CONVERT(DATE, GETUTCDATE())
                           and DATEADD(DAY, 0, CONVERT(DATE, DATEADD(SECOND, a.end_date / 1000, '1970-01-01'))) >= CONVERT(DATE, GETUTCDATE())
                       ORDER BY
                           COUNT(a.homestay_id) DESC;
             """, nativeQuery = true)
     HomestayNumberOfBookingTodayReponse getNumberOfBookingsToday(String id);
+
+    @Query(value = """
+                      SELECT
+                          COUNT(a.homestay_id) AS bookToday
+                      FROM
+                          booking a
+                          LEFT JOIN homestay b ON a.homestay_id = b.id
+                          LEFT JOIN owner_homestay c ON b.owner_id = c.id
+                      WHERE
+                        c.id =:id
+                        AND a.status = 3
+                        AND DATEADD(DAY, 0, CONVERT(DATE, DATEADD(SECOND, a.start_date / 1000, '1970-01-01'))) > CONVERT(DATE, GETUTCDATE())
+                      ORDER BY
+                        COUNT(a.homestay_id) DESC;
+            """, nativeQuery = true)
+    HomestayNumberOfBookingTodayReponse getNumberOfBookingCho(String id);
 
     @Query(value = """
             SELECT * FROM booking
