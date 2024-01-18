@@ -70,7 +70,7 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
     Page<Booking> getAllBooking(@Param("request") HomestayOwnerBookingRequest request, Pageable pageable);
 
     @Query(value = """
-                     SELECT ROW_NUMBER() OVER(ORDER BY b.created_date DESC) AS stt, b.* ,SUM(b.total_price - b.refund_price) AS 'TongSoTien'
+                     SELECT ROW_NUMBER() OVER(ORDER BY b.created_date DESC) AS stt, b.*
                      FROM booking b
                      JOIN dbo.homestay h ON b.homestay_id = h.id
                      JOIN owner_homestay c ON h.owner_id=c.id
