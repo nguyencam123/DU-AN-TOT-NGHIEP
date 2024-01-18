@@ -68,7 +68,7 @@ const StatisticalHomestay = () => {
 
   const onChange = (dateString) => {
     setYear(new Date(dateString).getFullYear())
-    dispatch(fetchStatisticalByYear(UserID, dateString))
+    dispatch(fetchStatisticalByYear(UserID, new Date(dateString).getFullYear()))
     dispatch(fetchStatisticalByTop5(UserID, new Date(dateString).getFullYear()))
   }
   useEffect(() => {
@@ -83,7 +83,7 @@ const StatisticalHomestay = () => {
     )
     dispatch(fetchStatisticalByTop5(UserID, currentYear))
     dispatch(fetchStatisticalByBookingToday(UserID))
-    dispatch(fetchHomestay())
+    dispatch(fetchHomestay(''))
     // console.log(currentYear)
   }, [currentYear])
 
@@ -551,7 +551,7 @@ const StatisticalHomestay = () => {
         <div style={{ width: '33%', marginLeft: 50 }}>
           <Title style={{ marginTop: '1px', fontWeight: 400 }} level={5}>
             {' '}
-            Số homestay đang chờ được duyệt
+            Số homestay đang chờ nhận phòng
           </Title>
           <Title style={{ marginTop: '1px', fontWeight: 500 }} level={4}>
             {statisticalAwait?.bookToday == null

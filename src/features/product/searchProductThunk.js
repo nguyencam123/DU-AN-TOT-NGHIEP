@@ -74,7 +74,7 @@ export const fetchSearchProductsForPromotion =
     dispatch(fetchProductsStart())
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/v1/homestay/search-by-promotion?dateFrom=${startDate}&dateTo=${enDate}&size=10&page=${page}`,
+        `http://localhost:8080/api/v1/homestay/search-by-promotion?dateFrom=${startDate}&dateTo=${enDate}&size=999`,
       )
       dispatch(fetchProductPromotionSuccess(response.data.data)) // Lấy dữ liệu từ response.data.data
     } catch (error) {
