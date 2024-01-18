@@ -22,13 +22,21 @@ const ProductTabs = (props) => {
 
     useEffect(() => {
         // Set checkInDate to tomorrow
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours('00')
+      tomorrow.setMinutes('00')
+      tomorrow.setSeconds('00')
+      tomorrow.setMilliseconds('000')
         setCheckInDate(tomorrow);
 
         // Set checkOutDate to the day after tomorrow
         const dayAfterTomorrow = new Date();
-        dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
+      dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
+      dayAfterTomorrow.setHours('00')
+      dayAfterTomorrow.setMinutes('00')
+      dayAfterTomorrow.setSeconds('00')
+      dayAfterTomorrow.setMilliseconds('000')
         setCheckOutDate(dayAfterTomorrow);
     }, []);
 
@@ -90,7 +98,7 @@ const ProductTabs = (props) => {
                     </div>
                 ) : null
             }
-            {error ? <p>Error: {error}</p> : null}
+            {/* {error ? <p>Error: {error}</p> : null} */}
             <Row style={{}}>
                 {productlist.map((product) => (
                     <Col
@@ -109,7 +117,7 @@ const ProductTabs = (props) => {
                                 style={{
                                     width: 270,
                                 }}
-                                cover={<img alt="example" src={product.images[0]?.imgUrl} />}
+                                cover={<img alt="example" style={{width:'270px', height:'200px'}} src={product.images[0]?.imgUrl} />}
                             >
                                 <Meta title={product.name} />
                                 <div>

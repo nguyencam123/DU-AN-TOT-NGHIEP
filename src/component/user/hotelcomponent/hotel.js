@@ -11,7 +11,7 @@ import {
   Rate,
   Pagination,
 } from 'antd'
-import hotelimg from '../../../assets/img/saleHotel.png'
+import hotelimg from '../../../assets/img/saleHotel.jpg'
 import logoTravel from '../../../assets/svg/Rectangle 405.svg'
 import {
   SearchOutlined,
