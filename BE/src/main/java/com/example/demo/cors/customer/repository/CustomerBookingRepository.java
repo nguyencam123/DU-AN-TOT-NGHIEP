@@ -20,7 +20,7 @@ public interface CustomerBookingRepository extends BookingRepository {
             SELECT ROW_NUMBER() OVER(ORDER BY b.created_date DESC) AS stt, b.*
             FROM booking b
             WHERE b.[user_id] = :#{#customerBookingRequest.userId}
-            AND b.[status] = 1 OR b.[status] = 0
+            AND b.[status] = 1 OR b.[status] = 0 OR b.[status] = 3
             """, nativeQuery = true)
     Page<Booking> getBookingByUserId(Pageable pageable, CustomerBookingRequest customerBookingRequest);
 
@@ -41,10 +41,10 @@ public interface CustomerBookingRepository extends BookingRepository {
     List<Booking> getAllBookingSuccess();
 
     @Query(value = """
-               SELECT b.[name] AS name_user, b.phone_number, b.email,
+            SELECT b.[name] AS name_user, b.phone_number, b.email,
             FORMAT(CONVERT(DATE, DATEADD(SECOND, b.created_date / 1000, '19700101')), 'dd-MM-yyyy') AS created_date,
-            FORMAT(CONVERT(DATE, DATEADD(SECOND, b.[start_date] / 1000, '19700101')), 'dd-MM-yyyy') AS [start_date],
-            FORMAT(CONVERT(DATE, DATEADD(SECOND, b.[end_date] / 1000, '19700101')), 'dd-MM-yyyy') AS [end_date],
+            FORMAT(CONVERT(DATE, DATEADD(DAY, 1, DATEADD(SECOND, b.[start_date] / 1000, '19700101'))), 'dd-MM-yyyy') AS [start_date],
+            FORMAT(CONVERT(DATE, DATEADD(DAY, 1, DATEADD(SECOND, b.[end_date] / 1000, '19700101'))), 'dd-MM-yyyy') AS [end_date],
             b.total_price, b.type_booking, b.code, b.payment_method,
             CASE WHEN b.promotion_id IS NULL THEN (h.price * b.number_of_night + 0.11 * h.price * b.number_of_night)
             	WHEN b.promotion_id IS NOT NULL THEN ((h.price - p.[value]) * b.number_of_night + 0.11 * (h.price - p.[value]) * b.number_of_night)

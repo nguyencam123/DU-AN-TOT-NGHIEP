@@ -184,4 +184,12 @@ public interface HomestayOwnerBookingRepository extends BookingRepository {
             """, nativeQuery = true)
     List<Booking> getBookingActive(@Param("homestayId") String homestayId);
 
+    @Query(value = """
+            SELECT o.email FROM owner_homestay o
+            JOIN homestay h ON o.id = h.owner_id
+            JOIN booking b ON h.id = b.homestay_id
+            WHERE b.id = :#{#bookingId}
+            """, nativeQuery = true)
+    String getEmailOwner(@Param("bookingId") String bookingId);
+
 }

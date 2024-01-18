@@ -73,7 +73,7 @@ public class CustomerBookingServiceImpl implements CustomerBookingService {
         email.setToEmail(new String[]{booking.getHomestay().getOwnerHomestay().getEmail()});
         email.setSubject("Thông báo hủy phòng");
         email.setTitleEmail("Homestay " + booking.getHomestay().getName() + " đã bị hủy");
-        email.setBody("Lý do hủy: " + booking.getNote());
+        email.setBody("Khách hàng " + booking.getName() + " thời gian hủy " + booking.getCancellationDate() + ". " + "Lý do hủy: " + booking.getNote());
         emailSender.sendEmail(email.getToEmail(), email.getSubject(), email.getTitleEmail(), email.getBody());
         customerBookingRepository.save(booking);
         return booking;

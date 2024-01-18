@@ -75,4 +75,9 @@ public class CustomerPaymentController {
         return new ResponseObject(customerPaypalService.sendBillBooking(bookingId));
     }
 
+    @GetMapping("/send-mail-owner")
+    public ResponseObject sendBillBookingOwner(@RequestParam("bookingId") String bookingId) {
+        return new ResponseObject(customerPaypalService.sendBillBookingOwner(bookingId));
+    }
+
 }
